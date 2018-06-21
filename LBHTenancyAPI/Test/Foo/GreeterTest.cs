@@ -1,16 +1,15 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using LBHTenancyAPI.Foo;
 
 namespace LBHTenancyAPI.Test.Foo
 {
-    [TestFixture]
     public class GreeterTest
     {
-        [Test]
+        [Fact]
         public void SaysHello()
         {
             Greeter greeter = new Greeter();
-            Assert.AreEqual(greeter.SayHello(), "hello world");
+            Assert.Equal("hello world", greeter.SayHello());
         }
     }
 }
