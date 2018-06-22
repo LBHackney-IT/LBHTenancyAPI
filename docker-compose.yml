@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  lbhtenancyapi:
+    image: lbhtenancyapi
+    build:
+      context: .
+      dockerfile: LBHTenancyAPI/Dockerfile
+    ports:
+      - 3000:80
