@@ -1,0 +1,70 @@
+version: 2
+jobs:
+  check:
+    docker:
+      - image: microsoft/dotnet:2.1-aspnetcore-runtime
+    steps:
+      - checkout
+      - run:
+          name: Test
+          command: echo ...............
+      - run:
+          name: Lint
+          command: echo ...............
+
+  staging_release:
+    machine: true
+    working_directory: ~/repo/LBHTenancyAPI
+    steps:
+      - checkout:
+          path: ~/repo
+      - run:
+          name: Install Heroku CLI
+          command: bash ../.circleci/install-heroku.sh
+      - run:
+          name: Login to Heroku Container Registry
+          command: heroku container:login
+      - run:
+          name: Build new application Docker image
+          command: heroku container:push web --context-path=.. --app=lbh-tenancy-api-staging
+      - run:
+          name: Release new version to staging
+          command: heroku container:release web --app=lbh-tenancy-api-staging
+
+  production_release:
+    machine: true
+    working_directory: ~/repo/LBHTenancyAPI
+    steps:
+      - checkout:
+          path: ~/repo
+      - run:
+          name: Install Heroku CLI
+          command: bash ../.circleci/install-heroku.sh
+      - run:
+          name: Login to Heroku Container Registry
+          command: heroku container:login
+      - run:
+          name: Build new application Docker image
+          command: heroku container:push web --context-path=.. --app=lbh-tenancy-api-production
+      - run:
+          name: Release new version to production
+          command: heroku container:release web --app=lbh-tenancy-api-production
+
+workflows:
+  version: 2
+  continuous_delivery:
+    jobs:
+      - check
+      - staging_release:
+          requires:
+            - check
+          filters:
+            branches:
+              only: master
+      - permit_production_release:
+          type: approval
+          requires:
+            - staging_release
+      - production_release:
+          requires:
+            - permit_production_release
