@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using LBHTenancyAPI.Foo;
 
 namespace LBHTenancyAPI.Controllers
 {
@@ -11,9 +12,10 @@ namespace LBHTenancyAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            Greeter greeter = new Greeter();
+            return greeter.SayHello();
         }
 
         // GET api/values/5
