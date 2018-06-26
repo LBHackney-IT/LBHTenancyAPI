@@ -2,12 +2,15 @@ version: 2
 jobs:
   check:
     docker:
-      - image: microsoft/dotnet:2.1-aspnetcore-runtime
+      - image: microsoft/dotnet:2.1-sdk
     steps:
       - checkout
       - run:
+          name: Build
+          command: dotnet build LBHTenancyAPI.sln
+      - run:
           name: Test
-          command: echo ...............
+          command: dotnet test LBHTenancyAPITest
       - run:
           name: Lint
           command: echo ...............
