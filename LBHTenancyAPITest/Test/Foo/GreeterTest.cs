@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using LBHTenancyAPI.Foo;
 
-namespace LBHTenancyAPI.Test.Foo
+namespace LBHTenancyAPITest.Foo
 {
     public class GreeterTest
     {
