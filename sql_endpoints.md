@@ -1,10 +1,13 @@
 # Tenancy Details
 
-## Get tenancy agreement info for a tenancy
+## SQL Queries
+
+### Get basic info for a tenancy
 
 ```sql
 SELECT tenagree.tenure as tenure_type_code,
   tenure_lookup.ten_desc as tenure_type_display_name,
+  tenagree.cur_bal as current_balance,
   tenagree.rent as current_rent,
   tenagree.service as current_service_charge,
   tenagree.other_charge as current_other_charge,
@@ -16,7 +19,7 @@ ON tenagree.tenure = tenure_lookup.ten_type
 WHERE tenagree.tag_ref = '000075/01';
 ```
 
-## Get arrears action diary events for a tenancy
+### Get arrears action diary events for a tenancy
 
 ```sql
 SELECT araction.action_date as created_date,
@@ -31,7 +34,7 @@ ON araction.action_code = raaction.act_code
 WHERE tag_ref = '000075/01';
 ```
 
-## Get agreements for a tenancy
+### Get agreements for a tenancy
 
 ```sql
 SELECT arag.arag_status as status_code,
@@ -54,10 +57,38 @@ AND frequency_lookup.lu_type = 'ZPS'
 AND status_lookup.lu_type = 'AAS';
 ```
 
+### Get transactions for a tenancy
+
+```sql
+SELECT rtrans.trans_type as type_code,
+  rectype.rec_desc as rec_type_display_name,
+  debtype.deb_desc as deb_type_display_name,
+  rtrans.post_date as date,
+  rtrans.real_value as amount,
+  rtrans.sys_comm as comment
+FROM [dbo].[rtrans] rtrans
+LEFT JOIN [dbo].[rectype] rectype
+ON rtrans.trans_type = rectype.rec_code
+LEFT JOIN [dbo].[debtype] debtype
+ON rtrans.trans_type = debtype.deb_code
+WHERE tag_ref = '000015/01';
+```
+
+### Get counts
+
+```sql
+SELECT
+  (SELECT COUNT(*) FROM [dbo].[rtrans] WHERE tag_ref = '000075/01') as transactions_count,
+  (SELECT COUNT(*) FROM [dbo].[araction] WHERE tag_ref = '000075/01') as arrears_action_events_count,
+  (SELECT COUNT(*) FROM [dbo].[arag] WHERE tag_ref = '000075/01') as arrears_agreements_count
+```
+
+## Expected endpoints
+
 ```json
 {
   "ref": "✅",
-  "current_balance": "🚫",
+  "current_balance": "✅",
   "current_rent": "✅",
   "current_service_charge": "✅",
   "tenure_type": {
@@ -87,7 +118,7 @@ AND status_lookup.lu_type = 'AAS';
     "breached": "✅",
     "comment": "✅"
   },
-  "number_of_agreements": "🚫",
+  "number_of_agreements": "✅",
   "recent_arrears_actions": [{
     "created_date": "✅",
     "type": {
@@ -98,20 +129,20 @@ AND status_lookup.lu_type = 'AAS';
     "user_name": "✅",
     "documents": ["???"]
   }],
-  "number_of_arrears_actions": "🚫",
+  "number_of_arrears_actions": "✅",
   "recent_transactions": [{
     "type": {
-      "code": "🚫",
-      "display_name": "🚫"
+      "code": "✅",
+      "display_name": "✅"
     },
-    "date": "🚫",
+    "date": "✅",
     "payment_method": {
       "code": "🚫",
       "display_name": "🚫"
     },
-    "delta": "🚫",
+    "amount": "✅",
     "final_balance": "🚫"
   }],
-  "number_of_transactions": "🚫",
+  "number_of_transactions": "✅",
 }
 ```
