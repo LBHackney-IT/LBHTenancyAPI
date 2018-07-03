@@ -8,3 +8,10 @@ services:
       dockerfile: LBHTenancyAPI/Dockerfile
     ports:
       - 3000:80
+  stubuniversalhousing:
+    image: stubuniversalhousing
+    build:
+      context: .
+      dockerfile: StubUniversalHousing/Dockerfile
+    ports:
+      - 1433:1433

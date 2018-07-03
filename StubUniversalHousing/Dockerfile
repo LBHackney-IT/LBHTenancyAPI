@@ -1,15 +1,13 @@
-# mssql-server-linux
-# Maintainers: Microsoft Corporation (LuisBosquez and twright-msft on GitHub)
-# GitRepo: https://github.com/Microsoft/mssql-docker
+FROM microsoft/mssql-server-linux
 
-# Base OS layer: Latest Ubuntu LTS.
-FROM ubuntu:16.04
-
-# Default SQL Server TCP/Port.
+## Default SQL Server TCP/Port.
 EXPOSE 1433
 
-# Copy all SQL Server runtime files from build drop into image.
-COPY ./install /
+COPY ./ /usr/src/app
+WORKDIR /usr/src/app
+ENV SA_PASSWORD "Rooty-Tooty"
+ENV ACCEPT_EULA "Y"
 
-# Run SQL Server process.
-CMD [ "/opt/mssql/bin/sqlservr & /usr/src/app/setup_stub_uh.sh" ]
+# Run SQL Server process and create tables.
+RUN /opt/mssql/bin/sqlservr & sleep 10 \
+  && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master -i /usr/src/app/StubUniversalHousing/setup.sql

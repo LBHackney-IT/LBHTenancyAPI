@@ -9,10 +9,10 @@ COPY LBHTenancyAPI/LBHTenancyAPI.csproj LBHTenancyAPI/
 RUN dotnet restore -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR /src/LBHTenancyAPI
-RUN dotnet build -c Release -o /app
+RUN dotnet build LBHTenancyAPI.csproj -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish LBHTenancyAPI.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

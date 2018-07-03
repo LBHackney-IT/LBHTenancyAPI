@@ -1,17 +1,35 @@
 ﻿using Xunit;
+using System.Collections.Generic;
+using System.Linq;
+using Dapper;
 
 namespace LBHTenancyAPITest.Test.SqlGateway
 {
-    public class SqlGatewayTest
+    using LBHTenancyAPI.Models;
+    
+    public class SqlGatewayTest : IClassFixture<DatabaseFixture>
     {
-        public SqlGatewayTest()
+        DatabaseFixture db;
+        
+        /*
+         * Setup test context in constructor
+         */
+        public SqlGatewayTest(DatabaseFixture fixture)
         {
+            db = fixture;
+            db.Db.Open();
+            db.Db.Query("Insert into Test values (1, 'banana')");
         }
 
         [Fact]
-        public void getAllTenanciesTest()
+        public void GetAllTenanciesTest()
         {
-            
+            const string sql = "SELECT * FROM Test";
+            List<Test> entries = db.Db.Query<LBHTenancyAPI.Models.Test>(sql).ToList();
+                
+            Assert.Single(entries);
+            Assert.Equal(1, entries.First().ID);
+            Assert.Equal("banana", entries.First().Name);            
         }
     }
 }
