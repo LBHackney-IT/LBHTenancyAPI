@@ -13,8 +13,8 @@ SELECT tenagree.tenure as tenure_type_code,
   tenagree.other_charge as current_other_charge,
   tenagree.cot as tenancy_start_date,
   tenagree.eot as tenancy_end_date
-FROM [dbo].[tenagree] tenagree
-LEFT JOIN [dbo].[tenure] tenure_lookup
+FROM [dbo].[tenagree] tenagree WITH(NOLOCK)
+LEFT JOIN [dbo].[tenure] tenure_lookup WITH(NOLOCK)
 ON tenagree.tenure = tenure_lookup.ten_type
 WHERE tenagree.tag_ref = '000075/01';
 ```
@@ -28,8 +28,8 @@ SELECT araction.action_date as created_date,
   araction.action_comment as description,
   araction.action_balance as balance,
   araction.username as user_name
-FROM [dbo].[araction] araction
-LEFT JOIN [dbo].[raaction] raaction
+FROM [dbo].[araction] araction WITH(NOLOCK)
+LEFT JOIN [dbo].[raaction] raaction WITH(NOLOCK)
 ON araction.action_code = raaction.act_code
 WHERE tag_ref = '000075/01';
 ```
@@ -45,12 +45,12 @@ SELECT arag.arag_status as status_code,
   aragdet.aragdet_amount as amount,
   arag.arag_breached as has_been_breached,
   arag.arag_comment as comment
-FROM [dbo].[arag] arag
-INNER JOIN [dbo].[aragdet] aragdet
+FROM [dbo].[arag] arag WITH(NOLOCK)
+INNER JOIN [dbo].[aragdet] aragdet WITH(NOLOCK)
 ON arag.arag_sid = aragdet.arag_sid
-LEFT JOIN [dbo].[lookup] frequency_lookup
+LEFT JOIN [dbo].[lookup] frequency_lookup WITH(NOLOCK)
 ON aragdet.aragdet_frequency = frequency_lookup.lu_ref
-LEFT JOIN [dbo].[lookup] status_lookup
+LEFT JOIN [dbo].[lookup] status_lookup WITH(NOLOCK)
 ON arag.arag_status = status_lookup.lu_ref
 WHERE arag.tag_ref = '000075/01'
 AND frequency_lookup.lu_type = 'ZPS'
@@ -66,10 +66,10 @@ SELECT rtrans.trans_type as type_code,
   rtrans.post_date as date,
   rtrans.real_value as amount,
   rtrans.sys_comm as comment
-FROM [dbo].[rtrans] rtrans
-LEFT JOIN [dbo].[rectype] rectype
+FROM [dbo].[rtrans] rtrans WITH(NOLOCK)
+LEFT JOIN [dbo].[rectype] rectype WITH(NOLOCK)
 ON rtrans.trans_type = rectype.rec_code
-LEFT JOIN [dbo].[debtype] debtype
+LEFT JOIN [dbo].[debtype] debtype WITH(NOLOCK)
 ON rtrans.trans_type = debtype.deb_code
 WHERE tag_ref = '000015/01';
 ```
@@ -78,9 +78,9 @@ WHERE tag_ref = '000015/01';
 
 ```sql
 SELECT
-  (SELECT COUNT(*) FROM [dbo].[rtrans] WHERE tag_ref = '000075/01') as transactions_count,
-  (SELECT COUNT(*) FROM [dbo].[araction] WHERE tag_ref = '000075/01') as arrears_action_events_count,
-  (SELECT COUNT(*) FROM [dbo].[arag] WHERE tag_ref = '000075/01') as arrears_agreements_count
+  (SELECT COUNT(*) FROM [dbo].[rtrans] WITH(NOLOCK) WHERE tag_ref = '000075/01') as transactions_count,
+  (SELECT COUNT(*) FROM [dbo].[araction] WITH(NOLOCK) WHERE tag_ref = '000075/01') as arrears_action_events_count,
+  (SELECT COUNT(*) FROM [dbo].[arag] WITH(NOLOCK) WHERE tag_ref = '000075/01') as arrears_agreements_count
 ```
 
 ## Expected endpoints
