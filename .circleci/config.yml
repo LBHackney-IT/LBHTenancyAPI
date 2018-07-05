@@ -1,16 +1,20 @@
 version: 2
 jobs:
   check:
-    docker:
-      - image: microsoft/dotnet:2.1-sdk
+    machine: true
+    working_directory: ~/repo/LBHTenancyAPI
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
       - run:
-          name: Build
-          command: dotnet build LBHTenancyAPI.sln
+          name: Build projects
+          command: docker-compose build
       - run:
-          name: Test
-          command: dotnet test LBHTenancyAPITest
+          name: Spin up docker instances
+          command: docker-compose up -d ; sleep 20
+      - run:
+          name: Run tests
+          command: docker run -e CI_TEST="True" --network repo_default --name lbhtenancyapitest -i --rm lbhtenancyapitest dotnet test
       - run:
           name: Lint
           command: echo ...............

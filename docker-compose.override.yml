@@ -1,7 +1,19 @@
-version: '3.4'
+version: '3.2'
 
 services:
   lbhtenancyapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+  stubuniversalhousing:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+  lbhtenancyapitest:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
