@@ -2,42 +2,21 @@ version: 2
 jobs:
   check:
     machine: true
-    # docker:
-    #   - image: microsoft/dotnet:2.1-sdk
+    working_directory: ~/repo/LBHTenancyAPI
+    environment:
+      CI_TEST: "True"
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
       - run:
-          name: Build
-          command: dotnet build LBHTenancyAPI.sln
-      - run:
-          name: Install Docker client
-          command: |
-            set -x
-            VER="17.03.0-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            mv /tmp/docker/* /usr/bin
-
-      - setup_remote_docker
-
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            mv ~/docker-compose /usr/local/bin/docker-compose
-      - run:
-          name: Build StubUniversalHousing
+          name: Build projects
           command: docker-compose build
-      # - run:
-      #     name: Spin up Stub Universal Housing
-      #     command: docker-compose run -d --service-ports --rm stubuniversalhousing
       - run:
-          name: Spin up Stub Universal Housing
-          command: docker-compose up -d
+          name: Spin up docker instances
+          command: docker-compose up -d ; sleep 20
       - run:
-          name: Test
-          command: sleep 20 ; dotnet test LBHTenancyAPITest
+          name: Run tests
+          command: docker run --network repo_default --name lbhtenancyapitest -i --rm lbhtenancyapitest dotnet test
       - run:
           name: Lint
           command: echo ...............

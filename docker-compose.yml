@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.2'
 
 services:
   lbhtenancyapi:
@@ -8,6 +8,11 @@ services:
       dockerfile: LBHTenancyAPI/Dockerfile
     ports:
       - 3000:80
+  lbhtenancyapitest:
+    image: lbhtenancyapitest
+    build:
+      context: .
+      dockerfile: LBHTenancyAPITest/Dockerfile
   stubuniversalhousing:
     image: stubuniversalhousing
     build:
