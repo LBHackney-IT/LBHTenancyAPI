@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using Dapper;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,13 @@ namespace LBHTenancyAPITest.Test
 
         public void Dispose()
         {
-            Db.Query("DELETE FROM *");
+            DataTable dt = Db.GetSchema("Tables");
+
+            foreach (DataRow row in dt.Rows)
+            {
+                Db.Query("DELETE FROM {0}", (string)row[2]);
+            }
+
             Db.Dispose();
         }
     }
