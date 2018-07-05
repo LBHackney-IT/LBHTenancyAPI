@@ -30,12 +30,7 @@ namespace LBHTenancyAPITest.Test
 
         public void Dispose()
         {
-            DataTable dt = Db.GetSchema("Tables");
-
-            foreach (DataRow row in dt.Rows)
-            {
-                Db.Query("DELETE FROM {0}", (string)row[2]);
-            }
+            Db.Query("DELETE FROM Test");
 
             Db.Dispose();
         }
