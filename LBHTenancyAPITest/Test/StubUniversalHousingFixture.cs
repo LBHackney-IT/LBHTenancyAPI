@@ -27,12 +27,9 @@ namespace LBHTenancyAPITest.Test
             Db = new SqlConnection(builder.ConnectionString);
         }
 
-        /*
-        * Called when test runner releases fixture
-        */
         public void Dispose()
         {
-            Db.Query("DELETE FROM Test");
+            Db.Query("DELETE FROM *");
             Db.Dispose();
         }
     }

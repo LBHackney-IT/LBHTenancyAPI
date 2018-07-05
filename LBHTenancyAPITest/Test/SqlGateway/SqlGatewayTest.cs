@@ -10,10 +10,7 @@ namespace LBHTenancyAPITest.Test.SqlGateway
     public class SqlGatewayTest : IClassFixture<DatabaseFixture>
     {
         DatabaseFixture db;
-        
-        /*
-         * Setup test context in constructor
-         */
+
         public SqlGatewayTest(DatabaseFixture fixture)
         {
             db = fixture;
@@ -25,7 +22,7 @@ namespace LBHTenancyAPITest.Test.SqlGateway
         public void GetAllTenanciesTest()
         {
             const string sql = "SELECT * FROM Test";
-            List<Test> entries = db.Db.Query<LBHTenancyAPI.Models.Test>(sql).ToList();
+            List<Test> entries = db.Db.Query<Test>(sql).ToList();
                 
             Assert.Single(entries);
             Assert.Equal(1, entries.First().ID);
