@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,9 @@ namespace LBHTenancyAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../.env");
+            DotNetEnv.Env.Load(dotenv);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

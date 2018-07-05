@@ -1,20 +1,42 @@
 version: 2
 jobs:
   check:
-    machine: true
-    working_directory: ~/repo/LBHTenancyAPI
+    docker:
+      - image: microsoft/dotnet:2.1-sdk
     steps:
-      - checkout:
-          path: ~/repo
+      - checkout
       - run:
-          name: Build projects
+          name: Build
+          command: dotnet build LBHTenancyAPI.sln
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+
+      - setup_remote_docker
+
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Build StubUniversalHousing
           command: docker-compose build
+      # - run:
+      #     name: Spin up Stub Universal Housing
+      #     command: docker-compose run -d --service-ports --rm stubuniversalhousing
       - run:
-          name: Spin up docker instances
-          command: docker-compose up -d ; sleep 20
+          name: Spin up Stub Universal Housing
+          command: docker-compose up -d
       - run:
-          name: Run tests
-          command: docker run -e UH_CONNECTION_STRING="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --network repo_default --name lbhtenancyapitest -i --rm lbhtenancyapitest dotnet test
+          name: Test
+          command: sleep 20 ; dotnet test LBHTenancyAPITest
       - run:
           name: Lint
           command: echo ...............

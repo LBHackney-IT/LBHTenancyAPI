@@ -1,37 +1,34 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using Dapper;
-using Microsoft.AspNetCore.Hosting;
 
 namespace LBHTenancyAPITest.Test
 {
     public class DatabaseFixture : IDisposable
     {
         public SqlConnection Db { get; private set; }
-        
+
         public DatabaseFixture()
         {
-            SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder();  
-       
-            builder["Data Source"] = "(local)";
-            
-            if (Environment.GetEnvironmentVariable("CI_TEST") == "True")
-            {
-                builder["Data Source"] = "tcp:stubuniversalhousing";
-            }
-            
-            builder["integrated Security"] = false;
-            builder["Initial Catalog"] = "StubUH";
-            builder.UserID = "sa";
-            builder.Password = "Rooty-Tooty";
-            Db = new SqlConnection(builder.ConnectionString);
+            string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../../.env");
+            DotNetEnv.Env.Load(dotenv);
+
+            Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            Db.Open();
         }
 
         public void Dispose()
         {
-            Db.Query("DELETE FROM Test");
+            Db.Query(
+                "DELETE FROM araction;" +
+                "DELETE FROM arag;" +
+                "DELETE FROM contacts;" +
+                "DELETE FROM tenagree"
+            );
 
+            Db.Close();
             Db.Dispose();
         }
     }
