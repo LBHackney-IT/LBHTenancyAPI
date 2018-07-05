@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers
 {
+    [Produces("application/json")]
     public class TenanciesController : Controller
     {
         [HttpGet]
@@ -11,7 +12,7 @@ namespace LBHTenancyAPI.Controllers
         {
             var result = new Dictionary<string, string> {{"foo", "bar"}};
 
-            return Ok(Json(result));
+            return Ok(result);
         }
     }
 }

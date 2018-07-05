@@ -17,11 +17,12 @@ namespace LBHTenancyAPITest.Test.Controllers
             var result = await controller.Get();
             var response = result as OkObjectResult;
 
-            var expectedResult = new Dictionary<string, string>() { {"foo", "bar"} };
+            var expectedResult = new Dictionary<string, string>() {{"foo", "bar"}};
             var expectedJson = JsonConvert.SerializeObject(expectedResult);
+            var json = JsonConvert.SerializeObject(response.Value);
 
             Assert.NotNull(response);
-            Assert.Equal(expectedJson, response.Value);
+            Assert.Equal(expectedJson, json);
         }
     }
 }
