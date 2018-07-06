@@ -1,14 +1,13 @@
-﻿using Xunit;
-using LBHTenancyAPI.Foo;
-
-namespace LBHTenancyAPITest.Foo
+﻿namespace LBHTenancyAPITest.Test.Foo
 {
+    using LBHTenancyAPI.Foo;
+    using Xunit;
+
     public class GreeterTest
     {
         [Fact]
         public void SaysHello()
         {
-            Greeter greeter = new Greeter();
             Assert.Equal("hello world", Greeter.SayHello());
         }
     }

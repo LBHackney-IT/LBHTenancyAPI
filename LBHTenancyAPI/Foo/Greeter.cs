@@ -1,5 +1,4 @@
-﻿using System;
-namespace LBHTenancyAPI.Foo
+﻿namespace LBHTenancyAPI.Foo
 {
     public class Greeter
     {

@@ -10,7 +10,6 @@ namespace LBHTenancyAPI.Controllers
         [HttpGet]
         public string Get()
         {
-            Greeter greeter = new Greeter();
             return Greeter.SayHello();
         }
 
