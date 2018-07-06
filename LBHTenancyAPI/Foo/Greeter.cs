@@ -3,11 +3,7 @@ namespace LBHTenancyAPI.Foo
 {
     public class Greeter
     {
-        public Greeter()
-        {
-        }
-
-        public String SayHello()
+        public static string SayHello()
         {
             return "hello world";
         }

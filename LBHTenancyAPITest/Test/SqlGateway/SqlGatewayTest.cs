@@ -1,15 +1,14 @@
-﻿using Xunit;
-using System.Collections.Generic;
-using System.Linq;
-using Dapper;
-
-namespace LBHTenancyAPITest.Test.SqlGateway
+﻿namespace LBHTenancyAPITest.Test.SqlGateway
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Dapper;
     using LBHTenancyAPI.Models;
-    
+    using Xunit;
+
     public class SqlGatewayTest : IClassFixture<DatabaseFixture>
     {
-        DatabaseFixture db;
+        private readonly DatabaseFixture db;
 
         public SqlGatewayTest(DatabaseFixture fixture)
         {
@@ -25,7 +24,7 @@ namespace LBHTenancyAPITest.Test.SqlGateway
             List<Test> entries = db.Db.Query<Test>(sql).ToList();
                 
             Assert.Single(entries);
-            Assert.Equal(1, entries.First().ID);
+            Assert.Equal(1, entries.First().Id);
             Assert.Equal("banana", entries.First().Name);            
         }
     }

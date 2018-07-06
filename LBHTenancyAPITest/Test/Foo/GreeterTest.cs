@@ -9,7 +9,7 @@ namespace LBHTenancyAPITest.Foo
         public void SaysHello()
         {
             Greeter greeter = new Greeter();
-            Assert.Equal("hello world", greeter.SayHello());
+            Assert.Equal("hello world", Greeter.SayHello());
         }
     }
 }
