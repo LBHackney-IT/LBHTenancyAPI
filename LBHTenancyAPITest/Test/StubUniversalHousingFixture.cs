@@ -1,32 +1,32 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using Dapper;
-using Microsoft.AspNetCore.Hosting;
-
-namespace LBHTenancyAPITest.Test
+﻿namespace LBHTenancyAPITest.Test
 {
+    using System;
+    using System.Data.SqlClient;
+    using Dapper;
+
     public class DatabaseFixture : IDisposable
     {
-        public SqlConnection Db { get; private set; }
-        
         public DatabaseFixture()
         {
-            SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder();  
-       
-            builder["Data Source"] = "(local)";
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
+            {
+                ["Data Source"] = "(local)",
+                ["integrated Security"] = false,
+                ["Initial Catalog"] = "StubUH",
+                UserID = "sa",
+                Password = "Rooty-Tooty"
+            };
             
+
             if (Environment.GetEnvironmentVariable("CI_TEST") == "True")
             {
                 builder["Data Source"] = "tcp:stubuniversalhousing";
             }
-            
-            builder["integrated Security"] = false;
-            builder["Initial Catalog"] = "StubUH";
-            builder.UserID = "sa";
-            builder.Password = "Rooty-Tooty";
+
             Db = new SqlConnection(builder.ConnectionString);
         }
+
+        public SqlConnection Db { get; }
 
         public void Dispose()
         {

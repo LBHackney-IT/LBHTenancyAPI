@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using LBHTenancyAPI.Foo;
 
 namespace LBHTenancyAPI.Controllers
@@ -14,8 +10,7 @@ namespace LBHTenancyAPI.Controllers
         [HttpGet]
         public string Get()
         {
-            Greeter greeter = new Greeter();
-            return greeter.SayHello();
+            return Greeter.SayHello();
         }
 
         // GET api/values/5

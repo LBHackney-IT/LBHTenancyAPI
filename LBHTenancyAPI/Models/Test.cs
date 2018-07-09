@@ -1,8 +1,12 @@
-﻿namespace LBHTenancyAPI.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace LBHTenancyAPI.Models
 {
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
     public class Test
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
+        public int Id { get; }
+        public string Name { get; }
     }
 }
