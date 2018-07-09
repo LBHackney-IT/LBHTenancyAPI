@@ -88,7 +88,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             string commandText =
                 "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @lastActionType, @lastActionTime);" +
                 "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
-                "INSERT INTO arag (tag_ref, arag_status, start_date) VALUES (@tenancyRef, @agreementStatus, @arrearsAgreementStartDate);" +
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
             SqlCommand command = new SqlCommand(commandText, db);
@@ -100,10 +99,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@lastActionTime"].Value = tenancyAttributes.LastActionDate;
             command.Parameters.Add("@currentBalance", SqlDbType.NVarChar);
             command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
-            command.Parameters.Add("@agreementStatus", SqlDbType.NVarChar);
-            command.Parameters["@agreementStatus"].Value = tenancyAttributes.ArrearsAgreementStatus;
-            command.Parameters.Add("@arrearsAgreementStartDate", SqlDbType.SmallDateTime);
-            command.Parameters["@arrearsAgreementStartDate"].Value = tenancyAttributes.ArrearsAgreementStartDate;
             command.Parameters.Add("@primaryContactName", SqlDbType.NVarChar);
             command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
@@ -112,6 +107,8 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
 
             command.ExecuteNonQuery();
+
+            InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus, tenancyAttributes.ArrearsAgreementStartDate);
         }
 
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
