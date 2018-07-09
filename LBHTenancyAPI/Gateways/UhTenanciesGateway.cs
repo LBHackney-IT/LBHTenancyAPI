@@ -10,13 +10,13 @@ namespace LBHTenancyAPI.Gateways
     public class UhTenanciesGateway
     {
         private readonly SqlConnection conn;
-        
+
         public UhTenanciesGateway(string connectionString)
         {
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
-        
+
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
         {
             return conn.Query<TenancyListItem>($"" +
@@ -26,6 +26,7 @@ namespace LBHTenancyAPI.Gateways
                                              $"araction.action_code as LastActionCode, " +
                                              $"araction.action_date as LastActionDate, " +
                                              $"arag.arag_status as ArrearsAgreementStatus, " +
+                                             $"arag.start_date as ArrearsAgreementStartDate, " +
                                              $"contacts.con_name as PrimaryContactName, " +
                                              $"contacts.con_address as PrimaryContactShortAddress, " +
                                              $"contacts.con_postcode as PrimaryContactPostcode " +
@@ -36,7 +37,7 @@ namespace LBHTenancyAPI.Gateways
                                              $"ON arag.tag_ref = tenagree.tag_ref " +
                                              $"LEFT JOIN contacts " +
                                              $"ON contacts.tag_ref = tenagree.tag_ref " +
-                                             $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}')")
+                                             $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') ORDER BY arag.start_date DESC")
                 .ToList();
         }
 
