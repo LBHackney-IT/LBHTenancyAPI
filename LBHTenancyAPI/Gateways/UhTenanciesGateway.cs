@@ -20,25 +20,26 @@ namespace LBHTenancyAPI.Gateways
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
         {
             return conn.Query<TenancyListItem>($"" +
-                                             $"SELECT TOP 1 " +
-                                             $"tenagree.tag_ref as TenancyRef, " +
-                                             $"tenagree.cur_bal as CurrentBalance, " +
-                                             $"araction.action_code as LastActionCode, " +
-                                             $"araction.action_date as LastActionDate, " +
-                                             $"arag.arag_status as ArrearsAgreementStatus, " +
-                                             $"contacts.con_name as PrimaryContactName, " +
-                                             $"contacts.con_address as PrimaryContactShortAddress, " +
-                                             $"contacts.con_postcode as PrimaryContactPostcode " +
-                                             $"FROM tenagree " +
-                                             $"LEFT JOIN araction " +
-                                             $"ON araction.tag_ref = tenagree.tag_ref " +
-                                             $"LEFT JOIN arag " +
-                                             $"ON arag.tag_ref = tenagree.tag_ref " +
-                                             $"LEFT JOIN contacts " +
-                                             $"ON contacts.tag_ref = tenagree.tag_ref " +
-                                             $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}')")
+                                               $"SELECT TOP 1 " +
+                                               $"tenagree.tag_ref as TenancyRef, " +
+                                               $"tenagree.cur_bal as CurrentBalance, " +
+                                               $"araction.action_code as LastActionCode, " +
+                                               $"araction.action_date as LastActionDate, " +
+                                               $"arag.arag_status as ArrearsAgreementStatus, " +
+                                               $"arag.start_date as ArrearsAgreementStartDate, " +
+                                               $"contacts.con_name as PrimaryContactName, " +
+                                               $"contacts.con_address as PrimaryContactShortAddress, " +
+                                               $"contacts.con_postcode as PrimaryContactPostcode " +
+                                               $"FROM tenagree " +
+                                               $"LEFT JOIN araction " +
+                                               $"ON araction.tag_ref = tenagree.tag_ref " +
+                                               $"LEFT JOIN arag " +
+                                               $"ON arag.tag_ref = tenagree.tag_ref " +
+                                               $"LEFT JOIN contacts " +
+                                               $"ON contacts.tag_ref = tenagree.tag_ref " +
+                                               $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                                               $"ORDER BY arag.start_date DESC")
                 .ToList();
         }
-
     }
 }
