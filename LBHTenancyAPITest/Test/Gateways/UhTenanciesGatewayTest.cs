@@ -14,6 +14,7 @@ namespace LBHTenancyAPITest.Test.Gateways
     public class UhTenanciesGatewayTest : IClassFixture<DatabaseFixture>
     {
         private readonly SqlConnection db;
+        private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
 
         public UhTenanciesGatewayTest(DatabaseFixture fixture)
         {
@@ -48,7 +49,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             InsertTenancyAttributes(expectedTenancy);
 
             DateTime latestAragDate = expectedTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(expectedTenancy.TenancyRef, "Inactive", expectedTenancy.ArrearsAgreementStartDate.Subtract(new TimeSpan(1, 0, 0, 0)));
+            InsertAgreement(expectedTenancy.TenancyRef, "Inactive", expectedTenancy.ArrearsAgreementStartDate.Subtract(DAY_IN_TIMESPAN));
             InsertAgreement(expectedTenancy.TenancyRef, "Active", latestAragDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
@@ -113,13 +114,13 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
         }
 
-        private void InsertAgreement(string tagRef, string status, DateTime startDate)
+        private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
             string commandText = "INSERT INTO arag (tag_ref, arag_status, start_date) VALUES (@tenancyRef, @agreementStatus, @startDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
-            command.Parameters["@tenancyRef"].Value = tagRef;
+            command.Parameters["@tenancyRef"].Value = tenancyRef;
             command.Parameters.Add("@agreementStatus", SqlDbType.NVarChar);
             command.Parameters["@agreementStatus"].Value = status;
             command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
