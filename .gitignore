@@ -40,4 +40,5 @@ Thumbs.db
 # dotCover
 *.dotCover
 
-.env*
+.env
+.env.*
