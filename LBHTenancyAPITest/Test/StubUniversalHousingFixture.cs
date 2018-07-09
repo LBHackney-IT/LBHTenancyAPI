@@ -9,10 +9,18 @@ namespace LBHTenancyAPITest.Test
     {
         public DatabaseFixture()
         {
-            string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../../.env");
-            DotNetEnv.Env.Load(dotenv);
+            try
+            {
+                string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../../.env");
+                DotNetEnv.Env.Load(dotenv);
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
 
             Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+
             Db.Open();
         }
 
