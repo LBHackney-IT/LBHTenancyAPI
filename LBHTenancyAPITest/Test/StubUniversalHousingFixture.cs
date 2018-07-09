@@ -1,15 +1,12 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
-using Dapper;
-
 namespace LBHTenancyAPITest.Test
 {
+    using System;
+    using System.Data.SqlClient;
+    using System.IO;
+    using Dapper;
+
     public class DatabaseFixture : IDisposable
     {
-        public SqlConnection Db { get; private set; }
-
         public DatabaseFixture()
         {
             string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../../.env");
@@ -18,6 +15,8 @@ namespace LBHTenancyAPITest.Test
             Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
             Db.Open();
         }
+
+       public SqlConnection Db { get; }
 
         public void Dispose()
         {
