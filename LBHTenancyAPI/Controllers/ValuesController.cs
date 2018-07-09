@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LBHTenancyAPI.Foo;
-
-namespace LBHTenancyAPI.Controllers
+﻿namespace LBHTenancyAPI.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
@@ -10,7 +9,7 @@ namespace LBHTenancyAPI.Controllers
         [HttpGet]
         public string Get()
         {
-            return Greeter.SayHello();
+            return "Hello";
         }
 
         // GET api/values/5

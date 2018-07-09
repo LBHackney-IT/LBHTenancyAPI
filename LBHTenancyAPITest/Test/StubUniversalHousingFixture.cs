@@ -1,37 +1,41 @@
-﻿namespace LBHTenancyAPITest.Test
+namespace LBHTenancyAPITest.Test
 {
     using System;
     using System.Data.SqlClient;
+    using System.IO;
     using Dapper;
 
     public class DatabaseFixture : IDisposable
     {
         public DatabaseFixture()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
+            try
             {
-                ["Data Source"] = "(local)",
-                ["integrated Security"] = false,
-                ["Initial Catalog"] = "StubUH",
-                UserID = "sa",
-                Password = "Rooty-Tooty"
-            };
-            
-
-            if (Environment.GetEnvironmentVariable("CI_TEST") == "True")
+                string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../../.env");
+                DotNetEnv.Env.Load(dotenv);
+            }
+            catch (Exception)
             {
-                builder["Data Source"] = "tcp:stubuniversalhousing";
+                // do nothing
             }
 
-            Db = new SqlConnection(builder.ConnectionString);
+            Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+
+            Db.Open();
         }
 
-        public SqlConnection Db { get; }
+       public SqlConnection Db { get; }
 
         public void Dispose()
         {
-            Db.Query("DELETE FROM Test");
+            Db.Query(
+                "DELETE FROM araction;" +
+                "DELETE FROM arag;" +
+                "DELETE FROM contacts;" +
+                "DELETE FROM tenagree"
+            );
 
+            Db.Close();
             Db.Dispose();
         }
     }
