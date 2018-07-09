@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace LBHTenancyAPI.Gateways
 {
-    public class UhTenanciesGateway
+    public class UhTenanciesGateway : ITenanciesGateway
     {
         private readonly SqlConnection conn;
-        
+
         public UhTenanciesGateway(string connectionString)
         {
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
-        
+
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
         {
             return conn.Query<TenancyListItem>($"" +
