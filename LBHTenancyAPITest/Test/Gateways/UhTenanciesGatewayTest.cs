@@ -114,6 +114,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             InsertTenancyAttributes(expectedTenancy);
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
+
             Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancies[0].PrimaryContactShortAddress);
         }
 
@@ -139,7 +140,6 @@ namespace LBHTenancyAPITest.Test.Gateways
                 PrimaryContactName = random.Word(),
                 PrimaryContactShortAddress = $"{random.Words()}\n{random.Words()}\n{random.Words()}\n{random.Words()}",
                 PrimaryContactPostcode=  random.Word()
-
             };
         }
 
