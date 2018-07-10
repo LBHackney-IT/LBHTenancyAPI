@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace LBHTenancyAPI.Domain
 {
@@ -11,7 +12,15 @@ namespace LBHTenancyAPI.Domain
         public string ArrearsAgreementStatus { get; set; }
         public DateTime ArrearsAgreementStartDate { get; set; }
         public string PrimaryContactName { get; set; }
-        public string PrimaryContactShortAddress { get; set; }
+
+        private string primaryContactShortAddress;
+        public string PrimaryContactShortAddress
+        {
+            get => primaryContactShortAddress;
+
+            set => primaryContactShortAddress = !string.IsNullOrEmpty(value) ? value.Split("\n").First() : null;
+        }
+
         public string PrimaryContactPostcode { get; set; }
     }
 }
