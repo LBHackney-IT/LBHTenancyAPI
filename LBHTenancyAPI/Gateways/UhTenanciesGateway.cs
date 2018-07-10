@@ -24,7 +24,7 @@ namespace LBHTenancyAPI.Gateways
                                                $"(tenagree.tag_ref) as TenancyRef, " +
                                                $"tenagree.cur_bal as CurrentBalance, " +
                                                $"arag.arag_status as ArrearsAgreementStatus, " +
-                                               $"arag.start_date as ArrearsAgreementStartDate, " +
+                                               $"arag.arag_startdate as ArrearsAgreementStartDate, " +
                                                $"contacts.con_name as PrimaryContactName, " +
                                                $"contacts.con_address as PrimaryContactShortAddress, " +
                                                $"contacts.con_postcode as PrimaryContactPostcode, " +
@@ -38,7 +38,7 @@ namespace LBHTenancyAPI.Gateways
                                                $"LEFT JOIN araction " +
                                                $"ON araction.tag_ref = tenagree.tag_ref " +
                                                $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                                               $"ORDER BY arag.start_date DESC, araction.action_date DESC")
+                                               $"ORDER BY arag.arag_startdate DESC, araction.action_date DESC")
                 .ToList();
 
         }

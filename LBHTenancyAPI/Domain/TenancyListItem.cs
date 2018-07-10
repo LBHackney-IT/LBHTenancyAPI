@@ -8,7 +8,7 @@ namespace LBHTenancyAPI.Domain
         public string TenancyRef { get; set; }
         public string LastActionCode { get; set; }
         public DateTime LastActionDate { get; set; }
-        public double CurrentBalance { get; set; }
+        public decimal CurrentBalance { get; set; }
         public string ArrearsAgreementStatus { get; set; }
         public DateTime ArrearsAgreementStartDate { get; set; }
         public string PrimaryContactName { get; set; }
