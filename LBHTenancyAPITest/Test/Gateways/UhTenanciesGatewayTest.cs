@@ -105,7 +105,6 @@ namespace LBHTenancyAPITest.Test.Gateways
         private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
         {
             string commandText =
-
                 "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
@@ -141,7 +140,6 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             command.ExecuteNonQuery();
         }
-
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
         {
