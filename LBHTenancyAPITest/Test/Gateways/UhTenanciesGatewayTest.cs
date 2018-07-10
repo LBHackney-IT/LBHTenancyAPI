@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using Remotion.Linq.Clauses;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways
@@ -65,7 +68,30 @@ namespace LBHTenancyAPITest.Test.Gateways
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 
             Assert.Equal(tenancies[0].LastActionDate, latestActionDate);
+        }
 
+        [Fact]
+        public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldReturnAllUniqueTenancies()
+        {
+            TenancyListItem firstTenancy = InsertRandomisedTenancyListItem();
+            TenancyListItem secondTenancy = InsertRandomisedTenancyListItem();
+
+            DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.AddDays(1);
+            InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
+
+            DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
+            InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
+
+            var tenancies = GetTenanciesByRef(new List<string> {firstTenancy.TenancyRef, secondTenancy.TenancyRef});
+
+            Assert.Contains(firstTenancy, tenancies);
+            Assert.Contains(secondTenancy, tenancies);
+
+            var receivedFirst = tenancies.Where(e => firstTenancy.TenancyRef == e.TenancyRef);
+            Assert.Equal(firstTenancyLatestActionDate, receivedFirst.First().LastActionDate);
+
+            var receivedSecond = tenancies.Where(e => secondTenancy.TenancyRef == e.TenancyRef);
+            Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.First().ArrearsAgreementStartDate);
         }
 
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
