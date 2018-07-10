@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Dapper;
-using System.Linq;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace LBHTenancyAPITest.Test.Gateways
 {
@@ -32,8 +29,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTenancyObjectForThatRef()
         {
-            TenancyListItem expectedTenancy = CreateRandomTenancyListItem();
-            InsertTenancyAttributes(expectedTenancy);
+            TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 
@@ -45,8 +41,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTheLatestAgreement()
         {
-            TenancyListItem expectedTenancy = CreateRandomTenancyListItem();
-            InsertTenancyAttributes(expectedTenancy);
+            TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
             DateTime latestAragDate = expectedTenancy.ArrearsAgreementStartDate.AddDays(1);
             InsertAgreement(expectedTenancy.TenancyRef, "Inactive", expectedTenancy.ArrearsAgreementStartDate.Subtract(DAY_IN_TIMESPAN));
@@ -55,6 +50,22 @@ namespace LBHTenancyAPITest.Test.Gateways
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 
             Assert.Equal(tenancies[0].ArrearsAgreementStartDate, latestAragDate);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTheLatestArrearsAction()
+        {
+            TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
+
+            DateTime latestActionDate = expectedTenancy.LastActionDate.AddDays(1);
+            InsertArrearsActions(expectedTenancy.TenancyRef, "ABC",
+                expectedTenancy.LastActionDate.Subtract(DAY_IN_TIMESPAN));
+            InsertArrearsActions(expectedTenancy.TenancyRef, "XYZ", latestActionDate);
+
+            var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
+
+            Assert.Equal(tenancies[0].LastActionDate, latestActionDate);
+
         }
 
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
@@ -68,7 +79,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         private TenancyListItem CreateRandomTenancyListItem()
         {
             var random = new Bogus.Randomizer();
-            return new TenancyListItem()
+            return new TenancyListItem
             {
                 TenancyRef = random.Hash(),
                 CurrentBalance = Math.Round(random.Double(), 2),
@@ -83,20 +94,24 @@ namespace LBHTenancyAPITest.Test.Gateways
             };
         }
 
+        private TenancyListItem InsertRandomisedTenancyListItem()
+        {
+            TenancyListItem tenancy = CreateRandomTenancyListItem();
+            InsertTenancyAttributes(tenancy);
+
+            return tenancy;
+        }
+
         private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
         {
             string commandText =
-                "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @lastActionType, @lastActionTime);" +
+
                 "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
-            command.Parameters.Add("@lastActionType", SqlDbType.NVarChar);
-            command.Parameters["@lastActionType"].Value = tenancyAttributes.LastActionCode;
-            command.Parameters.Add("@lastActionTime", SqlDbType.SmallDateTime);
-            command.Parameters["@lastActionTime"].Value = tenancyAttributes.LastActionDate;
             command.Parameters.Add("@currentBalance", SqlDbType.NVarChar);
             command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
             command.Parameters.Add("@primaryContactName", SqlDbType.NVarChar);
@@ -109,6 +124,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
 
             InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus, tenancyAttributes.ArrearsAgreementStartDate);
+            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode, tenancyAttributes.LastActionDate);
         }
 
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
@@ -122,6 +138,23 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@agreementStatus"].Value = status;
             command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
             command.Parameters["@startDate"].Value = startDate;
+
+            command.ExecuteNonQuery();
+        }
+
+
+        private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
+        {
+            string commandText =
+                "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
+
+            SqlCommand command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters["@tenancyRef"].Value = tenancyRef;
+            command.Parameters.Add("@actionCode", SqlDbType.NVarChar);
+            command.Parameters["@actionCode"].Value = actionCode;
+            command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
+            command.Parameters["@actionDate"].Value = actionDate;
 
             command.ExecuteNonQuery();
         }
