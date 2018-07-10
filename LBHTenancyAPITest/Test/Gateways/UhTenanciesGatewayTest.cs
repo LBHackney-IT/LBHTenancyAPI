@@ -47,7 +47,8 @@ namespace LBHTenancyAPITest.Test.Gateways
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
             DateTime latestAragDate = expectedTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(expectedTenancy.TenancyRef, "Inactive", expectedTenancy.ArrearsAgreementStartDate.Subtract(DAY_IN_TIMESPAN));
+            InsertAgreement(expectedTenancy.TenancyRef, "Inactive",
+                expectedTenancy.ArrearsAgreementStartDate.Subtract(DAY_IN_TIMESPAN));
             InsertAgreement(expectedTenancy.TenancyRef, "Active", latestAragDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
@@ -97,13 +98,26 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenATenancyRef_GetTenanciesByRefs_ShouldReturnOnlyTheShortAddress()
         {
+            var random = new Bogus.Randomizer();
+
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
-            string longAddress = expectedTenancy.PrimaryContactShortAddress;
+
+            string longAddress = $"{expectedTenancy.PrimaryContactShortAddress}\n" +
+                                 $"{random.Words()}\n{random.Words()}\n{random.Words()}";
+
+            // make sure there's a long string in the db
+            string commandText =
+                $"UPDATE contacts SET con_address = '{longAddress}' WHERE contacts.tag_ref = '{expectedTenancy.TenancyRef}'";
+            SqlCommand command = new SqlCommand(commandText, db);
+            command.ExecuteNonQuery();
+
+
             string actualShortAddressExpected = longAddress.Split("\n")[0];
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 
             Assert.Equal(actualShortAddressExpected, tenancies[0].PrimaryContactShortAddress);
+            Assert.NotEqual(longAddress, tenancies[0].PrimaryContactShortAddress);
         }
 
         [Fact]
@@ -136,10 +150,11 @@ namespace LBHTenancyAPITest.Test.Gateways
                 LastActionDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
                 LastActionCode = random.Hash(),
                 ArrearsAgreementStatus = random.Word(),
-                ArrearsAgreementStartDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
+                ArrearsAgreementStartDate =
+                    new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
                 PrimaryContactName = random.Word(),
-                PrimaryContactShortAddress = $"{random.Words()}\n{random.Words()}\n{random.Words()}\n{random.Words()}",
-                PrimaryContactPostcode=  random.Word()
+                PrimaryContactShortAddress = random.Words(),
+                PrimaryContactPostcode = random.Word()
             };
         }
 
@@ -166,19 +181,24 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
             command.Parameters["@primaryContactAddress"].Value =
-                tenancyAttributes.PrimaryContactShortAddress == null ? DBNull.Value.ToString() : tenancyAttributes.PrimaryContactShortAddress;
+                tenancyAttributes.PrimaryContactShortAddress == null
+                    ? DBNull.Value.ToString()
+                    : tenancyAttributes.PrimaryContactShortAddress;
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.NVarChar);
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
 
             command.ExecuteNonQuery();
 
-            InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus, tenancyAttributes.ArrearsAgreementStartDate);
-            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode, tenancyAttributes.LastActionDate);
+            InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus,
+                tenancyAttributes.ArrearsAgreementStartDate);
+            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode,
+                tenancyAttributes.LastActionDate);
         }
 
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
-            string commandText = "INSERT INTO arag (tag_ref, arag_status, start_date) VALUES (@tenancyRef, @agreementStatus, @startDate)";
+            string commandText =
+                "INSERT INTO arag (tag_ref, arag_status, start_date) VALUES (@tenancyRef, @agreementStatus, @startDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
