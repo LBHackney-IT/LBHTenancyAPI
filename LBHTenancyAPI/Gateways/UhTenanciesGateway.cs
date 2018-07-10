@@ -21,7 +21,7 @@ namespace LBHTenancyAPI.Gateways
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
         {
             List<TenancyListItem> results = new List<TenancyListItem>();
-            List<TenancyListItem> without_action = conn.Query<TenancyListItem>($"" +
+            List<TenancyListItem> withoutActions = conn.Query<TenancyListItem>($"" +
                                                $"SELECT TOP 1 " +
                                                $"tenagree.tag_ref as TenancyRef, " +
                                                $"tenagree.cur_bal as CurrentBalance, " +
@@ -40,7 +40,7 @@ namespace LBHTenancyAPI.Gateways
                 .ToList();
 
 
-            foreach (TenancyListItem tenancyListItem in without_action)
+            foreach (TenancyListItem tenancyListItem in withoutActions)
             {
                 TenancyListItem result = new TenancyListItem();
 
