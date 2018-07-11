@@ -82,7 +82,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(secondTenancy.TenancyRef, "Activeo", secondTenancyLatestAgreementStartDate);
+            InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {firstTenancy.TenancyRef, secondTenancy.TenancyRef});
 
@@ -92,7 +92,7 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             var receivedSecond = tenancies.Find(e => e.TenancyRef == secondTenancy.TenancyRef);
             Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.ArrearsAgreementStartDate);
-            Assert.Equal("Activeo", receivedSecond.ArrearsAgreementStatus);
+            Assert.Equal("Active    ", receivedSecond.ArrearsAgreementStatus);
         }
 
         [Fact]
@@ -174,18 +174,18 @@ namespace LBHTenancyAPITest.Test.Gateways
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.VarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
             command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
             command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
-            command.Parameters.Add("@primaryContactName", SqlDbType.VarChar);
+            command.Parameters.Add("@primaryContactName", SqlDbType.Char);
             command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
-            command.Parameters.Add("@primaryContactAddress", SqlDbType.VarChar);
+            command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
             command.Parameters["@primaryContactAddress"].Value =
                 tenancyAttributes.PrimaryContactShortAddress == null
                     ? DBNull.Value.ToString()
                     : tenancyAttributes.PrimaryContactShortAddress + "\n";
-            command.Parameters.Add("@primaryContactPostcode", SqlDbType.VarChar);
+            command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
 
             command.ExecuteNonQuery();
@@ -202,9 +202,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                 "INSERT INTO arag (tag_ref, arag_status, arag_startdate) VALUES (@tenancyRef, @agreementStatus, @startDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.VarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
-            command.Parameters.Add("@agreementStatus", SqlDbType.VarChar);
+            command.Parameters.Add("@agreementStatus", SqlDbType.Char);
             command.Parameters["@agreementStatus"].Value = status;
             command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
             command.Parameters["@startDate"].Value = startDate;
@@ -218,9 +218,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                 "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.VarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
-            command.Parameters.Add("@actionCode", SqlDbType.VarChar);
+            command.Parameters.Add("@actionCode", SqlDbType.Char);
             command.Parameters["@actionCode"].Value = actionCode;
             command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
             command.Parameters["@actionDate"].Value = actionDate;
