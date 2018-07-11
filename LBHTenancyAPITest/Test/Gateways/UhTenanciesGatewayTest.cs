@@ -82,24 +82,23 @@ namespace LBHTenancyAPITest.Test.Gateways
             InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
+            InsertAgreement(secondTenancy.TenancyRef, "Activeo", secondTenancyLatestAgreementStartDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {firstTenancy.TenancyRef, secondTenancy.TenancyRef});
 
-            Assert.Contains(firstTenancy, tenancies);
-            Assert.Contains(secondTenancy, tenancies);
+            var receivedFirst = tenancies.Find(e => e.TenancyRef == firstTenancy.TenancyRef);
+            Assert.Equal(firstTenancyLatestActionDate, receivedFirst.LastActionDate);
+            Assert.Equal("ABC", receivedFirst.LastActionCode);
 
-            var receivedFirst = tenancies.Where(e => firstTenancy.TenancyRef == e.TenancyRef);
-            Assert.Equal(firstTenancyLatestActionDate, receivedFirst.First().LastActionDate);
-
-            var receivedSecond = tenancies.Where(e => secondTenancy.TenancyRef == e.TenancyRef);
-            Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.First().ArrearsAgreementStartDate);
+            var receivedSecond = tenancies.Find(e => e.TenancyRef == secondTenancy.TenancyRef);
+            Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.ArrearsAgreementStartDate);
+            Assert.Equal("Activeo", receivedSecond.ArrearsAgreementStatus);
         }
 
         [Fact]
         public void WhenGivenATenancyRef_GetTenanciesByRefs_ShouldReturnOnlyTheShortAddress()
         {
-            var random = new Bogus.Randomizer();
+            var random = new Randomizer();
 
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
