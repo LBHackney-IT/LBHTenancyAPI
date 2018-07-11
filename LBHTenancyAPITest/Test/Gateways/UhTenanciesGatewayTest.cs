@@ -132,12 +132,39 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancies[0].PrimaryContactShortAddress);
         }
 
+        [Fact]
+        public void WhenGivenNoTenancyRefs_GetSingleTenancyByRefs_ShouldReturnNoTenancies()
+        {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+
+            Assert.Equal(expectedTenancy, tenancy);
+        }
+
+        private Tenancy GetSingleTenacyForRef(string tenancyRef)
+        {
+            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            var tenancy = gateway.GetTenancyForRef(tenancyRef);
+
+            return tenancy;
+        }
+
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
             var tenancies = gateway.GetTenanciesByRefs(refs);
 
             return tenancies;
+        }
+
+        private Tenancy CreateRandomSingleTenancyItem()
+        {
+            var random = new Bogus.Randomizer();
+            return new Tenancy
+            {
+                TenancyRef = random.Hash()
+            };
         }
 
         private TenancyListItem CreateRandomTenancyListItem()

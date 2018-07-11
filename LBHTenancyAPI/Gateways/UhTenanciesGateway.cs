@@ -42,5 +42,30 @@ namespace LBHTenancyAPI.Gateways
                 .ToList();
 
         }
+
+        public Tenancy GetTenancyForRef(string tenancyRef)
+        {
+            return conn.QueryFirst($"" +
+                                   $"SELECT DISTINCT" +
+                                   $"(tenagree.tag_ref) as TenancyRef, " +
+                                   $"tenagree.cur_bal as CurrentBalance, " +
+                                   $"arag.arag_status as ArrearsAgreementStatus, " +
+                                   $"arag.start_date as ArrearsAgreementStartDate, " +
+                                   $"contacts.con_name as PrimaryContactName, " +
+                                   $"contacts.con_address as PrimaryContactShortAddress, " +
+                                   $"contacts.con_postcode as PrimaryContactPostcode, " +
+                                   $"araction.action_code as LastActionCode, " +
+                                   $"araction.action_date as LastActionDate " +
+                                   $"FROM tenagree " +
+                                   $"LEFT JOIN arag " +
+                                   $"ON arag.tag_ref = tenagree.tag_ref " +
+                                   $"LEFT JOIN contacts " +
+                                   $"ON contacts.tag_ref = tenagree.tag_ref " +
+                                   $"LEFT JOIN araction " +
+                                   $"ON araction.tag_ref = tenagree.tag_ref " +
+                                   $"WHERE tenagree.tag_ref IN ('{tenancyRef}') " +
+                                   $"ORDER BY arag.start_date DESC, araction.action_date DESC")
+                .ToString();
+        }
     }
 }
