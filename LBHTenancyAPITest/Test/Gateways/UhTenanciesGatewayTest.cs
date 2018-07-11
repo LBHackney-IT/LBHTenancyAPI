@@ -142,6 +142,16 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy, tenancy);
         }
 
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnSingleTenancyDetails()
+        {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            InsertTenancyAttributes(expectedTenancy);
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+
+            Assert.Equal(expectedTenancy, tenancy);
+        }
+
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
@@ -163,7 +173,16 @@ namespace LBHTenancyAPITest.Test.Gateways
             var random = new Bogus.Randomizer();
             return new Tenancy
             {
-                TenancyRef = random.Hash()
+                TenancyRef = random.Hash(),
+                CurrentBalance = Math.Round(random.Double(), 2),
+                LastActionDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
+                LastActionCode = random.Hash(),
+                ArrearsAgreementStatus = random.Word(),
+                ArrearsAgreementStartDate =
+                    new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
+                PrimaryContactName = random.Word(),
+                PrimaryContactShortAddress = random.Words(),
+                PrimaryContactPostcode = random.Word()
             };
         }
 
@@ -193,12 +212,18 @@ namespace LBHTenancyAPITest.Test.Gateways
             return tenancy;
         }
 
-        private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
+
+        private string InsertQueries()
         {
             string commandText =
                 "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
+            return commandText;
+        }
+        private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
+        {
+            string commandText = InsertQueries();
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
@@ -220,6 +245,32 @@ namespace LBHTenancyAPITest.Test.Gateways
                 tenancyAttributes.ArrearsAgreementStartDate);
             InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode,
                 tenancyAttributes.LastActionDate);
+        }
+
+        private void InsertTenancyAttributes(Tenancy tenancyValues)
+        {
+            string commandText = InsertQueries();
+            SqlCommand command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters["@tenancyRef"].Value = tenancyValues.TenancyRef;
+            command.Parameters.Add("@currentBalance", SqlDbType.NVarChar);
+            command.Parameters["@currentBalance"].Value = tenancyValues.CurrentBalance;
+            command.Parameters.Add("@primaryContactName", SqlDbType.NVarChar);
+            command.Parameters["@primaryContactName"].Value = tenancyValues.PrimaryContactName;
+            command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
+            command.Parameters["@primaryContactAddress"].Value =
+                tenancyValues.PrimaryContactShortAddress == null
+                    ? DBNull.Value.ToString()
+                    : tenancyValues.PrimaryContactShortAddress;
+            command.Parameters.Add("@primaryContactPostcode", SqlDbType.NVarChar);
+            command.Parameters["@primaryContactPostcode"].Value = tenancyValues.PrimaryContactPostcode;
+
+            command.ExecuteNonQuery();
+
+            InsertAgreement(tenancyValues.TenancyRef, tenancyValues.ArrearsAgreementStatus,
+                tenancyValues.ArrearsAgreementStartDate);
+            InsertArrearsActions(tenancyValues.TenancyRef, tenancyValues.LastActionCode,
+                tenancyValues.LastActionDate);
         }
 
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)

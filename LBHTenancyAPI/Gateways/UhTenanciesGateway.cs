@@ -63,7 +63,7 @@ namespace LBHTenancyAPI.Gateways
                                    $"ON contacts.tag_ref = tenagree.tag_ref " +
                                    $"LEFT JOIN araction " +
                                    $"ON araction.tag_ref = tenagree.tag_ref " +
-                                   $"WHERE tenagree.tag_ref IN ('{tenancyRef}') " +
+                                   $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
                                    $"ORDER BY arag.start_date DESC, araction.action_date DESC")
                 .ToString();
         }
