@@ -202,38 +202,22 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
 
+
+
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveArrearsActions()
         {
             Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
-            DateTime latestActionDate = expectedTenancy.LastActionDate;
-            InsertArrearsActions(expectedTenancy.TenancyRef, "ABC",
-                                   expectedTenancy.LastActionDate.Add(DAY_IN_TIMESPAN));
-            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
-                                 expectedTenancy.LastActionDate.AddDays(1));
-            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
-                                 expectedTenancy.LastActionDate.AddDays(5));
-            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
-                                expectedTenancy.LastActionDate.AddDays(-1));
-            InsertArrearsActions(expectedTenancy.TenancyRef, "XYZ", latestActionDate);
 
-            var tenancy = GetLatestfiveArrearsActionforSingleTenancyRef(expectedTenancy.TenancyRef);
-            Assert.Equal(expectedTenancy.LastActionDate, latestActionDate);
+            expectedTenancy.ArrearsActionDiary = InsertRandomActionDiaryDetails(expectedTenancy.TenancyRef, 6);
 
-
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+            Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
-
-
-
-        private Tenancy GetLatestfiveArrearsActionforSingleTenancyRef(string tenancyRef)
-        {
-            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
-            var arraction = gateway.GetLatestfiveArrearsActionForRef(tenancyRef);
-
-            return arraction;
-        }
-
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
@@ -375,6 +359,8 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
         }
 
+
+
         private List<ArrearsAgreementDetail> InsertRandomAgreementDetails(string tenancyRef, int num)
         {
             var random = new Faker();
@@ -421,6 +407,73 @@ namespace LBHTenancyAPITest.Test.Gateways
             }
 
             return items.OrderByDescending(i => i.Startdate).ToList();
+        }
+
+
+        private List<ArrearsActionDiaryDetails> InsertRandomActionDiaryDetails(string tenancyRef, int num)
+        {
+            List<ArrearsActionDiaryDetails> items = null;
+            SqlCommand command = null;
+            try
+            {
+                var random = new Faker();
+                items = new List<ArrearsActionDiaryDetails>();
+                string commandText =
+
+                    "INSERT INTO araction (tag_ref, action_code,action_code_name,action_date,action_comment,action_balance," +
+                    "uh_username) " +
+                    "VALUES (@tenancyRef, @actionCode,@actionCodeName,@actionDate,@actionComment,@actionBalance,@uhUsername)";
+
+                foreach (int i in Enumerable.Range(0, num))
+                {
+                 ArrearsActionDiaryDetails arrearsActionDiaryDetail = new ArrearsActionDiaryDetails
+                 {
+                    TenancyRef = tenancyRef,
+                    ActionCode = random.Random.Hash(3),
+                    ActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                    ActionCodeName = random.Random.Words(),
+                    ActionComment = random.Random.Words(),
+                    ActionBalance = random.Finance.Amount(),
+                    UHUsername = random.Name.FullName()
+                };
+
+                command = new SqlCommand(commandText, db);
+                command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+                command.Parameters["@tenancyRef"].Value = arrearsActionDiaryDetail.TenancyRef;
+
+                command.Parameters.Add("@actionCode", SqlDbType.Char);
+                command.Parameters["@actionCode"].Value = arrearsActionDiaryDetail.ActionCode;
+
+                command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
+                command.Parameters["@actionDate"].Value = arrearsActionDiaryDetail.ActionDate;
+
+                command.Parameters.Add("@actionCodeName", SqlDbType.Char);
+                command.Parameters["@actionCodeName"].Value = arrearsActionDiaryDetail.ActionCodeName;
+
+                command.Parameters.Add("@actionComment", SqlDbType.NVarChar);
+                command.Parameters["@actionComment"].Value = arrearsActionDiaryDetail.ActionComment;
+
+                command.Parameters.Add("@actionBalance", SqlDbType.Decimal);
+                command.Parameters["@actionBalance"].Value = arrearsActionDiaryDetail.ActionBalance;
+
+                command.Parameters.Add("@uhUsername", SqlDbType.Char);
+                command.Parameters["@uhUsername"].Value = arrearsActionDiaryDetail.UHUsername;
+
+                items.Add(arrearsActionDiaryDetail);
+                command.ExecuteNonQuery();
+            }
+
+            return items.OrderByDescending(i => i.ActionDate).ToList();
+            }
+            catch (Exception ex)
+            {
+               throw ex;
+            }
+            finally
+            {
+                command = null;
+            }
+
         }
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)

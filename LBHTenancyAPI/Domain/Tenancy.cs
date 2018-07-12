@@ -7,6 +7,7 @@ namespace LBHTenancyAPI.Domain
     public struct Tenancy
     {
         public List<ArrearsAgreementDetail> ArrearsAgreements { get; set; }
+        public List<ArrearsActionDiaryDetails> ArrearsActionDiary { get; set; }
 
         private decimal currentBalance;
         public Decimal CurrentBalance
