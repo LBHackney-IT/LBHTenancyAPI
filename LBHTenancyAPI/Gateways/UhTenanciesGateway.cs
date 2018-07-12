@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using LBHTenancyAPI.Domain;
 using Dapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Rewrite.Internal;
 using Microsoft.EntityFrameworkCore.Internal;
 
