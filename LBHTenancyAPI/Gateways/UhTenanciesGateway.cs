@@ -127,5 +127,31 @@ namespace LBHTenancyAPI.Gateways
                                                   $"ORDER BY araction.action_date DESC").ToList();
 
         }
+
+            public Tenancy GetLatestfiveArrearsActionForRef(string tenancyRef)
+        {
+            return conn.Query<Tenancy>($"" +
+                                                  $"SELECT top 5" +
+                                                  $"(tenagree.tag_ref) as TenancyRef, " +
+                                                  $"tenagree.cur_bal as CurrentBalance, " +
+                                                  $"arag.arag_status as ArrearsAgreementStatus, " +
+                                                  $"arag.arag_startdate as ArrearsAgreementStartDate, " +
+                                                  $"contacts.con_name as PrimaryContactName, " +
+                                                  $"contacts.con_address as PrimaryContactLongAddress, " +
+                                                  $"contacts.con_postcode as PrimaryContactPostcode, " +
+                                                  $"contacts.con_phone1 as PrimaryContactPhone, " +
+                                                  $"araction.action_code as LastActionCode, " +
+                                                  $"araction.action_date as LastActionDate " +
+                                                  $"FROM tenagree " +
+                                                  $"LEFT JOIN arag " +
+                                                  $"ON arag.tag_ref = tenagree.tag_ref " +
+                                                  $"LEFT JOIN contacts " +
+                                                  $"ON contacts.tag_ref = tenagree.tag_ref " +
+                                                  $"LEFT JOIN araction " +
+                                                  $"ON araction.tag_ref = tenagree.tag_ref " +
+                                                  $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
+                                                  $"ORDER BY arag.arag_startdate DESC, araction.action_date DESC").FirstOrDefault();
+
+        }
     }
 }
