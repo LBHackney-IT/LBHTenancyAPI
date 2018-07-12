@@ -79,7 +79,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             TenancyListItem secondTenancy = InsertRandomisedTenancyListItem();
 
             DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.AddDays(1);
-            InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
+            InsertArrearsActions(firstTenancy.TenancyRef, "AB", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
             InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
@@ -88,11 +88,11 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             var receivedFirst = tenancies.Find(e => e.TenancyRef == firstTenancy.TenancyRef);
             Assert.Equal(firstTenancyLatestActionDate, receivedFirst.LastActionDate);
-            Assert.Equal("ABC", receivedFirst.LastActionCode);
+            Assert.Equal("AB", receivedFirst.LastActionCode);
 
             var receivedSecond = tenancies.Find(e => e.TenancyRef == secondTenancy.TenancyRef);
             Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.ArrearsAgreementStartDate);
-            Assert.Equal("Active    ", receivedSecond.ArrearsAgreementStatus);
+            Assert.Equal("Active", receivedSecond.ArrearsAgreementStatus);
         }
 
         [Fact]
