@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Bogus;
+using Dapper;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Remotion.Linq.Clauses;
@@ -79,20 +81,65 @@ namespace LBHTenancyAPITest.Test.Gateways
             TenancyListItem secondTenancy = InsertRandomisedTenancyListItem();
 
             DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.AddDays(1);
-            InsertArrearsActions(firstTenancy.TenancyRef, "AB", firstTenancyLatestActionDate);
+            InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
+            InsertAgreement(secondTenancy.TenancyRef, "characters", secondTenancyLatestAgreementStartDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {firstTenancy.TenancyRef, secondTenancy.TenancyRef});
 
             var receivedFirst = tenancies.Find(e => e.TenancyRef == firstTenancy.TenancyRef);
             Assert.Equal(firstTenancyLatestActionDate, receivedFirst.LastActionDate);
-            Assert.Equal("AB", receivedFirst.LastActionCode);
+            Assert.Equal("ABC", receivedFirst.LastActionCode);
 
             var receivedSecond = tenancies.Find(e => e.TenancyRef == secondTenancy.TenancyRef);
             Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.ArrearsAgreementStartDate);
-            Assert.Equal("Active", receivedSecond.ArrearsAgreementStatus);
+            Assert.Equal("characters", receivedSecond.ArrearsAgreementStatus);
+        }
+
+        [Fact]
+        public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldTrimCharacterFields()
+        {
+            string commandText =
+                "INSERT INTO tenagree (tag_ref) VALUES (@tenancyRef);" +
+                "INSERT INTO araction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
+                "INSERT INTO arag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
+                "INSERT INTO contacts (tag_ref, con_postcode, con_phone1) VALUES (@tenancyRef, @postcode, @phone)";
+
+        SqlCommand command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+            command.Parameters["@tenancyRef"].Value = "not11chars";
+            command.Parameters.Add("@actionCode", SqlDbType.Char);
+            command.Parameters["@actionCode"].Value = "ee";
+            command.Parameters.Add("@aragStatus", SqlDbType.Char);
+            command.Parameters["@aragStatus"].Value = "status";
+            command.Parameters.Add("@postcode", SqlDbType.Char);
+            command.Parameters["@postcode"].Value = "pcode";
+            command.Parameters.Add("@phone", SqlDbType.Char);
+            command.Parameters["@phone"].Value = "phone";
+
+            command.ExecuteNonQuery();
+
+            string retrieved_value = db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("not11chars ", retrieved_value);
+
+            retrieved_value = db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("ee ", retrieved_value);
+
+            retrieved_value = db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("status    ", retrieved_value);
+
+            List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
+            IDictionary<string, object> row = retrieved_values[0];
+            Assert.Contains("pcode     ", row.Values);
+            Assert.Contains("phone                ", row.Values);
+
+            TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
+
+            Assert.Equal("not11chars", trimmedTenancy.TenancyRef);
+            Assert.Equal("ee", trimmedTenancy.LastActionCode);
+            Assert.Equal("status", trimmedTenancy.ArrearsAgreementStatus);
+            Assert.Equal("pcode", trimmedTenancy.PrimaryContactPostcode);
         }
 
         [Fact]
