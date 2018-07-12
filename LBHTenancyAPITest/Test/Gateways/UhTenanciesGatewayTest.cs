@@ -133,24 +133,40 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public void WhenGivenNoTenancyRefs_GetSingleTenancyByRefs_ShouldReturnNoTenancies()
+        public void WhenGivenNoTenancyRefs_GetSingleTenancyByRefs_ShouldReturnEmptyTenancy()
         {
-            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            var tenancy = GetSingleTenacyForRef("i_do_not_exist");
 
-            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
-
-            Assert.Equal(expectedTenancy, tenancy);
+            Assert.Null(tenancy.TenancyRef);
         }
 
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnSingleTenancyDetails()
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
-            InsertTenancyAttributes(expectedTenancy);
+            InsertSingleTenancyAttributes(expectedTenancy);
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
             Assert.Equal(expectedTenancy, tenancy);
         }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicContactDetails()
+        {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            InsertSingleTenancyAttributes(expectedTenancy);
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveArrearsActions()
+        {
+
+        }
+
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
@@ -181,7 +197,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 ArrearsAgreementStartDate =
                     new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
                 PrimaryContactName = random.Word(),
-                PrimaryContactShortAddress = random.Words(),
+                PrimaryContactLongAddress = random.Words(),
                 PrimaryContactPostcode = random.Word()
             };
         }
@@ -247,7 +263,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 tenancyAttributes.LastActionDate);
         }
 
-        private void InsertTenancyAttributes(Tenancy tenancyValues)
+        private void InsertSingleTenancyAttributes(Tenancy tenancyValues)
         {
             string commandText = InsertQueries();
             SqlCommand command = new SqlCommand(commandText, db);
@@ -259,9 +275,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@primaryContactName"].Value = tenancyValues.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
             command.Parameters["@primaryContactAddress"].Value =
-                tenancyValues.PrimaryContactShortAddress == null
+                tenancyValues.PrimaryContactLongAddress == null
                     ? DBNull.Value.ToString()
-                    : tenancyValues.PrimaryContactShortAddress;
+                    : tenancyValues.PrimaryContactLongAddress;
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.NVarChar);
             command.Parameters["@primaryContactPostcode"].Value = tenancyValues.PrimaryContactPostcode;
 

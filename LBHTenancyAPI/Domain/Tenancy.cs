@@ -12,7 +12,8 @@ namespace LBHTenancyAPI.Domain
         public string ArrearsAgreementStatus { get; set; }
         public DateTime ArrearsAgreementStartDate { get; set; }
         public string PrimaryContactName { get; set; }
-        public string PrimaryContactShortAddress { get; set; }
+        public string PrimaryContactLongAddress { get; set; }
+        public string PrimaryContactPhone { get; set; }
         public string PrimaryContactPostcode { get; set; }
     }
 }
