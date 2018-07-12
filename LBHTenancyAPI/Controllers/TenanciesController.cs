@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
+    [Route("api/tenancies")]
     public class TenanciesController : Controller
     {
         private readonly IListTenancies listTenancies;
@@ -17,7 +20,7 @@ namespace LBHTenancyAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(List<string> tenancyRefs)
+        public async Task<IActionResult> Get([FromQuery(Name = "tenancy_refs")] List<string> tenancyRefs)
         {
             var response = listTenancies.Execute(tenancyRefs);
             var tenancies = response.Tenancies.ConvertAll(tenancy => new Dictionary<string, object>
