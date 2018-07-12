@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Bogus;
+using Dapper;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Remotion.Linq.Clauses;
@@ -81,24 +84,68 @@ namespace LBHTenancyAPITest.Test.Gateways
             InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
-            InsertAgreement(secondTenancy.TenancyRef, "Active", secondTenancyLatestAgreementStartDate);
+            InsertAgreement(secondTenancy.TenancyRef, "characters", secondTenancyLatestAgreementStartDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {firstTenancy.TenancyRef, secondTenancy.TenancyRef});
 
-            Assert.Contains(firstTenancy, tenancies);
-            Assert.Contains(secondTenancy, tenancies);
+            var receivedFirst = tenancies.Find(e => e.TenancyRef == firstTenancy.TenancyRef);
+            Assert.Equal(firstTenancyLatestActionDate, receivedFirst.LastActionDate);
+            Assert.Equal("ABC", receivedFirst.LastActionCode);
 
-            var receivedFirst = tenancies.Where(e => firstTenancy.TenancyRef == e.TenancyRef);
-            Assert.Equal(firstTenancyLatestActionDate, receivedFirst.First().LastActionDate);
+            var receivedSecond = tenancies.Find(e => e.TenancyRef == secondTenancy.TenancyRef);
+            Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.ArrearsAgreementStartDate);
+            Assert.Equal("characters", receivedSecond.ArrearsAgreementStatus);
+        }
 
-            var receivedSecond = tenancies.Where(e => secondTenancy.TenancyRef == e.TenancyRef);
-            Assert.Equal(secondTenancyLatestAgreementStartDate, receivedSecond.First().ArrearsAgreementStartDate);
+        [Fact]
+        public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldTrimCharacterFields()
+        {
+            string commandText =
+                "INSERT INTO tenagree (tag_ref) VALUES (@tenancyRef);" +
+                "INSERT INTO araction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
+                "INSERT INTO arag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
+                "INSERT INTO contacts (tag_ref, con_postcode, con_phone1) VALUES (@tenancyRef, @postcode, @phone)";
+
+        SqlCommand command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+            command.Parameters["@tenancyRef"].Value = "not11chars";
+            command.Parameters.Add("@actionCode", SqlDbType.Char);
+            command.Parameters["@actionCode"].Value = "ee";
+            command.Parameters.Add("@aragStatus", SqlDbType.Char);
+            command.Parameters["@aragStatus"].Value = "status";
+            command.Parameters.Add("@postcode", SqlDbType.Char);
+            command.Parameters["@postcode"].Value = "pcode";
+            command.Parameters.Add("@phone", SqlDbType.Char);
+            command.Parameters["@phone"].Value = "phone";
+
+            command.ExecuteNonQuery();
+
+            string retrieved_value = db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("not11chars ", retrieved_value);
+
+            retrieved_value = db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("ee ", retrieved_value);
+
+            retrieved_value = db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
+            Assert.Contains("status    ", retrieved_value);
+
+            List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
+            IDictionary<string, object> row = retrieved_values[0];
+            Assert.Contains("pcode     ", row.Values);
+            Assert.Contains("phone                ", row.Values);
+
+            TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
+
+            Assert.Equal("not11chars", trimmedTenancy.TenancyRef);
+            Assert.Equal("ee", trimmedTenancy.LastActionCode);
+            Assert.Equal("status", trimmedTenancy.ArrearsAgreementStatus);
+            Assert.Equal("pcode", trimmedTenancy.PrimaryContactPostcode);
         }
 
         [Fact]
         public void WhenGivenATenancyRef_GetTenanciesByRefs_ShouldReturnOnlyTheShortAddress()
         {
-            var random = new Bogus.Randomizer();
+            var random = new Randomizer();
 
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
@@ -142,19 +189,20 @@ namespace LBHTenancyAPITest.Test.Gateways
 
         private TenancyListItem CreateRandomTenancyListItem()
         {
-            var random = new Bogus.Randomizer();
+            var random = new Faker();
+
             return new TenancyListItem
             {
-                TenancyRef = random.Hash(),
-                CurrentBalance = Math.Round(random.Double(), 2),
-                LastActionDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
-                LastActionCode = random.Hash(),
-                ArrearsAgreementStatus = random.Word(),
+                TenancyRef = random.Random.Hash(11),
+                CurrentBalance = random.Finance.Amount(),
+                LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                LastActionCode = random.Random.Hash(3),
+                ArrearsAgreementStatus = random.Random.Hash(10),
                 ArrearsAgreementStartDate =
-                    new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
-                PrimaryContactName = random.Word(),
-                PrimaryContactShortAddress = random.Words(),
-                PrimaryContactPostcode = random.Word()
+                    new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                PrimaryContactName = random.Name.FullName(),
+                PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+                PrimaryContactPostcode = random.Random.Hash(10)
             };
         }
 
@@ -173,18 +221,18 @@ namespace LBHTenancyAPITest.Test.Gateways
                 "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
-            command.Parameters.Add("@currentBalance", SqlDbType.NVarChar);
+            command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
             command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
-            command.Parameters.Add("@primaryContactName", SqlDbType.NVarChar);
+            command.Parameters.Add("@primaryContactName", SqlDbType.Char);
             command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
-            command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
+            command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
             command.Parameters["@primaryContactAddress"].Value =
                 tenancyAttributes.PrimaryContactShortAddress == null
                     ? DBNull.Value.ToString()
-                    : tenancyAttributes.PrimaryContactShortAddress;
-            command.Parameters.Add("@primaryContactPostcode", SqlDbType.NVarChar);
+                    : tenancyAttributes.PrimaryContactShortAddress + "\n";
+            command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
 
             command.ExecuteNonQuery();
@@ -198,12 +246,12 @@ namespace LBHTenancyAPITest.Test.Gateways
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, start_date) VALUES (@tenancyRef, @agreementStatus, @startDate)";
+                "INSERT INTO arag (tag_ref, arag_status, arag_startdate) VALUES (@tenancyRef, @agreementStatus, @startDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
-            command.Parameters.Add("@agreementStatus", SqlDbType.NVarChar);
+            command.Parameters.Add("@agreementStatus", SqlDbType.Char);
             command.Parameters["@agreementStatus"].Value = status;
             command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
             command.Parameters["@startDate"].Value = startDate;
@@ -217,9 +265,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                 "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
-            command.Parameters.Add("@actionCode", SqlDbType.NVarChar);
+            command.Parameters.Add("@actionCode", SqlDbType.Char);
             command.Parameters["@actionCode"].Value = actionCode;
             command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
             command.Parameters["@actionDate"].Value = actionDate;
