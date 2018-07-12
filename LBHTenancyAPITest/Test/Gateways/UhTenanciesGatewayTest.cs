@@ -188,22 +188,16 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnSingleTenancyDetails()
-        {
-            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
-            InsertSingleTenancyAttributes(expectedTenancy);
-            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
-
-            Assert.Equal(expectedTenancy, tenancy);
-        }
-
-        [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicContactDetails()
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
+            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
+
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
+            Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
@@ -213,11 +207,18 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
+            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
+
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
-            List<ArrearsAgreementDetail> agreements = tenancy.ArrearsAgreements;
-
-            Assert.Equal(agreements[0].Amount, 1200);
+            Assert.Equal(5, tenancy.ArrearsAgreements.Count);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].Amount, tenancy.ArrearsAgreements[0].Amount);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].Breached, tenancy.ArrearsAgreements[0].Breached);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].ClearBy, tenancy.ArrearsAgreements[0].ClearBy);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].StartBalance, tenancy.ArrearsAgreements[0].StartBalance);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].Startdate, tenancy.ArrearsAgreements[0].Startdate);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].Status, tenancy.ArrearsAgreements[0].Status);
+            Assert.Equal(expectedTenancy.ArrearsAgreements[0].TenancyRef, tenancy.ArrearsAgreements[0].TenancyRef);
         }
 
 
@@ -249,6 +250,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 PrimaryContactName = random.Name.FullName(),
                 PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
                 PrimaryContactPostcode = random.Random.Hash(10),
+                PrimaryContactPhone = random.Random.Hash(21),
                 ArrearsAgreements = new List<ArrearsAgreementDetail>()
             };
         }
@@ -285,7 +287,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             string commandText =
                 "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
-                "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode);";
+                "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode, @primaryContactPhone);";
 
             return commandText;
         }
@@ -306,6 +308,8 @@ namespace LBHTenancyAPITest.Test.Gateways
                     : tenancyAttributes.PrimaryContactShortAddress + "\n";
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
+            command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);
+            command.Parameters["@primaryContactPhone"].Value = DBNull.Value.ToString();
 
             command.ExecuteNonQuery();
 
@@ -332,11 +336,12 @@ namespace LBHTenancyAPITest.Test.Gateways
                     : tenancyValues.PrimaryContactLongAddress + "\n";
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyValues.PrimaryContactPostcode;
+            command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);
+            command.Parameters["@primaryContactPhone"].Value = tenancyValues.PrimaryContactPhone;
 
 
             command.ExecuteNonQuery();
 
-            InsertRandomAgreementDetails(tenancyValues.TenancyRef, 6);
             InsertArrearsActions(tenancyValues.TenancyRef, tenancyValues.LastActionCode,
                 tenancyValues.LastActionDate);
         }
@@ -357,31 +362,52 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
         }
 
-        private void InsertRandomAgreementDetails(string tenancyRef, int num)
+        private List<ArrearsAgreementDetail> InsertRandomAgreementDetails(string tenancyRef, int num)
         {
             var random = new Faker();
+            List<ArrearsAgreementDetail> items = new List<ArrearsAgreementDetail>();
 
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_amount, arag_frequency) " +
-                "VALUES (@tenancyRef, @agreementStatus, @startDate, @amount, @frequency)";
+                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_amount, arag_startbal, arag_frequency, arag_breached, arag_clearby) " +
+                "VALUES (@tenancyRef, @agreementStatus, @startDate, @amount, @startBal, @frequency, @breached, @clearBy)";
 
             foreach (int i in Enumerable.Range(0, num))
             {
+                ArrearsAgreementDetail arrearsAgreementDetail = new ArrearsAgreementDetail
+                {
+                    Amount = random.Finance.Amount(),
+                    Breached = true,
+                    ClearBy = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                    Frequency = $"FR{i}",
+                    StartBalance = random.Finance.Amount(),
+                    Startdate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                    Status = $"AB{i}",
+                    TenancyRef = tenancyRef
+                };
+
                 SqlCommand command = new SqlCommand(commandText, db);
                 command.Parameters.Add("@tenancyRef", SqlDbType.Char);
-                command.Parameters["@tenancyRef"].Value = tenancyRef;
+                command.Parameters["@tenancyRef"].Value = arrearsAgreementDetail.TenancyRef;
                 command.Parameters.Add("@agreementStatus", SqlDbType.Char);
-                command.Parameters["@agreementStatus"].Value = $"AB{i}";
+                command.Parameters["@agreementStatus"].Value = arrearsAgreementDetail.Status;
                 command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
-                command.Parameters["@startDate"].Value = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0);
+                command.Parameters["@startDate"].Value = arrearsAgreementDetail.Startdate;
                 command.Parameters.Add("@amount", SqlDbType.Decimal);
-                command.Parameters["@amount"].Value = random.Finance.Amount();
+                command.Parameters["@amount"].Value = arrearsAgreementDetail.Amount;
+                command.Parameters.Add("@startBal", SqlDbType.Decimal);
+                command.Parameters["@startBal"].Value = arrearsAgreementDetail.StartBalance;
                 command.Parameters.Add("@frequency", SqlDbType.Char);
-                command.Parameters["@frequency"].Value = $"FREQ{i}";
+                command.Parameters["@frequency"].Value = arrearsAgreementDetail.Frequency;
+                command.Parameters.Add("@breached", SqlDbType.Bit);
+                command.Parameters["@breached"].Value = 1;
+                command.Parameters.Add("@clearBy", SqlDbType.SmallDateTime);
+                command.Parameters["@clearBy"].Value = arrearsAgreementDetail.ClearBy;
 
+                items.Add(arrearsAgreementDetail);
                 command.ExecuteNonQuery();
             }
 
+            return items.OrderByDescending(i => i.Startdate).ToList();
         }
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
