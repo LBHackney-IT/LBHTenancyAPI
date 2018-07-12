@@ -4,25 +4,25 @@ using LBHTenancyAPI.Gateways;
 
 namespace LBHTenancyAPI.UseCases
 {
-    public class ListTenancies
+    public class ListTenancies : IListTenancies
     {
-        private ITenanciesGateway _tenanciesGateway;
+        private readonly ITenanciesGateway tenanciesGateway;
 
         public ListTenancies(ITenanciesGateway tenanciesGateway)
         {
-            this._tenanciesGateway = tenanciesGateway;
+            this.tenanciesGateway = tenanciesGateway;
         }
 
         public Response Execute(List<string> tenancyRefs)
         {
             var response = new Response();
-            var tenancies = _tenanciesGateway.GetTenanciesByRefs(tenancyRefs);
+            var tenancies = tenanciesGateway.GetTenanciesByRefs(tenancyRefs);
 
-            response.Tenancies = tenancies.ConvertAll<ResponseTenancy>(tenancy => new ResponseTenancy()
+            response.Tenancies = tenancies.ConvertAll(tenancy => new ResponseTenancy()
                 {
                     TenancyRef = tenancy.TenancyRef,
                     LastActionCode = tenancy.LastActionCode,
-                    LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
+                    LastActionDate = string.Format("{0:u}", tenancy.LastActionDate),
                     CurrentBalance = tenancy.CurrentBalance.ToString(),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContactName = tenancy.PrimaryContactName,
