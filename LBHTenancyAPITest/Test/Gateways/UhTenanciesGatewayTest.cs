@@ -211,7 +211,33 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveArrearsActions()
         {
+            Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
+            InsertSingleTenancyAttributes(expectedTenancy);
+            DateTime latestActionDate = expectedTenancy.LastActionDate;
+            InsertArrearsActions(expectedTenancy.TenancyRef, "ABC",
+                                   expectedTenancy.LastActionDate.Add(DAY_IN_TIMESPAN));
+            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
+                                 expectedTenancy.LastActionDate.AddDays(1));
+            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
+                                 expectedTenancy.LastActionDate.AddDays(5));
+            InsertArrearsActions(expectedTenancy.TenancyRef, "DEF",
+                                expectedTenancy.LastActionDate.AddDays(-1));
+            InsertArrearsActions(expectedTenancy.TenancyRef, "XYZ", latestActionDate);
 
+            var tenancy = GetLatestfiveArrearsActionforSingleTenancyRef(expectedTenancy.TenancyRef);
+            Assert.Equal(expectedTenancy.LastActionDate, latestActionDate);
+
+
+        }
+
+
+
+        private Tenancy GetLatestfiveArrearsActionforSingleTenancyRef(string tenancyRef)
+        {
+            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            var arraction = gateway.GetLatestfiveArrearsActionForRef(tenancyRef);
+
+            return arraction;
         }
 
 
@@ -236,7 +262,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             var random = new Bogus.Randomizer();
             return new Tenancy
             {
-                TenancyRef = random.Hash(),
+                TenancyRef = random.Hash(11),
                 CurrentBalance = Math.Round(random.Double(), 2),
                 LastActionDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
                 LastActionCode = random.Hash(),
