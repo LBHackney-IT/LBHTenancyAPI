@@ -211,7 +211,13 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveArrearsActions()
         {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            InsertSingleTenancyAttributes(expectedTenancy);
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
+            List<ArrearsAgreementDetail> agreements = tenancy.ArrearsAgreements;
+
+            Assert.Equal(agreements[0].Amount, 1200);
         }
 
 
@@ -233,19 +239,17 @@ namespace LBHTenancyAPITest.Test.Gateways
 
         private Tenancy CreateRandomSingleTenancyItem()
         {
-            var random = new Bogus.Randomizer();
+            var random = new Faker();
             return new Tenancy
             {
-                TenancyRef = random.Hash(),
-                CurrentBalance = Math.Round(random.Double(), 2),
-                LastActionDate = new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
-                LastActionCode = random.Hash(),
-                ArrearsAgreementStatus = random.Word(),
-                ArrearsAgreementStartDate =
-                    new DateTime(random.Int(1900, 1999), random.Int(1, 12), random.Int(1, 28), 9, 30, 0),
-                PrimaryContactName = random.Word(),
-                PrimaryContactLongAddress = random.Words(),
-                PrimaryContactPostcode = random.Word()
+                TenancyRef = random.Random.Hash(11),
+                CurrentBalance = random.Finance.Amount(),
+                LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                LastActionCode = random.Random.Hash(3),
+                PrimaryContactName = random.Name.FullName(),
+                PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+                PrimaryContactPostcode = random.Random.Hash(10),
+                ArrearsAgreements = new List<ArrearsAgreementDetail>()
             };
         }
 
@@ -315,24 +319,24 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             string commandText = InsertQueries();
             SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.NVarChar);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyValues.TenancyRef;
-            command.Parameters.Add("@currentBalance", SqlDbType.NVarChar);
+            command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
             command.Parameters["@currentBalance"].Value = tenancyValues.CurrentBalance;
-            command.Parameters.Add("@primaryContactName", SqlDbType.NVarChar);
+            command.Parameters.Add("@primaryContactName", SqlDbType.Char);
             command.Parameters["@primaryContactName"].Value = tenancyValues.PrimaryContactName;
-            command.Parameters.Add("@primaryContactAddress", SqlDbType.NVarChar);
+            command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
             command.Parameters["@primaryContactAddress"].Value =
                 tenancyValues.PrimaryContactLongAddress == null
                     ? DBNull.Value.ToString()
-                    : tenancyValues.PrimaryContactLongAddress;
-            command.Parameters.Add("@primaryContactPostcode", SqlDbType.NVarChar);
+                    : tenancyValues.PrimaryContactLongAddress + "\n";
+            command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyValues.PrimaryContactPostcode;
+
 
             command.ExecuteNonQuery();
 
-            InsertAgreement(tenancyValues.TenancyRef, tenancyValues.ArrearsAgreementStatus,
-                tenancyValues.ArrearsAgreementStartDate);
+            InsertRandomAgreementDetails(tenancyValues.TenancyRef, 6);
             InsertArrearsActions(tenancyValues.TenancyRef, tenancyValues.LastActionCode,
                 tenancyValues.LastActionDate);
         }
@@ -351,6 +355,33 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@startDate"].Value = startDate;
 
             command.ExecuteNonQuery();
+        }
+
+        private void InsertRandomAgreementDetails(string tenancyRef, int num)
+        {
+            var random = new Faker();
+
+            string commandText =
+                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_amount, arag_frequency) " +
+                "VALUES (@tenancyRef, @agreementStatus, @startDate, @amount, @frequency)";
+
+            foreach (int i in Enumerable.Range(0, num))
+            {
+                SqlCommand command = new SqlCommand(commandText, db);
+                command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+                command.Parameters["@tenancyRef"].Value = tenancyRef;
+                command.Parameters.Add("@agreementStatus", SqlDbType.Char);
+                command.Parameters["@agreementStatus"].Value = $"AB{i}";
+                command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
+                command.Parameters["@startDate"].Value = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0);
+                command.Parameters.Add("@amount", SqlDbType.Decimal);
+                command.Parameters["@amount"].Value = random.Finance.Amount();
+                command.Parameters.Add("@frequency", SqlDbType.Char);
+                command.Parameters["@frequency"].Value = $"FREQ{i}";
+
+                command.ExecuteNonQuery();
+            }
+
         }
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
