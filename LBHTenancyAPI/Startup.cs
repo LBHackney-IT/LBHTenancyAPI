@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,14 +27,13 @@ namespace LBHTenancyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddTransient<IListTenancies, ListTenancies>();
+            services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            string dotenv = Path.GetRelativePath(Directory.GetCurrentDirectory(), "../../../.env");
-            DotNetEnv.Env.Load(dotenv);
-            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

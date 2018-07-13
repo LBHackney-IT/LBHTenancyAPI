@@ -8,6 +8,7 @@ using Bogus;
 using Dapper;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPITest.Helpers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
@@ -170,7 +171,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenATenancyRefWithNoAddress_GetTenanciesByRefs_ShouldReturnNull()
         {
-            TenancyListItem expectedTenancy = CreateRandomTenancyListItem();
+            TenancyListItem expectedTenancy = Fake.GenerateTenancyListItem();
             expectedTenancy.PrimaryContactShortAddress = null;
             InsertTenancyAttributes(expectedTenancy);
 
@@ -187,28 +188,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             return tenancies;
         }
 
-        private TenancyListItem CreateRandomTenancyListItem()
-        {
-            var random = new Faker();
-
-            return new TenancyListItem
-            {
-                TenancyRef = random.Random.Hash(11),
-                CurrentBalance = random.Finance.Amount(),
-                LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                LastActionCode = random.Random.Hash(3),
-                ArrearsAgreementStatus = random.Random.Hash(10),
-                ArrearsAgreementStartDate =
-                    new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                PrimaryContactName = random.Name.FullName(),
-                PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
-                PrimaryContactPostcode = random.Random.Hash(10)
-            };
-        }
-
         private TenancyListItem InsertRandomisedTenancyListItem()
         {
-            TenancyListItem tenancy = CreateRandomTenancyListItem();
+            TenancyListItem tenancy = Fake.GenerateTenancyListItem();
             InsertTenancyAttributes(tenancy);
 
             return tenancy;
