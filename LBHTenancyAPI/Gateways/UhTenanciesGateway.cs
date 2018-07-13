@@ -115,7 +115,7 @@ namespace LBHTenancyAPI.Gateways
         {
             return conn.Query<ArrearsActionDiaryDetails>($"" +
                                                   $"SELECT top 5" +
-                                                  $"(tag_ref) as TenancyRef, " +
+                                                  $"tag_ref as TenancyRef, " +
                                                   $"action_code as ActionCode, " +
                                                   $"action_code_name as ActionCodeName, " +
                                                   $"action_date as ActionDate, " +

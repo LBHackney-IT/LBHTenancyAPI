@@ -434,7 +434,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                     ActionCodeName = random.Random.Words(),
                     ActionComment = random.Random.Words(),
                     ActionBalance = random.Finance.Amount(),
-                    UHUsername = random.Name.FullName()
+                     UniversalHousingUsername = random.Name.FullName()
                 };
 
                 command = new SqlCommand(commandText, db);
@@ -457,7 +457,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 command.Parameters["@actionBalance"].Value = arrearsActionDiaryDetail.ActionBalance;
 
                 command.Parameters.Add("@uhUsername", SqlDbType.Char);
-                command.Parameters["@uhUsername"].Value = arrearsActionDiaryDetail.UHUsername;
+                command.Parameters["@uhUsername"].Value = arrearsActionDiaryDetail.UniversalHousingUsername;
 
                 items.Add(arrearsActionDiaryDetail);
                 command.ExecuteNonQuery();

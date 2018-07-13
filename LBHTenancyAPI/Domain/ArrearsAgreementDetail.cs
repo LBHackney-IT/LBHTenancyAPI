@@ -8,7 +8,6 @@ namespace LBHTenancyAPI.Domain
         public Decimal Amount
         {
             get => amount;
-
             set => amount = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
@@ -20,7 +19,6 @@ namespace LBHTenancyAPI.Domain
         public string Frequency
         {
             get => frequency;
-
             set => frequency = value.Trim();
         }
 
@@ -28,7 +26,6 @@ namespace LBHTenancyAPI.Domain
         public Decimal StartBalance
         {
             get => startBalance;
-
             set => startBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
@@ -38,7 +35,6 @@ namespace LBHTenancyAPI.Domain
         public string Status
         {
             get => status;
-
             set => status = value.Trim();
         }
 
@@ -46,7 +42,6 @@ namespace LBHTenancyAPI.Domain
         public string TenancyRef
         {
             get => tenancyRef;
-
             set => tenancyRef = value.Trim();
         }
     }
