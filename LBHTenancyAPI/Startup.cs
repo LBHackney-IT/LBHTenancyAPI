@@ -28,7 +28,7 @@ namespace LBHTenancyAPI
         {
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
-            services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway("Data Source=(local);Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty"));
+            services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
