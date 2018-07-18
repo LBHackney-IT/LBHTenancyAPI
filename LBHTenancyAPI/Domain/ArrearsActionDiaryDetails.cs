@@ -1,7 +1,7 @@
 ﻿using System;
 namespace LBHTenancyAPI.Domain
 {
-    public class ArrearsActionDiaryDetails
+    public struct ArrearsActionDiaryDetails
     {
         public decimal ActionBalance { get; set; }
         public string ActionCodeName { get; set; }

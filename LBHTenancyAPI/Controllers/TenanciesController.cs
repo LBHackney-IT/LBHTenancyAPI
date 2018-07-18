@@ -51,9 +51,9 @@ namespace LBHTenancyAPI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetActionDiaryDetails(string tenancyRef)
+        public async Task<IActionResult> GetActionDiaryDetails( List<string> tenancyRefs)
         {
-            var response = listTenancies.ExecuteQuery(tenancyRef);
+            var response = listTenancies.ExecuteActionDiaryQuery(tenancyRefs);
             var arrearActionDiary = response.ActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
             {
                 {"ref", actionDiary.TenancyRef},

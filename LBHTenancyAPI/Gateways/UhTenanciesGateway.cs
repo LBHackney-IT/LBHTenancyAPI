@@ -128,7 +128,7 @@ namespace LBHTenancyAPI.Gateways
 
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(List<string> tenancyRefs)
         {
             return conn.Query<ArrearsActionDiaryDetails>($"" +
                                                          $"SELECT " +
@@ -140,7 +140,7 @@ namespace LBHTenancyAPI.Gateways
                                                          $"uh_username as UHUsername, " +
                                                          $"action_balance as ActionBalance " +
                                                          $"FROM araction " +
-                                                         $"WHERE tag_ref = ('{tenancyRef}') " +
+                                                         $"WHERE tag_ref IN ('{tenancyRefs.Join("', '")}') " +
                                                          $"ORDER BY araction.action_date DESC").ToList();
 
         }

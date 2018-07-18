@@ -8,11 +8,14 @@ using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Xunit;
+using LBHTenancyAPI.Gateways;
+using Moq;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
     public class TenanciesTest
     {
+
         [Fact]
         public async Task WhenGivenNoTenancyRefs_Index_ShouldRespondWithNoResults()
         {
@@ -166,13 +169,13 @@ namespace LBHTenancyAPITest.Test.Controllers
             var listTenancies = new ListTenanciesStub();
             listTenancies.AddActionDiaryResponse(expectedTenancyResponse.TenancyRef, expectedTenancyResponse);
 
-            var response = await GetIndex(listTenancies, expectedTenancyResponse.TenancyRef);
+            var response = await GetResult(listTenancies, new List<string> {expectedTenancyResponse.TenancyRef});
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject(
                 new Dictionary<string, object>
                 {
                     {
-                        "tenancies", new List<Dictionary<string, object>>
+                        "arrearActionDiary", new List<Dictionary<string, object>>
                         {
                             new Dictionary<string, object>
                             {
@@ -205,7 +208,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             return result as OkObjectResult;
         }
 
-        private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, string tenancyRef)
+        private static async Task<ObjectResult> GetResult(IListTenancies listTenanciesUseCase, List<string> tenancyRef)
         {
             var controller = new TenanciesController(listTenanciesUseCase);
             var result = await controller.GetActionDiaryDetails(tenancyRef);
@@ -233,7 +236,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             }
 
 
-            public ListTenancies.ArrearsActionDiaryResponse ExecuteQuery(string tenancyRef)
+            public ListTenancies.ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRef)
             {
                 calledWith.Add(tenancyRef);
                 return new ListTenancies.ArrearsActionDiaryResponse() {ActionDiary = new List<ListTenancies.ResponseArrearsActionDiary>()};
@@ -279,15 +282,12 @@ namespace LBHTenancyAPITest.Test.Controllers
                 };
             }
 
-           public ListTenancies.ArrearsActionDiaryResponse ExecuteQuery(string tenancyRef)
+           public ListTenancies.ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRefs)
            {
                   return new ListTenancies.ArrearsActionDiaryResponse()
                   {
-                    //  ActionDiary = tenancyRef.Contains(tenancyRefList => stubTenancies[tenancyRef])
+                      ActionDiary = tenancyRefs.ConvertAll(tenancyRef => stubActionDiaryDetails[tenancyRef])
                   };
-
-              //var ActionDiary = new ListTenancies.ArrearsActionDiaryResponse();
-              //return ActionDiary;
            }
         }
     }
