@@ -483,7 +483,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
         }
 
-        public string TrimmedValue(string passedValue)
+        private string TrimmedValue(string passedValue)
         {
             string expectedValue = String.Empty;
             expectedValue = passedValue.Trim();

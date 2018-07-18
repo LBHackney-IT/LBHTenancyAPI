@@ -48,5 +48,34 @@ namespace LBHTenancyAPI.Controllers
 
             return Ok(result);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetActionDiaryDetails(string tenancyRef)
+        {
+            var response = listTenancies.ExecuteQuery(tenancyRef);
+            var arrearActionDiary = response.ActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
+            {
+                {"ref", actionDiary.TenancyRef},
+                {"action_balance", actionDiary.ActionBalance},
+                {"universal_housing_username", actionDiary.UniversalHousingUsername},
+                {
+                    "latest_action", new Dictionary<string, string>
+                    {
+                        {"code", actionDiary.ActionCode},
+                        {"code_name", actionDiary.ActionCodeName},
+                        {"date", actionDiary.ActionDate.ToString()},
+                        {"comment", actionDiary.ActionComment}
+                    }
+                }
+            });
+
+            var result = new Dictionary<string, object>
+            {
+                {"arrearActionDiary", arrearActionDiary}
+            };
+
+            return Ok(result);
+        }
     }
 }
