@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -146,10 +147,68 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.Equal(expectedJson, actualJson);
         }
 
+
+        [Fact]
+        public async Task WhenGivenATenancyRef_Index_ShouldRespondWithTenancyActionDiaryInfoForThatTenancy()
+        {
+            var faker = new Faker();
+            var expectedTenancyResponse = new ListTenancies.ResponseArrearsActionDiary()
+            {
+                TenancyRef = faker.Random.Hash(),
+                ActionCode = faker.Random.Hash(3),
+                ActionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12), faker.Random.Int(1, 28), 9, 30, 0),
+                ActionCodeName = faker.Random.Words(),
+                ActionComment = faker.Random.Words(),
+                ActionBalance = faker.Finance.Amount(),
+                UniversalHousingUsername = faker.Name.FullName()
+            };
+
+            var listTenancies = new ListTenanciesStub();
+            listTenancies.AddActionDiaryResponse(expectedTenancyResponse.TenancyRef, expectedTenancyResponse);
+
+            var response = await GetIndex(listTenancies, expectedTenancyResponse.TenancyRef);
+            var actualJson = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject(
+                new Dictionary<string, object>
+                {
+                    {
+                        "tenancies", new List<Dictionary<string, object>>
+                        {
+                            new Dictionary<string, object>
+                            {
+                                {"ref", expectedTenancyResponse.TenancyRef},
+                                {"action_balance", expectedTenancyResponse.ActionBalance},
+                                {"universal_housing_username", expectedTenancyResponse.UniversalHousingUsername},
+                                {
+                                    "latest_action", new Dictionary<string, string>
+                                    {
+                                        {"code", expectedTenancyResponse.ActionCode},
+                                        {"code_name", expectedTenancyResponse.ActionCodeName},
+                                        {"date", expectedTenancyResponse.ActionDate.ToString()},
+                                        {"comment", expectedTenancyResponse.ActionComment}
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            );
+
+            Assert.Equal(expectedJson, actualJson);
+        }
+
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
             var controller = new TenanciesController(listTenanciesUseCase);
             var result = await controller.Get(tenancyRefs);
+            return result as OkObjectResult;
+        }
+
+        private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, string tenancyRef)
+        {
+            var controller = new TenanciesController(listTenanciesUseCase);
+            var result = await controller.GetActionDiaryDetails(tenancyRef);
             return result as OkObjectResult;
         }
 
@@ -173,6 +232,13 @@ namespace LBHTenancyAPITest.Test.Controllers
                 return new ListTenancies.Response {Tenancies = new List<ListTenancies.ResponseTenancy>()};
             }
 
+
+            public ListTenancies.ArrearsActionDiaryResponse ExecuteQuery(string tenancyRef)
+            {
+                calledWith.Add(tenancyRef);
+                return new ListTenancies.ArrearsActionDiaryResponse() {ActionDiary = new List<ListTenancies.ResponseArrearsActionDiary>()};
+            }
+
             public void AssertCalledOnce()
             {
                 Assert.Single(calledWith);
@@ -187,15 +253,22 @@ namespace LBHTenancyAPITest.Test.Controllers
         private class ListTenanciesStub : IListTenancies
         {
             private readonly Dictionary<string, ListTenancies.ResponseTenancy> stubTenancies;
+            private readonly Dictionary<string, ListTenancies.ResponseArrearsActionDiary> stubActionDiaryDetails;
 
             public ListTenanciesStub()
             {
                 stubTenancies = new Dictionary<string, ListTenancies.ResponseTenancy>();
+                stubActionDiaryDetails = new Dictionary<string, ListTenancies.ResponseArrearsActionDiary>();
             }
 
             public void AddTenancyResponse(string tenancyRef, ListTenancies.ResponseTenancy tenancyResponse)
             {
                 stubTenancies[tenancyRef] = tenancyResponse;
+            }
+
+            public void AddActionDiaryResponse(string tenancyRef, ListTenancies.ResponseArrearsActionDiary actionDiaryResponse)
+            {
+                stubActionDiaryDetails[tenancyRef] = actionDiaryResponse;
             }
 
             public ListTenancies.Response Execute(List<string> tenancyRefs)
@@ -205,6 +278,17 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Tenancies = tenancyRefs.ConvertAll(tenancyRef => stubTenancies[tenancyRef])
                 };
             }
+
+           public ListTenancies.ArrearsActionDiaryResponse ExecuteQuery(string tenancyRef)
+           {
+                  return new ListTenancies.ArrearsActionDiaryResponse()
+                  {
+                    //  ActionDiary = tenancyRef.Contains(tenancyRefList => stubTenancies[tenancyRef])
+                  };
+
+              //var ActionDiary = new ListTenancies.ArrearsActionDiaryResponse();
+              //return ActionDiary;
+           }
         }
     }
 }

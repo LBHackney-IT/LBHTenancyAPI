@@ -117,7 +117,8 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
 
             string retrieved_value = db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
-            Assert.Contains("not11chars ", retrieved_value);
+            string expectedValue = "not11chars ";
+            Assert.Contains(TrimmedValue(expectedValue), retrieved_value);
 
             retrieved_value = db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("ee ", retrieved_value);
@@ -127,8 +128,11 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
-            Assert.Contains("pcode     ", row.Values);
-            Assert.Contains("phone                ", row.Values);
+
+            expectedValue = "pcode    ";
+            Assert.Contains(TrimmedValue(expectedValue), row.Values);
+            expectedValue = "phone                ";
+            Assert.Contains(TrimmedValue(expectedValue), row.Values);
 
             TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
 
@@ -477,6 +481,13 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@actionDate"].Value = actionDate;
 
             command.ExecuteNonQuery();
+        }
+
+        private string TrimmedValue(string passedValue)
+        {
+            string expectedValue = String.Empty;
+            expectedValue = passedValue.Trim();
+            return expectedValue;
         }
     }
 }
