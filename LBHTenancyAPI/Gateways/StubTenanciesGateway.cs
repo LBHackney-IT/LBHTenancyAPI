@@ -11,7 +11,6 @@ namespace LBHTenancyAPI.Gateways
         public StubTenanciesGateway()
         {
             StoredTenancyListItems = new Dictionary<string, TenancyListItem>();
-            StoredActionDiaryDetails = new Dictionary<string, ArrearsActionDiaryDetails>();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
@@ -21,12 +20,18 @@ namespace LBHTenancyAPI.Gateways
             {
                 tenancies.Add(StoredTenancyListItems[tenancyRef]);
             }
+
             return tenancies;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(List<string> tenancyRefs)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
         {
             var actionDiaryDetails = new List<ArrearsActionDiaryDetails>();
+            foreach (var actionDiary in actionDiaryDetails)
+            {
+                actionDiaryDetails.Add(StoredActionDiaryDetails[tenancyRef]);
+            }
+
             return actionDiaryDetails;
         }
 
