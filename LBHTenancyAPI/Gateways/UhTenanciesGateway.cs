@@ -22,38 +22,38 @@ namespace LBHTenancyAPI.Gateways
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
         {
             var all = conn.Query<TenancyListItem>(
-                "SELECT " +
-                "tenagree.tag_ref as TenancyRef, " +
-                "tenagree.cur_bal as CurrentBalance, " +
-                "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactShortAddress, " +
-                "contacts.con_postcode as PrimaryContactPostcode, " +
-                "araction.tag_ref AS TenancyRef, " +
-                "araction.action_code AS LastActionCode, " +
-                "araction.action_date AS LastActionDate, " +
-                "arag.arag_status as ArrearsAgreementStatus, " +
-                "arag.arag_startdate as ArrearsAgreementStartDate " +
-                "FROM tenagree " +
-                "LEFT JOIN contacts " +
-                "ON contacts.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "araction.tag_ref, " +
-                "araction.action_code, " +
-                "araction.action_date " +
-                "FROM araction " +
-                $"WHERE araction.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "arag.tag_ref," +
-                "arag.arag_status, " +
-                "arag.arag_startdate " +
-                "FROM arag " +
-                $"WHERE arag.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
-                $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC"
+                                        "SELECT " +
+                                        "tenagree.tag_ref as TenancyRef, " +
+                                        "tenagree.cur_bal as CurrentBalance, " +
+                                        "contacts.con_name as PrimaryContactName, " +
+                                        "contacts.con_address as PrimaryContactShortAddress, " +
+                                        "contacts.con_postcode as PrimaryContactPostcode, " +
+                                        "araction.tag_ref AS TenancyRef, " +
+                                        "araction.action_code AS LastActionCode, " +
+                                        "araction.action_date AS LastActionDate, " +
+                                        "arag.arag_status as ArrearsAgreementStatus, " +
+                                        "arag.arag_startdate as ArrearsAgreementStartDate " +
+                                        "FROM tenagree " +
+                                        "LEFT JOIN contacts " +
+                                        "ON contacts.tag_ref = tenagree.tag_ref " +
+                                        "LEFT JOIN ( " +
+                                        "SELECT " +
+                                        "araction.tag_ref, " +
+                                        "araction.action_code, " +
+                                        "araction.action_date " +
+                                        "FROM araction " +
+                                        $"WHERE araction.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                                        ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
+                                        "LEFT JOIN ( " +
+                                        "SELECT " +
+                                        "arag.tag_ref," +
+                                        "arag.arag_status, " +
+                                        "arag.arag_startdate " +
+                                        "FROM arag " +
+                                        $"WHERE arag.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                                        ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
+                                        $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                                        "ORDER BY arag.arag_startdate DESC, araction.action_date DESC"
             ).ToList();
 
             List<TenancyListItem> results = new List<TenancyListItem>();
@@ -61,7 +61,6 @@ namespace LBHTenancyAPI.Gateways
             {
                 results.Add(all.First(e => e.TenancyRef == reference));
             }
-
             return results;
         }
 
@@ -144,7 +143,5 @@ namespace LBHTenancyAPI.Gateways
                                                          $"ORDER BY araction.action_date DESC").ToList();
 
         }
-
-
     }
 }
