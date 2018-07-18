@@ -35,10 +35,10 @@ namespace LBHTenancyAPI.UseCases
             return response;
         }
 
-        public ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRefs)
+        public ArrearsActionDiaryResponse ExecuteQuery(string tenancyRef)
         {
             var response = new ArrearsActionDiaryResponse();
-            var actionDiary = tenanciesGateway.GetActionDiaryDetailsbyTenancyRef(tenancyRefs);
+            var actionDiary = tenanciesGateway.GetActionDiaryDetailsbyTenancyRef(tenancyRef);
 
             response.ActionDiary = actionDiary.ConvertAll(actiondiary => new ResponseArrearsActionDiary()
                 {
