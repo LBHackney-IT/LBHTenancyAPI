@@ -6,6 +6,6 @@ namespace LBHTenancyAPI.Gateways
     public interface ITenanciesGateway
     {
         List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs);
-        List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(List<string> tenancyRefs);
+        List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(List<string> tenancyRefs);
     }
 }
