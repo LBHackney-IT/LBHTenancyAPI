@@ -65,6 +65,11 @@ namespace LBHTenancyAPI.UseCases
             public List<ResponseArrearsActionDiary> ActionDiary { get; set; }
         }
 
+        public struct ArrearsAgreementResponse
+        {
+            public List<ResponseArrearsAgreement> Agreement { get; set; }
+        }
+
         public struct ResponseTenancy
         {
             public string TenancyRef { get; set; }
@@ -86,6 +91,15 @@ namespace LBHTenancyAPI.UseCases
             public DateTime ActionDate { get; set; }
             public string TenancyRef{ get; set; }
             public string UniversalHousingUsername { get; set; }
+        }
+
+        public struct ResponseArrearsAgreement
+        {
+            public string TenancyRef { get; set; }
+            public string PropertyRef { get; set; }
+            public string TransactionType { get; set; }
+            public DateTime TransactionDate { get; set; }
+            public decimal TransactionAmount { get; set; }
         }
     }
 }

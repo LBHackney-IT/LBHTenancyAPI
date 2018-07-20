@@ -201,6 +201,21 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.Equal(expectedJson, actualJson);
         }
 
+
+        [Fact]
+        public async Task WhenGivenATenancyRef_Index_ShouldRespondWithTenancyPaymentAgreementDetailsInfoForThatTenancy()
+        {
+            var faker = new Faker();
+            var expectedTenancyResponse = new ListTenancies.ResponseArrearsAgreement()
+            {
+                TenancyRef = faker.Random.Hash(),
+                PropertyRef = faker.Random.Hash(),
+                TransactionType = faker.Random.Hash(),
+                TransactionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12), faker.Random.Int(1, 28), 9, 30, 0),
+                TransactionAmount = faker.Random.Decimal()
+            };
+        }
+
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
             var controller = new TenanciesController(listTenanciesUseCase);
