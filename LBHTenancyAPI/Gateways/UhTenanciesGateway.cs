@@ -127,7 +127,7 @@ namespace LBHTenancyAPI.Gateways
 
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(List<string> tenancyRefs)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(List<string> tenancyRefs)
         {
             return conn.Query<ArrearsActionDiaryDetails>($"" +
                                                          $"SELECT " +
