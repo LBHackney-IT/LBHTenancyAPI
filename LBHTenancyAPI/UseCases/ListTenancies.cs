@@ -55,6 +55,25 @@ namespace LBHTenancyAPI.UseCases
             return response;
         }
 
+        public PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRef)
+        {
+            var response = new PaymentTransactionResponse();
+            var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
+
+            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new ResponsePaymentTransactions()
+                {
+                    TransactionRef = paymentTrans.TransactionsRef,
+                    TenancyRef = paymentTrans.TenancyRef,
+                    PropertyRef = paymentTrans.PropertyRef,
+                    TransactionType = paymentTrans.TransactionType,
+                    TransactionDate = paymentTrans.TransactionDate,
+                    TransactionAmount = paymentTrans.TransactionAmount
+                }
+            );
+
+            return response;
+        }
+
         public struct Response
         {
             public List<ResponseTenancy> Tenancies { get; set; }
@@ -65,9 +84,9 @@ namespace LBHTenancyAPI.UseCases
             public List<ResponseArrearsActionDiary> ActionDiary { get; set; }
         }
 
-        public struct ArrearsAgreementResponse
+        public struct PaymentTransactionResponse
         {
-            public List<ResponseArrearsAgreement> Agreement { get; set; }
+            public List<ResponsePaymentTransactions> PaymentTransactions { get; set; }
         }
 
         public struct ResponseTenancy
@@ -93,8 +112,9 @@ namespace LBHTenancyAPI.UseCases
             public string UniversalHousingUsername { get; set; }
         }
 
-        public struct ResponseArrearsAgreement
+        public struct ResponsePaymentTransactions
         {
+            public string TransactionRef { get; set; }
             public string TenancyRef { get; set; }
             public string PropertyRef { get; set; }
             public string TransactionType { get; set; }

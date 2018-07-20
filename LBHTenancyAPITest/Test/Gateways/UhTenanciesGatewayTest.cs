@@ -129,7 +129,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
 
-            expectedValue = "pcode    ";
+            expectedValue = "pcode     ";
             Assert.Contains(TrimmedValue(expectedValue), row.Values);
             expectedValue = "phone                ";
             Assert.Contains(TrimmedValue(expectedValue), row.Values);
@@ -276,7 +276,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             return tenancy;
         }
 
-
         private string InsertQueries()
         {
             string commandText =
@@ -285,6 +284,7 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             return commandText;
         }
+
         private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
         {
             string commandText = InsertQueries();
@@ -349,8 +349,6 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             command.ExecuteNonQuery();
         }
-
-
 
         private List<ArrearsAgreementDetail> InsertRandomAgreementDetails(string tenancyRef, int num)
         {
@@ -417,44 +415,44 @@ namespace LBHTenancyAPITest.Test.Gateways
 
                 foreach (int i in Enumerable.Range(0, num))
                 {
-                 ArrearsActionDiaryDetails arrearsActionDiaryDetail = new ArrearsActionDiaryDetails
-                 {
-                    TenancyRef = tenancyRef,
-                    ActionCode = random.Random.Hash(3),
-                    ActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                    ActionCodeName = random.Random.Words(),
-                    ActionComment = random.Random.Words(),
-                    ActionBalance = random.Finance.Amount(),
-                     UniversalHousingUsername = random.Name.FullName()
-                };
+                     ArrearsActionDiaryDetails arrearsActionDiaryDetail = new ArrearsActionDiaryDetails
+                     {
+                        TenancyRef = tenancyRef,
+                        ActionCode = random.Random.Hash(3),
+                        ActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                        ActionCodeName = random.Random.Words(),
+                        ActionComment = random.Random.Words(),
+                        ActionBalance = random.Finance.Amount(),
+                        UniversalHousingUsername = random.Name.FullName()
+                    };
 
-                command = new SqlCommand(commandText, db);
-                command.Parameters.Add("@tenancyRef", SqlDbType.Char);
-                command.Parameters["@tenancyRef"].Value = arrearsActionDiaryDetail.TenancyRef;
+                    command = new SqlCommand(commandText, db);
+                    command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+                    command.Parameters["@tenancyRef"].Value = arrearsActionDiaryDetail.TenancyRef;
 
-                command.Parameters.Add("@actionCode", SqlDbType.Char);
-                command.Parameters["@actionCode"].Value = arrearsActionDiaryDetail.ActionCode;
+                    command.Parameters.Add("@actionCode", SqlDbType.Char);
+                    command.Parameters["@actionCode"].Value = arrearsActionDiaryDetail.ActionCode;
 
-                command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
-                command.Parameters["@actionDate"].Value = arrearsActionDiaryDetail.ActionDate;
+                    command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
+                    command.Parameters["@actionDate"].Value = arrearsActionDiaryDetail.ActionDate;
 
-                command.Parameters.Add("@actionCodeName", SqlDbType.Char);
-                command.Parameters["@actionCodeName"].Value = arrearsActionDiaryDetail.ActionCodeName;
+                    command.Parameters.Add("@actionCodeName", SqlDbType.Char);
+                    command.Parameters["@actionCodeName"].Value = arrearsActionDiaryDetail.ActionCodeName;
 
-                command.Parameters.Add("@actionComment", SqlDbType.NVarChar);
-                command.Parameters["@actionComment"].Value = arrearsActionDiaryDetail.ActionComment;
+                    command.Parameters.Add("@actionComment", SqlDbType.NVarChar);
+                    command.Parameters["@actionComment"].Value = arrearsActionDiaryDetail.ActionComment;
 
-                command.Parameters.Add("@actionBalance", SqlDbType.Decimal);
-                command.Parameters["@actionBalance"].Value = arrearsActionDiaryDetail.ActionBalance;
+                    command.Parameters.Add("@actionBalance", SqlDbType.Decimal);
+                    command.Parameters["@actionBalance"].Value = arrearsActionDiaryDetail.ActionBalance;
 
-                command.Parameters.Add("@uhUsername", SqlDbType.Char);
-                command.Parameters["@uhUsername"].Value = arrearsActionDiaryDetail.UniversalHousingUsername;
+                    command.Parameters.Add("@uhUsername", SqlDbType.Char);
+                    command.Parameters["@uhUsername"].Value = arrearsActionDiaryDetail.UniversalHousingUsername;
 
-                items.Add(arrearsActionDiaryDetail);
-                command.ExecuteNonQuery();
-            }
+                    items.Add(arrearsActionDiaryDetail);
+                    command.ExecuteNonQuery();
+                }
 
-            return items.OrderByDescending(i => i.ActionDate).ToList();
+                return items.OrderByDescending(i => i.ActionDate).ToList();
             }
             catch (Exception ex)
             {
@@ -464,7 +462,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             {
                 command = null;
             }
-
         }
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)

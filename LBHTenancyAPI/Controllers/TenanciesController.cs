@@ -77,5 +77,24 @@ namespace LBHTenancyAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaymentTransactionDetails(List<string> tenancyRefs)
+        {
+            var response = listTenancies.ExecutePaymentTransactionQuery(tenancyRefs);
+            var paymentsTransaction = response.PaymentTransaction.ConvertAll(paymentTrans => new Dictionary<string, object>
+            {
+                {"ref", paymentTrans.TenancyRef},
+                {"transaction_amount", paymentTrans.TransactionAmount},
+                {"universal_housing_username", paymentTrans.UniversalHousingUsername},
+            });
+
+            var result = new Dictionary<string, object>
+            {
+                {"paymentTransaction", paymentsTransaction}
+            };
+
+            return Ok(result);
+        }
     }
 }

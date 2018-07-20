@@ -1,7 +1,13 @@
-﻿namespace LBHTenancyAPI.Domain
+﻿using System;
+namespace LBHTenancyAPI.Domain
 {
-    public class PaymentTransactionDetails
+    public struct PaymentTransactionDetails
     {
-        
+        public string TransactionsRef { get; set; }
+        public string PropertyRef { get; set; }
+        public string TenancyRef { get; set; }
+        public string TransactionType{ get; set; }
+        public DateTime TransactionDate { get; set; }
+        public decimal TransactionAmount{ get; set; }
     }
 }
