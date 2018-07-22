@@ -205,35 +205,40 @@ namespace LBHTenancyAPITest.Test.Controllers
             var faker = new Faker();
             var expectedTenancyResponse = new ListTenancies.ResponsePaymentTransactions()
             {
-                TransactionRef = faker.Random.Hash(),
-                TenancyRef = faker.Random.Hash(),
-                PropertyRef = faker.Random.Hash(),
-                TransactionType = faker.Random.Hash(),
-                TransactionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
+                Amount = faker.Random.Decimal(),
+                Breached = faker.Random.Bool(),
+                ClearBy = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
                     faker.Random.Int(1, 28), 9, 30, 0),
-                TransactionAmount = faker.Random.Decimal()
+                Frequency = faker.Random.Word(),
+                StartBalance = faker.Random.Decimal(),
+                Startdate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
+                    faker.Random.Int(1, 28), 9, 30, 0),
+                TenancyRef = faker.Random.Hash(),
+                Status = faker.Random.Word()
             };
 
             var listPayments = new ListTenanciesStub();
             listPayments.AddPaymentTransactionResponse(expectedTenancyResponse.TenancyRef, expectedTenancyResponse);
 
-            var response = await GetIndex(listPayments, new List<string> {expectedTenancyResponse.TenancyRef});
+            var response = await GetIndexForTransaction(listPayments, new List<string> {expectedTenancyResponse.TenancyRef});
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject
             (
                 new Dictionary<string, object>
                 {
                     {
-                        "payments", new List<Dictionary<string, object>>
+                        "paymentTransaction", new List<Dictionary<string, object>>
                         {
                             new Dictionary<string, object>
                             {
-                                {"transaction_ref", expectedTenancyResponse.TransactionRef},
+                                {"amount", expectedTenancyResponse.Amount},
                                 {"tenancy_ref", expectedTenancyResponse.TenancyRef},
-                                {"property_ref", expectedTenancyResponse.PropertyRef},
-                                {"transaction_type", expectedTenancyResponse.TransactionType},
-                                {"transaction_date", expectedTenancyResponse.TransactionDate},
-                                {"transaction_amount", expectedTenancyResponse.TransactionAmount}
+                                {"breached", expectedTenancyResponse.Breached},
+                                {"clear_by", expectedTenancyResponse.ClearBy},
+                                {"frequency", expectedTenancyResponse.Frequency},
+                                {"start_balance", expectedTenancyResponse.StartBalance},
+                                {"start_date", expectedTenancyResponse.Startdate},
+                                {"status", expectedTenancyResponse.Status}
                             }
                         }
                     }
@@ -261,7 +266,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                                                                        List<string> tenancyRef)
         {
             var controller = new TenanciesController(listTenanciesUseCase);
-            var result = await controller.GetActionDiaryDetails(tenancyRef);
+            var result = await controller.GetPaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }
 
@@ -292,10 +297,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 return new ListTenancies.ArrearsActionDiaryResponse() {ActionDiary = new List<ListTenancies.ResponseArrearsActionDiary>()};
             }
 
-            public ListTenancies.ResponsePaymentTransactions ExecutePaymentTransactionQuery(List<string> tenancyRef)
+            public ListTenancies.PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRef)
             {
                 calledWith.Add(tenancyRef);
-                return new ListTenancies.ResponsePaymentTransactions() {PaymentTransactions = new List<ListTenancies.ResponsePaymentTransactions>()};
+                return new ListTenancies.PaymentTransactionResponse() {PaymentTransactions = new List<ListTenancies.ResponsePaymentTransactions>()};
             }
 
             public void AssertCalledOnce()
@@ -353,7 +358,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 };
             }
 
-            public ListTenancies.ArrearsActionDiaryResponse ExecutePaymentTransactionQuery(List<string> tenancyRefs)
+            public ListTenancies.PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRefs)
             {
                 return new ListTenancies.PaymentTransactionResponse()
                 {

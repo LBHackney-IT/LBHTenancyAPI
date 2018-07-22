@@ -7,11 +7,13 @@ namespace LBHTenancyAPI.Gateways
     {
         private Dictionary<string, TenancyListItem> StoredTenancyListItems;
         private Dictionary<string, ArrearsActionDiaryDetails> StoredActionDiaryDetails;
-        private Dictionary<string, PaymentTransactionDetails> StoredPaymentTransactionsDetails;
+        private Dictionary<string, ArrearsAgreementDetail> StoredPaymentTransactionsDetails;
 
         public StubTenanciesGateway()
         {
             StoredTenancyListItems = new Dictionary<string, TenancyListItem>();
+            StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryDetails>();
+            StoredPaymentTransactionsDetails = new Dictionary<string, ArrearsAgreementDetail>();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
@@ -36,10 +38,10 @@ namespace LBHTenancyAPI.Gateways
             return actionDiaryDetails;
         }
 
-        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(List<string> tenancyRef)
+        public List<ArrearsAgreementDetail> GetPaymentTransactionsByTenancyRef(List<string> tenancyRefs)
         {
-            var paymentTransactionDetails = new List<PaymentTransactionDetails>();
-            foreach (var paymentTrans in tenancyRef)
+            var paymentTransactionDetails = new List<ArrearsAgreementDetail>();
+            foreach (var paymentTrans in tenancyRefs)
             {
                 paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[paymentTrans]);
             }

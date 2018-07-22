@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.Internal.Networking;
 
 namespace LBHTenancyAPI.UseCases
 {
@@ -55,19 +56,20 @@ namespace LBHTenancyAPI.UseCases
             return response;
         }
 
-        public PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRef)
+        public PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRefs)
         {
             var response = new PaymentTransactionResponse();
-            var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
+            var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRefs);
 
             response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new ResponsePaymentTransactions()
                 {
-                    TransactionRef = paymentTrans.TransactionsRef,
+                    Amount = paymentTrans.Amount,
                     TenancyRef = paymentTrans.TenancyRef,
-                    PropertyRef = paymentTrans.PropertyRef,
-                    TransactionType = paymentTrans.TransactionType,
-                    TransactionDate = paymentTrans.TransactionDate,
-                    TransactionAmount = paymentTrans.TransactionAmount
+                    Breached = paymentTrans.Breached,
+                    ClearBy = paymentTrans.ClearBy,
+                    Frequency = paymentTrans.Frequency,
+                    StartBalance = paymentTrans.StartBalance,
+                    Status = paymentTrans.Status
                 }
             );
 
@@ -114,12 +116,14 @@ namespace LBHTenancyAPI.UseCases
 
         public struct ResponsePaymentTransactions
         {
-            public string TransactionRef { get; set; }
+            public decimal Amount { get; set; }
+            public bool Breached{ get; set; }
+            public DateTime ClearBy { get; set; }
+            public string Frequency { get; set; }
+            public Decimal StartBalance{ get; set; }
+            public DateTime Startdate { get; set; }
+            public string Status{ get; set; }
             public string TenancyRef { get; set; }
-            public string PropertyRef { get; set; }
-            public string TransactionType { get; set; }
-            public DateTime TransactionDate { get; set; }
-            public decimal TransactionAmount { get; set; }
         }
     }
 }
