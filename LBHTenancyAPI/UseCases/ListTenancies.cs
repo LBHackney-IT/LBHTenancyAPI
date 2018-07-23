@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.Internal.Networking;
 
 namespace LBHTenancyAPI.UseCases
 {
@@ -34,9 +36,58 @@ namespace LBHTenancyAPI.UseCases
             return response;
         }
 
+        public ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRefs)
+        {
+            var response = new ArrearsActionDiaryResponse();
+            var actionDiary = tenanciesGateway.GetActionDiaryDetailsbyTenancyRefs(tenancyRefs);
+
+            response.ActionDiary = actionDiary.ConvertAll(actiondiary => new ResponseArrearsActionDiary()
+                {
+                    TenancyRef = actiondiary.TenancyRef,
+                    ActionCode = actiondiary.ActionCode,
+                    ActionCodeName = actiondiary.ActionCodeName,
+                    ActionBalance = actiondiary.ActionBalance,
+                    ActionComment = actiondiary.ActionComment,
+                    ActionDate = actiondiary.ActionDate,
+                    UniversalHousingUsername = actiondiary.UniversalHousingUsername
+                }
+            );
+
+            return response;
+        }
+
+        public PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRefs)
+        {
+            var response = new PaymentTransactionResponse();
+            var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRefs);
+
+            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new ResponsePaymentTransactions()
+                {
+                    TransactionsRef= paymentTrans.TransactionsRef,
+                    TenancyRef = paymentTrans.TenancyRef,
+                    TransactionAmount= paymentTrans.TransactionAmount,
+                    TransactionDate = paymentTrans.TransactionDate,
+                    TransactionType = paymentTrans.TransactionType,
+                    PropertyRef = paymentTrans.PropertyRef
+                }
+            );
+
+            return response;
+        }
+
         public struct Response
         {
             public List<ResponseTenancy> Tenancies { get; set; }
+        }
+
+        public struct ArrearsActionDiaryResponse
+        {
+            public List<ResponseArrearsActionDiary> ActionDiary { get; set; }
+        }
+
+        public struct PaymentTransactionResponse
+        {
+            public List<ResponsePaymentTransactions> PaymentTransactions { get; set; }
         }
 
         public struct ResponseTenancy
@@ -49,6 +100,29 @@ namespace LBHTenancyAPI.UseCases
             public string PrimaryContactName { get; set; }
             public string PrimaryContactShortAddress { get; set; }
             public string PrimaryContactPostcode { get; set; }
+        }
+
+        public struct ResponseArrearsActionDiary
+        {
+            public decimal ActionBalance { get; set; }
+            public string ActionCodeName { get; set; }
+            public string ActionCode { get; set; }
+            public string ActionComment{ get; set; }
+            public DateTime ActionDate { get; set; }
+            public string TenancyRef{ get; set; }
+            public string UniversalHousingUsername { get; set; }
+        }
+
+
+
+        public struct ResponsePaymentTransactions
+        {
+            public string TransactionsRef { get; set; }
+            public DateTime TransactionDate { get; set; }
+            public string PropertyRef{ get; set; }
+            public string TenancyRef { get; set; }
+            public string TransactionType { get; set; }
+            public decimal TransactionAmount { get; set; }
         }
     }
 }

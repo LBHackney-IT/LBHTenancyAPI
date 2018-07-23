@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Xunit;
+using LBHTenancyAPI.Gateways;
+using Moq;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
@@ -20,9 +23,10 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.NotNull(response);
 
             var actualJson = ResponseJson(response);
-            var expectedJson = JsonConvert.SerializeObject(
-                new Dictionary<string, object>() {{"tenancies", new List<Dictionary<string, object>>()}}
-            );
+            var expectedJson = JsonConvert.SerializeObject
+                (
+                    new Dictionary<string, object>() {{"tenancies", new List<Dictionary<string, object>>()}}
+                );
 
             Assert.Equal(expectedJson, actualJson);
         }
@@ -146,10 +150,119 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.Equal(expectedJson, actualJson);
         }
 
+        [Fact]
+        public async Task WhenGivenATenancyRef_Index_ShouldRespondWithTenancyActionDiaryInfoForThatTenancy()
+        {
+            var faker = new Faker();
+            var expectedTenancyResponse = new ListTenancies.ResponseArrearsActionDiary()
+            {
+                TenancyRef = faker.Random.Hash(),
+                ActionCode = faker.Random.Hash(3),
+                ActionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12), faker.Random.Int(1, 28), 9, 30, 0),
+                ActionCodeName = faker.Random.Words(),
+                ActionComment = faker.Random.Words(),
+                ActionBalance = faker.Finance.Amount(),
+                UniversalHousingUsername = faker.Name.FullName()
+            };
+
+            var listTenancies = new ListTenanciesStub();
+            listTenancies.AddActionDiaryResponse(expectedTenancyResponse.TenancyRef, expectedTenancyResponse);
+
+            var response = await GetResult(listTenancies, new List<string> {expectedTenancyResponse.TenancyRef});
+            var actualJson = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject(
+                new Dictionary<string, object>
+                {
+                    {
+                        "arrears_action_diary", new List<Dictionary<string, object>>
+                        {
+                            new Dictionary<string, object>
+                            {
+                                {"ref", expectedTenancyResponse.TenancyRef},
+                                {"action_balance", expectedTenancyResponse.ActionBalance},
+                                {"universal_housing_username", expectedTenancyResponse.UniversalHousingUsername},
+                                {
+                                    "latest_action", new Dictionary<string, string>
+                                    {
+                                        {"code", expectedTenancyResponse.ActionCode},
+                                        {"code_name", expectedTenancyResponse.ActionCodeName},
+                                        {"date", expectedTenancyResponse.ActionDate.ToString()},
+                                        {"comment", expectedTenancyResponse.ActionComment}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+
+            Assert.Equal(expectedJson, actualJson);
+        }
+
+        [Fact]
+        public async Task WhenGivenATenancyRef_Index_ShouldRespondWithTenancyPaymentTransactionDetailsInfoForThatTenancy()
+        {
+            var faker = new Faker();
+            var expectedTenancyResponse = new ListTenancies.ResponsePaymentTransactions()
+            {
+                TransactionsRef= faker.Random.Hash(),
+                TransactionAmount = faker.Random.Decimal(),
+                TransactionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
+                    faker.Random.Int(1, 28), 9, 30, 0),
+                TransactionType  = faker.Random.Word(),
+                TenancyRef  = faker.Random.Hash(),
+                PropertyRef = faker.Random.Word()
+            };
+
+            var listPayments = new ListTenanciesStub();
+            listPayments.AddPaymentTransactionResponse(expectedTenancyResponse.TenancyRef, expectedTenancyResponse);
+
+            var response = await GetIndexForTransaction(listPayments, new List<string> {expectedTenancyResponse.TenancyRef});
+            var actualJson = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject
+            (
+                new Dictionary<string, object>
+                {
+                    {
+                        "payment_transaction", new List<Dictionary<string, object>>
+                        {
+                            new Dictionary<string, object>
+                            {
+                                {"transactions_ref", expectedTenancyResponse.TransactionsRef},
+                                {"transaction_amount", expectedTenancyResponse.TenancyRef},
+                                {"transaction_date", expectedTenancyResponse.TransactionDate},
+                                {"transaction_type", expectedTenancyResponse.TransactionType},
+                                {"tenancy_ref", expectedTenancyResponse.TenancyRef},
+                                {"property_ref", expectedTenancyResponse.PropertyRef}
+
+                            }
+                        }
+                    }
+                }
+            );
+
+            Assert.Equal(expectedJson, actualJson);
+        }
+
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
             var controller = new TenanciesController(listTenanciesUseCase);
             var result = await controller.Get(tenancyRefs);
+            return result as OkObjectResult;
+        }
+
+        private static async Task<ObjectResult> GetResult(IListTenancies listTenanciesUseCase, List<string> tenancyRef)
+        {
+            var controller = new TenanciesController(listTenanciesUseCase);
+            var result = await controller.GetActionDiaryDetails(tenancyRef);
+            return result as OkObjectResult;
+        }
+
+        private static async Task<ObjectResult> GetIndexForTransaction(IListTenancies listTenanciesUseCase,
+                                                                       List<string> tenancyRef)
+        {
+            var controller = new TenanciesController(listTenanciesUseCase);
+            var result = await controller.GetPaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }
 
@@ -173,6 +286,19 @@ namespace LBHTenancyAPITest.Test.Controllers
                 return new ListTenancies.Response {Tenancies = new List<ListTenancies.ResponseTenancy>()};
             }
 
+
+            public ListTenancies.ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRef)
+            {
+                calledWith.Add(tenancyRef);
+                return new ListTenancies.ArrearsActionDiaryResponse() {ActionDiary = new List<ListTenancies.ResponseArrearsActionDiary>()};
+            }
+
+            public ListTenancies.PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRef)
+            {
+                calledWith.Add(tenancyRef);
+                return new ListTenancies.PaymentTransactionResponse() {PaymentTransactions = new List<ListTenancies.ResponsePaymentTransactions>()};
+            }
+
             public void AssertCalledOnce()
             {
                 Assert.Single(calledWith);
@@ -187,10 +313,14 @@ namespace LBHTenancyAPITest.Test.Controllers
         private class ListTenanciesStub : IListTenancies
         {
             private readonly Dictionary<string, ListTenancies.ResponseTenancy> stubTenancies;
+            private readonly Dictionary<string, ListTenancies.ResponseArrearsActionDiary> stubActionDiaryDetails;
+            private readonly Dictionary<string, ListTenancies.ResponsePaymentTransactions> stubPaymentsTransactionsDetails;
 
             public ListTenanciesStub()
             {
                 stubTenancies = new Dictionary<string, ListTenancies.ResponseTenancy>();
+                stubActionDiaryDetails = new Dictionary<string, ListTenancies.ResponseArrearsActionDiary>();
+                stubPaymentsTransactionsDetails = new Dictionary<string, ListTenancies.ResponsePaymentTransactions>();
             }
 
             public void AddTenancyResponse(string tenancyRef, ListTenancies.ResponseTenancy tenancyResponse)
@@ -198,11 +328,37 @@ namespace LBHTenancyAPITest.Test.Controllers
                 stubTenancies[tenancyRef] = tenancyResponse;
             }
 
+            public void AddActionDiaryResponse(string tenancyRef, ListTenancies.ResponseArrearsActionDiary actionDiaryResponse)
+            {
+                stubActionDiaryDetails[tenancyRef] = actionDiaryResponse;
+            }
+
+            public void AddPaymentTransactionResponse(string tenancyRef, ListTenancies.ResponsePaymentTransactions paymentTransactionsResponse)
+            {
+                stubPaymentsTransactionsDetails[tenancyRef] = paymentTransactionsResponse;
+            }
+
             public ListTenancies.Response Execute(List<string> tenancyRefs)
             {
                 return new ListTenancies.Response
                 {
                     Tenancies = tenancyRefs.ConvertAll(tenancyRef => stubTenancies[tenancyRef])
+                };
+            }
+
+            public ListTenancies.ArrearsActionDiaryResponse ExecuteActionDiaryQuery(List<string> tenancyRefs)
+            {
+                return new ListTenancies.ArrearsActionDiaryResponse()
+                {
+                    ActionDiary = tenancyRefs.ConvertAll(tenancyRef => stubActionDiaryDetails[tenancyRef])
+                };
+            }
+
+            public ListTenancies.PaymentTransactionResponse ExecutePaymentTransactionQuery(List<string> tenancyRefs)
+            {
+                return new ListTenancies.PaymentTransactionResponse()
+                {
+                    PaymentTransactions = tenancyRefs.ConvertAll(tenancyRef => stubPaymentsTransactionsDetails[tenancyRef])
                 };
             }
         }

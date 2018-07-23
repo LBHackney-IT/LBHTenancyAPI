@@ -41,4 +41,6 @@ Thumbs.db
 *.dotCover
 
 .env
+
 .env.*
+.idea
