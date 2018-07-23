@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using LBHTenancyAPI.Domain;
+using LBHTenancyAPI.Gateways;
 
-namespace LBHTenancyAPI.Gateways
+namespace LBHTenancyAPITest.TestDoubles.Gateways
 {
     public class StubTenanciesGateway : ITenanciesGateway
     {

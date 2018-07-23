@@ -4,6 +4,7 @@ using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;
+using LBHTenancyAPITest.TestDoubles.Gateways;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using SQLitePCL;
 using Xunit;
@@ -44,15 +45,15 @@ namespace LBHTenancyAPITest.Test.UseCases
         }
 
         [Fact]
-        public void WhenATenancyRefIsGiven_ResponseShouldIncludeDetailsOnThatTenancy_Example1()
+        public void WhenATenancyRefIsGiven_ResponseShouldIncludeDetailsOnThatTenancy()
         {
             var gateway = new StubTenanciesGateway();
             var tenancy = Fake.GenerateTenancyListItem();
 
             gateway.SetTenancyListItem(tenancy.TenancyRef, tenancy);
 
-            var listTenancies = new ListTenancies(tenanciesGateway: gateway);
-            var actualResponse = listTenancies.Execute(tenancyRefs: new List<string> {tenancy.TenancyRef});
+            var listTenancies = new ListTenancies(gateway);
+            var actualResponse = listTenancies.Execute(new List<string> {tenancy.TenancyRef});
             var expectedResponse = new ListTenancies.Response()
             {
                 Tenancies = new List<ListTenancies.ResponseTenancy>
@@ -62,7 +63,7 @@ namespace LBHTenancyAPITest.Test.UseCases
                         TenancyRef = tenancy.TenancyRef,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
-                        CurrentBalance = tenancy.CurrentBalance.ToString(),
+                        CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                         ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                         PrimaryContactName = tenancy.PrimaryContactName,
                         PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,

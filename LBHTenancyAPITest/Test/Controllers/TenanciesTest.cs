@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.UseCases;
+using LBHTenancyAPITest.TestDoubles.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
-    public class TenanciesTest
+    public partial class TenanciesTest
     {
         [Fact]
         public async Task WhenGivenNoTenancyRefs_Index_ShouldRespondWithNoResults()
@@ -156,55 +157,6 @@ namespace LBHTenancyAPITest.Test.Controllers
         private static string ResponseJson(ObjectResult response)
         {
             return JsonConvert.SerializeObject(response.Value);
-        }
-
-        private class ListTenanciesSpy : IListTenancies
-        {
-            private readonly List<object> calledWith;
-
-            public ListTenanciesSpy()
-            {
-                calledWith = new List<object>();
-            }
-
-            public ListTenancies.Response Execute(List<string> tenancyRefs)
-            {
-                calledWith.Add(new List<object> {tenancyRefs});
-                return new ListTenancies.Response {Tenancies = new List<ListTenancies.ResponseTenancy>()};
-            }
-
-            public void AssertCalledOnce()
-            {
-                Assert.Single(calledWith);
-            }
-
-            public void AssertCalledWith(List<object> expectedArguments)
-            {
-                Assert.Equal(expectedArguments, calledWith[0]);
-            }
-        }
-
-        private class ListTenanciesStub : IListTenancies
-        {
-            private readonly Dictionary<string, ListTenancies.ResponseTenancy> stubTenancies;
-
-            public ListTenanciesStub()
-            {
-                stubTenancies = new Dictionary<string, ListTenancies.ResponseTenancy>();
-            }
-
-            public void AddTenancyResponse(string tenancyRef, ListTenancies.ResponseTenancy tenancyResponse)
-            {
-                stubTenancies[tenancyRef] = tenancyResponse;
-            }
-
-            public ListTenancies.Response Execute(List<string> tenancyRefs)
-            {
-                return new ListTenancies.Response
-                {
-                    Tenancies = tenancyRefs.ConvertAll(tenancyRef => stubTenancies[tenancyRef])
-                };
-            }
         }
     }
 }
