@@ -17,8 +17,8 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenThereAreNoTenancyRefsGiven_ShouldReturnNone()
         {
             var gateway = new StubTenanciesGateway();
-            var listTenancies = new ListTenancies(tenanciesGateway: gateway);
-            var response = listTenancies.Execute(tenancyRefs: new List<string> { });
+            var listTenancies = new ListTenancies(gateway);
+            var response = listTenancies.Execute(new List<string>());
 
             Assert.Empty(response.Tenancies);
         }
@@ -27,8 +27,8 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenNoTenancyRefs_ShouldReturnATenancyResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listTenancies = new ListTenancies(tenanciesGateway: gateway);
-            var response = listTenancies.Execute(tenancyRefs: new List<string> { });
+            var listTenancies = new ListTenancies(gateway);
+            var response = listTenancies.Execute(new List<string>());
 
             Assert.IsType(typeof(ListTenancies.Response), response);
         }
@@ -37,8 +37,8 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenATenancyRef_ShouldReturnATenancyResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listTenancies = new ListTenancies(tenanciesGateway: gateway);
-            var response = listTenancies.Execute(tenancyRefs: new List<string> { });
+            var listTenancies = new ListTenancies(gateway);
+            var response = listTenancies.Execute(new List<string>());
 
             Assert.IsType(typeof(ListTenancies.Response), response);
         }
@@ -51,13 +51,13 @@ namespace LBHTenancyAPITest.Test.UseCases
 
             gateway.SetTenancyListItem(tenancy.TenancyRef, tenancy);
 
-            var listTenancies = new ListTenancies(tenanciesGateway: gateway);
-            var actualResponse = listTenancies.Execute(tenancyRefs: new List<string> {tenancy.TenancyRef});
-            var expectedResponse = new ListTenancies.Response()
+            var listTenancies = new ListTenancies(gateway);
+            var actualResponse = listTenancies.Execute(new List<string> {tenancy.TenancyRef});
+            var expectedResponse = new ListTenancies.Response
             {
                 Tenancies = new List<ListTenancies.ResponseTenancy>
                 {
-                    new ListTenancies.ResponseTenancy()
+                    new ListTenancies.ResponseTenancy
                     {
                         TenancyRef = tenancy.TenancyRef,
                         LastActionCode = tenancy.LastActionCode,
