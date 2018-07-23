@@ -117,8 +117,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.ExecuteNonQuery();
 
             string retrieved_value = db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
-            string expectedValue = "not11chars ";
-            Assert.Contains(TrimmedValue(expectedValue), retrieved_value);
+            Assert.Contains("not11chars ", retrieved_value);
 
             retrieved_value = db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("ee ", retrieved_value);
@@ -129,10 +128,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
 
-            expectedValue = "pcode     ";
-            Assert.Contains(TrimmedValue(expectedValue), row.Values);
-            expectedValue = "phone                ";
-            Assert.Contains(TrimmedValue(expectedValue), row.Values);
+            Assert.Contains("pcode     ", row.Values);
+            Assert.Contains("phone                ", row.Values);
+
 
             TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
 
@@ -420,10 +418,10 @@ namespace LBHTenancyAPITest.Test.Gateways
                         TenancyRef = tenancyRef,
                         ActionCode = random.Random.Hash(3),
                         ActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                        ActionCodeName = random.Random.Words(),
-                        ActionComment = random.Random.Words(),
+                        ActionCodeName = random.Random.Hash(50),
+                        ActionComment = random.Random.Hash(50),
                         ActionBalance = random.Finance.Amount(),
-                        UniversalHousingUsername = random.Name.FullName()
+                        UniversalHousingUsername = random.Random.Hash(50)
                     };
 
                     command = new SqlCommand(commandText, db);
@@ -478,13 +476,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@actionDate"].Value = actionDate;
 
             command.ExecuteNonQuery();
-        }
-
-        private string TrimmedValue(string passedValue)
-        {
-            string expectedValue = String.Empty;
-            expectedValue = passedValue.Trim();
-            return expectedValue;
         }
     }
 }

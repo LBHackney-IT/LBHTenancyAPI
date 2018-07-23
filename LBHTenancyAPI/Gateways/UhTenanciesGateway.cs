@@ -144,21 +144,19 @@ namespace LBHTenancyAPI.Gateways
 
         }
 
-        public List<ArrearsAgreementDetail> GetPaymentTransactionsByTenancyRef(List<string> tenancyRefs)
+        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(List<string> tenancyRefs)
         {
-            return conn.Query<ArrearsAgreementDetail>($"" +
+            return conn.Query<PaymentTransactionDetails>($"" +
                                                            $"SELECT " +
                                                            $"tag_ref AS TenancyRef," +
-                                                           $"arag_status AS Status, " +
-                                                           $"arag_startdate Startdate, " +
-                                                           $"arag_amount Amount, " +
-                                                           $"arag_frequency AS Frequency, " +
-                                                           $"arag_breached AS Breached, " +
-                                                           $"arag_startbal AS StartBalance, " +
-                                                           $"arag_clearby AS ClearBy " +
-                                                           $"FROM arag " +
+                                                           $"prop_ref AS PropertyRef, " +
+                                                           $"trans_type AS TransactionType, " +
+                                                           $"amount AS TransactionAmount, " +
+                                                           $"transaction_date AS TransactionDate, " +
+                                                           $"trans_ref AS TransactionRef, " +
+                                                           $"FROM rtrans " +
                                                            $"WHERE tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                                                           $"ORDER BY arag_startdate DESC ").ToList();
+                                                           $"ORDER BY transaction_date DESC ").ToList();
 
         }
     }

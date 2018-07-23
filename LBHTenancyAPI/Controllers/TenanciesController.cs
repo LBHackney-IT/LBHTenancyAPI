@@ -84,14 +84,12 @@ namespace LBHTenancyAPI.Controllers
             var response = listTenancies.ExecutePaymentTransactionQuery(tenancyRefs);
             var paymentsTransaction = response.PaymentTransactions.ConvertAll(paymentTrans => new Dictionary<string, object>
             {
-                {"amount", paymentTrans.Amount},
+                {"transactions_ref", paymentTrans.TransactionsRef},
+                {"transaction_amount", paymentTrans.TenancyRef},
+                {"transaction_date", paymentTrans.TransactionDate},
+                {"transaction_type", paymentTrans.TransactionType},
                 {"tenancy_ref", paymentTrans.TenancyRef},
-                {"breached", paymentTrans.Breached},
-                {"clear_by", paymentTrans.ClearBy},
-                {"frequency", paymentTrans.Frequency},
-                {"start_balance", paymentTrans.StartBalance},
-                {"start_date", paymentTrans.Startdate},
-                {"status", paymentTrans.Status}
+                {"property_ref", paymentTrans.PropertyRef}
             });
 
             var result = new Dictionary<string, object>

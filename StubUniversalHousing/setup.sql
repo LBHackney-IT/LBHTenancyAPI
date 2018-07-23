@@ -16,9 +16,3 @@ CREATE TABLE rtrans (trans_ref CHAR (11), tag_ref CHAR(11), prop_ref CHAR (11), 
                     amount NUMERIC (9,3));
 GO
 
-select * from araction
-DROP TABLE arag
-
-select * from arag
-alter table arag
-

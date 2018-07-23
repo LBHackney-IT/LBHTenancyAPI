@@ -63,13 +63,12 @@ namespace LBHTenancyAPI.UseCases
 
             response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new ResponsePaymentTransactions()
                 {
-                    Amount = paymentTrans.Amount,
+                    TransactionsRef= paymentTrans.TransactionsRef,
                     TenancyRef = paymentTrans.TenancyRef,
-                    Breached = paymentTrans.Breached,
-                    ClearBy = paymentTrans.ClearBy,
-                    Frequency = paymentTrans.Frequency,
-                    StartBalance = paymentTrans.StartBalance,
-                    Status = paymentTrans.Status
+                    TransactionAmount= paymentTrans.TransactionAmount,
+                    TransactionDate = paymentTrans.TransactionDate,
+                    TransactionType = paymentTrans.TransactionType,
+                    PropertyRef = paymentTrans.PropertyRef
                 }
             );
 
@@ -114,16 +113,16 @@ namespace LBHTenancyAPI.UseCases
             public string UniversalHousingUsername { get; set; }
         }
 
+
+
         public struct ResponsePaymentTransactions
         {
-            public decimal Amount { get; set; }
-            public bool Breached{ get; set; }
-            public DateTime ClearBy { get; set; }
-            public string Frequency { get; set; }
-            public Decimal StartBalance{ get; set; }
-            public DateTime Startdate { get; set; }
-            public string Status{ get; set; }
+            public string TransactionsRef { get; set; }
+            public DateTime TransactionDate { get; set; }
+            public string PropertyRef{ get; set; }
             public string TenancyRef { get; set; }
+            public string TransactionType { get; set; }
+            public decimal TransactionAmount { get; set; }
         }
     }
 }

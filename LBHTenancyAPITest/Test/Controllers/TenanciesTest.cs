@@ -205,16 +205,13 @@ namespace LBHTenancyAPITest.Test.Controllers
             var faker = new Faker();
             var expectedTenancyResponse = new ListTenancies.ResponsePaymentTransactions()
             {
-                Amount = faker.Random.Decimal(),
-                Breached = faker.Random.Bool(),
-                ClearBy = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
+                TransactionsRef= faker.Random.Hash(),
+                TransactionAmount = faker.Random.Decimal(),
+                TransactionDate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
                     faker.Random.Int(1, 28), 9, 30, 0),
-                Frequency = faker.Random.Word(),
-                StartBalance = faker.Random.Decimal(),
-                Startdate = new DateTime(faker.Random.Int(1900, 1999), faker.Random.Int(1, 12),
-                    faker.Random.Int(1, 28), 9, 30, 0),
-                TenancyRef = faker.Random.Hash(),
-                Status = faker.Random.Word()
+                TransactionType  = faker.Random.Word(),
+                TenancyRef  = faker.Random.Hash(),
+                PropertyRef = faker.Random.Word()
             };
 
             var listPayments = new ListTenanciesStub();
@@ -231,14 +228,13 @@ namespace LBHTenancyAPITest.Test.Controllers
                         {
                             new Dictionary<string, object>
                             {
-                                {"amount", expectedTenancyResponse.Amount},
+                                {"transactions_ref", expectedTenancyResponse.TransactionsRef},
+                                {"transaction_amount", expectedTenancyResponse.TenancyRef},
+                                {"transaction_date", expectedTenancyResponse.TransactionDate},
+                                {"transaction_type", expectedTenancyResponse.TransactionType},
                                 {"tenancy_ref", expectedTenancyResponse.TenancyRef},
-                                {"breached", expectedTenancyResponse.Breached},
-                                {"clear_by", expectedTenancyResponse.ClearBy},
-                                {"frequency", expectedTenancyResponse.Frequency},
-                                {"start_balance", expectedTenancyResponse.StartBalance},
-                                {"start_date", expectedTenancyResponse.Startdate},
-                                {"status", expectedTenancyResponse.Status}
+                                {"property_ref", expectedTenancyResponse.PropertyRef}
+
                             }
                         }
                     }
