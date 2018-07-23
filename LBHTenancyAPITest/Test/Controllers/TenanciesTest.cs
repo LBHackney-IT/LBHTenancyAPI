@@ -174,7 +174,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 new Dictionary<string, object>
                 {
                     {
-                        "arrearActionDiary", new List<Dictionary<string, object>>
+                        "arrears_action_diary", new List<Dictionary<string, object>>
                         {
                             new Dictionary<string, object>
                             {
@@ -224,7 +224,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 new Dictionary<string, object>
                 {
                     {
-                        "paymentTransaction", new List<Dictionary<string, object>>
+                        "payment_transaction", new List<Dictionary<string, object>>
                         {
                             new Dictionary<string, object>
                             {

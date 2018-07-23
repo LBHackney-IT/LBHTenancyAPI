@@ -72,7 +72,7 @@ namespace LBHTenancyAPI.Controllers
 
             var result = new Dictionary<string, object>
             {
-                {"arrearActionDiary", arrearActionDiary}
+                {"arrears_action_diary", arrearActionDiary}
             };
 
             return Ok(result);
@@ -94,7 +94,7 @@ namespace LBHTenancyAPI.Controllers
 
             var result = new Dictionary<string, object>
             {
-                {"paymentTransaction", paymentsTransaction}
+                {"payment_transaction", paymentsTransaction}
             };
 
             return Ok(result);
