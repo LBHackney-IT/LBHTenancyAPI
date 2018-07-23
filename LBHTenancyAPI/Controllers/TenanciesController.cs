@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/tenancies")]
+    [Route("api/v1/tenancies")]
     public class TenanciesController : Controller
     {
         private readonly IListTenancies listTenancies;
