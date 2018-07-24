@@ -16,17 +16,17 @@ namespace LBHTenancyAPI.UseCases
         public ArrearsActionDiaryResponse Execute(string tenancyRef)
         {
             var response = new ArrearsActionDiaryResponse();
-            var actionDiary = tenanciesGateway.GetActionDiaryDetailsbyTenancyRefs(tenancyRef);
+            var actionDiaryResponse = tenanciesGateway.GetActionDiaryDetailsbyTenancyRefs(tenancyRef);
 
-            response.ActionDiaryEntries = actionDiary.ConvertAll(actiondiary => new ArrearsActionDiaryEntry()
+            response.ActionDiaryEntries = actionDiaryResponse.ConvertAll(actionDiary => new ArrearsActionDiaryEntry()
                 {
-                    TenancyRef = actiondiary.TenancyRef,
-                    ActionCode = actiondiary.ActionCode,
-                    ActionCodeName = actiondiary.ActionCodeName,
-                    ActionBalance = actiondiary.ActionBalance,
-                    ActionComment = actiondiary.ActionComment,
-                    ActionDate = actiondiary.ActionDate,
-                    UniversalHousingUsername = actiondiary.UniversalHousingUsername
+                    TenancyRef = actionDiary.TenancyRef,
+                    ActionCode = actionDiary.ActionCode,
+                    ActionCodeName = actionDiary.ActionCodeName,
+                    ActionBalance = actionDiary.ActionBalance.ToString("C"),
+                    ActionComment = actionDiary.ActionComment,
+                    ActionDate = string.Format("{0:u}", actionDiary.ActionDate),
+                    UniversalHousingUsername = actionDiary.UniversalHousingUsername
                 }
             );
 
@@ -40,11 +40,11 @@ namespace LBHTenancyAPI.UseCases
 
         public struct ArrearsActionDiaryEntry
         {
-            public decimal ActionBalance { get; set; }
+            public string ActionBalance { get; set; }
             public string ActionCodeName { get; set; }
             public string ActionCode { get; set; }
             public string ActionComment{ get; set; }
-            public DateTime ActionDate { get; set; }
+            public string ActionDate { get; set; }
             public string TenancyRef{ get; set; }
             public string UniversalHousingUsername { get; set; }
         }

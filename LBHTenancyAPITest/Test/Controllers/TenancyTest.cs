@@ -100,15 +100,38 @@ namespace LBHTenancyAPITest.Test.Controllers
             var expectedJson = JsonConvert.SerializeObject(output);
 
             Assert.Equal(expectedJson, actualResponse);
+        }
 
+        [Fact]
+        public async Task WhenGivenTenancyRefThatDoesntExist_ActionDiary_ShouldRespondWithNoResults()
+        {
+            var allActions = new AllActionsStub();
+            var response = await GetPaymentTransactionDetails(allActions, "NotHere");
+            Assert.NotNull(response);
+
+            var actualJson = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject
+            (
+                new Dictionary<string, object> {{"payment_transactions", new List<AllPaymentsForTenancy.PaymentTransaction>()}}
+            );
+
+            Assert.Equal(expectedJson, actualJson);
         }
 
         private static async Task<ObjectResult> GetPaymentTransactionDetails(IListAllPayments listPaymentsUseCase, string tenancyRef)
         {
-            var controller = new TenancyController(listPaymentsUseCase);
+            var controller = new TenancyController(listPaymentsUseCase, null);
             var result = await controller.PaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }
+
+        private static async Task<ObjectResult> GetArrearsActionsDetails(IListAllPayments listPaymentsUseCase, string tenancyRef)
+        {
+            var controller = new TenancyController(listPaymentsUseCase, null);
+            var result = await controller.PaymentTransactionDetails(tenancyRef);
+            return result as OkObjectResult;
+        }
+
         private static string ResponseJson(ObjectResult response)
         {
             return JsonConvert.SerializeObject(response.Value);

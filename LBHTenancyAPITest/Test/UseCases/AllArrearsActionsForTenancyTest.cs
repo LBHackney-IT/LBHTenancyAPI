@@ -51,8 +51,8 @@ namespace LBHTenancyAPITest.Test.UseCases
                     new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
                     {
                         TenancyRef = actionDiary.TenancyRef,
-                        ActionDate = actionDiary.ActionDate,
-                        ActionBalance = actionDiary.ActionBalance,
+                        ActionBalance = actionDiary.ActionBalance.ToString("C"),
+                        ActionDate = string.Format("{0:u}", actionDiary.ActionDate),
                         ActionCode = actionDiary.ActionCode,
                         ActionCodeName = actionDiary.ActionCodeName,
                         ActionComment = actionDiary.ActionComment,
