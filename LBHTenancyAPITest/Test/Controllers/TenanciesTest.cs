@@ -25,7 +25,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject
                 (
-                    new Dictionary<string, object>() {{"tenancies", new List<Dictionary<string, object>>()}}
+                    new Dictionary<string, object> {{"tenancies", new List<Dictionary<string, object>>()}}
                 );
 
             Assert.Equal(expectedJson, actualJson);
@@ -103,7 +103,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 TenancyRef = faker.Random.Hash(),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
-                CurrentBalance = faker.Finance.Amount().ToString(),
+                CurrentBalance = faker.Finance.Amount().ToString("C"),
                 ArrearsAgreementStatus = faker.Random.Word(),
                 PrimaryContactName = faker.Person.FullName,
                 PrimaryContactShortAddress = faker.Address.StreetAddress(),

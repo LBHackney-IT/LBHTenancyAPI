@@ -62,7 +62,7 @@ namespace LBHTenancyAPITest.Test.UseCases
                         TenancyRef = tenancy.TenancyRef,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
-                        CurrentBalance = tenancy.CurrentBalance.ToString(),
+                        CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                         ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                         PrimaryContactName = tenancy.PrimaryContactName,
                         PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,

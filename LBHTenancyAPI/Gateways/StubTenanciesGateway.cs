@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LBHTenancyAPI.Domain;
 
 namespace LBHTenancyAPI.Gateways
@@ -27,23 +28,33 @@ namespace LBHTenancyAPI.Gateways
             return tenancies;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(List<string> tenancyRefs)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(string tenancyRef)
         {
             var actionDiaryDetails = new List<ArrearsActionDiaryDetails>();
-            foreach (var actionDiary in tenancyRefs)
+
+            try
             {
-                actionDiaryDetails.Add(StoredActionDiaryDetails[actionDiary]);
+                actionDiaryDetails.Add(StoredActionDiaryDetails[tenancyRef]);
+            }
+            catch (Exception)
+            {
+                //do nothing
             }
 
             return actionDiaryDetails;
         }
 
-        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(List<string> tenancyRefs)
+        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
             var paymentTransactionDetails = new List<PaymentTransactionDetails>();
-            foreach (var paymentTrans in tenancyRefs)
+
+            try
             {
-                paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[paymentTrans]);
+                paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[tenancyRef]);
+            }
+            catch (Exception)
+            {
+                // do nothing
             }
 
             return paymentTransactionDetails;
@@ -53,5 +64,16 @@ namespace LBHTenancyAPI.Gateways
         {
             StoredTenancyListItems[tenancyRef] = tenancyListItem;
         }
+
+        public void SetPaymentTransactionDetails(string tenancyRef, PaymentTransactionDetails payment)
+        {
+            StoredPaymentTransactionsDetails[tenancyRef] = payment;
+        }
+
+        public void SetActionDiaryDetails(string tenancyRef,ArrearsActionDiaryDetails actionDiary)
+        {
+            StoredActionDiaryDetails[tenancyRef] = actionDiary;
+        }
+
     }
 }
