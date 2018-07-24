@@ -12,9 +12,13 @@ namespace LBHTenancyAPI.Controllers
         private readonly IListAllPayments listAllPayments;
         private readonly IListAllArrearsActions listAllArrearsActions;
 
-        public TenancyController(IListAllPayments listAllPayments, IListAllArrearsActions listAllArrearsActions)
+        public TenancyController(IListAllPayments listAllPayments)
         {
             this.listAllPayments = listAllPayments;
+        }
+
+        public TenancyController(IListAllArrearsActions listAllArrearsActions)
+        {
             this.listAllArrearsActions = listAllArrearsActions;
         }
 
@@ -48,18 +52,13 @@ namespace LBHTenancyAPI.Controllers
             var response = listAllArrearsActions.Execute(tenancyRef);
             var arrearActionDiary = response.ActionDiaryEntries.ConvertAll(actionDiary => new Dictionary<string, object>
             {
-                {"ref", actionDiary.TenancyRef},
                 {"action_balance", actionDiary.ActionBalance},
+                {"action_code", actionDiary.ActionCode},
+                {"action_code_name", actionDiary.ActionCodeName},
+                {"action_date", actionDiary.ActionDate.ToString()},
+                {"action_comment", actionDiary.ActionComment},
                 {"universal_housing_username", actionDiary.UniversalHousingUsername},
-                {
-                    "latest_action", new Dictionary<string, string>
-                    {
-                        {"code", actionDiary.ActionCode},
-                        {"code_name", actionDiary.ActionCodeName},
-                        {"date", actionDiary.ActionDate.ToString()},
-                        {"comment", actionDiary.ActionComment}
-                    }
-                }
+                {"tenancy_ref", actionDiary.TenancyRef}
             });
 
             var result = new Dictionary<string, object>
