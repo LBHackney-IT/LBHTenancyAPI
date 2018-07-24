@@ -18,12 +18,12 @@ namespace LBHTenancyAPI.UseCases
             var response = new PaymentTransactionResponse();
             var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
 
-            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new ResponsePaymentTransactions()
+            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction()
                 {
-                    TransactionsRef= paymentTrans.TransactionsRef,
+                    TransactionRef= paymentTrans.TransactionsRef,
                     TenancyRef = paymentTrans.TenancyRef,
-                    TransactionAmount= paymentTrans.TransactionAmount,
-                    TransactionDate = paymentTrans.TransactionDate,
+                    TransactionAmount= paymentTrans.TransactionAmount.ToString("C"),
+                    TransactionDate = string.Format("{0:u}", paymentTrans.TransactionDate),
                     TransactionType = paymentTrans.TransactionType,
                     PropertyRef = paymentTrans.PropertyRef
                 }
@@ -34,17 +34,17 @@ namespace LBHTenancyAPI.UseCases
 
         public struct PaymentTransactionResponse
         {
-            public List<ResponsePaymentTransactions> PaymentTransactions { get; set; }
+            public List<PaymentTransaction> PaymentTransactions { get; set; }
         }
 
-        public struct ResponsePaymentTransactions
+        public struct PaymentTransaction
         {
-            public string TransactionsRef { get; set; }
-            public DateTime TransactionDate { get; set; }
+            public string TransactionRef { get; set; }
+            public string TransactionDate { get; set; }
             public string PropertyRef{ get; set; }
             public string TenancyRef { get; set; }
             public string TransactionType { get; set; }
-            public decimal TransactionAmount { get; set; }
+            public string TransactionAmount { get; set; }
         }
     }
 }

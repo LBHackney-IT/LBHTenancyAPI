@@ -47,14 +47,14 @@ namespace LBHTenancyAPITest.Test.UseCases
 
             var expectedResponse = new AllPaymentsForTenancy.PaymentTransactionResponse
             {
-                PaymentTransactions = new List<AllPaymentsForTenancy.ResponsePaymentTransactions>
+                PaymentTransactions = new List<AllPaymentsForTenancy.PaymentTransaction>
                 {
-                    new AllPaymentsForTenancy.ResponsePaymentTransactions
+                    new AllPaymentsForTenancy.PaymentTransaction
                     {
                         TenancyRef = payment.TenancyRef,
-                        TransactionsRef= payment.TransactionsRef,
-                        TransactionAmount= payment.TransactionAmount,
-                        TransactionDate = payment.TransactionDate,
+                        TransactionRef= payment.TransactionsRef,
+                        TransactionAmount= payment.TransactionAmount.ToString("C"),
+                        TransactionDate = string.Format("{0:u}", payment.TransactionDate),
                         TransactionType = payment.TransactionType,
                         PropertyRef = payment.PropertyRef
                     }
