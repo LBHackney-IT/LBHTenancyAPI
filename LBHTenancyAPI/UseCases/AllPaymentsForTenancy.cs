@@ -20,11 +20,10 @@ namespace LBHTenancyAPI.UseCases
 
             response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction()
                 {
-                    TransactionRef= paymentTrans.TransactionsRef,
-                    TenancyRef = paymentTrans.TenancyRef,
-                    TransactionAmount= paymentTrans.TransactionAmount.ToString("C"),
-                    TransactionDate = string.Format("{0:u}", paymentTrans.TransactionDate),
-                    TransactionType = paymentTrans.TransactionType,
+                    Ref= paymentTrans.TransactionsRef,
+                    Amount= paymentTrans.TransactionAmount.ToString("C"),
+                    Date = string.Format("{0:u}", paymentTrans.TransactionDate),
+                    Type = paymentTrans.TransactionType,
                     PropertyRef = paymentTrans.PropertyRef
                 }
             );
@@ -39,12 +38,11 @@ namespace LBHTenancyAPI.UseCases
 
         public struct PaymentTransaction
         {
-            public string TransactionRef { get; set; }
-            public string TransactionDate { get; set; }
+            public string Ref { get; set; }
+            public string Date { get; set; }
             public string PropertyRef{ get; set; }
-            public string TenancyRef { get; set; }
-            public string TransactionType { get; set; }
-            public string TransactionAmount { get; set; }
+            public string Type { get; set; }
+            public string Amount { get; set; }
         }
     }
 }

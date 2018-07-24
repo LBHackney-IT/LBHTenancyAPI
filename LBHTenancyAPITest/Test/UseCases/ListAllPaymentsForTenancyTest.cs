@@ -51,11 +51,10 @@ namespace LBHTenancyAPITest.Test.UseCases
                 {
                     new AllPaymentsForTenancy.PaymentTransaction
                     {
-                        TenancyRef = payment.TenancyRef,
-                        TransactionRef= payment.TransactionsRef,
-                        TransactionAmount= payment.TransactionAmount.ToString("C"),
-                        TransactionDate = string.Format("{0:u}", payment.TransactionDate),
-                        TransactionType = payment.TransactionType,
+                        Ref= payment.TransactionsRef,
+                        Amount= payment.TransactionAmount.ToString("C"),
+                        Date = string.Format("{0:u}", payment.TransactionDate),
+                        Type = payment.TransactionType,
                         PropertyRef = payment.PropertyRef
                     }
                 }

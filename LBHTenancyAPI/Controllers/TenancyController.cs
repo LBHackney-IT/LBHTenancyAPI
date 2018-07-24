@@ -29,11 +29,10 @@ namespace LBHTenancyAPI.Controllers
             var response = listAllPayments.Execute(tenancyRef);
             var paymentsTransaction = response.PaymentTransactions.ConvertAll(paymentTrans => new Dictionary<string, object>
             {
-                {"transaction_ref", paymentTrans.TransactionRef},
-                {"transaction_amount", paymentTrans.TransactionAmount},
-                {"transaction_date", paymentTrans.TransactionDate},
-                {"transaction_type", paymentTrans.TransactionType},
-                {"tenancy_ref", paymentTrans.TenancyRef},
+                {"ref", paymentTrans.Ref},
+                {"amount", paymentTrans.Amount},
+                {"date", paymentTrans.Date},
+                {"type", paymentTrans.Type},
                 {"property_ref", paymentTrans.PropertyRef}
             });
 
@@ -52,18 +51,17 @@ namespace LBHTenancyAPI.Controllers
             var response = listAllArrearsActions.Execute(tenancyRef);
             var arrearActionDiary = response.ActionDiaryEntries.ConvertAll(actionDiary => new Dictionary<string, object>
             {
-                {"action_balance", actionDiary.ActionBalance},
-                {"action_code", actionDiary.ActionCode},
-                {"action_code_name", actionDiary.ActionCodeName},
-                {"action_date", actionDiary.ActionDate.ToString()},
-                {"action_comment", actionDiary.ActionComment},
-                {"universal_housing_username", actionDiary.UniversalHousingUsername},
-                {"tenancy_ref", actionDiary.TenancyRef}
+                {"balance", actionDiary.ActionBalance},
+                {"code", actionDiary.ActionCode},
+                {"code_name", actionDiary.ActionCodeName},
+                {"date", actionDiary.ActionDate.ToString()},
+                {"comment", actionDiary.ActionComment},
+                {"universal_housing_username", actionDiary.UniversalHousingUsername}
             });
 
             var result = new Dictionary<string, object>
             {
-                {"arrears_action_diary", arrearActionDiary}
+                {"arrears_action_diary_events", arrearActionDiary}
             };
 
             return Ok(result);

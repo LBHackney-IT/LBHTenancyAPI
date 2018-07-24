@@ -45,42 +45,38 @@ namespace LBHTenancyAPITest.Test.Controllers
             var allPayments = new AllPaymentsStub();
             allPayments.AddPaymentTransaction(new AllPaymentsForTenancy.PaymentTransaction()
             {
-                TenancyRef = "000002/01",
                 PropertyRef = "000002/01/11",
-                TransactionAmount = "23.01",
-                TransactionDate = "2018-01-01 00:00:00Z",
-                TransactionType = "Direct Debit",
-                TransactionRef = "12345678"
+                Amount = "23.01",
+                Date = "2018-01-01 00:00:00Z",
+                Type = "Direct Debit",
+                Ref = "12345678"
             });
             allPayments.AddPaymentTransaction(new AllPaymentsForTenancy.PaymentTransaction()
             {
-                TenancyRef = "000002/01",
                 PropertyRef = "000002/02/12",
-                TransactionAmount = "24.01",
-                TransactionDate = "2018-01-03 00:00:00Z",
-                TransactionType = "Direct Debit",
-                TransactionRef = "123456789"
+                Amount = "24.01",
+                Date = "2018-01-03 00:00:00Z",
+                Type = "Direct Debit",
+                Ref = "123456789"
             });
 
             var response = await GetPaymentTransactionDetails(allPayments, "000002/01");
 
             var first = new Dictionary<string, object>
             {
-                {"transaction_ref", "12345678"},
-                {"transaction_amount", "23.01"},
-                {"transaction_date", "2018-01-01 00:00:00Z"},
-                {"transaction_type", "Direct Debit"},
-                {"tenancy_ref", "000002/01"},
+                {"ref", "12345678"},
+                {"amount", "23.01"},
+                {"date", "2018-01-01 00:00:00Z"},
+                {"type", "Direct Debit"},
                 {"property_ref", "000002/01/11"}
             };
 
             var second = new Dictionary<string, object>
             {
-                {"transaction_ref", "123456789"},
-                {"transaction_amount", "24.01"},
-                {"transaction_date", "2018-01-03 00:00:00Z"},
-                {"transaction_type", "Direct Debit"},
-                {"tenancy_ref", "000002/01"},
+                {"ref", "123456789"},
+                {"amount", "24.01"},
+                {"date", "2018-01-03 00:00:00Z"},
+                {"type", "Direct Debit"},
                 {"property_ref", "000002/02/12"}
             };
 
@@ -140,8 +136,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 ActionCodeName = "Some Code Name",
                 ActionDate = "11/10/1000",
                 ActionComment = "Something very interesting!",
-                UniversalHousingUsername = "Vlad",
-                TenancyRef = "000003/01"
+                UniversalHousingUsername = "Vlad"
             });
             allActions.AddActionDiary(new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry()
             {
@@ -150,37 +145,34 @@ namespace LBHTenancyAPITest.Test.Controllers
                 ActionCodeName = "Another Code here",
                 ActionDate = "22/08/2000",
                 ActionComment = "Something very not interesting!",
-                UniversalHousingUsername = "Vlad",
-                TenancyRef = "000003/01"
+                UniversalHousingUsername = "Vlad"
             });
 
             var response = await GetArrearsActionsDetails(allActions, "000003/01");
 
             var first = new Dictionary<string, object>
             {
-                {"action_balance", "10.10"},
-                {"action_code", "ABC01"},
-                {"action_code_name", "Some Code Name"},
-                {"action_date", "11/10/1000"},
-                {"action_comment", "Something very interesting!"},
-                {"universal_housing_username", "Vlad"},
-                {"tenancy_ref", "000003/01"}
+                {"balance", "10.10"},
+                {"code", "ABC01"},
+                {"code_name", "Some Code Name"},
+                {"date", "11/10/1000"},
+                {"comment", "Something very interesting!"},
+                {"universal_housing_username", "Vlad"}
             };
 
             var second = new Dictionary<string, object>
             {
-                {"action_balance", "11.20"},
-                {"action_code", "DEF12"},
-                {"action_code_name", "Another Code here"},
-                {"action_date", "22/08/2000"},
-                {"action_comment", "Something very not interesting!"},
-                {"universal_housing_username", "Vlad"},
-                {"tenancy_ref", "000003/01"}
+                {"balance", "11.20"},
+                {"code", "DEF12"},
+                {"code_name", "Another Code here"},
+                {"date", "22/08/2000"},
+                {"comment", "Something very not interesting!"},
+                {"universal_housing_username", "Vlad"}
             };
 
             var output = new Dictionary<string, object>
             {
-                {"arrears_action_diary",
+                {"arrears_action_diary_events",
                     new List<Dictionary<string, object>>
                     {
                         first,
