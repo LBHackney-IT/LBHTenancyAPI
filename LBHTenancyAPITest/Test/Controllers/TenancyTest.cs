@@ -43,24 +43,29 @@ namespace LBHTenancyAPITest.Test.Controllers
         public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson()
         {
             var allPayments = new AllPaymentsStub();
-            allPayments.AddPaymentTransaction(new AllPaymentsForTenancy.PaymentTransaction()
+
+
+            allPayments.AddPaymentTransaction("0test/01", new List<AllPaymentsForTenancy.PaymentTransaction>
             {
-                PropertyRef = "000002/01/11",
-                Amount = "23.01",
-                Date = "2018-01-01 00:00:00Z",
-                Type = "Direct Debit",
-                Ref = "12345678"
-            });
-            allPayments.AddPaymentTransaction(new AllPaymentsForTenancy.PaymentTransaction()
-            {
-                PropertyRef = "000002/02/12",
-                Amount = "24.01",
-                Date = "2018-01-03 00:00:00Z",
-                Type = "Direct Debit",
-                Ref = "123456789"
+                new AllPaymentsForTenancy.PaymentTransaction
+                {
+                    PropertyRef = "000002/01/11",
+                    Amount = "23.01",
+                    Date = "2018-01-01 00:00:00Z",
+                    Type = "Direct Debit",
+                    Ref = "12345678"
+                },
+                new AllPaymentsForTenancy.PaymentTransaction
+                {
+                    PropertyRef = "000002/02/12",
+                    Amount = "24.01",
+                    Date = "2018-01-03 00:00:00Z",
+                    Type = "Direct Debit",
+                    Ref = "123456789"
+                }
             });
 
-            var response = await GetPaymentTransactionDetails(allPayments, "000002/01");
+            var response = await GetPaymentTransactionDetails(allPayments, "0test/01");
 
             var first = new Dictionary<string, object>
             {
@@ -108,7 +113,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject
             (
-                new Dictionary<string, object> {{"arrears_action_diary", new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>()}}
+                new Dictionary<string, object> {{"arrears_action_diary_events", new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>()}}
             );
 
             Assert.Equal(expectedJson, actualJson);
@@ -129,26 +134,29 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var allActions = new AllActionsStub();
 
-            allActions.AddActionDiary(new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry()
+            allActions.AddActionDiary("1test/02", new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>
             {
-                ActionBalance = "10.10",
-                ActionCode = "ABC01",
-                ActionCodeName = "Some Code Name",
-                ActionDate = "11/10/1000",
-                ActionComment = "Something very interesting!",
-                UniversalHousingUsername = "Vlad"
-            });
-            allActions.AddActionDiary(new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry()
-            {
-                ActionBalance = "11.20",
-                ActionCode = "DEF12",
-                ActionCodeName = "Another Code here",
-                ActionDate = "22/08/2000",
-                ActionComment = "Something very not interesting!",
-                UniversalHousingUsername = "Vlad"
-            });
+                new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
+                {
+                    Balance = "10.10",
+                    Code = "ABC01",
+                    CodeName = "Some Code Name",
+                    Date = "11/10/1000",
+                    Comment = "Something very interesting!",
+                    UniversalHousingUsername = "Vlad"
+                },
+                new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
+                {
+                    Balance = "11.20",
+                    Code = "DEF12",
+                    CodeName = "Another Code here",
+                    Date = "22/08/2000",
+                    Comment = "Something very not interesting!",
+                    UniversalHousingUsername = "Vlad"
+                }
+             });
 
-            var response = await GetArrearsActionsDetails(allActions, "000003/01");
+            var response = await GetArrearsActionsDetails(allActions, "1test/02");
 
             var first = new Dictionary<string, object>
             {
@@ -235,24 +243,31 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private class AllPaymentsStub : IListAllPayments
         {
-            private readonly List<AllPaymentsForTenancy.PaymentTransaction> stubPaymentsTransactionsDetails;
+            private readonly Dictionary<string, List<AllPaymentsForTenancy.PaymentTransaction>> stubPaymentsTransactionsDetails;
 
             public AllPaymentsStub()
             {
-                stubPaymentsTransactionsDetails = new List<AllPaymentsForTenancy.PaymentTransaction>();
+                stubPaymentsTransactionsDetails = new Dictionary<string, List<AllPaymentsForTenancy.PaymentTransaction>>();
             }
 
-            public void AddPaymentTransaction(AllPaymentsForTenancy.PaymentTransaction paymentTransaction)
+            public void AddPaymentTransaction(string tenancyRef, List<AllPaymentsForTenancy.PaymentTransaction> paymentTransactions)
             {
-                stubPaymentsTransactionsDetails.Add(paymentTransaction);
+                stubPaymentsTransactionsDetails[tenancyRef] = paymentTransactions;
             }
 
             public AllPaymentsForTenancy.PaymentTransactionResponse Execute(string tenancyRef)
             {
+                var savedPayments = new List<AllPaymentsForTenancy.PaymentTransaction>();
+
+                if (stubPaymentsTransactionsDetails.ContainsKey(tenancyRef))
+                {
+                    savedPayments = stubPaymentsTransactionsDetails[tenancyRef];
+                }
+
 
                 return new AllPaymentsForTenancy.PaymentTransactionResponse
                 {
-                    PaymentTransactions = stubPaymentsTransactionsDetails.FindAll(e => e.TenancyRef == tenancyRef)
+                    PaymentTransactions = savedPayments
                 };
             }
         }
@@ -285,24 +300,30 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private class AllActionsStub : IListAllArrearsActions
         {
-            private readonly List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry> stubActionDiaryDetails;
+            private readonly Dictionary<string, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>> stubActionDiaryDetails;
 
             public AllActionsStub()
             {
-                stubActionDiaryDetails = new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>();
+                stubActionDiaryDetails = new Dictionary<string, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>>();
             }
 
-            public void AddActionDiary(AllArrearsActionsForTenancy.ArrearsActionDiaryEntry actionDiary)
+            public void AddActionDiary(string tenancyRef, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry> actionDiary)
             {
-                stubActionDiaryDetails.Add(actionDiary);
+                stubActionDiaryDetails[tenancyRef] = actionDiary;
             }
 
             public AllArrearsActionsForTenancy.ArrearsActionDiaryResponse Execute(string tenancyRef)
             {
+                var savedActions = new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>();
+
+                if (stubActionDiaryDetails.ContainsKey(tenancyRef))
+                {
+                    savedActions = stubActionDiaryDetails[tenancyRef];
+                }
 
                 return new AllArrearsActionsForTenancy.ArrearsActionDiaryResponse
                 {
-                    ActionDiaryEntries = stubActionDiaryDetails.FindAll(e => e.TenancyRef == tenancyRef)
+                    ActionDiaryEntries = savedActions
                 };
             }
         }

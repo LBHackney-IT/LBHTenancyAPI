@@ -20,12 +20,11 @@ namespace LBHTenancyAPI.UseCases
 
             response.ActionDiaryEntries = actionDiaryResponse.ConvertAll(actionDiary => new ArrearsActionDiaryEntry()
                 {
-                    TenancyRef = actionDiary.TenancyRef,
-                    ActionCode = actionDiary.ActionCode,
-                    ActionCodeName = actionDiary.ActionCodeName,
-                    ActionBalance = actionDiary.ActionBalance.ToString("C"),
-                    ActionComment = actionDiary.ActionComment,
-                    ActionDate = string.Format("{0:u}", actionDiary.ActionDate),
+                    Code = actionDiary.ActionCode,
+                    CodeName = actionDiary.ActionCodeName,
+                    Balance = actionDiary.ActionBalance.ToString("C"),
+                    Comment = actionDiary.ActionComment,
+                    Date = string.Format("{0:u}", actionDiary.ActionDate),
                     UniversalHousingUsername = actionDiary.UniversalHousingUsername
                 }
             );
@@ -40,12 +39,11 @@ namespace LBHTenancyAPI.UseCases
 
         public struct ArrearsActionDiaryEntry
         {
-            public string ActionBalance { get; set; }
-            public string ActionCodeName { get; set; }
-            public string ActionCode { get; set; }
-            public string ActionComment{ get; set; }
-            public string ActionDate { get; set; }
-            public string TenancyRef{ get; set; }
+            public string Balance { get; set; }
+            public string CodeName { get; set; }
+            public string Code { get; set; }
+            public string Comment{ get; set; }
+            public string Date { get; set; }
             public string UniversalHousingUsername { get; set; }
         }
     }

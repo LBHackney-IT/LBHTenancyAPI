@@ -51,11 +51,11 @@ namespace LBHTenancyAPI.Controllers
             var response = listAllArrearsActions.Execute(tenancyRef);
             var arrearActionDiary = response.ActionDiaryEntries.ConvertAll(actionDiary => new Dictionary<string, object>
             {
-                {"balance", actionDiary.ActionBalance},
-                {"code", actionDiary.ActionCode},
-                {"code_name", actionDiary.ActionCodeName},
-                {"date", actionDiary.ActionDate.ToString()},
-                {"comment", actionDiary.ActionComment},
+                {"balance", actionDiary.Balance},
+                {"code", actionDiary.Code},
+                {"code_name", actionDiary.CodeName},
+                {"date", actionDiary.Date.ToString()},
+                {"comment", actionDiary.Comment},
                 {"universal_housing_username", actionDiary.UniversalHousingUsername}
             });
 
