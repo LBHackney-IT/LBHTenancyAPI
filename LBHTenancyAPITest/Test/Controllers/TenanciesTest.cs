@@ -152,7 +152,7 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
-            var controller = new TenanciesController(listTenanciesUseCase);
+            var controller = new TenanciesController(listTenanciesUseCase, null, null);
             var result = await controller.Get(tenancyRefs);
             return result as OkObjectResult;
         }

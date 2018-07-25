@@ -28,6 +28,8 @@ namespace LBHTenancyAPI
         {
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
+            services.AddTransient<IListAllArrearsActions, AllArrearsActionsForTenancy>();
+            services.AddTransient<IListAllPayments, AllPaymentsForTenancy>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
         }
 
