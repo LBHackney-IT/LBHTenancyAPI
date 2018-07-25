@@ -35,7 +35,7 @@ namespace LBHTenancyAPITest.Test.UseCases
         }
 
         [Fact]
-        public void WhenATenancyRefIsGiven_ResponseShouldIncludePaymentsForThatTenancy_Example1()
+        public void WhenATenancyRefIsGiven_ResponseShouldIncludePaymentsForThatTenancy()
         {
             var gateway = new StubTenanciesGateway();
             var payment = Fake.GeneratePaymentTransactionDetails();

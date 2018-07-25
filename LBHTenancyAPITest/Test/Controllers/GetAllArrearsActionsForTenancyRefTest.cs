@@ -37,7 +37,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenGivenATenancyRef_ActionDiary_ShouldRespondWithFormattedJson()
+        public async Task WhenGivenATenancyRef_ActionDiary_ShouldRespondWithFormattedJson_Example1()
         {
             var allActions = new AllActionsStub();
 
@@ -83,6 +83,72 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"date", "22/08/2000"},
                 {"comment", "Something very not interesting!"},
                 {"universal_housing_username", "Vlad"}
+            };
+
+            var output = new Dictionary<string, object>
+            {
+                {"arrears_action_diary_events",
+                    new List<Dictionary<string, object>>
+                    {
+                        first,
+                        second
+                    }
+
+                }
+            };
+            var actualResponse = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject(output);
+
+            Assert.Equal(expectedJson, actualResponse);
+        }
+
+        [Fact]
+        public async Task WhenGivenATenancyRef_ActionDiary_ShouldRespondWithFormattedJson_Example2()
+        {
+            var allActions = new AllActionsStub();
+
+            allActions.AddActionDiary("testtest/11", new List<ListAllArrearsActions.ArrearsActionDiaryEntry>
+            {
+                new ListAllArrearsActions.ArrearsActionDiaryEntry
+                {
+                    Balance = "166.10",
+                    Code = "ACODE",
+                    CodeName = "Great Code Name",
+                    Date = "12/11/1222",
+                    Comment = "A great comment!",
+                    UniversalHousingUsername = "Ritchard"
+                },
+                new ListAllArrearsActions.ArrearsActionDiaryEntry
+                {
+                    Balance = "-99.00",
+                    Code = "CODE2",
+                    CodeName = "Fantastic Code Name",
+                    Date = "21/08/1988",
+                    Comment = "A somewhat salubrious comment.",
+                    UniversalHousingUsername = "Stephen"
+                }
+             });
+
+            var response = await GetArrearsActionsDetails(allActions, "testtest/11");
+
+            var first = new Dictionary<string, object>
+            {
+                {"balance", "166.10"},
+                {"code", "ACODE"},
+                {"code_name", "Great Code Name"},
+                {"date", "12/11/1222"},
+                {"comment", "A great comment!"},
+                {"universal_housing_username", "Ritchard"}
+            };
+
+            var second = new Dictionary<string, object>
+            {
+                {"balance", "-99.00"},
+                {"code", "CODE2"},
+                {"code_name", "Fantastic Code Name"},
+                {"date", "21/08/1988"},
+                {"comment", "A somewhat salubrious comment."},
+                {"universal_housing_username", "Stephen"}
             };
 
             var output = new Dictionary<string, object>

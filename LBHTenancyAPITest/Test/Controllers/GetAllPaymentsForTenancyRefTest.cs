@@ -40,7 +40,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson()
+        public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson_Example1()
         {
             var allPayments = new AllPaymentsStub();
 
@@ -83,6 +83,70 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"date", "2018-01-03 00:00:00Z"},
                 {"type", "Direct Debit"},
                 {"property_ref", "000002/02/12"}
+            };
+
+            var output = new Dictionary<string, object>
+            {
+                {"payment_transactions",
+                    new List<Dictionary<string, object>>
+                    {
+                        first,
+                        second
+                    }
+
+                }
+            };
+
+            var actualResponse = ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject(output);
+
+            Assert.Equal(expectedJson, actualResponse);
+        }
+
+        [Fact]
+        public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson_Example2()
+        {
+            var allPayments = new AllPaymentsStub();
+
+
+            allPayments.AddPaymentTransaction("3test/32", new List<ListAllPayments.PaymentTransaction>
+            {
+                new ListAllPayments.PaymentTransaction
+                {
+                    PropertyRef = "010101/02/99",
+                    Amount = "459.99",
+                    Date = "2017-11-30 00:00:00Z",
+                    Type = "PayPoint",
+                    Ref = "6645352"
+                },
+                new ListAllPayments.PaymentTransaction
+                {
+                    PropertyRef = "33333/55/77",
+                    Amount = "32.22",
+                    Date = "2018-02-23 00:00:00Z",
+                    Type = "type!",
+                    Ref = "098765"
+                }
+            });
+
+            var response = await GetPaymentTransactionDetails(allPayments, "3test/32");
+
+            var first = new Dictionary<string, object>
+            {
+                {"ref", "6645352"},
+                {"amount", "459.99"},
+                {"date", "2017-11-30 00:00:00Z"},
+                {"type", "PayPoint"},
+                {"property_ref", "010101/02/99"}
+            };
+
+            var second = new Dictionary<string, object>
+            {
+                {"ref", "098765"},
+                {"amount", "32.22"},
+                {"date", "2018-02-23 00:00:00Z"},
+                {"type", "type!"},
+                {"property_ref", "33333/55/77"}
             };
 
             var output = new Dictionary<string, object>

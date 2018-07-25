@@ -6,7 +6,7 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases
 {
-    public class AllArrearsActionsForTenancyTest
+    public class ListAllArrearsActionsForTenancyTest
     {
         [Fact]
         public void WhenGivenATenancyRefThatDoesntExist_ShouldReturnAnEmptyArrearsActionsResponse()
@@ -34,7 +34,7 @@ namespace LBHTenancyAPITest.Test.UseCases
         }
 
         [Fact]
-        public void WhenATenancyRefIsGiven_ResponseShouldIncludeActionDiaryForThatTenancy_Example1()
+        public void WhenATenancyRefIsGiven_ResponseShouldIncludeActionDiaryForThatTenancy()
         {
             var gateway = new StubTenanciesGateway();
             var actionDiary = Fake.GenerateActionDiary();
