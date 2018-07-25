@@ -28,7 +28,7 @@ namespace LBHTenancyAPI.Gateways
             return tenancies;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(string tenancyRef)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
         {
             var actionDiaryDetails = new List<ArrearsActionDiaryDetails>();
 

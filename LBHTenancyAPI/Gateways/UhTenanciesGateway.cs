@@ -59,20 +59,20 @@ namespace LBHTenancyAPI.Gateways
             return results;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(string tenancyRef)
+        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
         {
-            return conn.Query<ArrearsActionDiaryDetails>($"" +
-                                                         $"SELECT " +
-                                                         $"tag_ref as TenancyRef, " +
-                                                         $"action_code as ActionCode, " +
-                                                         $"action_code_name as ActionCodeName, " +
-                                                         $"action_date as ActionDate, " +
-                                                         $"action_comment as ActionComment, " +
-                                                         $"uh_username as UHUsername, " +
-                                                         $"action_balance as ActionBalance " +
-                                                         $"FROM araction " +
-                                                         $"WHERE tag_ref = '{tenancyRef}') " +
-                                                         $"ORDER BY araction.action_date DESC").ToList();
+            return conn.Query<ArrearsActionDiaryDetails>("" +
+                                                         "SELECT " +
+                                                         "tag_ref as TenancyRef, " +
+                                                         "action_code as ActionCode, " +
+                                                         "action_code_name as ActionCodeName, " +
+                                                         "action_date as ActionDate, " +
+                                                         "action_comment as ActionComment, " +
+                                                         "uh_username as UHUsername, " +
+                                                         "action_balance as ActionBalance " +
+                                                         "FROM araction " +
+                                                         $"WHERE tag_ref = ('{tenancyRef}') " +
+                                                         "ORDER BY araction.action_date DESC").ToList();
         }
 
         public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(string tenancyRef)
@@ -84,9 +84,9 @@ namespace LBHTenancyAPI.Gateways
                                                          "trans_type AS TransactionType, " +
                                                          "amount AS TransactionAmount, " +
                                                          "transaction_date AS TransactionDate, " +
-                                                         "trans_ref AS TransactionRef, " +
+                                                         "trans_ref AS TransactionRef " +
                                                          "FROM rtrans " +
-                                                         $"WHERE tag_ref = '{tenancyRef}') " +
+                                                         $"WHERE tag_ref = ('{tenancyRef}') " +
                                                          "ORDER BY transaction_date DESC ").ToList();
         }
 
@@ -116,7 +116,7 @@ namespace LBHTenancyAPI.Gateways
                 .FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-            result.ArrearsActionDiary = GetLatestfiveArrearsActionForRef(tenancyRef);
+            result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
             return result;
         }
 
@@ -136,7 +136,7 @@ namespace LBHTenancyAPI.Gateways
                                                       "ORDER BY arag_startdate DESC ").ToList();
         }
 
-        public List<ArrearsActionDiaryDetails> GetLatestfiveArrearsActionForRef(string tenancyRef)
+        public List<ArrearsActionDiaryDetails> GetLatestFiveArrearsActionForRef(string tenancyRef)
         {
             return conn.Query<ArrearsActionDiaryDetails>("" +
                                                          "SELECT top 5" +

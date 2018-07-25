@@ -16,7 +16,7 @@ namespace LBHTenancyAPI.UseCases
         public ArrearsActionDiaryResponse Execute(string tenancyRef)
         {
             var response = new ArrearsActionDiaryResponse();
-            var actionDiaryResponse = tenanciesGateway.GetActionDiaryDetailsbyTenancyRefs(tenancyRef);
+            var actionDiaryResponse = tenanciesGateway.GetActionDiaryDetailsbyTenancyRef(tenancyRef);
 
             response.ActionDiaryEntries = actionDiaryResponse.ConvertAll(actionDiary => new ArrearsActionDiaryEntry()
                 {

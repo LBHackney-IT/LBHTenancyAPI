@@ -214,20 +214,54 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
 
+        [Fact]
+        public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnAllArrearsActions()
+        {
+            int numberOfExpectedActions = 10;
+            string expectedTenancyRef = "12345/01";
+
+            InsertRandomActionDiaryDetails(expectedTenancyRef, numberOfExpectedActions);
+
+            var actions = GetArrearsActionsByRef(expectedTenancyRef);
+
+            Assert.Equal(numberOfExpectedActions, actions.Count);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnAllPayments()
+        {
+            int numberOfExpectedTransactions = 10;
+            string expectedTenancyRef = "12345/01";
+
+            InsertRandomTransactions(expectedTenancyRef, numberOfExpectedTransactions);
+
+            var transactions = GetPaymentTransactionsByTenancyRef(expectedTenancyRef);
+
+            Assert.Equal(numberOfExpectedTransactions, transactions.Count);
+        }
+
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
-            var tenancy = gateway.GetTenancyForRef(tenancyRef);
-
-            return tenancy;
+            return gateway.GetTenancyForRef(tenancyRef);
         }
 
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
-            var tenancies = gateway.GetTenanciesByRefs(refs);
+            return gateway.GetTenanciesByRefs(refs);
+        }
 
-            return tenancies;
+        private List<ArrearsActionDiaryDetails> GetArrearsActionsByRef(string tenancyRef)
+        {
+            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            return gateway.GetActionDiaryDetailsbyTenancyRef(tenancyRef);
+        }
+
+        private List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(string tenancyRef)
+        {
+            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            return gateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
         }
 
         private Tenancy CreateRandomSingleTenancyItem()
@@ -407,9 +441,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                 items = new List<ArrearsActionDiaryDetails>();
                 string commandText =
 
-                    "INSERT INTO araction (tag_ref, action_code,action_code_name,action_date,action_comment,action_balance," +
+                    "INSERT INTO araction (tag_ref, action_code, action_code_name, action_date, action_comment, action_balance, " +
                     "uh_username) " +
-                    "VALUES (@tenancyRef, @actionCode,@actionCodeName,@actionDate,@actionComment,@actionBalance,@uhUsername)";
+                    "VALUES (@tenancyRef, @actionCode, @actionCodeName, @actionDate, @actionComment, @actionBalance, @uhUsername)";
 
                 foreach (int i in Enumerable.Range(0, num))
                 {
@@ -461,6 +495,67 @@ namespace LBHTenancyAPITest.Test.Gateways
                 command = null;
             }
         }
+
+        private List<PaymentTransactionDetails> InsertRandomTransactions(string tenancyRef, int num)
+        {
+            List<PaymentTransactionDetails> items = null;
+            SqlCommand command = null;
+            try
+            {
+                var random = new Faker();
+                items = new List<PaymentTransactionDetails>();
+                string commandText =
+
+                    "INSERT INTO rtrans (tag_ref, trans_ref, prop_ref, trans_type, transaction_date, amount)" +
+                    "VALUES (@tenancyRef, @transRef, @propRef, @transType, @transactionDate, @amount)";
+
+                foreach (int i in Enumerable.Range(0, num))
+                {
+                     PaymentTransactionDetails paymentDetail = new PaymentTransactionDetails
+                     {
+                        TenancyRef = tenancyRef,
+                        TransactionType = random.Random.Hash(11),
+                        PropertyRef = random.Random.Hash(11),
+                        TransactionRef= random.Random.Hash(11),
+                        TransactionAmount = random.Finance.Amount(),
+                        TransactionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0)
+                    };
+
+                    command = new SqlCommand(commandText, db);
+                    command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+                    command.Parameters["@tenancyRef"].Value = paymentDetail.TenancyRef;
+
+                    command.Parameters.Add("@transRef", SqlDbType.Char);
+                    command.Parameters["@transRef"].Value = paymentDetail.TransactionRef;
+
+                    command.Parameters.Add("@transactionDate", SqlDbType.SmallDateTime);
+                    command.Parameters["@transactionDate"].Value = paymentDetail.TransactionDate;
+
+                    command.Parameters.Add("@propRef", SqlDbType.Char);
+                    command.Parameters["@propRef"].Value = paymentDetail.PropertyRef;
+
+                    command.Parameters.Add("@amount", SqlDbType.Decimal);
+                    command.Parameters["@amount"].Value = paymentDetail.TransactionAmount;
+
+                    command.Parameters.Add("@transType", SqlDbType.Char);
+                    command.Parameters["@transType"].Value = paymentDetail.TransactionType;
+
+                    items.Add(paymentDetail);
+                    command.ExecuteNonQuery();
+                }
+
+                return items.OrderByDescending(i => i.TransactionDate).ToList();
+            }
+            catch (Exception ex)
+            {
+               throw ex;
+            }
+            finally
+            {
+                command = null;
+            }
+        }
+
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
         {

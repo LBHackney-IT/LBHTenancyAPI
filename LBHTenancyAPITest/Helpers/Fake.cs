@@ -34,7 +34,7 @@ namespace LBHTenancyAPITest.Helpers
                 TenancyRef = random.Random.Hash(11),
                 TransactionAmount = random.Finance.Amount(),
                 TransactionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                TransactionsRef = random.Random.Hash(11),
+                TransactionRef = random.Random.Hash(11),
                 TransactionType = random.Random.Hash(11),
                 PropertyRef = random.Random.Hash(11)
             };

@@ -3,7 +3,7 @@ namespace LBHTenancyAPI.Domain
 {
     public struct PaymentTransactionDetails
     {
-        public string TransactionsRef { get; set; }
+        public string TransactionRef { get; set; }
         public string PropertyRef { get; set; }
         public string TenancyRef { get; set; }
         public string TransactionType{ get; set; }
