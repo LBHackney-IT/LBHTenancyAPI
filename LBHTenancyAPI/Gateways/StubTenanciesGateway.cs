@@ -32,13 +32,9 @@ namespace LBHTenancyAPI.Gateways
         {
             var actionDiaryDetails = new List<ArrearsActionDiaryEntry>();
 
-            try
+            if (StoredActionDiaryDetails.ContainsKey(tenancyRef))
             {
                 actionDiaryDetails.Add(StoredActionDiaryDetails[tenancyRef]);
-            }
-            catch (Exception)
-            {
-                //do nothing
             }
 
             return actionDiaryDetails;
@@ -48,13 +44,9 @@ namespace LBHTenancyAPI.Gateways
         {
             var paymentTransactionDetails = new List<PaymentTransaction>();
 
-            try
+            if (StoredPaymentTransactionsDetails.ContainsKey(tenancyRef))
             {
                 paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[tenancyRef]);
-            }
-            catch (Exception)
-            {
-                // do nothing
             }
 
             return paymentTransactionDetails;
