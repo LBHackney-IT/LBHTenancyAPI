@@ -16,15 +16,15 @@ namespace LBHTenancyAPI.UseCases
         public ArrearsActionDiaryResponse Execute(string tenancyRef)
         {
             var response = new ArrearsActionDiaryResponse();
-            var actionDiaryResponse = tenanciesGateway.GetActionDiaryDetailsbyTenancyRef(tenancyRef);
+            var actionDiaryResponse = tenanciesGateway.GetActionDiaryEntriesbyTenancyRef(tenancyRef);
 
             response.ActionDiaryEntries = actionDiaryResponse.ConvertAll(actionDiary => new ArrearsActionDiaryEntry()
                 {
-                    Code = actionDiary.ActionCode,
-                    CodeName = actionDiary.ActionCodeName,
-                    Balance = actionDiary.ActionBalance.ToString("C"),
-                    Comment = actionDiary.ActionComment,
-                    Date = string.Format("{0:u}", actionDiary.ActionDate),
+                    Code = actionDiary.Code,
+                    CodeName = actionDiary.CodeName,
+                    Balance = actionDiary.Balance.ToString("C"),
+                    Comment = actionDiary.Comment,
+                    Date = string.Format("{0:u}", actionDiary.Date),
                     UniversalHousingUsername = actionDiary.UniversalHousingUsername
                 }
             );

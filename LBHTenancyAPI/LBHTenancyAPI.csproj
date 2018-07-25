@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Domain\ArrearsActionDiary.cs" />
-    <Compile Remove="Domain\ArrearsAgreement.cs" />
   </ItemGroup>
 </Project>

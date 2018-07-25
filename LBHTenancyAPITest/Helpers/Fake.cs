@@ -25,33 +25,33 @@ namespace LBHTenancyAPITest.Helpers
           };
         }
 
-        public static PaymentTransactionDetails GeneratePaymentTransactionDetails()
+        public static PaymentTransaction GeneratePaymentTransactionDetails()
         {
             var random = new Faker();
 
-            return new PaymentTransactionDetails
+            return new PaymentTransaction
             {
                 TenancyRef = random.Random.Hash(11),
-                TransactionAmount = random.Finance.Amount(),
-                TransactionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                Amount = random.Finance.Amount(),
+                Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 TransactionRef = random.Random.Hash(11),
-                TransactionType = random.Random.Hash(11),
+                Type = random.Random.Hash(11),
                 PropertyRef = random.Random.Hash(11)
             };
         }
 
-        public static ArrearsActionDiaryDetails GenerateActionDiary()
+        public static ArrearsActionDiaryEntry GenerateActionDiary()
         {
             var random = new Faker();
 
-            return new ArrearsActionDiaryDetails
+            return new ArrearsActionDiaryEntry
             {
                 TenancyRef = random.Random.Hash(11),
-                ActionBalance = random.Finance.Amount(),
-                ActionCode = random.Random.Hash(3),
-                ActionCodeName = random.Random.Hash(50),
-                ActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                ActionComment = random.Random.Hash(100),
+                Balance = random.Finance.Amount(),
+                Code = random.Random.Hash(3),
+                CodeName = random.Random.Hash(50),
+                Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                Comment = random.Random.Hash(100),
                 UniversalHousingUsername = random.Random.Hash(50)
             };
         }

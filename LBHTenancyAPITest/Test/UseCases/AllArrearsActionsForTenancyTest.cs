@@ -50,11 +50,11 @@ namespace LBHTenancyAPITest.Test.UseCases
                 {
                     new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
                     {
-                        Balance = actionDiary.ActionBalance.ToString("C"),
-                        Date = string.Format("{0:u}", actionDiary.ActionDate),
-                        Code = actionDiary.ActionCode,
-                        CodeName = actionDiary.ActionCodeName,
-                        Comment = actionDiary.ActionComment,
+                        Balance = actionDiary.Balance.ToString("C"),
+                        Date = string.Format("{0:u}", actionDiary.Date),
+                        Code = actionDiary.Code,
+                        CodeName = actionDiary.CodeName,
+                        Comment = actionDiary.Comment,
                         UniversalHousingUsername = actionDiary.UniversalHousingUsername
                     }
                 }

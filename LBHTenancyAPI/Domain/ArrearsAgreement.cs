@@ -2,7 +2,7 @@
 
 namespace LBHTenancyAPI.Domain
 {
-    public struct ArrearsAgreementDetail
+    public struct ArrearsAgreement
     {
         private decimal amount;
         public Decimal Amount

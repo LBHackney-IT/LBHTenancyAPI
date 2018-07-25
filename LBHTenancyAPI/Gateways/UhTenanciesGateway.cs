@@ -59,9 +59,9 @@ namespace LBHTenancyAPI.Gateways
             return results;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
+        public List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef)
         {
-            return conn.Query<ArrearsActionDiaryDetails>("" +
+            return conn.Query<ArrearsActionDiaryEntry>("" +
                                                          "SELECT " +
                                                          "tag_ref as TenancyRef, " +
                                                          "action_code as ActionCode, " +
@@ -75,9 +75,9 @@ namespace LBHTenancyAPI.Gateways
                                                          "ORDER BY araction.action_date DESC").ToList();
         }
 
-        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(string tenancyRef)
+        public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            return conn.Query<PaymentTransactionDetails>("" +
+            return conn.Query<PaymentTransaction>("" +
                                                          "SELECT " +
                                                          "tag_ref AS TenancyRef," +
                                                          "prop_ref AS PropertyRef, " +
@@ -120,9 +120,9 @@ namespace LBHTenancyAPI.Gateways
             return result;
         }
 
-        private List<ArrearsAgreementDetail> GetLastFiveAgreementsForTenancy(string tenancyRef)
+        private List<ArrearsAgreement> GetLastFiveAgreementsForTenancy(string tenancyRef)
         {
-            return conn.Query<ArrearsAgreementDetail>("SELECT TOP 5" +
+            return conn.Query<ArrearsAgreement>("SELECT TOP 5" +
                                                       "tag_ref AS TenancyRef," +
                                                       "arag_status AS Status, " +
                                                       "arag_startdate Startdate, " +
@@ -136,9 +136,9 @@ namespace LBHTenancyAPI.Gateways
                                                       "ORDER BY arag_startdate DESC ").ToList();
         }
 
-        public List<ArrearsActionDiaryDetails> GetLatestFiveArrearsActionForRef(string tenancyRef)
+        public List<ArrearsActionDiaryEntry> GetLatestFiveArrearsActionForRef(string tenancyRef)
         {
-            return conn.Query<ArrearsActionDiaryDetails>("" +
+            return conn.Query<ArrearsActionDiaryEntry>("" +
                                                          "SELECT top 5" +
                                                          "tag_ref as TenancyRef, " +
                                                          "action_code as ActionCode, " +

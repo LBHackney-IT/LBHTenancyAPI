@@ -21,9 +21,9 @@ namespace LBHTenancyAPI.UseCases
             response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction()
                 {
                     Ref= paymentTrans.TransactionRef,
-                    Amount= paymentTrans.TransactionAmount.ToString("C"),
-                    Date = string.Format("{0:u}", paymentTrans.TransactionDate),
-                    Type = paymentTrans.TransactionType,
+                    Amount= paymentTrans.Amount.ToString("C"),
+                    Date = string.Format("{0:u}", paymentTrans.Date),
+                    Type = paymentTrans.Type,
                     PropertyRef = paymentTrans.PropertyRef
                 }
             );

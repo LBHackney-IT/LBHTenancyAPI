@@ -7,14 +7,14 @@ namespace LBHTenancyAPI.Gateways
     public class StubTenanciesGateway : ITenanciesGateway
     {
         private Dictionary<string, TenancyListItem> StoredTenancyListItems;
-        private Dictionary<string, ArrearsActionDiaryDetails> StoredActionDiaryDetails;
-        private Dictionary<string, PaymentTransactionDetails> StoredPaymentTransactionsDetails;
+        private Dictionary<string, ArrearsActionDiaryEntry> StoredActionDiaryDetails;
+        private Dictionary<string, PaymentTransaction> StoredPaymentTransactionsDetails;
 
         public StubTenanciesGateway()
         {
             StoredTenancyListItems = new Dictionary<string, TenancyListItem>();
-            StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryDetails>();
-            StoredPaymentTransactionsDetails = new Dictionary<string, PaymentTransactionDetails>();
+            StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryEntry>();
+            StoredPaymentTransactionsDetails = new Dictionary<string, PaymentTransaction>();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
@@ -28,9 +28,9 @@ namespace LBHTenancyAPI.Gateways
             return tenancies;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRef(string tenancyRef)
+        public List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef)
         {
-            var actionDiaryDetails = new List<ArrearsActionDiaryDetails>();
+            var actionDiaryDetails = new List<ArrearsActionDiaryEntry>();
 
             try
             {
@@ -44,9 +44,9 @@ namespace LBHTenancyAPI.Gateways
             return actionDiaryDetails;
         }
 
-        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(string tenancyRef)
+        public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            var paymentTransactionDetails = new List<PaymentTransactionDetails>();
+            var paymentTransactionDetails = new List<PaymentTransaction>();
 
             try
             {
@@ -65,12 +65,12 @@ namespace LBHTenancyAPI.Gateways
             StoredTenancyListItems[tenancyRef] = tenancyListItem;
         }
 
-        public void SetPaymentTransactionDetails(string tenancyRef, PaymentTransactionDetails payment)
+        public void SetPaymentTransactionDetails(string tenancyRef, PaymentTransaction payment)
         {
             StoredPaymentTransactionsDetails[tenancyRef] = payment;
         }
 
-        public void SetActionDiaryDetails(string tenancyRef,ArrearsActionDiaryDetails actionDiary)
+        public void SetActionDiaryDetails(string tenancyRef,ArrearsActionDiaryEntry actionDiary)
         {
             StoredActionDiaryDetails[tenancyRef] = actionDiary;
         }
