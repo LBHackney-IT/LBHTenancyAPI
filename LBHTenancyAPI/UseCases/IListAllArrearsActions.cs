@@ -4,6 +4,6 @@ namespace LBHTenancyAPI.UseCases
 {
     public interface IListAllArrearsActions
     {
-        AllArrearsActionsForTenancy.ArrearsActionDiaryResponse Execute(string tenancyRef);
+        ListAllArrearsActions.ArrearsActionDiaryResponse Execute(string tenancyRef);
     }
 }

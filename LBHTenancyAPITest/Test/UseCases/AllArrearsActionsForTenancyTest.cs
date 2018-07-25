@@ -12,10 +12,10 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenATenancyRefThatDoesntExist_ShouldReturnAnEmptyArrearsActionsResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listAllActions = new AllArrearsActionsForTenancy(gateway);
+            var listAllActions = new ListAllArrearsActions(gateway);
             var response = listAllActions.Execute("");
 
-            Assert.IsType(typeof(AllArrearsActionsForTenancy.ArrearsActionDiaryResponse), response);
+            Assert.IsType(typeof(ListAllArrearsActions.ArrearsActionDiaryResponse), response);
             Assert.Empty(response.ActionDiaryEntries);
         }
 
@@ -23,14 +23,14 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenATenancyRef_ShouldReturnAnActionDiaryResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listAllActions = new AllArrearsActionsForTenancy(gateway);
+            var listAllActions = new ListAllArrearsActions(gateway);
 
             var actionDiary = Fake.GenerateActionDiary();
             gateway.SetActionDiaryDetails(actionDiary.TenancyRef, actionDiary);
 
             var response = listAllActions.Execute(actionDiary.TenancyRef);
 
-            Assert.IsType(typeof(AllArrearsActionsForTenancy.ArrearsActionDiaryResponse), response);
+            Assert.IsType(typeof(ListAllArrearsActions.ArrearsActionDiaryResponse), response);
         }
 
         [Fact]
@@ -41,14 +41,14 @@ namespace LBHTenancyAPITest.Test.UseCases
 
             gateway.SetActionDiaryDetails(actionDiary.TenancyRef, actionDiary);
 
-            var listAllActionDiary = new AllArrearsActionsForTenancy(gateway);
+            var listAllActionDiary = new ListAllArrearsActions(gateway);
             var response = listAllActionDiary.Execute(actionDiary.TenancyRef);
 
-            var expectedResponse = new AllArrearsActionsForTenancy.ArrearsActionDiaryResponse
+            var expectedResponse = new ListAllArrearsActions.ArrearsActionDiaryResponse
             {
-                ActionDiaryEntries = new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>
+                ActionDiaryEntries = new List<ListAllArrearsActions.ArrearsActionDiaryEntry>
                 {
-                    new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
+                    new ListAllArrearsActions.ArrearsActionDiaryEntry
                     {
                         Balance = actionDiary.Balance.ToString("C"),
                         Date = string.Format("{0:u}", actionDiary.Date),

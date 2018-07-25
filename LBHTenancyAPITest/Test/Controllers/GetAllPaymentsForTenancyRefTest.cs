@@ -23,7 +23,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject
             (
-                new Dictionary<string, object> {{"payment_transactions", new List<AllPaymentsForTenancy.PaymentTransaction>()}}
+                new Dictionary<string, object> {{"payment_transactions", new List<ListAllPayments.PaymentTransaction>()}}
             );
 
             Assert.Equal(expectedJson, actualJson);
@@ -45,9 +45,9 @@ namespace LBHTenancyAPITest.Test.Controllers
             var allPayments = new AllPaymentsStub();
 
 
-            allPayments.AddPaymentTransaction("0test/01", new List<AllPaymentsForTenancy.PaymentTransaction>
+            allPayments.AddPaymentTransaction("0test/01", new List<ListAllPayments.PaymentTransaction>
             {
-                new AllPaymentsForTenancy.PaymentTransaction
+                new ListAllPayments.PaymentTransaction
                 {
                     PropertyRef = "000002/01/11",
                     Amount = "23.01",
@@ -55,7 +55,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Type = "Direct Debit",
                     Ref = "12345678"
                 },
-                new AllPaymentsForTenancy.PaymentTransaction
+                new ListAllPayments.PaymentTransaction
                 {
                     PropertyRef = "000002/02/12",
                     Amount = "24.01",
@@ -124,10 +124,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 calledWith = new List<object>();
             }
 
-            public AllPaymentsForTenancy.PaymentTransactionResponse Execute(string tenancyRef)
+            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
             {
                 calledWith.Add(tenancyRef);
-                return new AllPaymentsForTenancy.PaymentTransactionResponse {PaymentTransactions = new List<AllPaymentsForTenancy.PaymentTransaction>()};
+                return new ListAllPayments.PaymentTransactionResponse {PaymentTransactions = new List<ListAllPayments.PaymentTransaction>()};
             }
 
             public void AssertCalledOnce()
@@ -143,21 +143,21 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private class AllPaymentsStub : IListAllPayments
         {
-            private readonly Dictionary<string, List<AllPaymentsForTenancy.PaymentTransaction>> stubPaymentsTransactionsDetails;
+            private readonly Dictionary<string, List<ListAllPayments.PaymentTransaction>> stubPaymentsTransactionsDetails;
 
             public AllPaymentsStub()
             {
-                stubPaymentsTransactionsDetails = new Dictionary<string, List<AllPaymentsForTenancy.PaymentTransaction>>();
+                stubPaymentsTransactionsDetails = new Dictionary<string, List<ListAllPayments.PaymentTransaction>>();
             }
 
-            public void AddPaymentTransaction(string tenancyRef, List<AllPaymentsForTenancy.PaymentTransaction> paymentTransactions)
+            public void AddPaymentTransaction(string tenancyRef, List<ListAllPayments.PaymentTransaction> paymentTransactions)
             {
                 stubPaymentsTransactionsDetails[tenancyRef] = paymentTransactions;
             }
 
-            public AllPaymentsForTenancy.PaymentTransactionResponse Execute(string tenancyRef)
+            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
             {
-                var savedPayments = new List<AllPaymentsForTenancy.PaymentTransaction>();
+                var savedPayments = new List<ListAllPayments.PaymentTransaction>();
 
                 if (stubPaymentsTransactionsDetails.ContainsKey(tenancyRef))
                 {
@@ -165,7 +165,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 }
 
 
-                return new AllPaymentsForTenancy.PaymentTransactionResponse
+                return new ListAllPayments.PaymentTransactionResponse
                 {
                     PaymentTransactions = savedPayments
                 };

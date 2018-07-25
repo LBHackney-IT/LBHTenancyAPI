@@ -13,10 +13,10 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenATenancyRefThatDoesntExist_ShouldReturnAnEmptyPaymentResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listAllPayments = new AllPaymentsForTenancy(gateway);
+            var listAllPayments = new ListAllPayments(gateway);
             var response = listAllPayments.Execute("");
 
-            Assert.IsType(typeof(AllPaymentsForTenancy.PaymentTransactionResponse), response);
+            Assert.IsType(typeof(ListAllPayments.PaymentTransactionResponse), response);
             Assert.Empty(response.PaymentTransactions);
         }
 
@@ -24,14 +24,14 @@ namespace LBHTenancyAPITest.Test.UseCases
         public void WhenGivenATenancyRef_ShouldReturnAPaymentResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var listAllPayments = new AllPaymentsForTenancy(gateway);
+            var listAllPayments = new ListAllPayments(gateway);
 
             var payment = Fake.GeneratePaymentTransactionDetails();
             gateway.SetPaymentTransactionDetails(payment.TenancyRef, payment);
 
             var response = listAllPayments.Execute(payment.TenancyRef);
 
-            Assert.IsType(typeof(AllPaymentsForTenancy.PaymentTransactionResponse), response);
+            Assert.IsType(typeof(ListAllPayments.PaymentTransactionResponse), response);
         }
 
         [Fact]
@@ -42,14 +42,14 @@ namespace LBHTenancyAPITest.Test.UseCases
 
             gateway.SetPaymentTransactionDetails(payment.TenancyRef, payment);
 
-            var listAllPayments = new AllPaymentsForTenancy(gateway);
+            var listAllPayments = new ListAllPayments(gateway);
             var response = listAllPayments.Execute(payment.TenancyRef);
 
-            var expectedResponse = new AllPaymentsForTenancy.PaymentTransactionResponse
+            var expectedResponse = new ListAllPayments.PaymentTransactionResponse
             {
-                PaymentTransactions = new List<AllPaymentsForTenancy.PaymentTransaction>
+                PaymentTransactions = new List<ListAllPayments.PaymentTransaction>
                 {
-                    new AllPaymentsForTenancy.PaymentTransaction
+                    new ListAllPayments.PaymentTransaction
                     {
                         Ref= payment.TransactionRef,
                         Amount= payment.Amount.ToString("C"),

@@ -4,11 +4,11 @@ using LBHTenancyAPI.Gateways;
 
 namespace LBHTenancyAPI.UseCases
 {
-    public class AllPaymentsForTenancy : IListAllPayments
+    public class ListAllPayments : IListAllPayments
     {
         private readonly ITenanciesGateway tenanciesGateway;
 
-        public AllPaymentsForTenancy(ITenanciesGateway gateway)
+        public ListAllPayments(ITenanciesGateway gateway)
         {
             tenanciesGateway = gateway;
         }

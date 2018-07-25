@@ -20,7 +20,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var actualJson = ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject
             (
-                new Dictionary<string, object> {{"arrears_action_diary_events", new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>()}}
+                new Dictionary<string, object> {{"arrears_action_diary_events", new List<ListAllArrearsActions.ArrearsActionDiaryEntry>()}}
             );
 
             Assert.Equal(expectedJson, actualJson);
@@ -41,9 +41,9 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var allActions = new AllActionsStub();
 
-            allActions.AddActionDiary("1test/02", new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>
+            allActions.AddActionDiary("1test/02", new List<ListAllArrearsActions.ArrearsActionDiaryEntry>
             {
-                new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
+                new ListAllArrearsActions.ArrearsActionDiaryEntry
                 {
                     Balance = "10.10",
                     Code = "ABC01",
@@ -52,7 +52,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Comment = "Something very interesting!",
                     UniversalHousingUsername = "Vlad"
                 },
-                new AllArrearsActionsForTenancy.ArrearsActionDiaryEntry
+                new ListAllArrearsActions.ArrearsActionDiaryEntry
                 {
                     Balance = "11.20",
                     Code = "DEF12",
@@ -124,10 +124,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 calledWith = new List<object>();
             }
 
-            public AllArrearsActionsForTenancy.ArrearsActionDiaryResponse Execute(string tenancyRef)
+            public ListAllArrearsActions.ArrearsActionDiaryResponse Execute(string tenancyRef)
             {
                 calledWith.Add(tenancyRef);
-                return new AllArrearsActionsForTenancy.ArrearsActionDiaryResponse {ActionDiaryEntries = new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>()};
+                return new ListAllArrearsActions.ArrearsActionDiaryResponse {ActionDiaryEntries = new List<ListAllArrearsActions.ArrearsActionDiaryEntry>()};
             }
 
             public void AssertCalledOnce()
@@ -143,28 +143,28 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private class AllActionsStub : IListAllArrearsActions
         {
-            private readonly Dictionary<string, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>> stubActionDiaryDetails;
+            private readonly Dictionary<string, List<ListAllArrearsActions.ArrearsActionDiaryEntry>> stubActionDiaryDetails;
 
             public AllActionsStub()
             {
-                stubActionDiaryDetails = new Dictionary<string, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>>();
+                stubActionDiaryDetails = new Dictionary<string, List<ListAllArrearsActions.ArrearsActionDiaryEntry>>();
             }
 
-            public void AddActionDiary(string tenancyRef, List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry> actionDiary)
+            public void AddActionDiary(string tenancyRef, List<ListAllArrearsActions.ArrearsActionDiaryEntry> actionDiary)
             {
                 stubActionDiaryDetails[tenancyRef] = actionDiary;
             }
 
-            public AllArrearsActionsForTenancy.ArrearsActionDiaryResponse Execute(string tenancyRef)
+            public ListAllArrearsActions.ArrearsActionDiaryResponse Execute(string tenancyRef)
             {
-                var savedActions = new List<AllArrearsActionsForTenancy.ArrearsActionDiaryEntry>();
+                var savedActions = new List<ListAllArrearsActions.ArrearsActionDiaryEntry>();
 
                 if (stubActionDiaryDetails.ContainsKey(tenancyRef))
                 {
                     savedActions = stubActionDiaryDetails[tenancyRef];
                 }
 
-                return new AllArrearsActionsForTenancy.ArrearsActionDiaryResponse
+                return new ListAllArrearsActions.ArrearsActionDiaryResponse
                 {
                     ActionDiaryEntries = savedActions
                 };
