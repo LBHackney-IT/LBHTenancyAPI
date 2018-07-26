@@ -34,10 +34,16 @@ jobs:
           command: docker build -f LBHTenancyAPI/Dockerfile -t hackney/apps/tenancy-api .
       - run:
           name: Tag new image for staging release
-          command: docker tag hackney/apps/tenancy-api:latest $ECR_STAGING_IMAGE_URL
+          command: |
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:latest
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:staging
       - run:
           name: Release new image to ECR
-          command: docker push $ECR_STAGING_IMAGE_URL
+          command: |
+            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker push $ECR_IMAGE_URL:latest
+            docker push $ECR_IMAGE_URL:staging
       - run:
           name: Force new deployment
           command: python -m awscli ecs update-service --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service $ECS_STAGING_APP_NAME --force-new-deployment
@@ -57,10 +63,10 @@ jobs:
           command: docker build -f LBHTenancyAPI/Dockerfile -t hackney/apps/tenancy-api .
       - run:
           name: Tag new image for production release
-          command: docker tag hackney/apps/tenancy-api:latest $ECR_PRODUCTION_IMAGE_URL
+          command: docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:production
       - run:
           name: Release new image to ECR
-          command: docker push $ECR_PRODUCTION_IMAGE_URL
+          command: docker push $ECR_IMAGE_URL:production
       - run:
           name: Force new deployment
           command: python -m awscli ecs update-service --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service $ECS_PRODUCTION_APP_NAME --force-new-deployment
