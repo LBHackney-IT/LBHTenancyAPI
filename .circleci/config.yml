@@ -21,41 +21,55 @@ jobs:
 
   staging_release:
     machine: true
-    working_directory: ~/repo/LBHTenancyAPI
     steps:
-      - checkout:
-          path: ~/repo
+      - checkout
       - run:
-          name: Install Heroku CLI
-          command: bash ../.circleci/install-heroku.sh
+          name: Install AWS CLI
+          command: pip install --upgrade --user awscli==1.15.65
       - run:
-          name: Login to Heroku Container Registry
-          command: heroku container:login
+          name: Login to ECR
+          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
           name: Build new application Docker image
-          command: heroku container:push web --context-path=.. --app=lbh-tenancy-api-staging
+          command: docker build -f LBHTenancyAPI/Dockerfile -t hackney/apps/tenancy-api .
       - run:
-          name: Release new version to staging
-          command: heroku container:release web --app=lbh-tenancy-api-staging
+          name: Tag new image for staging release
+          command: |
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:latest
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:staging
+      - run:
+          name: Release new image to ECR
+          command: |
+            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker push $ECR_IMAGE_URL:latest
+            docker push $ECR_IMAGE_URL:staging
+      - run:
+          name: Force new deployment
+          command: python -m awscli ecs update-service --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service $ECS_STAGING_APP_NAME --force-new-deployment
 
   production_release:
     machine: true
-    working_directory: ~/repo/LBHTenancyAPI
     steps:
-      - checkout:
-          path: ~/repo
+      - checkout
       - run:
-          name: Install Heroku CLI
-          command: bash ../.circleci/install-heroku.sh
+          name: Install AWS CLI
+          command: pip install --upgrade --user awscli==1.15.65
       - run:
-          name: Login to Heroku Container Registry
-          command: heroku container:login
+          name: Login to ECR
+          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
           name: Build new application Docker image
-          command: heroku container:push web --context-path=.. --app=lbh-tenancy-api-production
+          command: docker build -f LBHTenancyAPI/Dockerfile -t hackney/apps/tenancy-api .
       - run:
-          name: Release new version to production
-          command: heroku container:release web --app=lbh-tenancy-api-production
+          name: Tag new image for production release
+          command: docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:production
+      - run:
+          name: Release new image to ECR
+          command: docker push $ECR_IMAGE_URL:production
+      - run:
+          name: Force new deployment
+          command: python -m awscli ecs update-service --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service $ECS_PRODUCTION_APP_NAME --force-new-deployment
 
 workflows:
   version: 2
