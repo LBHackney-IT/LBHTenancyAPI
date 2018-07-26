@@ -32,7 +32,8 @@ namespace LBHTenancyAPITest.Test
                 "DELETE FROM araction;" +
                 "DELETE FROM arag;" +
                 "DELETE FROM contacts;" +
-                "DELETE FROM tenagree"
+                "DELETE FROM tenagree;" +
+                "DELETE FROM rtrans"
             );
 
             Db.Close();

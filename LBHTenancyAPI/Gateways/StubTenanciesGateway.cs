@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LBHTenancyAPI.Domain;
 
 namespace LBHTenancyAPI.Gateways
@@ -6,14 +7,14 @@ namespace LBHTenancyAPI.Gateways
     public class StubTenanciesGateway : ITenanciesGateway
     {
         private Dictionary<string, TenancyListItem> StoredTenancyListItems;
-        private Dictionary<string, ArrearsActionDiaryDetails> StoredActionDiaryDetails;
-        private Dictionary<string, PaymentTransactionDetails> StoredPaymentTransactionsDetails;
+        private Dictionary<string, ArrearsActionDiaryEntry> StoredActionDiaryDetails;
+        private Dictionary<string, PaymentTransaction> StoredPaymentTransactionsDetails;
 
         public StubTenanciesGateway()
         {
             StoredTenancyListItems = new Dictionary<string, TenancyListItem>();
-            StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryDetails>();
-            StoredPaymentTransactionsDetails = new Dictionary<string, PaymentTransactionDetails>();
+            StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryEntry>();
+            StoredPaymentTransactionsDetails = new Dictionary<string, PaymentTransaction>();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
@@ -27,23 +28,25 @@ namespace LBHTenancyAPI.Gateways
             return tenancies;
         }
 
-        public List<ArrearsActionDiaryDetails> GetActionDiaryDetailsbyTenancyRefs(List<string> tenancyRefs)
+        public List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef)
         {
-            var actionDiaryDetails = new List<ArrearsActionDiaryDetails>();
-            foreach (var actionDiary in tenancyRefs)
+            var actionDiaryDetails = new List<ArrearsActionDiaryEntry>();
+
+            if (StoredActionDiaryDetails.ContainsKey(tenancyRef))
             {
-                actionDiaryDetails.Add(StoredActionDiaryDetails[actionDiary]);
+                actionDiaryDetails.Add(StoredActionDiaryDetails[tenancyRef]);
             }
 
             return actionDiaryDetails;
         }
 
-        public List<PaymentTransactionDetails> GetPaymentTransactionsByTenancyRef(List<string> tenancyRefs)
+        public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            var paymentTransactionDetails = new List<PaymentTransactionDetails>();
-            foreach (var paymentTrans in tenancyRefs)
+            var paymentTransactionDetails = new List<PaymentTransaction>();
+
+            if (StoredPaymentTransactionsDetails.ContainsKey(tenancyRef))
             {
-                paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[paymentTrans]);
+                paymentTransactionDetails.Add(StoredPaymentTransactionsDetails[tenancyRef]);
             }
 
             return paymentTransactionDetails;
@@ -53,5 +56,16 @@ namespace LBHTenancyAPI.Gateways
         {
             StoredTenancyListItems[tenancyRef] = tenancyListItem;
         }
+
+        public void SetPaymentTransactionDetails(string tenancyRef, PaymentTransaction payment)
+        {
+            StoredPaymentTransactionsDetails[tenancyRef] = payment;
+        }
+
+        public void SetActionDiaryDetails(string tenancyRef,ArrearsActionDiaryEntry actionDiary)
+        {
+            StoredActionDiaryDetails[tenancyRef] = actionDiary;
+        }
+
     }
 }

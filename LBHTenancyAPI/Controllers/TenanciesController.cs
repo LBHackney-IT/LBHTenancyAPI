@@ -9,14 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/tenancies")]
+    [Route("api/v1/tenancies")]
     public class TenanciesController : Controller
     {
         private readonly IListTenancies listTenancies;
+        private readonly IListAllPayments listAllPayments;
+        private readonly IListAllArrearsActions listAllArrearsActions;
 
-        public TenanciesController(IListTenancies listTenancies)
+        public TenanciesController(IListTenancies listTenancies, IListAllArrearsActions listAllArrearsActions, IListAllPayments listAllPayments)
         {
             this.listTenancies = listTenancies;
+            this.listAllArrearsActions = listAllArrearsActions;
+            this.listAllPayments = listAllPayments;
         }
 
         [HttpGet]
@@ -50,51 +54,47 @@ namespace LBHTenancyAPI.Controllers
         }
 
 
+
         [HttpGet]
-        public async Task<IActionResult> GetActionDiaryDetails( List<string> tenancyRefs)
+        [Route("{tenancyRef}/payments")]
+        public async Task<IActionResult> PaymentTransactionDetails(string tenancyRef)
         {
-            var response = listTenancies.ExecuteActionDiaryQuery(tenancyRefs);
-            var arrearActionDiary = response.ActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
+            var response = listAllPayments.Execute(tenancyRef);
+            var paymentsTransaction = response.PaymentTransactions.ConvertAll(paymentTrans => new Dictionary<string, object>
             {
-                {"ref", actionDiary.TenancyRef},
-                {"action_balance", actionDiary.ActionBalance},
-                {"universal_housing_username", actionDiary.UniversalHousingUsername},
-                {
-                    "latest_action", new Dictionary<string, string>
-                    {
-                        {"code", actionDiary.ActionCode},
-                        {"code_name", actionDiary.ActionCodeName},
-                        {"date", actionDiary.ActionDate.ToString()},
-                        {"comment", actionDiary.ActionComment}
-                    }
-                }
+                {"ref", paymentTrans.Ref},
+                {"amount", paymentTrans.Amount},
+                {"date", paymentTrans.Date},
+                {"type", paymentTrans.Type},
+                {"property_ref", paymentTrans.PropertyRef}
             });
 
             var result = new Dictionary<string, object>
             {
-                {"arrears_action_diary", arrearActionDiary}
+                {"payment_transactions", paymentsTransaction}
             };
 
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPaymentTransactionDetails(List<string> tenancyRefs)
+        [Route("{tenancyRef}/actions")]
+        public async Task<IActionResult> GetActionDiaryDetails(string tenancyRef)
         {
-            var response = listTenancies.ExecutePaymentTransactionQuery(tenancyRefs);
-            var paymentsTransaction = response.PaymentTransactions.ConvertAll(paymentTrans => new Dictionary<string, object>
+            var response = listAllArrearsActions.Execute(tenancyRef);
+            var arrearActionDiary = response.ActionDiaryEntries.ConvertAll(actionDiary => new Dictionary<string, object>
             {
-                {"transactions_ref", paymentTrans.TransactionsRef},
-                {"transaction_amount", paymentTrans.TenancyRef},
-                {"transaction_date", paymentTrans.TransactionDate},
-                {"transaction_type", paymentTrans.TransactionType},
-                {"tenancy_ref", paymentTrans.TenancyRef},
-                {"property_ref", paymentTrans.PropertyRef}
+                {"balance", actionDiary.Balance},
+                {"code", actionDiary.Code},
+                {"code_name", actionDiary.CodeName},
+                {"date", actionDiary.Date.ToString()},
+                {"comment", actionDiary.Comment},
+                {"universal_housing_username", actionDiary.UniversalHousingUsername}
             });
 
             var result = new Dictionary<string, object>
             {
-                {"payment_transaction", paymentsTransaction}
+                {"arrears_action_diary_events", arrearActionDiary}
             };
 
             return Ok(result);
