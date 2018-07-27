@@ -43,8 +43,6 @@ namespace LBHTenancyAPITest.Test.Controllers
         public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson_Example1()
         {
             var allPayments = new AllPaymentsStub();
-
-
             allPayments.AddPaymentTransaction("0test/01", new List<ListAllPayments.PaymentTransaction>
             {
                 new ListAllPayments.PaymentTransaction
@@ -169,7 +167,7 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private static async Task<ObjectResult> GetPaymentTransactionDetails(IListAllPayments listPaymentsUseCase, string tenancyRef)
         {
-            var controller = new TenanciesController(null, null, listPaymentsUseCase);
+            var controller = new TenanciesController(null, null, listPaymentsUseCase,null);
             var result = await controller.PaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }

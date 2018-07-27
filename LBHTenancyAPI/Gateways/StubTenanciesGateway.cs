@@ -9,6 +9,7 @@ namespace LBHTenancyAPI.Gateways
         private Dictionary<string, TenancyListItem> StoredTenancyListItems;
         private Dictionary<string, ArrearsActionDiaryEntry> StoredActionDiaryDetails;
         private Dictionary<string, PaymentTransaction> StoredPaymentTransactionsDetails;
+        private Dictionary<string, Tenancy> StoredTenancyDetails;
 
         public StubTenanciesGateway()
         {
@@ -52,6 +53,18 @@ namespace LBHTenancyAPI.Gateways
             return paymentTransactionDetails;
         }
 
+        public Tenancy GetTenancyForRef(string tenancyRef)
+        {
+            var tenancyDetails = new Tenancy();
+
+            if (StoredPaymentTransactionsDetails.ContainsKey(tenancyRef))
+            {
+                tenancyDetails=(StoredTenancyDetails[tenancyRef]);
+            }
+
+            return tenancyDetails;
+        }
+
         public void SetTenancyListItem(string tenancyRef, TenancyListItem tenancyListItem)
         {
             StoredTenancyListItems[tenancyRef] = tenancyListItem;
@@ -65,6 +78,11 @@ namespace LBHTenancyAPI.Gateways
         public void SetActionDiaryDetails(string tenancyRef,ArrearsActionDiaryEntry actionDiary)
         {
             StoredActionDiaryDetails[tenancyRef] = actionDiary;
+        }
+
+        public void SetTenancyDetails(string tenancyRef,Tenancy tenancy)
+        {
+            StoredTenancyDetails[tenancyRef] = tenancy;
         }
 
     }

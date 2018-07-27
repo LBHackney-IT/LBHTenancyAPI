@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LBHTenancyAPI.Domain
 {
-    public struct Tenancy
+    public class Tenancy
     {
         public List<ArrearsAgreement> ArrearsAgreements { get; set; }
         public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
@@ -53,12 +53,12 @@ namespace LBHTenancyAPI.Domain
             set => primaryContactPostcode = value.Trim();
         }
 
-        private string primaryContactLongAddress;
-        public string PrimaryContactLongAddress
+        private string _primaryContactShortAddress;
+        public string PrimaryContactShortAddress
         {
-            get => primaryContactLongAddress;
+            get => _primaryContactShortAddress;
 
-            set => primaryContactLongAddress = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+            set => _primaryContactShortAddress = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
         }
     }
 }

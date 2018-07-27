@@ -55,6 +55,7 @@ namespace LBHTenancyAPI.Gateways
             ).ToList();
 
             var results = new List<TenancyListItem>();
+
             foreach (var reference in tenancyRefs) results.Add(all.First(e => e.TenancyRef == reference));
             return results;
         }
@@ -116,6 +117,7 @@ namespace LBHTenancyAPI.Gateways
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
             result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+
             return result;
         }
 

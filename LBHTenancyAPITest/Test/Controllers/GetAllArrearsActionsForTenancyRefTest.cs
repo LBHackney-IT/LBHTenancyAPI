@@ -171,7 +171,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         private static async Task<ObjectResult> GetArrearsActionsDetails(IListAllArrearsActions listActionDiaryUseCase,
             string tenancyRef)
         {
-            var controller = new TenanciesController(null, listActionDiaryUseCase, null);
+            var controller = new TenanciesController(null, listActionDiaryUseCase, null,null);
             var result = await controller.GetActionDiaryDetails(tenancyRef);
             return result as OkObjectResult;
         }
