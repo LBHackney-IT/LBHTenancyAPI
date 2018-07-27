@@ -126,7 +126,6 @@ namespace LBHTenancyAPI.Gateways
                     result.ArrearsAgreements = lstArrearsAgreements;
                 }
 
-
                 List<ArrearsActionDiaryEntry> lstActionDiary = new List<ArrearsActionDiaryEntry>();
                 lstActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
 
