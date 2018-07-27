@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using LBHTenancyAPI.Domain;
+using Microsoft.Data.Edm.Csdl;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace LBHTenancyAPI.Gateways
@@ -100,7 +101,7 @@ namespace LBHTenancyAPI.Gateways
                 "arag.arag_status as ArrearsAgreementStatus, " +
                 "arag.arag_startdate as ArrearsAgreementStartDate, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactLongAddress, " +
+                "contacts.con_address as PrimaryContactShortAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
                 "contacts.con_phone1 as PrimaryContactPhone, " +
                 "araction.action_code as LastActionCode, " +
@@ -115,15 +116,39 @@ namespace LBHTenancyAPI.Gateways
                 $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
                 "ORDER BY arag.arag_startdate DESC, araction.action_date DESC").FirstOrDefault();
 
-            result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-            result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+            if(result != null)
+            {
+                List<ArrearsAgreement> lstArrearsAgreements = new List<ArrearsAgreement>();
+                lstArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
+
+                if (lstArrearsAgreements.Count != 0)
+                {
+                    result.ArrearsAgreements = lstArrearsAgreements;
+                }
+
+
+                List<ArrearsActionDiaryEntry> lstActionDiary = new List<ArrearsActionDiaryEntry>();
+                lstActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+
+                if (lstActionDiary.Count != 0)
+                {
+                    result.ArrearsActionDiary = lstActionDiary;
+                }
+            }
+            else
+            {
+                result = new Tenancy();
+            }
+
+            //result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
+            //result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
 
             return result;
         }
 
         private List<ArrearsAgreement> GetLastFiveAgreementsForTenancy(string tenancyRef)
         {
-            return conn.Query<ArrearsAgreement>(
+            var result= conn.Query<ArrearsAgreement>(
                 "SELECT TOP 5" +
                 "tag_ref AS TenancyRef," +
                 "arag_status AS Status, " +
@@ -136,6 +161,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM arag " +
                 $"WHERE tag_ref = '{tenancyRef}'" +
                 "ORDER BY arag_startdate DESC ").ToList();
+            return result;
         }
 
         public List<ArrearsActionDiaryEntry> GetLatestFiveArrearsActionForRef(string tenancyRef)
