@@ -53,12 +53,12 @@ namespace LBHTenancyAPI.Domain
             set => primaryContactPostcode = value.Trim();
         }
 
-        private string _primaryContactShortAddress;
-        public string PrimaryContactShortAddress
+        private string primaryContactLongAddress;
+        public string PrimaryContactLongAddress
         {
-            get => _primaryContactShortAddress;
+            get => primaryContactLongAddress;
 
-            set => _primaryContactShortAddress = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+            set => primaryContactLongAddress = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
         }
     }
 }

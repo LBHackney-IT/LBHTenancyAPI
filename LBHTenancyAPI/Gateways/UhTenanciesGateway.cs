@@ -25,7 +25,7 @@ namespace LBHTenancyAPI.Gateways
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactShortAddress, " +
+                "contacts.con_address as PrimaryContactLongAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
                 "araction.tag_ref AS TenancyRef, " +
                 "araction.action_code AS LastActionCode, " +
@@ -101,7 +101,7 @@ namespace LBHTenancyAPI.Gateways
                 "arag.arag_status as ArrearsAgreementStatus, " +
                 "arag.arag_startdate as ArrearsAgreementStartDate, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactShortAddress, " +
+                "contacts.con_address as PrimaryContactLongAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
                 "contacts.con_phone1 as PrimaryContactPhone, " +
                 "araction.action_code as LastActionCode, " +
@@ -118,29 +118,26 @@ namespace LBHTenancyAPI.Gateways
 
             if(result != null)
             {
-                List<ArrearsAgreement> lstArrearsAgreements = new List<ArrearsAgreement>();
-                lstArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
+                List<ArrearsAgreement> listArrearsAgreements = new List<ArrearsAgreement>();
+                listArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
 
-                if (lstArrearsAgreements.Count != 0)
+                if (listArrearsAgreements.Count != 0)
                 {
-                    result.ArrearsAgreements = lstArrearsAgreements;
+                    result.ArrearsAgreements = listArrearsAgreements;
                 }
 
-                List<ArrearsActionDiaryEntry> lstActionDiary = new List<ArrearsActionDiaryEntry>();
-                lstActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+                List<ArrearsActionDiaryEntry> listActionDiary = new List<ArrearsActionDiaryEntry>();
+                listActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
 
-                if (lstActionDiary.Count != 0)
+                if (listActionDiary.Count != 0)
                 {
-                    result.ArrearsActionDiary = lstActionDiary;
+                    result.ArrearsActionDiary = listActionDiary;
                 }
             }
             else
             {
                 result = new Tenancy();
             }
-
-            //result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-            //result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
 
             return result;
         }

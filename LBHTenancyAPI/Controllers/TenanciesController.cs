@@ -16,15 +16,15 @@ namespace LBHTenancyAPI.Controllers
         private readonly IListTenancies listTenancies;
         private readonly IListAllPayments listAllPayments;
         private readonly IListAllArrearsActions listAllArrearsActions;
-        private readonly IListAllTenancyDetails listTenancyDetails;
+        private readonly ITenancyDetailsForRef _tenancyDetailsForRef;
 
         public TenanciesController(IListTenancies listTenancies, IListAllArrearsActions listAllArrearsActions,
-                                   IListAllPayments listAllPayments,IListAllTenancyDetails listTenancyDetails)
+                                   IListAllPayments listAllPayments,ITenancyDetailsForRef tenancyDetailsForRef)
         {
             this.listTenancies = listTenancies;
             this.listAllArrearsActions = listAllArrearsActions;
             this.listAllPayments = listAllPayments;
-            this.listTenancyDetails = listTenancyDetails;
+            this._tenancyDetailsForRef = tenancyDetailsForRef;
         }
 
         [HttpGet]
@@ -106,69 +106,113 @@ namespace LBHTenancyAPI.Controllers
 
 
         [HttpGet]
-        [Route("{tenancyRef}/tenancyDetails")]
+        [Route("tenancies/{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
-            var response = listTenancyDetails.Execute(tenancyRef);
-            var tenancy = response.TenancyDetails;
+
             var latestActionDiary = new List<Dictionary<string,object>>();
             var latestAgreement = new List<Dictionary<string,object>>();
-
-            var tenancies = new Dictionary<string, object>
+            var result = new Dictionary<string, object>();
+            var tenancies = new Dictionary<string, object>();
+            try
             {
-                {"action_code", tenancy.LastActionCode},
-                {"agreement_status", tenancy.ArrearsAgreementStatus},
-                {"last_action_date", tenancy.LastActionDate},
-                {"primary_contact_name", tenancy.PrimaryContactName},
-                {"primary_contact_short_address", tenancy.PrimaryContactShortAddress},
-                {"primary_contact_postcode", tenancy.PrimaryContactPostcode},
-            };
-
-            if (tenancy.ArrearsActionDiary == null)
-            {
-                latestActionDiary = new List<Dictionary<string, object>>();
-                latestActionDiary = null;
-            }
-            else
-            {
-                latestActionDiary=tenancy.ArrearsActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
+                if (string.IsNullOrWhiteSpace(tenancyRef))
                 {
-                    {"balance", actionDiary.Balance},
-                    {"code", actionDiary.Code},
-                    {"code_name", actionDiary.CodeName},
-                    {"date", actionDiary.Date.ToString()},
-                    {"comment", actionDiary.Comment},
-                    {"universal_housing_username", actionDiary.UniversalHousingUsername}
-                });
-
-            }
-            if (tenancy.ArrearsAgreements == null)
-            {
-                latestAgreement = new List<Dictionary<string, object>>();
-                latestAgreement = null;
-            }
-            else
-            {
-
-                latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement => new Dictionary<string, object>
+                    var errors = new List<APIErrorMessage>
+                    {
+                        new APIErrorMessage
+                        {
+                            developerMessage = "Invalid parameter - Tenancy Reference",
+                            userMessage = "No tenancy for reference: {tenancyRef}"
+                        }
+                    };
+                    var json = Json(errors);
+                    json.StatusCode = 400;
+                    return json;
+                }
+                else
                 {
-                    {"amount", agreement.Amount},
-                    {"breached", agreement.Breached},
-                    {"clear_by", agreement.ClearBy},
-                    {"frequency", agreement.Frequency},
-                    {"start_balance", agreement.StartBalance},
-                    {"start_date", agreement.Startdate},
-                    {"status", agreement.Status}
-                });
+                    var response = _tenancyDetailsForRef.Execute(tenancyRef);
+                    var tenancy = response.TenancyDetails;
+
+                        if (tenancy.TenancyRef != null)
+                        {
+                            tenancies = new Dictionary<string, object>
+                            {
+                                {"action_code", tenancy.LastActionCode},
+                                {"agreement_status", tenancy.ArrearsAgreementStatus},
+                                {"last_action_date", tenancy.LastActionDate},
+                                {"primary_contact_name", tenancy.PrimaryContactName},
+                                {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
+                                {"primary_contact_postcode", tenancy.PrimaryContactPostcode},
+                            };
+                        }
+                        if (tenancy.ArrearsActionDiary == null)
+                        {
+                            latestActionDiary = new List<Dictionary<string, object>>();
+                        }
+                        else
+                        {
+                            latestActionDiary=tenancy.ArrearsActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
+                            {
+                                {"balance", actionDiary.Balance},
+                                {"code", actionDiary.Code},
+                                {"code_name", actionDiary.CodeName},
+                                {"date", actionDiary.Date.ToString()},
+                                {"comment", actionDiary.Comment},
+                                {"universal_housing_username", actionDiary.UniversalHousingUsername}
+                            });
+                        }
+                        if (tenancy.ArrearsAgreements == null)
+                        {
+                            latestAgreement = new List<Dictionary<string, object>>();
+                        }
+                        else
+                        {
+                            latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement => new Dictionary<string, object>
+                            {
+                                {"amount", agreement.Amount},
+                                {"breached", agreement.Breached},
+                                {"clear_by", agreement.ClearBy},
+                                {"frequency", agreement.Frequency},
+                                {"start_balance", agreement.StartBalance},
+                                {"start_date", agreement.Startdate},
+                                {"status", agreement.Status}
+                            });
+                        }
+
+                    if (tenancies.Count != 0)
+                    {
+                        result = new Dictionary<string, object>
+                        {
+                            {"tenancy_details", tenancies},
+                            {"latest_action_diary", latestActionDiary},
+                            {"latest_arrears_agreements", latestAgreement},
+                        };
+                    }
+                    else
+                    {
+                        result = new Dictionary<string, object>
+                        {
+                            {"tenancy_details", new List<TenancyDetailsForRef>()}
+                        };
+                    }
+                }
             }
-
-            var result = new Dictionary<string, object>
+            catch (Exception ex)
             {
-                {"tenancy_details",tenancies},
-                {"latest_action_diary",latestActionDiary},
-                {"latest_arrears_agreements",latestAgreement},
-            };
-
+                var errors = new List<APIErrorMessage>
+                {
+                    new APIErrorMessage
+                    {
+                        developerMessage = ex.Message,
+                        userMessage = "No tenancy for reference: {tenancyRef}"
+                    }
+                };
+                var json = Json(errors);
+                json.StatusCode = 500;
+                return json;
+            }
             return Ok(result);
         }
     }

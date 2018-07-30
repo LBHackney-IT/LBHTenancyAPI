@@ -147,7 +147,7 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();
 
-            string longAddress = $"{expectedTenancy.PrimaryContactShortAddress}\n" +
+            string longAddress = $"{expectedTenancy.PrimaryContactLongAddress}\n" +
                                  $"{random.Words()}\n{random.Words()}\n{random.Words()}";
 
             // make sure there's a long string in the db
@@ -168,12 +168,12 @@ namespace LBHTenancyAPITest.Test.Gateways
         public void WhenGivenATenancyRefWithNoAddress_GetTenanciesByRefs_ShouldReturnNull()
         {
             TenancyListItem expectedTenancy = CreateRandomTenancyListItem();
-            expectedTenancy.PrimaryContactShortAddress = null;
+            expectedTenancy.PrimaryContactLongAddress = null;
             InsertTenancyAttributes(expectedTenancy);
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 
-            Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancies[0].PrimaryContactShortAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancies[0].PrimaryContactLongAddress);
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
-            Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancy.PrimaryContactShortAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
 
@@ -210,7 +210,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
-            Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancy.PrimaryContactShortAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
         }
 
@@ -274,7 +274,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 LastActionCode = random.Random.Hash(3),
                 PrimaryContactName = random.Name.FullName(),
-                PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+                PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
                 PrimaryContactPostcode = random.Random.Hash(10),
                 PrimaryContactPhone = random.Random.Hash(21),
                 ArrearsAgreements = new List<ArrearsAgreement>()
@@ -295,7 +295,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 ArrearsAgreementStartDate =
                     new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 PrimaryContactName = random.Name.FullName(),
-                PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+                PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
                 PrimaryContactPostcode = random.Random.Hash(10)
             };
         }
@@ -329,9 +329,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
             command.Parameters["@primaryContactAddress"].Value =
-                tenancyAttributes.PrimaryContactShortAddress == null
+                tenancyAttributes.PrimaryContactLongAddress == null
                     ? DBNull.Value.ToString()
-                    : tenancyAttributes.PrimaryContactShortAddress + "\n";
+                    : tenancyAttributes.PrimaryContactLongAddress + "\n";
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
             command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);
@@ -354,9 +354,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@primaryContactName"].Value = tenancyValues.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
             command.Parameters["@primaryContactAddress"].Value =
-                tenancyValues.PrimaryContactShortAddress == null
+                tenancyValues.PrimaryContactLongAddress == null
                     ? DBNull.Value.ToString()
-                    : tenancyValues.PrimaryContactShortAddress + "\n";
+                    : tenancyValues.PrimaryContactLongAddress + "\n";
             command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
             command.Parameters["@primaryContactPostcode"].Value = tenancyValues.PrimaryContactPostcode;
             command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);

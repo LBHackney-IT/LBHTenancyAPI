@@ -59,7 +59,7 @@ namespace LBHTenancyAPI.Gateways
 
             if (StoredPaymentTransactionsDetails.ContainsKey(tenancyRef))
             {
-                tenancyDetails=(StoredTenancyDetails[tenancyRef]);
+                tenancyDetails = (StoredTenancyDetails[tenancyRef]);
             }
 
             return tenancyDetails;
@@ -84,6 +84,5 @@ namespace LBHTenancyAPI.Gateways
         {
             StoredTenancyDetails[tenancyRef] = tenancy;
         }
-
     }
 }
