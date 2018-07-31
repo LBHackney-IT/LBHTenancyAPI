@@ -12,7 +12,7 @@ CREATE TABLE arag (tag_ref CHAR(11), arag_status CHAR(10), arag_startdate SMALLD
                   arag_clearby SMALLDATETIME);
 CREATE TABLE contacts (tag_ref CHAR(11), con_name VARCHAR(73), con_address CHAR(200), con_postcode CHAR(10),
                       con_phone1 CHAR(21));
-CREATE TABLE rtrans (trans_ref CHAR (11), tag_ref CHAR(11), prop_ref CHAR (11), trans_type CHAR (11), transaction_date SMALLDATETIME,
-                    amount NUMERIC (9,3));
+CREATE TABLE rtrans (prop_ref CHAR(12) DEFAULT SPACE(1), tag_ref CHAR(11) DEFAULT SPACE(1), trans_type CHAR(3) DEFAULT SPACE(1),
+                     post_date SMALLDATETIME DEFAULT '', trans_ref CHAR(12) DEFAULT SPACE(1), real_value NUMERIC(9, 2))
 GO
 
