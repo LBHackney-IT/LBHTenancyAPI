@@ -93,12 +93,12 @@ namespace LBHTenancyAPI.Gateways
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
                 "trans_type AS TransactionType, " +
-                "amount AS TransactionAmount, " +
-                "transaction_date AS TransactionDate, " +
+                "real_value AS TransactionAmount, " +
+                "post_date AS TransactionDate, " +
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
                 $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY transaction_date DESC ").ToList();
+                "ORDER BY post_date DESC ").ToList();
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)

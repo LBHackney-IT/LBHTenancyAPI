@@ -525,7 +525,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                 items = new List<PaymentTransaction>();
                 string commandText =
 
-                    "INSERT INTO rtrans (tag_ref, trans_ref, prop_ref, trans_type, transaction_date, amount)" +
+                    "INSERT INTO rtrans (tag_ref, trans_ref, prop_ref, trans_type, post_date, real_value)" +
                     "VALUES (@tenancyRef, @transRef, @propRef, @transType, @transactionDate, @amount)";
 
                 foreach (int i in Enumerable.Range(0, num))
@@ -533,9 +533,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                      PaymentTransaction payment = new PaymentTransaction
                      {
                         TenancyRef = tenancyRef,
-                        Type = random.Random.Hash(11),
-                        PropertyRef = random.Random.Hash(11),
-                        TransactionRef= random.Random.Hash(11),
+                        Type = random.Random.Hash(3),
+                        PropertyRef = random.Random.Hash(12),
+                        TransactionRef= random.Random.Hash(12),
                         Amount = random.Finance.Amount(),
                         Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0)
                     };
