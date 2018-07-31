@@ -44,6 +44,25 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
+        public void WhenGivenSomeTenancyRefs_GetTenanciesByRefs_ShouldReturnTenancyObjectForEachValidRef()
+        {
+            TenancyListItem expectedTenancy1 = InsertRandomisedTenancyListItem();
+            TenancyListItem expectedTenancy2 = InsertRandomisedTenancyListItem();
+
+            var tenancies = GetTenanciesByRef(new List<string>
+            {
+                expectedTenancy1.TenancyRef,
+                "NotValid",
+                expectedTenancy2.TenancyRef,
+                "NotPresent"
+            });
+
+            Assert.Equal(2, tenancies.Count);
+            Assert.Contains(expectedTenancy1, tenancies);
+            Assert.Contains(expectedTenancy2, tenancies);
+        }
+
+        [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTheLatestAgreement()
         {
             TenancyListItem expectedTenancy = InsertRandomisedTenancyListItem();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
@@ -55,7 +56,17 @@ namespace LBHTenancyAPI.Gateways
             ).ToList();
 
             var results = new List<TenancyListItem>();
-            foreach (var reference in tenancyRefs) results.Add(all.First(e => e.TenancyRef == reference));
+            foreach (var reference in tenancyRefs)
+            {
+                try
+                {
+                    results.Add(all.First(e => e.TenancyRef == reference));
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.Write($"No valid tenancy for ref: {reference}");
+                }
+            }
             return results;
         }
 
