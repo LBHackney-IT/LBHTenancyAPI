@@ -25,7 +25,7 @@ namespace LBHTenancyAPI.Gateways
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactLongAddress, " +
+                "contacts.con_address as PrimaryContactShortAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
                 "araction.tag_ref AS TenancyRef, " +
                 "araction.action_code AS LastActionCode, " +
@@ -116,27 +116,20 @@ namespace LBHTenancyAPI.Gateways
                 $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
                 "ORDER BY arag.arag_startdate DESC, araction.action_date DESC").FirstOrDefault();
 
-            if(result != null)
+            List<ArrearsAgreement> listArrearsAgreements = new List<ArrearsAgreement>();
+            listArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
+
+            if (listArrearsAgreements.Count != 0)
             {
-                List<ArrearsAgreement> listArrearsAgreements = new List<ArrearsAgreement>();
-                listArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-
-                if (listArrearsAgreements.Count != 0)
-                {
-                    result.ArrearsAgreements = listArrearsAgreements;
-                }
-
-                List<ArrearsActionDiaryEntry> listActionDiary = new List<ArrearsActionDiaryEntry>();
-                listActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
-
-                if (listActionDiary.Count != 0)
-                {
-                    result.ArrearsActionDiary = listActionDiary;
-                }
+                result.ArrearsAgreements = listArrearsAgreements;
             }
-            else
+
+            List<ArrearsActionDiaryEntry> listActionDiary = new List<ArrearsActionDiaryEntry>();
+            listActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+
+            if (listActionDiary.Count != 0)
             {
-                result = new Tenancy();
+                result.ArrearsActionDiary = listActionDiary;
             }
 
             return result;
