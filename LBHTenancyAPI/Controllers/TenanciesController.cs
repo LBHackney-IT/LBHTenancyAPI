@@ -16,7 +16,7 @@ namespace LBHTenancyAPI.Controllers
         private readonly IListTenancies listTenancies;
         private readonly IListAllPayments listAllPayments;
         private readonly IListAllArrearsActions listAllArrearsActions;
-        private readonly ITenancyDetailsForRef _tenancyDetailsForRef;
+        private readonly ITenancyDetailsForRef tenancyDetailsForRef;
 
         public TenanciesController(IListTenancies listTenancies, IListAllArrearsActions listAllArrearsActions,
                                    IListAllPayments listAllPayments,ITenancyDetailsForRef tenancyDetailsForRef)
@@ -24,7 +24,7 @@ namespace LBHTenancyAPI.Controllers
             this.listTenancies = listTenancies;
             this.listAllArrearsActions = listAllArrearsActions;
             this.listAllPayments = listAllPayments;
-            this._tenancyDetailsForRef = tenancyDetailsForRef;
+            this.tenancyDetailsForRef = tenancyDetailsForRef;
         }
 
         [HttpGet]
@@ -56,8 +56,6 @@ namespace LBHTenancyAPI.Controllers
 
             return Ok(result);
         }
-
-
 
         [HttpGet]
         [Route("{tenancyRef}/payments")]
@@ -104,16 +102,14 @@ namespace LBHTenancyAPI.Controllers
             return Ok(result);
         }
 
-
         [HttpGet]
         [Route("tenancies/{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
-
             var latestActionDiary = new List<Dictionary<string,object>>();
             var latestAgreement = new List<Dictionary<string,object>>();
             var result = new Dictionary<string, object>();
-            var tenancies = new Dictionary<string, object>();
+            var tenancyDetails = new Dictionary<string, object>();
             try
             {
                 if (string.IsNullOrWhiteSpace(tenancyRef))
@@ -132,12 +128,12 @@ namespace LBHTenancyAPI.Controllers
                 }
                 else
                 {
-                    var response = _tenancyDetailsForRef.Execute(tenancyRef);
+                    var response = tenancyDetailsForRef.Execute(tenancyRef);
                     var tenancy = response.TenancyDetails;
 
                     if (tenancy.TenancyRef != null)
                     {
-                        tenancies = new Dictionary<string, object>
+                        tenancyDetails = new Dictionary<string, object>
                         {
                             {"action_code", tenancy.LastActionCode},
                             {"agreement_status", tenancy.ArrearsAgreementStatus},
@@ -185,11 +181,11 @@ namespace LBHTenancyAPI.Controllers
                             });
                     }
 
-                    if (tenancies.Count != 0)
+                    if (tenancyDetails.Count != 0)
                     {
                         result = new Dictionary<string, object>
                         {
-                            {"tenancy_details", tenancies},
+                            {"tenancy_details", tenancyDetails},
                             {"latest_action_diary", latestActionDiary},
                             {"latest_arrears_agreements", latestAgreement},
                         };
