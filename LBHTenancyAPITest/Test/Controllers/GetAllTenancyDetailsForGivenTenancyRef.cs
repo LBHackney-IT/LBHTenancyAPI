@@ -22,7 +22,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.NotNull(response);
 
             var actualJson = JSONHelper.ResponseJson(response);
-          
+
             var expectedJson = JsonConvert.SerializeObject
             (
                 new Dictionary<string, object> {{"tenancy_details", new List<TenancyDetailsForRef>()}}
