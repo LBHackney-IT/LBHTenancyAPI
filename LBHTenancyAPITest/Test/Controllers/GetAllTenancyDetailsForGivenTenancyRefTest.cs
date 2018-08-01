@@ -55,9 +55,9 @@ namespace LBHTenancyAPITest.Test.Controllers
                 PrimaryContactName="Rashmi",
                 PrimaryContactLongAddress="AquaLand",
                 PrimaryContactPostcode="e8 1hh",
-                ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>()
+                ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>
                 {
-                    new TenancyDetailsForRef.ArrearsAgreement()
+                    new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount ="23.01",
                         Breached ="True",
@@ -67,7 +67,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         Startdate ="2018-01-03 00:00:00Z",
                         Status="test"
                     },
-                    new TenancyDetailsForRef.ArrearsAgreement()
+                    new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount ="24.01",
                         Breached ="False",
@@ -80,7 +80,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 },
                 ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>()
                 {
-                    new TenancyDetailsForRef.ArrearsActionDiaryEntry()
+                    new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
                         Balance ="22.0",
                         Code ="DEF12",
@@ -89,7 +89,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         Date ="2018-12-03 00:00:00Z",
                         UniversalHousingUsername ="Rashmi"
                     },
-                    new TenancyDetailsForRef.ArrearsActionDiaryEntry()
+                    new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
                         Balance ="23.0",
                         Code ="DEF123",
@@ -107,30 +107,6 @@ namespace LBHTenancyAPITest.Test.Controllers
             var expectedJson = JsonConvert.SerializeObject(getExpectedJSON());
 
             Assert.Equal(expectedJson, actualResponse);
-        }
-
-        public Dictionary<string, object> getEmptyJSON()
-        {
-            var expectedTenancydetails = new Dictionary<string, object>
-            {
-                {"action_code", null},
-                {"agreement_status",null},
-                {"last_action_date", null},
-                {"primary_contact_name", null},
-                {"primary_contact_long_address", null},
-                {"primary_contact_postcode", null},
-            };
-            var result = new Dictionary<string, object>
-            {
-                {"tenancy_details", expectedTenancydetails},
-                {
-                    "latest_action_diary", null
-                },
-                {
-                    "latest_arrears_agreements", null
-                }
-            };
-            return result;
         }
 
         public Dictionary<string, object> getExpectedJSON()
