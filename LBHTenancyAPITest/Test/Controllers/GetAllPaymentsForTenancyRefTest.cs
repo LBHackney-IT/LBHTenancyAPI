@@ -167,7 +167,7 @@ namespace LBHTenancyAPITest.Test.Controllers
 
         private static async Task<ObjectResult> GetPaymentTransactionDetails(IListAllPayments listPaymentsUseCase, string tenancyRef)
         {
-            var controller = new TenanciesController(null, null, listPaymentsUseCase,null);
+            var controller = new TenanciesController(null, null, listPaymentsUseCase, null);
             var result = await controller.PaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }
