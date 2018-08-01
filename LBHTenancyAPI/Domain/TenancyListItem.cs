@@ -58,12 +58,5 @@ namespace LBHTenancyAPI.Domain
 
             set => primaryContactShortAddress = string.IsNullOrWhiteSpace(value) ? null : value.Split("\n").First();
         }
-        private string primaryContactLongAddress;
-        public string PrimaryContactLongAddress
-        {
-            get => PrimaryContactLongAddress;
-
-            set => PrimaryContactLongAddress = string.IsNullOrWhiteSpace(value) ? null : value.Split("\n").First();
-        }
     }
 }
