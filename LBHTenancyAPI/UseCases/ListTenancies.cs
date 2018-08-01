@@ -28,7 +28,7 @@ namespace LBHTenancyAPI.UseCases
                     CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContactName = tenancy.PrimaryContactName,
-                    PrimaryContactShortAddress = tenancy.PrimaryContactLongAddress,
+                    PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,
                     PrimaryContactPostcode = tenancy.PrimaryContactPostcode
                 }
             );

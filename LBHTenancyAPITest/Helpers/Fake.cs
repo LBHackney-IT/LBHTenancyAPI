@@ -20,7 +20,7 @@ namespace LBHTenancyAPITest.Helpers
               ArrearsAgreementStartDate =
                   new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
               PrimaryContactName = random.Name.FullName(),
-              PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+              PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
               PrimaryContactPostcode = random.Random.Hash(10)
           };
         }

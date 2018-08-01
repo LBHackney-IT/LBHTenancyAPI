@@ -135,25 +135,27 @@ namespace LBHTenancyAPI.Controllers
                     var response = _tenancyDetailsForRef.Execute(tenancyRef);
                     var tenancy = response.TenancyDetails;
 
-                        if (tenancy.TenancyRef != null)
+                    if (tenancy.TenancyRef != null)
+                    {
+                        tenancies = new Dictionary<string, object>
                         {
-                            tenancies = new Dictionary<string, object>
-                            {
-                                {"action_code", tenancy.LastActionCode},
-                                {"agreement_status", tenancy.ArrearsAgreementStatus},
-                                {"last_action_date", tenancy.LastActionDate},
-                                {"primary_contact_name", tenancy.PrimaryContactName},
-                                {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
-                                {"primary_contact_postcode", tenancy.PrimaryContactPostcode},
-                            };
-                        }
-                        if (tenancy.ArrearsActionDiary == null)
-                        {
-                            latestActionDiary = new List<Dictionary<string, object>>();
-                        }
-                        else
-                        {
-                            latestActionDiary=tenancy.ArrearsActionDiary.ConvertAll(actionDiary => new Dictionary<string, object>
+                            {"action_code", tenancy.LastActionCode},
+                            {"agreement_status", tenancy.ArrearsAgreementStatus},
+                            {"last_action_date", tenancy.LastActionDate},
+                            {"primary_contact_name", tenancy.PrimaryContactName},
+                            {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
+                            {"primary_contact_postcode", tenancy.PrimaryContactPostcode},
+                        };
+                    }
+
+                    if (tenancy.ArrearsActionDiary == null)
+                    {
+                        latestActionDiary = new List<Dictionary<string, object>>();
+                    }
+                    else
+                    {
+                        latestActionDiary = tenancy.ArrearsActionDiary.ConvertAll(actionDiary =>
+                            new Dictionary<string, object>
                             {
                                 {"balance", actionDiary.Balance},
                                 {"code", actionDiary.Code},
@@ -162,14 +164,16 @@ namespace LBHTenancyAPI.Controllers
                                 {"comment", actionDiary.Comment},
                                 {"universal_housing_username", actionDiary.UniversalHousingUsername}
                             });
-                        }
-                        if (tenancy.ArrearsAgreements == null)
-                        {
-                            latestAgreement = new List<Dictionary<string, object>>();
-                        }
-                        else
-                        {
-                            latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement => new Dictionary<string, object>
+                    }
+
+                    if (tenancy.ArrearsAgreements == null)
+                    {
+                        latestAgreement = new List<Dictionary<string, object>>();
+                    }
+                    else
+                    {
+                        latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement =>
+                            new Dictionary<string, object>
                             {
                                 {"amount", agreement.Amount},
                                 {"breached", agreement.Breached},
@@ -179,7 +183,7 @@ namespace LBHTenancyAPI.Controllers
                                 {"start_date", agreement.Startdate},
                                 {"status", agreement.Status}
                             });
-                        }
+                    }
 
                     if (tenancies.Count != 0)
                     {
