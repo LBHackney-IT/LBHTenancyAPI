@@ -42,7 +42,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
           [Fact]
-        public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson()
+        public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example1()
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
             allTenancyDetails.AddTenancyDetail("0test/01", new TenancyDetailsForRef.Tenancy()
@@ -104,12 +104,80 @@ namespace LBHTenancyAPITest.Test.Controllers
             var response = await GetAllTenancyDetailsForTenancyRef(allTenancyDetails, "0test/01");
 
             var actualResponse = JSONHelper.ResponseJson(response);
-            var expectedJson = JsonConvert.SerializeObject(getExpectedJSON());
+            var expectedJson = JsonConvert.SerializeObject(getExpectedJSONExample1());
 
             Assert.Equal(expectedJson, actualResponse);
         }
 
-        public Dictionary<string, object> getExpectedJSON()
+          [Fact]
+        public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example2()
+        {
+            var allTenancyDetails = new TenancyDetailsForRefStub();
+            allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy()
+            {
+                TenancyRef="0test/02",
+                LastActionCode="123456789",
+                ArrearsAgreementStatus="Breached",
+                LastActionDate="2017-01-03 00:00:00Z",
+                CurrentBalance="23.01",
+                PrimaryContactName="Vlad",
+                PrimaryContactLongAddress="AquaLand123",
+                PrimaryContactPostcode="e8 1hh",
+                ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>
+                {
+                    new TenancyDetailsForRef.ArrearsAgreement
+                    {
+                        Amount ="23.11",
+                        Breached ="True",
+                        ClearBy ="2017-12-03 00:00:00Z",
+                        Frequency ="Weekly",
+                        StartBalance ="100.00",
+                        Startdate ="2017-01-03 00:00:00Z",
+                        Status="test"
+                    },
+                    new TenancyDetailsForRef.ArrearsAgreement
+                    {
+                        Amount ="24.33",
+                        Breached ="False",
+                        ClearBy ="2017-12-04 00:00:00Z",
+                        Frequency ="Monthly",
+                        StartBalance ="110.00",
+                        Startdate ="2017-02-03 00:00:00Z",
+                        Status="test1"
+                     }
+                },
+                ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>()
+                {
+                    new TenancyDetailsForRef.ArrearsActionDiaryEntry
+                    {
+                        Balance ="25.11",
+                        Code ="XYZ12",
+                        CodeName ="Code name",
+                        Comment ="Some Comments",
+                        Date ="2017-12-03 00:00:00Z",
+                        UniversalHousingUsername ="Vlad"
+                    },
+                    new TenancyDetailsForRef.ArrearsActionDiaryEntry
+                    {
+                        Balance ="23.22",
+                        Code ="XYZ123",
+                        CodeName ="Code name",
+                        Comment ="Some Comments",
+                        Date ="2017-11-03 00:00:00Z",
+                        UniversalHousingUsername ="Vlad"
+                    }
+                }
+            });
+
+            var response = await GetAllTenancyDetailsForTenancyRef(allTenancyDetails, "0test/02");
+
+            var actualResponse = JSONHelper.ResponseJson(response);
+            var expectedJson = JsonConvert.SerializeObject(getExpectedJSONExample2());
+
+            Assert.Equal(expectedJson, actualResponse);
+        }
+
+        public Dictionary<string, object> getExpectedJSONExample1()
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
@@ -178,7 +246,74 @@ namespace LBHTenancyAPITest.Test.Controllers
             return result;
         }
 
+        public Dictionary<string, object> getExpectedJSONExample2()
+        {
+            var expectedTenancydetails = new Dictionary<string, object>
+            {
+                {"action_code", "123456789"},
+                {"agreement_status", "Breached"},
+                {"last_action_date", "2017-01-03 00:00:00Z"},
+                {"primary_contact_name", "Vlad"},
+                {"primary_contact_long_address", "AquaLand123"},
+                {"primary_contact_postcode", "e8 1hh"},
+            };
 
+            var result = new Dictionary<string, object>
+            {
+                {"tenancy_details", expectedTenancydetails},
+                {
+                    "latest_action_diary", new List<Dictionary<string, object>>
+                    {
+                        new Dictionary<string, object>
+                        {
+                            {"balance", "25.11"},
+                            {"code", "XYZ12"},
+                            {"code_name", "Code name"},
+                            {"date", "2017-12-03 00:00:00Z"},
+                            {"comment", "Some Comments"},
+                            {"universal_housing_username", "Vlad"}
+                        },
+                        new Dictionary<string, object>
+                        {
+                            {"balance", "23.22"},
+                            {"code", "XYZ123"},
+                            {"code_name", "Code name"},
+                            {"date", "2017-11-03 00:00:00Z"},
+                            {"comment", "Some Comments"},
+                            {"universal_housing_username", "Vlad"}
+                        }
+
+                    }
+
+                },
+                {
+                    "latest_arrears_agreements", new List<Dictionary<string, object>>
+                    {
+                        new Dictionary<string, object>
+                        {
+                            {"amount", "23.11"},
+                            {"breached", "True"},
+                            {"clear_by", "2017-12-03 00:00:00Z"},
+                            {"frequency", "Weekly"},
+                            {"start_balance", "100.00"},
+                            {"start_date", "2017-01-03 00:00:00Z"},
+                            {"status", "test"}
+                        },
+                        new Dictionary<string, object>
+                        {
+                            {"amount", "24.33"},
+                            {"breached", "False"},
+                            {"clear_by", "2017-12-04 00:00:00Z"},
+                            {"frequency", "Monthly"},
+                            {"start_balance", "110.00"},
+                            {"start_date", "2017-02-03 00:00:00Z"},
+                            {"status", "test1"}
+                        }
+                    }
+                }
+            };
+            return result;
+        }
         private class TenancyDetailsForRefSpy : ITenancyDetailsForRef
         {
             private readonly List<object> calledWith;
