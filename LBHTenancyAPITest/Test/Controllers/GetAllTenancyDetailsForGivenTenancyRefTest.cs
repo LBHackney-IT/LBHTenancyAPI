@@ -12,7 +12,7 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
-    public class GetAllTenancyDetailsForGivenTenancyRef
+    public class GetAllTenancyDetailsForGivenTenancyRefTest
     {
         [Fact]
         public async Task WhenGivenTenancyRefThatDoesntExist_Tenancy_ShouldRespondWithNoResults()
@@ -30,8 +30,6 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             Assert.Equal(expectedJson, actualJson);
         }
-
-
 
         [Fact]
         public async Task WhenGivenATenancyRef_TenancyDetails_ShouldCallGetAllTenancyDetailsForTenancyRef()
