@@ -181,8 +181,8 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
-                {"action_code", "123456789"},
-                {"agreement_status", "Breached"},
+                {"current_arrears_agreement_status", "Breached"},
+                {"last_action_code", "123456789"},
                 {"last_action_date", "2018-01-03 00:00:00Z"},
                 {"primary_contact_name", "Rashmi"},
                 {"primary_contact_long_address", "AquaLand"},
@@ -250,8 +250,8 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
-                {"action_code", "987654321"},
-                {"agreement_status", "Active"},
+                {"current_arrears_agreement_status", "Active"},
+                {"last_action_code", "987654321"},
                 {"last_action_date", "2017-01-03 00:00:00Z"},
                 {"primary_contact_name", "Vlad"},
                 {"primary_contact_long_address", "AquaLand123"},

@@ -85,13 +85,13 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var output = new Dictionary<string, object>
             {
-                {"payment_transactions",
+                {
+                    "payment_transactions",
                     new List<Dictionary<string, object>>
                     {
                         first,
                         second
                     }
-
                 }
             };
 
@@ -105,7 +105,6 @@ namespace LBHTenancyAPITest.Test.Controllers
         public async Task WhenGivenATenancyRef_Payments_ShouldRespondWithFormattedJson_Example2()
         {
             var allPayments = new AllPaymentsStub();
-
 
             allPayments.AddPaymentTransaction("3test/32", new List<ListAllPayments.PaymentTransaction>
             {
@@ -149,13 +148,13 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var output = new Dictionary<string, object>
             {
-                {"payment_transactions",
+                {
+                    "payment_transactions",
                     new List<Dictionary<string, object>>
                     {
                         first,
                         second
                     }
-
                 }
             };
 
@@ -226,14 +225,11 @@ namespace LBHTenancyAPITest.Test.Controllers
                     savedPayments = stubPaymentsTransactionsDetails[tenancyRef];
                 }
 
-
                 return new ListAllPayments.PaymentTransactionResponse
                 {
                     PaymentTransactions = savedPayments
                 };
             }
         }
-
-
     }
 }
