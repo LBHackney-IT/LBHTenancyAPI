@@ -78,10 +78,10 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tag_ref as TenancyRef, " +
                 "action_code as ActionCode, " +
-                "action_code_name as ActionCodeName, " +
+                "action_type as Type, " +
                 "action_date as ActionDate, " +
                 "action_comment as ActionComment, " +
-                "uh_username as UHUsername, " +
+                "username as UHUsername, " +
                 "action_balance as ActionBalance " +
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
@@ -161,10 +161,10 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT top 5" +
                 "tag_ref as TenancyRef, " +
                 "action_code as ActionCode, " +
-                "action_code_name as ActionCodeName, " +
+                "action_type as Type, " +
                 "action_date as ActionDate, " +
                 "action_comment as ActionComment, " +
-                "uh_username as UHUsername, " +
+                "username as UHUsername, " +
                 "action_balance as ActionBalance " +
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +

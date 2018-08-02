@@ -53,7 +53,7 @@ namespace LBHTenancyAPITest.Test.UseCases
                         Balance = actionDiary.Balance.ToString("C"),
                         Date = string.Format("{0:u}", actionDiary.Date),
                         Code = actionDiary.Code,
-                        CodeName = actionDiary.CodeName,
+                        Type = actionDiary.Type,
                         Comment = actionDiary.Comment,
                         UniversalHousingUsername = actionDiary.UniversalHousingUsername
                     }

@@ -459,9 +459,9 @@ namespace LBHTenancyAPITest.Test.Gateways
                 items = new List<ArrearsActionDiaryEntry>();
                 string commandText =
 
-                    "INSERT INTO araction (tag_ref, action_code, action_code_name, action_date, action_comment, action_balance, " +
-                    "uh_username) " +
-                    "VALUES (@tenancyRef, @actionCode, @actionCodeName, @actionDate, @actionComment, @actionBalance, @uhUsername)";
+                    "INSERT INTO araction (tag_ref, action_code, action_type, action_date, action_comment, action_balance, " +
+                    "username) " +
+                    "VALUES (@tenancyRef, @actionCode, @actionType, @actionDate, @actionComment, @actionBalance, @uhUsername)";
 
                 foreach (int i in Enumerable.Range(0, num))
                 {
@@ -470,10 +470,10 @@ namespace LBHTenancyAPITest.Test.Gateways
                         TenancyRef = tenancyRef,
                         Code = random.Random.Hash(3),
                         Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                        CodeName = random.Random.Hash(50),
+                        Type = random.Random.Hash(3),
                         Comment = random.Random.Hash(50),
                         Balance = random.Finance.Amount(),
-                        UniversalHousingUsername = random.Random.Hash(50)
+                        UniversalHousingUsername = random.Random.Hash(40)
                     };
 
                     command = new SqlCommand(commandText, db);
@@ -486,8 +486,8 @@ namespace LBHTenancyAPITest.Test.Gateways
                     command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
                     command.Parameters["@actionDate"].Value = arrearsActionDiaryEntry.Date;
 
-                    command.Parameters.Add("@actionCodeName", SqlDbType.Char);
-                    command.Parameters["@actionCodeName"].Value = arrearsActionDiaryEntry.CodeName;
+                    command.Parameters.Add("@actionType", SqlDbType.Char);
+                    command.Parameters["@actionType"].Value = arrearsActionDiaryEntry.Type;
 
                     command.Parameters.Add("@actionComment", SqlDbType.NVarChar);
                     command.Parameters["@actionComment"].Value = arrearsActionDiaryEntry.Comment;

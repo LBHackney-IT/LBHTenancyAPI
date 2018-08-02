@@ -49,7 +49,7 @@ namespace LBHTenancyAPITest.Helpers
                 TenancyRef = random.Random.Hash(11),
                 Balance = random.Finance.Amount(),
                 Code = random.Random.Hash(3),
-                CodeName = random.Random.Hash(50),
+                Type = random.Random.Hash(50),
                 Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 Comment = random.Random.Hash(100),
                 UniversalHousingUsername = random.Random.Hash(50)
