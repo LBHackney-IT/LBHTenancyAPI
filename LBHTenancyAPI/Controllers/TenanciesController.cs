@@ -196,7 +196,7 @@ namespace LBHTenancyAPI.Controllers
                     new APIErrorMessage
                     {
                         developerMessage = ex.Message,
-                        userMessage = "No tenancy found for reference: {tenancyRef}"
+                        userMessage = "Something went wrong with retrieving tenancy for ref: {tenancyRef}"
                     }
                 };
                 var json = Json(errors);
