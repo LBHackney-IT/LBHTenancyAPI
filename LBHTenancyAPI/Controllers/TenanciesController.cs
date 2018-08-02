@@ -109,9 +109,7 @@ namespace LBHTenancyAPI.Controllers
         [Route("tenancies/{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
-            var latestActionDiary = new List<Dictionary<string, object>>();
-            var latestAgreement = new List<Dictionary<string, object>>();
-            var result = new Dictionary<string, object>();
+            Dictionary<string, object> result;
             var tenancyDetails = new Dictionary<string, object>();
             try
             {
@@ -144,6 +142,8 @@ namespace LBHTenancyAPI.Controllers
                         {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
                     };
 
+                List<Dictionary<string, object>> latestActionDiary;
+
                 if (tenancy.ArrearsActionDiary == null)
                     latestActionDiary = new List<Dictionary<string, object>>();
                 else
@@ -157,6 +157,8 @@ namespace LBHTenancyAPI.Controllers
                             {"comment", actionDiary.Comment},
                             {"universal_housing_username", actionDiary.UniversalHousingUsername}
                         });
+
+                List<Dictionary<string, object>> latestAgreement;
 
                 if (tenancy.ArrearsAgreements == null)
                     latestAgreement = new List<Dictionary<string, object>>();
