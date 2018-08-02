@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
-using LBHTenancyAPI.UseCases;
-using Microsoft.AspNetCore.Diagnostics;
-using SQLitePCL;
 
 namespace LBHTenancyAPI.UseCases
 {
     public class TenancyDetailsForRef : ITenancyDetailsForRef
     {
-         
-        private ITenanciesGateway tenanciesGateway;
+        private readonly ITenanciesGateway tenanciesGateway;
 
         public TenancyDetailsForRef(ITenanciesGateway gateway)
         {
@@ -19,10 +14,10 @@ namespace LBHTenancyAPI.UseCases
 
         public TenancyResponse Execute(string tenancyRef)
         {
-            var response = new TenancyDetailsForRef.TenancyResponse();
+            var response = new TenancyResponse();
             var tenancyResponse = tenanciesGateway.GetTenancyForRef(tenancyRef);
 
-                response.TenancyDetails = new Tenancy()
+                response.TenancyDetails = new Tenancy
                 {
                     LastActionCode = tenancyResponse.LastActionCode,
                     LastActionDate = string.Format("{0:u}", tenancyResponse.LastActionDate),
@@ -72,7 +67,6 @@ namespace LBHTenancyAPI.UseCases
             public string PrimaryContactPostcode { get; set; }
             public List<ArrearsAgreement> ArrearsAgreements { get; set; }
             public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
-
         }
 
         public struct ArrearsAgreement
@@ -95,6 +89,5 @@ namespace LBHTenancyAPI.UseCases
             public string Date { get; set; }
             public string UniversalHousingUsername { get; set; }
         }
-
     }
 }
