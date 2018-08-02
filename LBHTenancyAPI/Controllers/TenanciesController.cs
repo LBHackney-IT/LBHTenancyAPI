@@ -135,8 +135,6 @@ namespace LBHTenancyAPI.Controllers
                     tenancyDetails = new Dictionary<string, object>
                     {
                         {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
-                        {"last_action_code", tenancy.LastActionCode},
-                        {"last_action_date", tenancy.LastActionDate},
                         {"primary_contact_name", tenancy.PrimaryContactName},
                         {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
                         {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
@@ -179,13 +177,15 @@ namespace LBHTenancyAPI.Controllers
                     result = new Dictionary<string, object>
                     {
                         {"tenancy_details", tenancyDetails},
-                        {"latest_action_diary", latestActionDiary},
+                        {"latest_action_diary_events", latestActionDiary},
                         {"latest_arrears_agreements", latestAgreement}
                     };
                 else
                     result = new Dictionary<string, object>
                     {
-                        {"tenancy_details", new List<TenancyDetailsForRef>()}
+                        {"tenancy_details", new Dictionary<string, object>()},
+                        {"latest_action_diary_events", new List<Dictionary<string, object>>()},
+                        {"latest_arrears_agreements", new List<Dictionary<string, object>>()}
                     };
             }
 
