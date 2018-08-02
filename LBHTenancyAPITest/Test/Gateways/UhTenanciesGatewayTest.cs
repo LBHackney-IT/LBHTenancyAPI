@@ -175,7 +175,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             SqlCommand command = new SqlCommand(commandText, db);
             command.ExecuteNonQuery();
 
-
             string actualShortAddressExpected = longAddress.Split("\n")[0];
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
 

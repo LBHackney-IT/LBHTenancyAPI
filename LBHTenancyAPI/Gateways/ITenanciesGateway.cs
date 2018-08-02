@@ -8,5 +8,6 @@ namespace LBHTenancyAPI.Gateways
         List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs);
         List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef);
         List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef);
+        Tenancy GetTenancyForRef(string tenancyRef);
     }
 }
