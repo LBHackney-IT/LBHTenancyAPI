@@ -89,7 +89,7 @@ jobs:
           command: docker push $ECR_IMAGE_URL:production
       - run:
           name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout 600
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout 1800
 
 workflows:
   version: 2
