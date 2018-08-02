@@ -200,7 +200,7 @@ namespace LBHTenancyAPI.Controllers
                     }
                 };
                 var json = Json(errors);
-                json.StatusCode = 404;
+                json.StatusCode = 500;
                 return json;
             }
 
