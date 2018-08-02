@@ -30,6 +30,7 @@ namespace LBHTenancyAPI
             services.AddTransient<IListTenancies, ListTenancies>();
             services.AddTransient<IListAllArrearsActions, ListAllArrearsActions>();
             services.AddTransient<IListAllPayments, ListAllPayments>();
+            services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
         }
 
