@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using LBHTenancyAPI.Domain;
-using Microsoft.Data.Edm.Csdl;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace LBHTenancyAPI.Gateways
@@ -57,7 +57,18 @@ namespace LBHTenancyAPI.Gateways
 
             var results = new List<TenancyListItem>();
 
-            foreach (var reference in tenancyRefs) results.Add(all.First(e => e.TenancyRef == reference));
+            foreach (var reference in tenancyRefs)
+            {
+                try
+                {
+                    results.Add(all.First(e => e.TenancyRef == reference));
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.Write($"No valid tenancy for ref: {reference}");
+                }
+            }
+
             return results;
         }
 
@@ -85,13 +96,14 @@ namespace LBHTenancyAPI.Gateways
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
                 "trans_type AS TransactionType, " +
-                "amount AS TransactionAmount, " +
-                "transaction_date AS TransactionDate, " +
+                "real_value AS TransactionAmount, " +
+                "post_date AS TransactionDate, " +
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
                 $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY transaction_date DESC "
+                "ORDER BY post_date DESC "
             ).ToList();
+
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)

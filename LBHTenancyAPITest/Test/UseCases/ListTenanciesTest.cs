@@ -44,6 +44,50 @@ namespace LBHTenancyAPITest.Test.UseCases
         }
 
         [Fact]
+        public void WhenGivenSomeTenanciesAndSomeVoid_ShouldReturnMatchedTenancies()
+        {
+            var gateway = new StubTenanciesGateway();
+            var tenancy1 = Fake.GenerateTenancyListItem();
+            var tenancy2 = Fake.GenerateTenancyListItem();
+
+            gateway.SetTenancyListItem(tenancy1.TenancyRef, tenancy1);
+            gateway.SetTenancyListItem(tenancy2.TenancyRef, tenancy2);
+
+            var listTenancies = new ListTenancies(gateway);
+            var actualResponse = listTenancies.Execute(new List<string> {tenancy1.TenancyRef, tenancy2.TenancyRef, "FAKE/01"});
+            var expectedResponse = new ListTenancies.Response
+            {
+                Tenancies = new List<ListTenancies.ResponseTenancy>
+                {
+                    new ListTenancies.ResponseTenancy
+                    {
+                        TenancyRef = tenancy1.TenancyRef,
+                        LastActionCode = tenancy1.LastActionCode,
+                        LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
+                        CurrentBalance = tenancy1.CurrentBalance.ToString("C"),
+                        ArrearsAgreementStatus = tenancy1.ArrearsAgreementStatus,
+                        PrimaryContactName = tenancy1.PrimaryContactName,
+                        PrimaryContactShortAddress = tenancy1.PrimaryContactShortAddress,
+                        PrimaryContactPostcode = tenancy1.PrimaryContactPostcode
+                    },
+                    new ListTenancies.ResponseTenancy
+                    {
+                        TenancyRef = tenancy2.TenancyRef,
+                        LastActionCode = tenancy2.LastActionCode,
+                        LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
+                        CurrentBalance = tenancy2.CurrentBalance.ToString("C"),
+                        ArrearsAgreementStatus = tenancy2.ArrearsAgreementStatus,
+                        PrimaryContactName = tenancy2.PrimaryContactName,
+                        PrimaryContactShortAddress = tenancy2.PrimaryContactShortAddress,
+                        PrimaryContactPostcode = tenancy2.PrimaryContactPostcode
+                    }
+                }
+            };
+
+            Assert.Equal(expectedResponse.Tenancies, actualResponse.Tenancies);
+        }
+
+        [Fact]
         public void WhenATenancyRefIsGiven_ResponseShouldIncludeDetailsOnThatTenancy_Example1()
         {
             var gateway = new StubTenanciesGateway();

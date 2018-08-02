@@ -23,7 +23,10 @@ namespace LBHTenancyAPI.Gateways
             var tenancies = new List<TenancyListItem>();
             foreach (var tenancyRef in tenancyRefs)
             {
-                tenancies.Add(StoredTenancyListItems[tenancyRef]);
+                if (StoredTenancyListItems.ContainsKey(tenancyRef))
+                {
+                    tenancies.Add(StoredTenancyListItems[tenancyRef]);
+                }
             }
 
             return tenancies;
