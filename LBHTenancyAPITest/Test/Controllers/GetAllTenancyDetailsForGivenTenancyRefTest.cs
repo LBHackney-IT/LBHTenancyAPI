@@ -45,7 +45,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example1()
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
-            allTenancyDetails.AddTenancyDetail("0test/01", new TenancyDetailsForRef.Tenancy()
+            allTenancyDetails.AddTenancyDetail("0test/01", new TenancyDetailsForRef.Tenancy
             {
                 TenancyRef="0test/01",
                 LastActionCode="123456789",
@@ -78,7 +78,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         Status="test1"
                      }
                 },
-                ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>()
+                ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>
                 {
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
@@ -113,57 +113,57 @@ namespace LBHTenancyAPITest.Test.Controllers
         public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example2()
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
-            allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy()
+            allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy
             {
                 TenancyRef="0test/02",
-                LastActionCode="123456789",
-                ArrearsAgreementStatus="Breached",
+                LastActionCode="987654321",
+                ArrearsAgreementStatus="Active",
                 LastActionDate="2017-01-03 00:00:00Z",
-                CurrentBalance="23.01",
+                CurrentBalance="21.01",
                 PrimaryContactName="Vlad",
                 PrimaryContactLongAddress="AquaLand123",
-                PrimaryContactPostcode="e8 1hh",
+                PrimaryContactPostcode="e8 2ii",
                 ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>
                 {
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="23.11",
-                        Breached ="True",
+                        Amount ="21.00",
+                        Breached ="False",
                         ClearBy ="2017-12-03 00:00:00Z",
                         Frequency ="Weekly",
-                        StartBalance ="100.00",
-                        Startdate ="2017-01-03 00:00:00Z",
-                        Status="test"
+                        StartBalance ="101.00",
+                        Startdate ="2016-01-02 00:00:00Z",
+                        Status="test2"
                     },
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="24.33",
-                        Breached ="False",
-                        ClearBy ="2017-12-04 00:00:00Z",
+                        Amount ="21.33",
+                        Breached ="True",
+                        ClearBy ="2017-12-09 00:00:00Z",
                         Frequency ="Monthly",
-                        StartBalance ="110.00",
-                        Startdate ="2017-02-03 00:00:00Z",
-                        Status="test1"
+                        StartBalance ="112.00",
+                        Startdate ="2016-03-04 00:00:00Z",
+                        Status="test3"
                      }
                 },
-                ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>()
+                ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>
                 {
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="25.11",
+                        Balance ="44.11",
                         Code ="XYZ12",
-                        CodeName ="Code name",
-                        Comment ="Some Comments",
-                        Date ="2017-12-03 00:00:00Z",
+                        CodeName ="Code one",
+                        Comment ="Pretty great comment",
+                        Date ="2017-12-15 00:00:00Z",
                         UniversalHousingUsername ="Vlad"
                     },
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="23.22",
+                        Balance ="44.22",
                         Code ="XYZ123",
-                        CodeName ="Code name",
-                        Comment ="Some Comments",
-                        Date ="2017-11-03 00:00:00Z",
+                        CodeName ="Code nine",
+                        Comment ="Extra great comment",
+                        Date ="2017-11-02 00:00:00Z",
                         UniversalHousingUsername ="Vlad"
                     }
                 }
@@ -250,12 +250,12 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
-                {"action_code", "123456789"},
-                {"agreement_status", "Breached"},
+                {"action_code", "987654321"},
+                {"agreement_status", "Active"},
                 {"last_action_date", "2017-01-03 00:00:00Z"},
                 {"primary_contact_name", "Vlad"},
                 {"primary_contact_long_address", "AquaLand123"},
-                {"primary_contact_postcode", "e8 1hh"},
+                {"primary_contact_postcode", "e8 2ii"},
             };
 
             var result = new Dictionary<string, object>
@@ -266,20 +266,20 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         new Dictionary<string, object>
                         {
-                            {"balance", "25.11"},
+                            {"balance", "44.11"},
                             {"code", "XYZ12"},
-                            {"code_name", "Code name"},
-                            {"date", "2017-12-03 00:00:00Z"},
-                            {"comment", "Some Comments"},
+                            {"code_name", "Code one"},
+                            {"date", "2017-12-15 00:00:00Z"},
+                            {"comment", "Pretty great comment"},
                             {"universal_housing_username", "Vlad"}
                         },
                         new Dictionary<string, object>
                         {
-                            {"balance", "23.22"},
+                            {"balance", "44.22"},
                             {"code", "XYZ123"},
-                            {"code_name", "Code name"},
-                            {"date", "2017-11-03 00:00:00Z"},
-                            {"comment", "Some Comments"},
+                            {"code_name", "Code nine"},
+                            {"date", "2017-11-02 00:00:00Z"},
+                            {"comment", "Extra great comment"},
                             {"universal_housing_username", "Vlad"}
                         }
 
@@ -291,23 +291,23 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         new Dictionary<string, object>
                         {
-                            {"amount", "23.11"},
-                            {"breached", "True"},
+                            {"amount", "21.00"},
+                            {"breached", "False"},
                             {"clear_by", "2017-12-03 00:00:00Z"},
                             {"frequency", "Weekly"},
-                            {"start_balance", "100.00"},
-                            {"start_date", "2017-01-03 00:00:00Z"},
-                            {"status", "test"}
+                            {"start_balance", "101.00"},
+                            {"start_date", "2016-01-02 00:00:00Z"},
+                            {"status", "test2"}
                         },
                         new Dictionary<string, object>
                         {
-                            {"amount", "24.33"},
-                            {"breached", "False"},
-                            {"clear_by", "2017-12-04 00:00:00Z"},
+                            {"amount", "21.33"},
+                            {"breached", "True"},
+                            {"clear_by", "2017-12-09 00:00:00Z"},
                             {"frequency", "Monthly"},
-                            {"start_balance", "110.00"},
-                            {"start_date", "2017-02-03 00:00:00Z"},
-                            {"status", "test1"}
+                            {"start_balance", "112.00"},
+                            {"start_date", "2016-03-04 00:00:00Z"},
+                            {"status", "test3"}
                         }
                     }
                 }
