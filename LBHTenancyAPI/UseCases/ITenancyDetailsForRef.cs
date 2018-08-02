@@ -4,5 +4,4 @@
      {
             TenancyDetailsForRef.TenancyResponse Execute(string tenancyRef);
      }
-
 }
