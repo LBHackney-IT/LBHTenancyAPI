@@ -52,7 +52,7 @@ namespace LBHTenancyAPI.Gateways
                 ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
                 "WHERE tenagree.tag_ref IN @allRefs " +
                 "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
-                new { allRefs = tenancyRefs }
+                new {allRefs = tenancyRefs}
             ).ToList();
 
             var results = new List<TenancyListItem>();
@@ -86,7 +86,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new { tRef = tenancyRef}
+                new {tRef = tenancyRef}
             ).ToList();
         }
 
