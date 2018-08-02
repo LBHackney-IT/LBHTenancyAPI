@@ -19,14 +19,12 @@ namespace LBHTenancyAPI.UseCases
 
                 response.TenancyDetails = new Tenancy
                 {
-                    LastActionCode = tenancyResponse.LastActionCode,
-                    LastActionDate = string.Format("{0:u}", tenancyResponse.LastActionDate),
                     CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
                     PrimaryContactName = tenancyResponse.PrimaryContactName,
                     PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
 
-                    ArrearsActionDiary= tenancyResponse.ArrearsActionDiary.ConvertAll(actionDiary => new ArrearsActionDiaryEntry()
+                    ArrearsActionDiary = tenancyResponse.ArrearsActionDiary.ConvertAll(actionDiary => new ArrearsActionDiaryEntry
                     {
                         Code = actionDiary.Code,
                         CodeName = actionDiary.CodeName,
@@ -35,9 +33,9 @@ namespace LBHTenancyAPI.UseCases
                         Date = string.Format("{0:u}", actionDiary.Date),
                         UniversalHousingUsername = actionDiary.UniversalHousingUsername
                     }),
-                    ArrearsAgreements =tenancyResponse.ArrearsAgreements.ConvertAll(agreement => new ArrearsAgreement()
+                    ArrearsAgreements = tenancyResponse.ArrearsAgreements.ConvertAll(agreement => new ArrearsAgreement
                     {
-                        Amount = agreement.Amount.ToString(),
+                        Amount = agreement.Amount.ToString("C"),
                         Breached = agreement.Breached.ToString(),
                         ClearBy = string.Format("{0:u}", agreement.ClearBy),
                         Frequency = agreement.Frequency,
@@ -58,8 +56,6 @@ namespace LBHTenancyAPI.UseCases
         public struct Tenancy
         {
             public string TenancyRef { get; set; }
-            public string LastActionCode { get; set; }
-            public string LastActionDate { get; set; }
             public string CurrentBalance { get; set; }
             public string ArrearsAgreementStatus { get; set; }
             public string PrimaryContactName { get; set; }

@@ -23,7 +23,12 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var expectedJson = JsonConvert.SerializeObject
             (
-                new Dictionary<string, object> {{"tenancy_details", new List<TenancyDetailsForRef>()}}
+                new Dictionary<string, object>
+                {
+                    {"tenancy_details", new Dictionary<string, object>()},
+                    {"latest_action_diary_events", new List<Dictionary<string, object>>()},
+                    {"latest_arrears_agreements", new List<Dictionary<string, object>>()}
+                }
             );
 
             Assert.Equal(expectedJson, actualJson);
@@ -45,56 +50,54 @@ namespace LBHTenancyAPITest.Test.Controllers
             var allTenancyDetails = new TenancyDetailsForRefStub();
             allTenancyDetails.AddTenancyDetail("0test/01", new TenancyDetailsForRef.Tenancy
             {
-                TenancyRef="0test/01",
-                LastActionCode="123456789",
-                ArrearsAgreementStatus="Breached",
-                LastActionDate="2018-01-03 00:00:00Z",
-                CurrentBalance="23.01",
-                PrimaryContactName="Rashmi",
-                PrimaryContactLongAddress="AquaLand",
-                PrimaryContactPostcode="e8 1hh",
+                TenancyRef = "0test/01",
+                ArrearsAgreementStatus = "Breached",
+                CurrentBalance = "23.01",
+                PrimaryContactName = "Rashmi",
+                PrimaryContactLongAddress = "AquaLand",
+                PrimaryContactPostcode = "e8 1hh",
                 ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>
                 {
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="23.01",
-                        Breached ="True",
-                        ClearBy ="2018-12-03 00:00:00Z",
-                        Frequency ="Weekly",
-                        StartBalance ="10.00",
-                        Startdate ="2018-01-03 00:00:00Z",
-                        Status="test"
+                        Amount = "23.01",
+                        Breached = "True",
+                        ClearBy = "2018-12-03 00:00:00Z",
+                        Frequency = "Weekly",
+                        StartBalance = "10.00",
+                        Startdate = "2018-01-03 00:00:00Z",
+                        Status = "test"
                     },
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="24.01",
-                        Breached ="False",
-                        ClearBy ="2018-12-04 00:00:00Z",
-                        Frequency ="Monthly",
-                        StartBalance ="11.00",
-                        Startdate ="2018-02-03 00:00:00Z",
-                        Status="test1"
+                        Amount = "24.01",
+                        Breached = "False",
+                        ClearBy = "2018-12-04 00:00:00Z",
+                        Frequency = "Monthly",
+                        StartBalance = "11.00",
+                        Startdate = "2018-02-03 00:00:00Z",
+                        Status = "test1"
                      }
                 },
                 ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>
                 {
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="22.0",
-                        Code ="DEF12",
-                        CodeName ="Code name",
-                        Comment ="Some Comments",
-                        Date ="2018-12-03 00:00:00Z",
-                        UniversalHousingUsername ="Rashmi"
+                        Balance = "22.0",
+                        Code = "DEF12",
+                        CodeName = "Code name",
+                        Comment = "Some Comments",
+                        Date = "2018-12-03 00:00:00Z",
+                        UniversalHousingUsername = "Rashmi"
                     },
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="23.0",
-                        Code ="DEF123",
-                        CodeName ="Code name",
-                        Comment ="Some Comments",
-                        Date ="2018-11-03 00:00:00Z",
-                        UniversalHousingUsername ="Rashmi"
+                        Balance = "23.0",
+                        Code = "DEF123",
+                        CodeName = "Code name",
+                        Comment = "Some Comments",
+                        Date = "2018-11-03 00:00:00Z",
+                        UniversalHousingUsername = "Rashmi"
                     }
                 }
             });
@@ -113,56 +116,54 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy
             {
-                TenancyRef="0test/02",
-                LastActionCode="987654321",
-                ArrearsAgreementStatus="Active",
-                LastActionDate="2017-01-03 00:00:00Z",
-                CurrentBalance="21.01",
-                PrimaryContactName="Vlad",
-                PrimaryContactLongAddress="AquaLand123",
-                PrimaryContactPostcode="e8 2ii",
+                TenancyRef = "0test/02",
+                ArrearsAgreementStatus = "Active",
+                CurrentBalance = "21.01",
+                PrimaryContactName = "Vlad",
+                PrimaryContactLongAddress = "AquaLand123",
+                PrimaryContactPostcode = "e8 2ii",
                 ArrearsAgreements = new List<TenancyDetailsForRef.ArrearsAgreement>
                 {
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="21.00",
-                        Breached ="False",
-                        ClearBy ="2017-12-03 00:00:00Z",
-                        Frequency ="Weekly",
-                        StartBalance ="101.00",
-                        Startdate ="2016-01-02 00:00:00Z",
-                        Status="test2"
+                        Amount = "21.00",
+                        Breached = "False",
+                        ClearBy = "2017-12-03 00:00:00Z",
+                        Frequency = "Weekly",
+                        StartBalance = "101.00",
+                        Startdate = "2016-01-02 00:00:00Z",
+                        Status = "test2"
                     },
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
-                        Amount ="21.33",
-                        Breached ="True",
-                        ClearBy ="2017-12-09 00:00:00Z",
-                        Frequency ="Monthly",
-                        StartBalance ="112.00",
-                        Startdate ="2016-03-04 00:00:00Z",
-                        Status="test3"
+                        Amount = "21.33",
+                        Breached = "True",
+                        ClearBy = "2017-12-09 00:00:00Z",
+                        Frequency = "Monthly",
+                        StartBalance = "112.00",
+                        Startdate = "2016-03-04 00:00:00Z",
+                        Status = "test3"
                      }
                 },
                 ArrearsActionDiary = new List<TenancyDetailsForRef.ArrearsActionDiaryEntry>
                 {
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="44.11",
-                        Code ="XYZ12",
-                        CodeName ="Code one",
-                        Comment ="Pretty great comment",
-                        Date ="2017-12-15 00:00:00Z",
-                        UniversalHousingUsername ="Vlad"
+                        Balance = "44.11",
+                        Code = "XYZ12",
+                        CodeName = "Code one",
+                        Comment = "Pretty great comment",
+                        Date = "2017-12-15 00:00:00Z",
+                        UniversalHousingUsername = "Vlad"
                     },
                     new TenancyDetailsForRef.ArrearsActionDiaryEntry
                     {
-                        Balance ="44.22",
-                        Code ="XYZ123",
-                        CodeName ="Code nine",
-                        Comment ="Extra great comment",
-                        Date ="2017-11-02 00:00:00Z",
-                        UniversalHousingUsername ="Vlad"
+                        Balance = "44.22",
+                        Code = "XYZ123",
+                        CodeName = "Code nine",
+                        Comment = "Extra great comment",
+                        Date = "2017-11-02 00:00:00Z",
+                        UniversalHousingUsername = "Vlad"
                     }
                 }
             });
