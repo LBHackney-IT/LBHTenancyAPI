@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -19,6 +16,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
             var response = await GetAllTenancyDetailsForTenancyRef(allTenancyDetails, "NotHere");
+
             Assert.NotNull(response);
 
             var actualJson = JSONHelper.ResponseJson(response);
@@ -41,7 +39,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             allTenancySpy.AssertCalledWith("EXAMPLE/123");
         }
 
-          [Fact]
+        [Fact]
         public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example1()
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
@@ -102,17 +100,17 @@ namespace LBHTenancyAPITest.Test.Controllers
             });
 
             var response = await GetAllTenancyDetailsForTenancyRef(allTenancyDetails, "0test/01");
-
             var actualResponse = JSONHelper.ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject(getExpectedJSONExample1());
 
             Assert.Equal(expectedJson, actualResponse);
         }
 
-          [Fact]
+        [Fact]
         public async Task WhenGivenATenancyRef_TenancyDetail_ShouldRespondWithFormattedJson_Example2()
         {
             var allTenancyDetails = new TenancyDetailsForRefStub();
+
             allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy
             {
                 TenancyRef="0test/02",
@@ -170,14 +168,13 @@ namespace LBHTenancyAPITest.Test.Controllers
             });
 
             var response = await GetAllTenancyDetailsForTenancyRef(allTenancyDetails, "0test/02");
-
             var actualResponse = JSONHelper.ResponseJson(response);
             var expectedJson = JsonConvert.SerializeObject(getExpectedJSONExample2());
 
             Assert.Equal(expectedJson, actualResponse);
         }
 
-        public Dictionary<string, object> getExpectedJSONExample1()
+        private Dictionary<string, object> getExpectedJSONExample1()
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
@@ -191,7 +188,9 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var result = new Dictionary<string, object>
             {
-                {"tenancy_details", expectedTenancydetails},
+                {
+                    "tenancy_details", expectedTenancydetails
+                },
                 {
                     "latest_action_diary", new List<Dictionary<string, object>>
                     {
@@ -213,9 +212,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                             {"comment", "Some Comments"},
                             {"universal_housing_username", "Rashmi"}
                         }
-
                     }
-
                 },
                 {
                     "latest_arrears_agreements", new List<Dictionary<string, object>>
@@ -246,7 +243,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             return result;
         }
 
-        public Dictionary<string, object> getExpectedJSONExample2()
+        private Dictionary<string, object> getExpectedJSONExample2()
         {
             var expectedTenancydetails = new Dictionary<string, object>
             {
@@ -260,7 +257,9 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var result = new Dictionary<string, object>
             {
-                {"tenancy_details", expectedTenancydetails},
+                {
+                    "tenancy_details", expectedTenancydetails
+                },
                 {
                     "latest_action_diary", new List<Dictionary<string, object>>
                     {
@@ -282,9 +281,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                             {"comment", "Extra great comment"},
                             {"universal_housing_username", "Vlad"}
                         }
-
                     }
-
                 },
                 {
                     "latest_arrears_agreements", new List<Dictionary<string, object>>
@@ -312,8 +309,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                     }
                 }
             };
+
             return result;
         }
+
         private class TenancyDetailsForRefSpy : ITenancyDetailsForRef
         {
             private readonly List<object> calledWith;
