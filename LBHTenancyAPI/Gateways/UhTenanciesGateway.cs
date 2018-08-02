@@ -105,14 +105,14 @@ namespace LBHTenancyAPI.Gateways
                 "contacts.con_name as PrimaryContactName, " +
                 "contacts.con_address as PrimaryContactLongAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
-                "contacts.con_phone1 as PrimaryContactPhone, " +
+                "contacts.con_phone1 as PrimaryContactPhone " +
                 "FROM tenagree " +
                 "LEFT JOIN arag " +
                 "ON arag.tag_ref = tenagree.tag_ref " +
                 "LEFT JOIN contacts " +
                 "ON contacts.tag_ref = tenagree.tag_ref " +
                 $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC"
+                "ORDER BY arag.arag_startdate DESC"
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
