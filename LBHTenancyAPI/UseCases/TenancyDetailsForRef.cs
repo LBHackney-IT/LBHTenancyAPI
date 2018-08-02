@@ -27,7 +27,7 @@ namespace LBHTenancyAPI.UseCases
                     ArrearsActionDiary = tenancyResponse.ArrearsActionDiary.ConvertAll(actionDiary => new ArrearsActionDiaryEntry
                     {
                         Code = actionDiary.Code,
-                        CodeName = actionDiary.CodeName,
+                        Type = actionDiary.Type,
                         Balance = actionDiary.Balance.ToString("C"),
                         Comment = actionDiary.Comment,
                         Date = string.Format("{0:u}", actionDiary.Date),
@@ -79,7 +79,7 @@ namespace LBHTenancyAPI.UseCases
         public struct ArrearsActionDiaryEntry
         {
             public string Balance { get; set; }
-            public string CodeName { get; set; }
+            public string Type { get; set; }
             public string Code { get; set; }
             public string Comment{ get; set; }
             public string Date { get; set; }

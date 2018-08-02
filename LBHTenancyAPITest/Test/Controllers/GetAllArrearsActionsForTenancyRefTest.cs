@@ -47,7 +47,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {
                     Balance = "10.10",
                     Code = "ABC01",
-                    CodeName = "Some Code Name",
+                    Type = "Some Code Name",
                     Date = "11/10/1000",
                     Comment = "Something very interesting!",
                     UniversalHousingUsername = "Vlad"
@@ -56,7 +56,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {
                     Balance = "11.20",
                     Code = "DEF12",
-                    CodeName = "Another Code here",
+                    Type = "Another Code here",
                     Date = "22/08/2000",
                     Comment = "Something very not interesting!",
                     UniversalHousingUsername = "Vlad"
@@ -69,7 +69,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"balance", "10.10"},
                 {"code", "ABC01"},
-                {"code_name", "Some Code Name"},
+                {"type", "Some Code Name"},
                 {"date", "11/10/1000"},
                 {"comment", "Something very interesting!"},
                 {"universal_housing_username", "Vlad"}
@@ -79,7 +79,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"balance", "11.20"},
                 {"code", "DEF12"},
-                {"code_name", "Another Code here"},
+                {"type", "Another Code here"},
                 {"date", "22/08/2000"},
                 {"comment", "Something very not interesting!"},
                 {"universal_housing_username", "Vlad"}
@@ -113,7 +113,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {
                     Balance = "166.10",
                     Code = "ACODE",
-                    CodeName = "Great Code Name",
+                    Type = "Great Code Name",
                     Date = "12/11/1222",
                     Comment = "A great comment!",
                     UniversalHousingUsername = "Ritchard"
@@ -122,7 +122,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {
                     Balance = "-99.00",
                     Code = "CODE2",
-                    CodeName = "Fantastic Code Name",
+                    Type = "Fantastic Code Name",
                     Date = "21/08/1988",
                     Comment = "A somewhat salubrious comment.",
                     UniversalHousingUsername = "Stephen"
@@ -135,7 +135,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"balance", "166.10"},
                 {"code", "ACODE"},
-                {"code_name", "Great Code Name"},
+                {"type", "Great Code Name"},
                 {"date", "12/11/1222"},
                 {"comment", "A great comment!"},
                 {"universal_housing_username", "Ritchard"}
@@ -145,7 +145,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"balance", "-99.00"},
                 {"code", "CODE2"},
-                {"code_name", "Fantastic Code Name"},
+                {"type", "Fantastic Code Name"},
                 {"date", "21/08/1988"},
                 {"comment", "A somewhat salubrious comment."},
                 {"universal_housing_username", "Stephen"}

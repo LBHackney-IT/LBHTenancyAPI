@@ -85,7 +85,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         Balance = "22.0",
                         Code = "DEF12",
-                        CodeName = "Code name",
+                        Type = "Code name",
                         Comment = "Some Comments",
                         Date = "2018-12-03 00:00:00Z",
                         UniversalHousingUsername = "Rashmi"
@@ -94,7 +94,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         Balance = "23.0",
                         Code = "DEF123",
-                        CodeName = "Code name",
+                        Type = "Code name",
                         Comment = "Some Comments",
                         Date = "2018-11-03 00:00:00Z",
                         UniversalHousingUsername = "Rashmi"
@@ -151,7 +151,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         Balance = "44.11",
                         Code = "XYZ12",
-                        CodeName = "Code one",
+                        Type = "Code one",
                         Comment = "Pretty great comment",
                         Date = "2017-12-15 00:00:00Z",
                         UniversalHousingUsername = "Vlad"
@@ -160,7 +160,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {
                         Balance = "44.22",
                         Code = "XYZ123",
-                        CodeName = "Code nine",
+                        Type = "Code nine",
                         Comment = "Extra great comment",
                         Date = "2017-11-02 00:00:00Z",
                         UniversalHousingUsername = "Vlad"
@@ -197,7 +197,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         {
                             {"balance", "22.0"},
                             {"code", "DEF12"},
-                            {"code_name", "Code name"},
+                            {"type", "Code name"},
                             {"date", "2018-12-03 00:00:00Z"},
                             {"comment", "Some Comments"},
                             {"universal_housing_username", "Rashmi"}
@@ -206,7 +206,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         {
                             {"balance", "23.0"},
                             {"code", "DEF123"},
-                            {"code_name", "Code name"},
+                            {"type", "Code name"},
                             {"date", "2018-11-03 00:00:00Z"},
                             {"comment", "Some Comments"},
                             {"universal_housing_username", "Rashmi"}
@@ -264,7 +264,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         {
                             {"balance", "44.11"},
                             {"code", "XYZ12"},
-                            {"code_name", "Code one"},
+                            {"type", "Code one"},
                             {"date", "2017-12-15 00:00:00Z"},
                             {"comment", "Pretty great comment"},
                             {"universal_housing_username", "Vlad"}
@@ -273,7 +273,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                         {
                             {"balance", "44.22"},
                             {"code", "XYZ123"},
-                            {"code_name", "Code nine"},
+                            {"type", "Code nine"},
                             {"date", "2017-11-02 00:00:00Z"},
                             {"comment", "Extra great comment"},
                             {"universal_housing_username", "Vlad"}

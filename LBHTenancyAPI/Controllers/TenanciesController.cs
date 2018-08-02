@@ -91,7 +91,7 @@ namespace LBHTenancyAPI.Controllers
             {
                 {"balance", actionDiary.Balance},
                 {"code", actionDiary.Code},
-                {"code_name", actionDiary.CodeName},
+                {"type", actionDiary.Type},
                 {"date", actionDiary.Date.ToString()},
                 {"comment", actionDiary.Comment},
                 {"universal_housing_username", actionDiary.UniversalHousingUsername}
@@ -150,7 +150,7 @@ namespace LBHTenancyAPI.Controllers
                         {
                             {"balance", actionDiary.Balance},
                             {"code", actionDiary.Code},
-                            {"code_name", actionDiary.CodeName},
+                            {"type", actionDiary.Type},
                             {"date", actionDiary.Date.ToString()},
                             {"comment", actionDiary.Comment},
                             {"universal_housing_username", actionDiary.UniversalHousingUsername}
