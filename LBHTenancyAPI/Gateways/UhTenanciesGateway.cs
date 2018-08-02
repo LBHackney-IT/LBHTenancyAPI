@@ -74,7 +74,8 @@ namespace LBHTenancyAPI.Gateways
                 "action_balance as ActionBalance " +
                 "FROM araction " +
                 $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY araction.action_date DESC").ToList();
+                "ORDER BY araction.action_date DESC"
+            ).ToList();
         }
 
         public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
@@ -89,7 +90,8 @@ namespace LBHTenancyAPI.Gateways
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
                 $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY transaction_date DESC ").ToList();
+                "ORDER BY transaction_date DESC "
+            ).ToList();
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)
@@ -104,40 +106,24 @@ namespace LBHTenancyAPI.Gateways
                 "contacts.con_address as PrimaryContactLongAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
                 "contacts.con_phone1 as PrimaryContactPhone, " +
-                "araction.action_code as LastActionCode, " +
-                "araction.action_date as LastActionDate " +
                 "FROM tenagree " +
                 "LEFT JOIN arag " +
                 "ON arag.tag_ref = tenagree.tag_ref " +
                 "LEFT JOIN contacts " +
                 "ON contacts.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN araction " +
-                "ON araction.tag_ref = tenagree.tag_ref " +
                 $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC").FirstOrDefault();
+                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC"
+            ).FirstOrDefault();
 
-            List<ArrearsAgreement> listArrearsAgreements = new List<ArrearsAgreement>();
-            listArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-
-            if (listArrearsAgreements.Count != 0)
-            {
-                result.ArrearsAgreements = listArrearsAgreements;
-            }
-
-            List<ArrearsActionDiaryEntry> listActionDiary = new List<ArrearsActionDiaryEntry>();
-            listActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
-
-            if (listActionDiary.Count != 0)
-            {
-                result.ArrearsActionDiary = listActionDiary;
-            }
+            result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
+            result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
 
             return result;
         }
 
         private List<ArrearsAgreement> GetLastFiveAgreementsForTenancy(string tenancyRef)
         {
-            var result= conn.Query<ArrearsAgreement>(
+            return conn.Query<ArrearsAgreement>(
                 "SELECT TOP 5" +
                 "tag_ref AS TenancyRef," +
                 "arag_status AS Status, " +
@@ -149,8 +135,8 @@ namespace LBHTenancyAPI.Gateways
                 "arag_clearby AS ClearBy " +
                 "FROM arag " +
                 $"WHERE tag_ref = '{tenancyRef}'" +
-                "ORDER BY arag_startdate DESC ").ToList();
-            return result;
+                "ORDER BY arag_startdate DESC "
+            ).ToList();
         }
 
         public List<ArrearsActionDiaryEntry> GetLatestFiveArrearsActionForRef(string tenancyRef)
@@ -166,7 +152,8 @@ namespace LBHTenancyAPI.Gateways
                 "action_balance as ActionBalance " +
                 "FROM araction " +
                 $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY araction.action_date DESC").ToList();
+                "ORDER BY araction.action_date DESC"
+            ).ToList();
         }
     }
 }
