@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using LBHTenancyAPI.Domain;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace LBHTenancyAPI.Gateways
 {
@@ -41,7 +40,7 @@ namespace LBHTenancyAPI.Gateways
                 "araction.action_code, " +
                 "araction.action_date " +
                 "FROM araction " +
-                $"WHERE araction.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                "WHERE araction.tag_ref IN @allRefs " +
                 ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
                 "LEFT JOIN ( " +
                 "SELECT " +
@@ -49,10 +48,11 @@ namespace LBHTenancyAPI.Gateways
                 "arag.arag_status, " +
                 "arag.arag_startdate " +
                 "FROM arag " +
-                $"WHERE arag.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
+                "WHERE arag.tag_ref IN @allRefs " +
                 ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
-                $"WHERE tenagree.tag_ref IN ('{tenancyRefs.Join("', '")}') " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC"
+                "WHERE tenagree.tag_ref IN @allRefs " +
+                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
+                new {allRefs = tenancyRefs}
             ).ToList();
 
             var results = new List<TenancyListItem>();
@@ -84,8 +84,9 @@ namespace LBHTenancyAPI.Gateways
                 "uh_username as UHUsername, " +
                 "action_balance as ActionBalance " +
                 "FROM araction " +
-                $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY araction.action_date DESC"
+                "WHERE tag_ref = @tRef " +
+                "ORDER BY araction.action_date DESC",
+                new {tRef = tenancyRef}
             ).ToList();
         }
 
@@ -100,8 +101,9 @@ namespace LBHTenancyAPI.Gateways
                 "post_date AS TransactionDate, " +
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
-                $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY post_date DESC "
+                "WHERE tag_ref = @tRef " +
+                "ORDER BY post_date DESC",
+                new {tref = tenancyRef}
             ).ToList();
 
         }
@@ -123,8 +125,9 @@ namespace LBHTenancyAPI.Gateways
                 "ON arag.tag_ref = tenagree.tag_ref " +
                 "LEFT JOIN contacts " +
                 "ON contacts.tag_ref = tenagree.tag_ref " +
-                $"WHERE tenagree.tag_ref = ('{tenancyRef}') " +
-                "ORDER BY arag.arag_startdate DESC"
+                "WHERE tenagree.tag_ref = @tRef " +
+                "ORDER BY arag.arag_startdate DESC",
+                new {tref = tenancyRef}
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
@@ -146,8 +149,9 @@ namespace LBHTenancyAPI.Gateways
                 "arag_startbal AS StartBalance, " +
                 "arag_clearby AS ClearBy " +
                 "FROM arag " +
-                $"WHERE tag_ref = '{tenancyRef}'" +
-                "ORDER BY arag_startdate DESC "
+                "WHERE tag_ref = @tRef " +
+                "ORDER BY arag_startdate DESC ",
+                new {tRef = tenancyRef}
             ).ToList();
         }
 
@@ -163,8 +167,9 @@ namespace LBHTenancyAPI.Gateways
                 "uh_username as UHUsername, " +
                 "action_balance as ActionBalance " +
                 "FROM araction " +
-                $"WHERE tag_ref = ('{tenancyRef}') " +
-                "ORDER BY araction.action_date DESC"
+                "WHERE tag_ref = @tRef " +
+                "ORDER BY araction.action_date DESC",
+                new {tRef = tenancyRef}
             ).ToList();
         }
     }
