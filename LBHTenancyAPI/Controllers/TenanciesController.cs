@@ -106,7 +106,7 @@ namespace LBHTenancyAPI.Controllers
         }
 
         [HttpGet]
-        [Route("tenancies/{tenancyRef}")]
+        [Route("{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
             Dictionary<string, object> result;
