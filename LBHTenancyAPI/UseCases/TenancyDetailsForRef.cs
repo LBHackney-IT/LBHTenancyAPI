@@ -19,6 +19,7 @@ namespace LBHTenancyAPI.UseCases
 
                 response.TenancyDetails = new Tenancy
                 {
+                    TenancyRef = tenancyResponse.TenancyRef,
                     CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
                     PrimaryContactName = tenancyResponse.PrimaryContactName,
                     PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,

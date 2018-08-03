@@ -106,7 +106,7 @@ namespace LBHTenancyAPI.Controllers
         }
 
         [HttpGet]
-        [Route("tenancies/{tenancyRef}")]
+        [Route("{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
             Dictionary<string, object> result;
@@ -134,6 +134,7 @@ namespace LBHTenancyAPI.Controllers
                 if (tenancy.TenancyRef != null)
                     tenancyDetails = new Dictionary<string, object>
                     {
+                        {"ref", tenancy.TenancyRef},
                         {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
                         {"primary_contact_name", tenancy.PrimaryContactName},
                         {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
