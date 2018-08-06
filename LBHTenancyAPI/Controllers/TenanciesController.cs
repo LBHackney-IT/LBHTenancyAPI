@@ -136,6 +136,7 @@ namespace LBHTenancyAPI.Controllers
                     {
                         {"ref", tenancy.TenancyRef},
                         {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
+                        {"current_balance",tenancy.CurrentBalance},
                         {"primary_contact_name", tenancy.PrimaryContactName},
                         {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
                         {"primary_contact_postcode", tenancy.PrimaryContactPostcode}

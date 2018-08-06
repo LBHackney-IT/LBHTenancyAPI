@@ -181,6 +181,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"ref", "0test/01"},
                 {"current_arrears_agreement_status", "Breached"},
+                {"current_balance","23.01"},
                 {"primary_contact_name", "Rashmi"},
                 {"primary_contact_long_address", "AquaLand"},
                 {"primary_contact_postcode", "e8 1hh"},
@@ -249,6 +250,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             {
                 {"ref", "0test/02"},
                 {"current_arrears_agreement_status", "Active"},
+                {"current_balance","21.01"},
                 {"primary_contact_name", "Vlad"},
                 {"primary_contact_long_address", "AquaLand123"},
                 {"primary_contact_postcode", "e8 2ii"},
