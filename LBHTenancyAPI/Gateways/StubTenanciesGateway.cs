@@ -16,6 +16,7 @@ namespace LBHTenancyAPI.Gateways
             StoredTenancyListItems = new Dictionary<string, TenancyListItem>();
             StoredActionDiaryDetails =  new Dictionary<string, ArrearsActionDiaryEntry>();
             StoredPaymentTransactionsDetails = new Dictionary<string, PaymentTransaction>();
+            StoredTenancyDetails = new Dictionary<string, Tenancy>();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
@@ -60,7 +61,7 @@ namespace LBHTenancyAPI.Gateways
         {
             var tenancyDetails = new Tenancy();
 
-            if (StoredPaymentTransactionsDetails.ContainsKey(tenancyRef))
+            if (StoredTenancyDetails.ContainsKey(tenancyRef))
             {
                 tenancyDetails = (StoredTenancyDetails[tenancyRef]);
             }
