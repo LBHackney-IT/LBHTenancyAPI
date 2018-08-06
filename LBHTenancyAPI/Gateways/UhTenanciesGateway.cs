@@ -105,13 +105,12 @@ namespace LBHTenancyAPI.Gateways
                 "ORDER BY post_date DESC",
                 new {tref = tenancyRef}
             ).ToList();
-
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)
         {
             var result = conn.Query<Tenancy>(
-                "SELECT DISTINCT " +
+                "SELECT " +
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
                 "arag.arag_status as ArrearsAgreementStatus, " +
