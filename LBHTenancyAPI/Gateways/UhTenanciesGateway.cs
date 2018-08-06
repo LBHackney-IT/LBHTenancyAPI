@@ -111,8 +111,8 @@ namespace LBHTenancyAPI.Gateways
         public Tenancy GetTenancyForRef(string tenancyRef)
         {
             var result = conn.Query<Tenancy>(
-                "SELECT DISTINCT" +
-                "(tenagree.tag_ref) as TenancyRef, " +
+                "SELECT DISTINCT " +
+                "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
                 "arag.arag_status as ArrearsAgreementStatus, " +
                 "arag.arag_startdate as ArrearsAgreementStartDate, " +
