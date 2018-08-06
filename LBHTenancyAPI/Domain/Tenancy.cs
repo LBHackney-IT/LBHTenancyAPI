@@ -35,6 +35,14 @@ namespace LBHTenancyAPI.Domain
 
         public DateTime LastActionDate { get; set; }
 
+        private string agreementStatus;
+        public string AgreementStatus
+        {
+            get => agreementStatus;
+
+            set => agreementStatus = value.Trim();
+        }
+
         public string PrimaryContactName { get; set; }
 
         private string primaryContactPhone;

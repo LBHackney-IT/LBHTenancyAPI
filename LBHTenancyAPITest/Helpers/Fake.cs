@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Bogus;
 using LBHTenancyAPI.Domain;
+using LBHTenancyAPI.UseCases;
 
 namespace LBHTenancyAPITest.Helpers
 {
@@ -39,6 +41,50 @@ namespace LBHTenancyAPITest.Helpers
                 PropertyRef = random.Random.Hash(11)
             };
         }
+
+        public static Tenancy GenerateTenancyDetails()
+        {
+            var random = new Faker();
+
+            return new Tenancy
+            {
+                TenancyRef = random.Random.Hash(11),
+                CurrentBalance = random.Finance.Amount(),
+                LastActionCode = random.Random.Hash(3),
+                LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                PrimaryContactName = random.Name.FullName(),
+                PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
+                PrimaryContactPostcode = random.Random.Hash(10),
+                AgreementStatus = random.Random.Hash(10),
+
+                ArrearsActionDiary = new List<ArrearsActionDiaryEntry>
+                {
+                    new ArrearsActionDiaryEntry()
+                    {
+                        Balance = random.Finance.Amount(),
+                        Code = random.Random.Hash(3),
+                        Type = random.Random.Hash(50),
+                        Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                        Comment = random.Random.Hash(100),
+                        UniversalHousingUsername = random.Random.Hash(50)
+                    }
+
+                },
+                ArrearsAgreements= new List<ArrearsAgreement>
+                {
+                   new ArrearsAgreement()
+                   {
+                       Amount = random.Finance.Amount(),
+                       Breached= random.Random.Bool(),
+                       Frequency = random.Random.Hash(10),
+                       ClearBy = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                       StartBalance = random.Finance.Amount(),
+                       Status = random.Random.Hash(10)
+                   }
+                }
+            };
+        }
+
 
         public static ArrearsActionDiaryEntry GenerateActionDiary()
         {
