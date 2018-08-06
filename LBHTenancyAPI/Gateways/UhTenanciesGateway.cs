@@ -113,8 +113,6 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
-                "arag.arag_status as ArrearsAgreementStatus, " +
-                "arag.arag_startdate as ArrearsAgreementStartDate, " +
                 "contacts.con_name as PrimaryContactName, " +
                 "contacts.con_address as PrimaryContactLongAddress, " +
                 "contacts.con_postcode as PrimaryContactPostcode, " +
@@ -159,12 +157,12 @@ namespace LBHTenancyAPI.Gateways
             return conn.Query<ArrearsActionDiaryEntry>(
                 "SELECT top 5" +
                 "tag_ref as TenancyRef, " +
-                "action_code as ActionCode, " +
+                "action_code as Code, " +
                 "action_type as Type, " +
-                "action_date as ActionDate, " +
-                "action_comment as ActionComment, " +
-                "username as UHUsername, " +
-                "action_balance as ActionBalance " +
+                "action_date as Date, " +
+                "action_comment as Comment, " +
+                "username as UniversalHousingUsername, " +
+                "action_balance as Balance " +
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
