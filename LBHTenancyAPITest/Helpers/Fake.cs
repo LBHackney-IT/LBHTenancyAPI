@@ -67,8 +67,16 @@ namespace LBHTenancyAPITest.Helpers
                         Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                         Comment = random.Random.Hash(100),
                         UniversalHousingUsername = random.Random.Hash(50)
-                    }
-
+                    },
+                    new ArrearsActionDiaryEntry()
+                    {
+                        Balance = random.Finance.Amount(),
+                        Code = random.Random.Hash(3),
+                        Type = random.Random.Hash(50),
+                        Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                        Comment = random.Random.Hash(100),
+                        UniversalHousingUsername = random.Random.Hash(50)
+                     }
                 },
                 ArrearsAgreements= new List<ArrearsAgreement>
                 {
@@ -80,7 +88,16 @@ namespace LBHTenancyAPITest.Helpers
                        ClearBy = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                        StartBalance = random.Finance.Amount(),
                        Status = random.Random.Hash(10)
-                   }
+                   },
+                    new ArrearsAgreement()
+                    {
+                        Amount = random.Finance.Amount(),
+                        Breached= random.Random.Bool(),
+                        Frequency = random.Random.Hash(10),
+                        ClearBy = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+                        StartBalance = random.Finance.Amount(),
+                        Status = random.Random.Hash(10)
+                    }
                 }
             };
         }
