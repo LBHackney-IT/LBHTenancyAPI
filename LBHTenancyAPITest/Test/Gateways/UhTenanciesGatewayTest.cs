@@ -207,7 +207,6 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
-            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
 
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
@@ -230,6 +229,25 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+
+            Assert.Equal(5, tenancy.ArrearsActionDiary.Count);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveAgreements()
+        {
+            Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
+            InsertSingleTenancyAttributes(expectedTenancy);
+
+            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
+
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+            Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+
+            Assert.Equal(5, tenancy.ArrearsAgreements.Count);
         }
 
         [Fact]
