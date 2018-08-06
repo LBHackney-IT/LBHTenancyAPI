@@ -16,7 +16,7 @@ namespace LBHTenancyAPITest.Test.UseCases
             var gateway = new StubTenanciesGateway();
             var tenancyDetailsForRef = new TenancyDetailsForRef(gateway);
 
-            var response = tenancyDetailsForRef.Execute("");
+            var response = tenancyDetailsForRef.Execute(" ");
 
             Assert.IsType(typeof(TenancyDetailsForRef.TenancyResponse), response);
             Assert.Equal(null,response.TenancyDetails.TenancyRef);

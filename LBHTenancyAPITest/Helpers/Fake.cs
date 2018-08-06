@@ -85,7 +85,6 @@ namespace LBHTenancyAPITest.Helpers
             };
         }
 
-
         public static ArrearsActionDiaryEntry GenerateActionDiary()
         {
             var random = new Faker();
