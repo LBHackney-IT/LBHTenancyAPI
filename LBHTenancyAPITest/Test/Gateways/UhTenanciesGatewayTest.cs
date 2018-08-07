@@ -207,7 +207,6 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
-            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
 
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
@@ -230,6 +229,33 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+
+            Assert.Equal(5, tenancy.ArrearsActionDiary.Count);
+            Assert.True(tenancy.ArrearsActionDiary[0].Date.Ticks >= tenancy.ArrearsActionDiary[1].Date.Ticks);
+
+            var oldestDate = expectedTenancy.ArrearsActionDiary.OrderBy(d => d.Date).First();
+            Assert.True(tenancy.ArrearsActionDiary[4].Date.Ticks >= oldestDate.Date.Ticks);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveAgreements()
+        {
+            Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
+            InsertSingleTenancyAttributes(expectedTenancy);
+
+            expectedTenancy.ArrearsAgreements = InsertRandomAgreementDetails(expectedTenancy.TenancyRef, 6);
+
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+            Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+
+            Assert.Equal(5, tenancy.ArrearsAgreements.Count);
+            Assert.True(tenancy.ArrearsAgreements[0].Startdate.Ticks >= tenancy.ArrearsAgreements[1].Startdate.Ticks);
+
+            var oldestDate = expectedTenancy.ArrearsAgreements.OrderBy(d => d.Startdate).First();
+            Assert.True(tenancy.ArrearsAgreements[4].Startdate.Ticks >= oldestDate.Startdate.Ticks);
         }
 
         [Fact]
@@ -289,8 +315,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             {
                 TenancyRef = random.Random.Hash(11),
                 CurrentBalance = random.Finance.Amount(),
-                LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-                LastActionCode = random.Random.Hash(3),
                 PrimaryContactName = random.Name.FullName(),
                 PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
                 PrimaryContactPostcode = random.Random.Hash(10),
@@ -380,8 +404,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);
             command.Parameters["@primaryContactPhone"].Value = tenancyValues.PrimaryContactPhone;
             command.ExecuteNonQuery();
-
-            InsertArrearsActions(tenancyValues.TenancyRef, tenancyValues.LastActionCode,tenancyValues.LastActionDate);
         }
 
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)

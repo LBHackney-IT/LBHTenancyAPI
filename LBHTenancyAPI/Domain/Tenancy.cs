@@ -25,16 +25,6 @@ namespace LBHTenancyAPI.Domain
             set => tenancyRef = value.Trim();
         }
 
-        private string lastActionCode;
-        public string LastActionCode
-        {
-            get => lastActionCode;
-
-            set => lastActionCode = value.Trim();
-        }
-
-        public DateTime LastActionDate { get; set; }
-
         private string agreementStatus;
         public string AgreementStatus
         {
