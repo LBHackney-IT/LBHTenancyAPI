@@ -17,6 +17,8 @@ namespace LBHTenancyAPI.UseCases
             var response = new TenancyResponse();
             var tenancyResponse = tenanciesGateway.GetTenancyForRef(tenancyRef);
 
+            if (string.IsNullOrWhiteSpace(tenancyRef))
+            {
                 response.TenancyDetails = new Tenancy
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
@@ -24,7 +26,20 @@ namespace LBHTenancyAPI.UseCases
                     PrimaryContactName = tenancyResponse.PrimaryContactName,
                     PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
-
+                    ArrearsActionDiary = new List<ArrearsActionDiaryEntry>(),
+                    ArrearsAgreements = new List<ArrearsAgreement>()
+                };
+            }
+            else
+            {
+                response.TenancyDetails = new Tenancy
+                {
+                    TenancyRef = tenancyResponse.TenancyRef,
+                    CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
+                    PrimaryContactName = tenancyResponse.PrimaryContactName,
+                    PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
+                    PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
+                    ArrearsAgreementStatus = tenancyResponse.AgreementStatus,
                     ArrearsActionDiary = tenancyResponse.ArrearsActionDiary.ConvertAll(actionDiary => new ArrearsActionDiaryEntry
                     {
                         Code = actionDiary.Code,
@@ -34,6 +49,7 @@ namespace LBHTenancyAPI.UseCases
                         Date = string.Format("{0:u}", actionDiary.Date),
                         UniversalHousingUsername = actionDiary.UniversalHousingUsername
                     }),
+
                     ArrearsAgreements = tenancyResponse.ArrearsAgreements.ConvertAll(agreement => new ArrearsAgreement
                     {
                         Amount = agreement.Amount.ToString("C"),
@@ -45,7 +61,7 @@ namespace LBHTenancyAPI.UseCases
                         Status = agreement.Status
                     })
                 };
-
+            }
             return response;
         }
 

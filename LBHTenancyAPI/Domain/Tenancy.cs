@@ -25,6 +25,14 @@ namespace LBHTenancyAPI.Domain
             set => tenancyRef = value.Trim();
         }
 
+        private string agreementStatus;
+        public string AgreementStatus
+        {
+            get => agreementStatus;
+
+            set => agreementStatus = value.Trim();
+        }
+
         public string PrimaryContactName { get; set; }
 
         private string primaryContactPhone;
