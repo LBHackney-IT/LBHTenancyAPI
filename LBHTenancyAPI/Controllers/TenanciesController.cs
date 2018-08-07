@@ -111,100 +111,66 @@ namespace LBHTenancyAPI.Controllers
         {
             Dictionary<string, object> result;
             var tenancyDetails = new Dictionary<string, object>();
-            try
+
+            var response = tenancyDetailsForRef.Execute(tenancyRef);
+
+            var tenancy = response.TenancyDetails;
+
+            if (tenancy.TenancyRef == null)
             {
-                if (string.IsNullOrWhiteSpace(tenancyRef))
+                result = new Dictionary<string, object>
                 {
-                    var errors = new List<APIErrorMessage>
-                    {
-                        new APIErrorMessage
-                        {
-                            developerMessage = "Invalid parameter - Tenancy Reference",
-                            userMessage = "No tenancy for reference: {tenancyRef}"
-                        }
-                    };
-                    var json = Json(errors);
-                    json.StatusCode = 404;
-                    return json;
-                }
-
-                var response = tenancyDetailsForRef.Execute(tenancyRef);
-                var tenancy = response.TenancyDetails;
-
-                if (tenancy.TenancyRef != null)
-                    tenancyDetails = new Dictionary<string, object>
-                    {
-                        {"ref", tenancy.TenancyRef},
-                        {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
-                        {"current_balance", tenancy.CurrentBalance},
-                        {"primary_contact_name", tenancy.PrimaryContactName},
-                        {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
-                        {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
-                    };
-
-                List<Dictionary<string, object>> latestActionDiary;
-
-                if (tenancy.ArrearsActionDiary == null)
-                    latestActionDiary = new List<Dictionary<string, object>>();
-                else
-                    latestActionDiary = tenancy.ArrearsActionDiary.ConvertAll(actionDiary =>
-                        new Dictionary<string, object>
-                        {
-                            {"balance", actionDiary.Balance},
-                            {"code", actionDiary.Code},
-                            {"type", actionDiary.Type},
-                            {"date", actionDiary.Date.ToString()},
-                            {"comment", actionDiary.Comment},
-                            {"universal_housing_username", actionDiary.UniversalHousingUsername}
-                        });
-
-                List<Dictionary<string, object>> latestAgreement;
-
-                if (tenancy.ArrearsAgreements == null)
-                    latestAgreement = new List<Dictionary<string, object>>();
-                else
-                    latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement =>
-                        new Dictionary<string, object>
-                        {
-                            {"amount", agreement.Amount},
-                            {"breached", agreement.Breached},
-                            {"clear_by", agreement.ClearBy},
-                            {"frequency", agreement.Frequency},
-                            {"start_balance", agreement.StartBalance},
-                            {"start_date", agreement.Startdate},
-                            {"status", agreement.Status}
-                        });
-
-                if (tenancyDetails.Count != 0)
-                    result = new Dictionary<string, object>
-                    {
-                        {"tenancy_details", tenancyDetails},
-                        {"latest_action_diary_events", latestActionDiary},
-                        {"latest_arrears_agreements", latestAgreement}
-                    };
-                else
-                    result = new Dictionary<string, object>
-                    {
-                        {"tenancy_details", new Dictionary<string, object>()},
-                        {"latest_action_diary_events", new List<Dictionary<string, object>>()},
-                        {"latest_arrears_agreements", new List<Dictionary<string, object>>()}
-                    };
-            }
-
-            catch (Exception ex)
-            {
-                var errors = new List<APIErrorMessage>
-                {
-                    new APIErrorMessage
-                    {
-                        developerMessage = ex.Message,
-                        userMessage = "Something went wrong with retrieving tenancy for ref: {tenancyRef}"
-                    }
+                    {"tenancy_details", new Dictionary<string, object>()},
+                    {"latest_action_diary_events", new List<Dictionary<string, object>>()},
+                    {"latest_arrears_agreements", new List<Dictionary<string, object>>()}
                 };
-                var json = Json(errors);
-                json.StatusCode = 500;
-                return json;
+
+                return Ok(result);
             }
+
+            tenancyDetails = new Dictionary<string, object>
+            {
+                {"ref", tenancy.TenancyRef},
+                {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
+                {"current_balance", tenancy.CurrentBalance},
+                {"primary_contact_name", tenancy.PrimaryContactName},
+                {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
+                {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
+            };
+
+            List<Dictionary<string, object>> latestActionDiary;
+
+            latestActionDiary = tenancy.ArrearsActionDiary.ConvertAll(actionDiary =>
+                new Dictionary<string, object>
+                {
+                    {"balance", actionDiary.Balance},
+                    {"code", actionDiary.Code},
+                    {"type", actionDiary.Type},
+                    {"date", actionDiary.Date.ToString()},
+                    {"comment", actionDiary.Comment},
+                    {"universal_housing_username", actionDiary.UniversalHousingUsername}
+                });
+
+            List<Dictionary<string, object>> latestAgreement;
+
+            latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement =>
+                new Dictionary<string, object>
+                {
+                    {"amount", agreement.Amount},
+                    {"breached", agreement.Breached},
+                    {"clear_by", agreement.ClearBy},
+                    {"frequency", agreement.Frequency},
+                    {"start_balance", agreement.StartBalance},
+                    {"start_date", agreement.Startdate},
+                    {"status", agreement.Status}
+                });
+
+            result = new Dictionary<string, object>
+            {
+                {"tenancy_details", tenancyDetails},
+                {"latest_action_diary_events", latestActionDiary},
+                {"latest_arrears_agreements", latestAgreement}
+            };
 
             return Ok(result);
         }
