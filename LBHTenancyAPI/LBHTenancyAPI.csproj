@@ -10,6 +10,10 @@
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="DotNetEnv" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
@@ -43,13 +47,6 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Web References\ArrearsAgreementService\Reference.map">
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Web References\ArrearsAgreementService\Reference.cs">
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>

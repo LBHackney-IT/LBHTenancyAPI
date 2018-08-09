@@ -1,6 +1,7 @@
-﻿using System.Collections.Specialized;
-using LBHTenancyAPI.ArrearsAgreementService;
+using System.Collections.Specialized;
+using AgreementService;
 using LBHTenancyAPI.Interfaces;
+
 namespace LBHTenancyAPI.Services
 {
     public class ArrearsServiceRequestBuilder : IArrearsServiceRequestBuilder
@@ -11,17 +12,21 @@ namespace LBHTenancyAPI.Services
             _configuration = configuration;
         }
 
-        public ArrearsActionCreateRequest BuildArrearsRequest()
+        public ArrearsActionCreateRequest BuildArrearsRequest(ArrearsActionCreateRequest arrears)
         {
-            ArrearsActionCreateRequest arrears = new ArrearsActionCreateRequest();
+            //arrears = new ArrearsActionCreateRequest();
             arrears.DirectUser = GetUserCredentials();
             arrears.SourceSystem = GetUhSourceSystem();
             arrears.ArrearsAction = new ArrearsActionInfo
             {
-                ActionBalance = 17,
-                ActionCode = "GEN",
-                Comment = "Added by webservice",
-                TenancyAgreementRef = "000017/01"
+                //ActionBalance = 17,
+                //ActionCode = "GEN",
+                //Comment = "Added by webservice",
+                //TenancyAgreementRef = "000017/01"
+                ActionBalance = arrears.ArrearsAction.ActionBalance,
+                ActionCode = arrears.ArrearsAction.ActionCode,
+                Comment = arrears.ArrearsAction.Comment,
+                TenancyAgreementRef = arrears.ArrearsAction.TenancyAgreementRef
             };
             return arrears;
         }
@@ -42,4 +47,3 @@ namespace LBHTenancyAPI.Services
         
     }
 }
- 

@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using LBHTenancyAPI.Interfaces;
 using System.Threading.Tasks;
-using LBHTenancyAPI.ArrearsAgreementService;
 using LBHTenancyAPI.UseCases;
-
+using AgreementService;
 
 namespace LBHTenancyAPI.Services
 {
-    public class ArrearsActionDiaryService :IArrearsActionDiaryService
+    public class ArrearsActionDiaryService : IArrearsActionDiaryService
     {
         private IArrearsActionDiaryService actionDiaryService;
-
         private ArrearsAgreementServiceClient arrearsAgreementServiceClient;
         private ILoggerAdapter<CreateArrearsActionDiaryUseCase> logger;
 
@@ -19,11 +17,8 @@ namespace LBHTenancyAPI.Services
             arrearsAgreementServiceClient = new ArrearsAgreementServiceClient();
             logger = log;
         }
-
-
-        public Task<ArrearsActionResponse> CreateArrearsActionAsync(ArrearsActionCreateRequest request)
+        public Task<AgreementService.ArrearsActionResponse> CreateActionDiaryRecord(AgreementService.ArrearsActionCreateRequest request)
         {
-
             logger.LogInformation($"ArrearsActionDiary/CreateArrearsActionAsync(): Sent request to upstream arrearsAgreementServiceClient (Request ref: {request.ArrearsAction.TenancyAgreementRef})");
             var response = arrearsAgreementServiceClient.CreateArrearsActionAsync(request);
             logger.LogInformation($"ArrearsActionDiary/CreateArrearsActionAsync(): Received response from upstream arrearsAgreementServiceClient (Request ref: {request.ArrearsAction.TenancyAgreementRef})");

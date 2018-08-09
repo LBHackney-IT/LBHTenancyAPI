@@ -12,6 +12,10 @@
     <PackageReference Include="DotNetEnv" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Moq" Version="4.8.3" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
     <PackageReference Include="xunit.runner.console" Version="2.4.0-rc.1.build4038" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -36,8 +40,6 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Web References\ArrearsAgreementService\Reference.map">
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>

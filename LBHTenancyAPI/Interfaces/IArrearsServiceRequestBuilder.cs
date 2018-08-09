@@ -1,4 +1,5 @@
-﻿using LBHTenancyAPI.ArrearsAgreementService;
+
+using AgreementService;
 
 namespace LBHTenancyAPI.Interfaces
 {

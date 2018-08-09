@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using LBHTenancyAPI.Interfaces;
-using LBHTenancyAPI.ArrearsAgreementService;
 using System.Threading.Tasks;
+using AgreementService;
 
 namespace LBHTenancyAPI.UseCases
 {
@@ -23,7 +23,7 @@ namespace LBHTenancyAPI.UseCases
             log.LogInformation($"Creating action Diary record with order (tenancyRef ref: {request.ArrearsAction.TenancyAgreementRef})");
             var actionDiaryRequest = requestBuilder.BuildArrearsRequest(request);
 
-            var response = await requestService.CreateArrearsActionAsync(request);
+            var response = await requestService.CreateActionDiaryRecord(request);
 
             if (!response.Success)
             {
