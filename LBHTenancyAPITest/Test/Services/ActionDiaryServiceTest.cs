@@ -16,44 +16,25 @@ namespace LBHTenancyAPITest.Test.Services
         public async Task WhenGivenActionDiaryDetails_ShouldReturnAnActionDiaryCreatedResponse()
         {
             var gateway = new StubTenanciesGateway();
-            var actionDiary = Fake.GenerateActionDiary();
+            var actionDiary = Fake.GenerateActionDiaryRequest();
 
-            gateway.SetActionDiaryDetails(actionDiary.TenancyRef, actionDiary);
-            var listAllActionDiary = new ListAllArrearsActions(gateway);
-            var response = listAllActionDiary.Execute(actionDiary.TenancyRef);
+            gateway.SetActionDiaryDetails(actionDiary.ArrearsAction.TenancyAgreementRef, actionDiary);
 
-            var builder = new ArrearsServiceRequestBuilder(configuration);
-            var request = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
+            var actionDiaryRecord = new ArrearsActionDiaryService();
+            var actualResponse = await actionDiaryRecord.CreateActionDiaryRecord(actionDiary);
+
+            var expectedResponse = new ArrearsActionCreateRequest
             {
                 ArrearsAction = new ArrearsActionInfo
                 {
-                    ActionBalance = 17,
-                    ActionCode = "GEN",
-                    Comment = "Added by webservice",
-                    TenancyAgreementRef = "000017/01"
+                    ActionBalance = actionDiary.ArrearsAction.ActionBalance,
+                    ActionCategory = actionDiary.ArrearsAction.ActionCategory,
+                    ActionCode = actionDiary.ArrearsAction.ActionCode,
+                    TenancyAgreementRef = actionDiary.ArrearsAction.TenancyAgreementRef;
                 }
-            });
-            var configuration = new NameValueCollection
-            {
-                {"UHUsername", "HackneyAPI"},
-                {"UHPassword", "Hackney1"},
-                {"UHSourceSystem", "HackneyAPI"}
             };
-            var builder = new ArrearsServiceRequestBuilder(configuration);
-            var expectedRequest = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
-            {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    ActionBalance = 17,
-                    ActionCode = "GEN",
-                    Comment = "Added by webservice",
-                    TenancyAgreementRef = "000017/01"
-                }
-            });
-            
-            Assert.Equal(workOrder.postcode, drsOrder.postcode);
-            Assert.Equal(workOrder.prop_ref, drsOrder.prop_ref);
-            Assert.Equal(workOrder.priority, drsOrder.priority);
+
         }
     }
 }
+
