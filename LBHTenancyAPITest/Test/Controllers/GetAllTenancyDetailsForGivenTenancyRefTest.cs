@@ -25,7 +25,15 @@ namespace LBHTenancyAPITest.Test.Controllers
             (
                 new Dictionary<string, object>
                 {
-                    {"tenancy_details", new Dictionary<string, object>()},
+                    {"tenancy_details", new Dictionary<string, object>
+                    {
+                        {"ref", null},
+                        {"current_arrears_agreement_status", null},
+                        {"current_balance", null},
+                        {"primary_contact_name", null},
+                        {"primary_contact_long_address", null},
+                        {"primary_contact_postcode", null}
+                    }},
                     {"latest_action_diary_events", new List<Dictionary<string, object>>()},
                     {"latest_arrears_agreements", new List<Dictionary<string, object>>()}
                 }
