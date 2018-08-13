@@ -86,7 +86,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -103,7 +103,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM rtrans " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY post_date DESC",
-                new {tref = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -124,7 +124,7 @@ namespace LBHTenancyAPI.Gateways
                 "ON contacts.tag_ref = tenagree.tag_ref " +
                 "WHERE tenagree.tag_ref = @tRef " +
                 "ORDER BY arag.arag_startdate DESC",
-                new {tref = tenancyRef.Replace("%2F", "/")}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
@@ -148,7 +148,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM arag " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY arag_startdate DESC ",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -166,7 +166,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
     }
