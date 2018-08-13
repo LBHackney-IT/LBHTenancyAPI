@@ -124,7 +124,7 @@ namespace LBHTenancyAPI.Gateways
                 "ON contacts.tag_ref = tenagree.tag_ref " +
                 "WHERE tenagree.tag_ref = @tRef " +
                 "ORDER BY arag.arag_startdate DESC",
-                new {tref = tenancyRef}
+                new {tref = tenancyRef.Replace("%2F", "/")}
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);

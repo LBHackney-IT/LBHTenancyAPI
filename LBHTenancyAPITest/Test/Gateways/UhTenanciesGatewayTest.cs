@@ -202,6 +202,19 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Null(tenancy.TenancyRef);
         }
 
+
+        [Fact]
+        public void WhenGivenTenancyRefThatisUrlEncoded_GetSingleTenancyByRefs_ShouldRespondWithResults()
+        {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            expectedTenancy.TenancyRef = "Test/01";
+            InsertSingleTenancyAttributes(expectedTenancy);
+
+            var tenancy = GetSingleTenacyForRef("Test%2F01");
+
+            Assert.Equal("Test/01", tenancy.TenancyRef);
+        }
+
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicContactDetails()
         {
