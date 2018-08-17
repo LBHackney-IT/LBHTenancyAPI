@@ -96,9 +96,9 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
-                "trans_type AS TransactionType, " +
-                "real_value AS TransactionAmount, " +
-                "post_date AS TransactionDate, " +
+                "trans_type AS Type, " +
+                "real_value AS Amount, " +
+                "post_date AS Date, " +
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
                 "WHERE tag_ref = @tRef " +

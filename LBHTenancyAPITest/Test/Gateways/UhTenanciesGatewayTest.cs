@@ -216,7 +216,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicContactDetails()
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
@@ -227,6 +227,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+            Assert.Equal(expectedTenancy.CurrentBalance, tenancy.CurrentBalance);
         }
 
         [Fact]
