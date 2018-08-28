@@ -32,6 +32,8 @@ namespace LBHTenancyAPI.Controllers
             var tenancies = response.Tenancies.ConvertAll(tenancy => new Dictionary<string, object>
             {
                 {"ref", tenancy.TenancyRef},
+                {"prop_ref", tenancy.PropertyRef},
+                {"tenure", tenancy.Tenure},
                 {"current_balance", tenancy.CurrentBalance},
                 {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
                 {
@@ -119,6 +121,11 @@ namespace LBHTenancyAPI.Controllers
             tenancyDetails = new Dictionary<string, object>
             {
                 {"ref", tenancy.TenancyRef},
+                {"prop_ref", tenancy.PropertyRef},
+                {"tenure", tenancy.Tenure},
+                {"rent", tenancy.Rent},
+                {"service", tenancy.Service},
+                {"other_charge", tenancy.OtherCharge},
                 {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
                 {"current_balance", tenancy.CurrentBalance},
                 {"primary_contact_name", tenancy.PrimaryContactName},

@@ -28,6 +28,11 @@ namespace LBHTenancyAPITest.Test.Controllers
                     {"tenancy_details", new Dictionary<string, object>
                     {
                         {"ref", null},
+                        {"prop_ref", null},
+                        {"tenure", null},
+                        {"rent", null},
+                        {"service", null},
+                        {"other_charge", null},
                         {"current_arrears_agreement_status", null},
                         {"current_balance", null},
                         {"primary_contact_name", null},
@@ -59,6 +64,11 @@ namespace LBHTenancyAPITest.Test.Controllers
             allTenancyDetails.AddTenancyDetail("0test/01", new TenancyDetailsForRef.Tenancy
             {
                 TenancyRef = "0test/01",
+                PropertyRef = "prop/01",
+                Tenure = "SEC",
+                Rent = "91.1",
+                Service = "12.0",
+                OtherCharge = "2.0",
                 ArrearsAgreementStatus = "Breached",
                 CurrentBalance = "23.01",
                 PrimaryContactName = "Rashmi",
@@ -125,6 +135,11 @@ namespace LBHTenancyAPITest.Test.Controllers
             allTenancyDetails.AddTenancyDetail("0test/02", new TenancyDetailsForRef.Tenancy
             {
                 TenancyRef = "0test/02",
+                PropertyRef = "prop/02",
+                Tenure = "TEM",
+                Rent = "92.1",
+                Service = "13.0",
+                OtherCharge = "3.0",
                 ArrearsAgreementStatus = "Active",
                 CurrentBalance = "21.01",
                 PrimaryContactName = "Vlad",
@@ -188,6 +203,11 @@ namespace LBHTenancyAPITest.Test.Controllers
             var expectedTenancydetails = new Dictionary<string, object>
             {
                 {"ref", "0test/01"},
+                {"prop_ref", "prop/01"},
+                {"tenure", "SEC"},
+                {"rent", "91.1"},
+                {"service", "12.0"},
+                {"other_charge", "2.0"},
                 {"current_arrears_agreement_status", "Breached"},
                 {"current_balance", "23.01"},
                 {"primary_contact_name", "Rashmi"},
@@ -257,6 +277,11 @@ namespace LBHTenancyAPITest.Test.Controllers
             var expectedTenancydetails = new Dictionary<string, object>
             {
                 {"ref", "0test/02"},
+                {"prop_ref", "prop/02"},
+                {"tenure", "TEM"},
+                {"rent", "92.1"},
+                {"service", "13.0"},
+                {"other_charge", "3.0"},
                 {"current_arrears_agreement_status", "Active"},
                 {"current_balance", "21.01"},
                 {"primary_contact_name", "Vlad"},

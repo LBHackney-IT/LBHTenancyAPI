@@ -48,6 +48,8 @@ namespace LBHTenancyAPITest.Test.Controllers
             listTenancies.AddTenancyResponse("000001/01", new ListTenancies.ResponseTenancy
             {
                 TenancyRef = "000001/01",
+                PropertyRef = "prop/01",
+                Tenure = "SEC",
                 LastActionCode = "CALLED",
                 LastActionDate = "2018-01-01 00:00:00Z",
                 CurrentBalance = "10.66",
@@ -68,6 +70,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                             new Dictionary<string, object>
                             {
                                 {"ref", "000001/01"},
+                                {"prop_ref", "prop/01"},
+                                {"tenure", "SEC"},
                                 {"current_balance", "10.66"},
                                 {"current_arrears_agreement_status", "ACTIVE"},
                                 {
@@ -101,6 +105,8 @@ namespace LBHTenancyAPITest.Test.Controllers
             var expectedTenancyResponse = new ListTenancies.ResponseTenancy
             {
                 TenancyRef = faker.Random.Hash(),
+                PropertyRef = faker.Random.Hash(),
+                Tenure = faker.Random.Word(),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
                 CurrentBalance = faker.Finance.Amount().ToString("C"),
@@ -124,6 +130,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                             new Dictionary<string, object>
                             {
                                 {"ref", expectedTenancyResponse.TenancyRef},
+                                {"prop_ref", expectedTenancyResponse.PropertyRef},
+                                {"tenure", expectedTenancyResponse.Tenure},
                                 {"current_balance", expectedTenancyResponse.CurrentBalance},
                                 {"current_arrears_agreement_status", expectedTenancyResponse.ArrearsAgreementStatus},
                                 {
