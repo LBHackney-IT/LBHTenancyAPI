@@ -22,7 +22,12 @@ namespace LBHTenancyAPI.UseCases
                 response.TenancyDetails = new Tenancy
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
+                    PropertyRef = tenancyResponse.PropertyRef,
+                    Tenure = tenancyResponse.PropertyRef,
                     CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
+                    Rent = tenancyResponse.Rent.ToString("C"),
+                    Service = tenancyResponse.Service.ToString("C"),
+                    OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
                     PrimaryContactName = tenancyResponse.PrimaryContactName,
                     PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
@@ -35,7 +40,12 @@ namespace LBHTenancyAPI.UseCases
                 response.TenancyDetails = new Tenancy
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
+                    PropertyRef = tenancyResponse.PropertyRef,
+                    Tenure = tenancyResponse.Tenure,
                     CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
+                    Rent = tenancyResponse.Rent.ToString("C"),
+                    Service = tenancyResponse.Service.ToString("C"),
+                    OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
                     PrimaryContactName = tenancyResponse.PrimaryContactName,
                     PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
@@ -73,6 +83,11 @@ namespace LBHTenancyAPI.UseCases
         public struct Tenancy
         {
             public string TenancyRef { get; set; }
+            public string PropertyRef { get; set; }
+            public string Tenure { get; set; }
+            public string Rent { get; set; }
+            public string Service { get; set; }
+            public string OtherCharge { get; set; }
             public string CurrentBalance { get; set; }
             public string ArrearsAgreementStatus { get; set; }
             public string PrimaryContactName { get; set; }
