@@ -10,6 +10,10 @@
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="DotNetEnv" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
@@ -18,5 +22,31 @@
     <Compile Remove="Domain\ArrearsActionDiary.cs" />
     <Compile Remove="UseCases\ListAllArrearsAgreements.cs" />
     <Compile Remove="UseCases\IListAllArrearsAgreements.cs" />
+    <Compile Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.cs" />
+    <Compile Remove="Service References\ArrearsAgreementService\Reference.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.svcmap" />
+    <None Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.xsd" />
+    <None Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://lbhuhwwebp01/civica-uh-gateway-dev/webservices/ArrearsAgreementService.svc">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ArrearsAgreementService</RelPath>
+      <UpdateFromURL>http://lbhuhwwebp01/civica-uh-gateway-dev/webservices/ArrearsAgreementService.svc</UpdateFromURL>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>
