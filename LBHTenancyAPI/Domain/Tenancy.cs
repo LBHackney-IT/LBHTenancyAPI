@@ -17,12 +17,52 @@ namespace LBHTenancyAPI.Domain
             set => currentBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
+        private decimal rent;
+        public Decimal Rent
+        {
+            get => rent;
+
+            set => rent = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private decimal service;
+        public Decimal Service
+        {
+            get => service;
+
+            set => service = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private decimal otherCharge;
+        public Decimal OtherCharge
+        {
+            get => otherCharge;
+
+            set => otherCharge = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+        }
+
         private string tenancyRef;
         public string TenancyRef
         {
             get => tenancyRef;
 
             set => tenancyRef = value.Trim();
+        }
+
+        private string propertyRef;
+        public string PropertyRef
+        {
+            get => propertyRef;
+
+            set => propertyRef = value.Trim();
+        }
+
+        private string tenure;
+        public string Tenure
+        {
+            get => tenure;
+
+            set => tenure = value.Trim();
         }
 
         private string agreementStatus;
