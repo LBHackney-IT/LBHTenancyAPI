@@ -52,11 +52,6 @@ namespace LBHTenancyAPITest.Test.UseCases
                 TenancyDetails = new TenancyDetailsForRef.Tenancy()
                 {
                     TenancyRef = tenancy.TenancyRef,
-                    PropertyRef = tenancy.PropertyRef,
-                    Tenure = tenancy.Tenure,
-                    Rent = tenancy.Rent.ToString("C"),
-                    Service = tenancy.Service.ToString("C"),
-                    OtherCharge = tenancy.OtherCharge.ToString("C"),
                     CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                     PrimaryContactName = tenancy.PrimaryContactName,
                     PrimaryContactLongAddress = tenancy.PrimaryContactLongAddress,
@@ -86,18 +81,13 @@ namespace LBHTenancyAPITest.Test.UseCases
                 }
             };
 
-            Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreementStatus, response.TenancyDetails.ArrearsAgreementStatus);
-            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance, response.TenancyDetails.CurrentBalance);
-            Assert.Equal(expectedResponse.TenancyDetails.PropertyRef, response.TenancyDetails.PropertyRef);
-            Assert.Equal(expectedResponse.TenancyDetails.Tenure, response.TenancyDetails.Tenure);
-            Assert.Equal(expectedResponse.TenancyDetails.Rent, response.TenancyDetails.Rent);
-            Assert.Equal(expectedResponse.TenancyDetails.Service, response.TenancyDetails.Service);
-            Assert.Equal(expectedResponse.TenancyDetails.OtherCharge, response.TenancyDetails.OtherCharge);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactLongAddress, response.TenancyDetails.PrimaryContactLongAddress);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactName, response.TenancyDetails.PrimaryContactName);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactPostcode, response.TenancyDetails.PrimaryContactPostcode);
-            Assert.Equal(expectedResponse.TenancyDetails.ArrearsActionDiary, response.TenancyDetails.ArrearsActionDiary);
-            Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreements, response.TenancyDetails.ArrearsAgreements);
+           Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreementStatus, response.TenancyDetails.ArrearsAgreementStatus);
+           Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance, response.TenancyDetails.CurrentBalance);
+           Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactLongAddress, response.TenancyDetails.PrimaryContactLongAddress);
+           Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactName, response.TenancyDetails.PrimaryContactName);
+           Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactPostcode,response.TenancyDetails.PrimaryContactPostcode);
+           Assert.Equal(expectedResponse.TenancyDetails.ArrearsActionDiary, response.TenancyDetails.ArrearsActionDiary);
+           Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreements, response.TenancyDetails.ArrearsAgreements);
         }
     }
 

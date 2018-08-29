@@ -23,8 +23,6 @@ namespace LBHTenancyAPI.UseCases
             response.Tenancies = tenancies.ConvertAll(tenancy => new ResponseTenancy
                 {
                     TenancyRef = tenancy.TenancyRef,
-                    PropertyRef = tenancy.PropertyRef,
-                    Tenure = tenancy.Tenure,
                     LastActionCode = tenancy.LastActionCode,
                     LastActionDate = string.Format("{0:u}", tenancy.LastActionDate),
                     CurrentBalance = tenancy.CurrentBalance.ToString("C"),
@@ -46,8 +44,6 @@ namespace LBHTenancyAPI.UseCases
         public struct ResponseTenancy
         {
             public string TenancyRef { get; set; }
-            public string PropertyRef { get; set; }
-            public string Tenure { get; set; }
             public string LastActionCode { get; set; }
             public string LastActionDate { get; set; }
             public string CurrentBalance { get; set; }

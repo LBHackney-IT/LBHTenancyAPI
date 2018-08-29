@@ -31,23 +31,6 @@ namespace LBHTenancyAPI.Domain
             set => tenancyRef = value.Trim();
         }
 
-        private string propertyRef;
-        public string PropertyRef
-        {
-            get => propertyRef;
-
-            set => propertyRef = value.Trim();
-        }
-
-        private string tenure;
-        public string Tenure
-        {
-            get => tenure;
-
-            set => tenure = value.Trim();
-        }
-
-
         private string lastActionCode;
         public string LastActionCode
         {
@@ -73,7 +56,7 @@ namespace LBHTenancyAPI.Domain
         {
             get => primaryContactShortAddress;
 
-            set => primaryContactShortAddress = string.IsNullOrWhiteSpace(value) ? null : value.Split("\n").First().Trim();
+            set => primaryContactShortAddress = string.IsNullOrWhiteSpace(value) ? null : value.Split("\n").First();
         }
     }
 }
