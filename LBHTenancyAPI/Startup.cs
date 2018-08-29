@@ -48,14 +48,12 @@ namespace LBHTenancyAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            if(!env.IsProduction())
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
-                });
-                app.UseSwagger();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
+            });
+            app.UseSwagger();
+
 
             app.UseMvc(routes =>
             {
