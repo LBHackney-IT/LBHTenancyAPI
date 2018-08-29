@@ -34,6 +34,7 @@ namespace LBHTenancyAPI
             services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
 
+            //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
@@ -47,14 +48,14 @@ namespace LBHTenancyAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
             });
             app.UseSwagger();
 
-
+            //required for swagger to work
             app.UseMvc(routes =>
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
