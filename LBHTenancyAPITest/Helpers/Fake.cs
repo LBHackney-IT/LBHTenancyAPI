@@ -134,7 +134,7 @@ namespace LBHTenancyAPITest.Helpers
             };
         }
 
-        public static AgreementService.ArrearsActionResponse CreateArrearsActionAsync(AgreementService.ArrearsActionCreateRequest request)
+        public static ArrearsActionResponse CreateArrearsActionAsync(AgreementService.ArrearsActionCreateRequest request)
         {
             var random = new Faker();
 
@@ -142,7 +142,7 @@ namespace LBHTenancyAPITest.Helpers
             {
                 ArrearsAction = new ArrearsActionLogDto
                 {
-                    TenancyAgreementRef = random.Random.Hash(11),
+                    TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef,
                     ActionBalance = random.Finance.Amount(),
                     ActionCode = random.Random.Hash(3),
                     ActionCategory = random.Random.Hash(10),

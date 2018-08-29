@@ -1,16 +1,10 @@
-using System;
+using AgreementService;
+using System.Threading.Tasks;
+
 namespace LBHTenancyAPI.Gateways
 {
     public interface IArrearsActionDiaryGateway
     {
-        bool CreateActionDiaryEntry();
-    }
-
-    public class ArrearsActionDiaryGateway : IArrearsActionDiaryGateway
-    {
-        public bool CreateActionDiaryEntry()
-        {
-            throw new NotImplementedException();
-        }
+        Task<ArrearsActionResponse> CreateActionDiaryEntryAsync(ArrearsActionCreateRequest request);
     }
 }
