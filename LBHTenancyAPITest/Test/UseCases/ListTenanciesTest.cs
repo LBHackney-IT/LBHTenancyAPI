@@ -62,6 +62,8 @@ namespace LBHTenancyAPITest.Test.UseCases
                     new ListTenancies.ResponseTenancy
                     {
                         TenancyRef = tenancy1.TenancyRef,
+                        PropertyRef = tenancy1.PropertyRef,
+                        Tenure = tenancy1.Tenure,
                         LastActionCode = tenancy1.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
                         CurrentBalance = tenancy1.CurrentBalance.ToString("C"),
@@ -73,6 +75,8 @@ namespace LBHTenancyAPITest.Test.UseCases
                     new ListTenancies.ResponseTenancy
                     {
                         TenancyRef = tenancy2.TenancyRef,
+                        PropertyRef = tenancy2.PropertyRef,
+                        Tenure = tenancy2.Tenure,
                         LastActionCode = tenancy2.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
                         CurrentBalance = tenancy2.CurrentBalance.ToString("C"),
@@ -104,6 +108,8 @@ namespace LBHTenancyAPITest.Test.UseCases
                     new ListTenancies.ResponseTenancy
                     {
                         TenancyRef = tenancy.TenancyRef,
+                        PropertyRef = tenancy.PropertyRef,
+                        Tenure = tenancy.Tenure,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
                         CurrentBalance = tenancy.CurrentBalance.ToString("C"),
