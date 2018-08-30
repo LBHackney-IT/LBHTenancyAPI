@@ -1,5 +1,3 @@
-using System;
-using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
@@ -12,7 +10,7 @@ namespace LBHTenancyAPITest.Test.Services
         [Fact]
         public void Return_A_Built_Request_Object()
         {
-            var builder = new ArrearsServiceRequestBuilder(new NameValueCollection());
+            var builder = new ArrearsServiceRequestBuilder(new CredentialsService());
             var request = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
             {
                 ArrearsAction = new ArrearsActionInfo()
@@ -23,13 +21,7 @@ namespace LBHTenancyAPITest.Test.Services
         [Fact]
         public void WhenGivenActionDiaryDetails_BuildValidArrearsActionDiaryRequest()
         {
-            var configuration = new NameValueCollection
-            {
-                {"UHUsername", "HackneyAPI"},
-                {"UHPassword", "Hackney1"},
-                {"UHSourceSystem", "HackneyAPI"}
-            };
-            var builder = new ArrearsServiceRequestBuilder(configuration);
+            var builder = new ArrearsServiceRequestBuilder(new CredentialsService());
             var request = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
             {
                 ArrearsAction = new ArrearsActionInfo

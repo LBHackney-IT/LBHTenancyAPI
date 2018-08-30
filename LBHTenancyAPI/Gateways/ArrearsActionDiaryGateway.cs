@@ -1,13 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
+using LBHTenancyAPI.Interfaces;
+using LBHTenancyAPI.UseCases;
 
 namespace LBHTenancyAPI.Gateways
 {
     public class ArrearsActionDiaryGateway : IArrearsActionDiaryGateway
     {
         private readonly IArrearsAgreementService _arrearsAgreementService;
-
         public ArrearsActionDiaryGateway(IArrearsAgreementService arrearsAgreementService)
         {
             _arrearsAgreementService = arrearsAgreementService;

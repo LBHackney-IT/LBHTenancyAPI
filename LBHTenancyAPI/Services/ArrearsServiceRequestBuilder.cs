@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using AgreementService;
 using LBHTenancyAPI.Interfaces;
 
@@ -6,23 +5,18 @@ namespace LBHTenancyAPI.Services
 {
     public class ArrearsServiceRequestBuilder : IArrearsServiceRequestBuilder
     {
-        private NameValueCollection _configuration;
-        public ArrearsServiceRequestBuilder(NameValueCollection configuration)
+        private readonly ICredentialsService _credentialsService;
+        public ArrearsServiceRequestBuilder(ICredentialsService credentialsService)
         {
-            _configuration = configuration;
+            _credentialsService = credentialsService;
         }
 
         public ArrearsActionCreateRequest BuildArrearsRequest(ArrearsActionCreateRequest arrears)
         {
-            //arrears = new ArrearsActionCreateRequest();
-            arrears.DirectUser = GetUserCredentials();
-            arrears.SourceSystem = GetUhSourceSystem();
+            arrears.DirectUser = _credentialsService.GetUhUserCredentials();
+            arrears.SourceSystem = _credentialsService.GetUhSourceSystem();
             arrears.ArrearsAction = new ArrearsActionInfo
             {
-                //ActionBalance = 17,
-                //ActionCode = "GEN",
-                //Comment = "Added by webservice",
-                //TenancyAgreementRef = "000017/01"
                 ActionBalance = arrears.ArrearsAction.ActionBalance,
                 ActionCode = arrears.ArrearsAction.ActionCode,
                 Comment = arrears.ArrearsAction.Comment,
@@ -30,20 +24,5 @@ namespace LBHTenancyAPI.Services
             };
             return arrears;
         }
-
-        private UserCredential GetUserCredentials()
-        {
-            return new UserCredential
-            {
-                UserName = _configuration.Get("UHUsername"),
-                UserPassword = _configuration.Get("UHPassword")
-            };
-        }
-
-        private string GetUhSourceSystem()
-        {
-            return _configuration.Get("UHSourceSystem");
-        }
-        
     }
 }
