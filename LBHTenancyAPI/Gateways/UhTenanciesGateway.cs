@@ -23,9 +23,14 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
+                "tenagree.prop_ref as PropertyRef, " +
+                "tenagree.tenure as Tenure, " +
+                "tenagree.rent as Rent, " +
+                "tenagree.service as Service, " +
+                "tenagree.other_charge as OtherCharge, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactShortAddress, " +
-                "contacts.con_postcode as PrimaryContactPostcode, " +
+                "property.short_address as PrimaryContactShortAddress, " +
+                "property.post_code as PrimaryContactPostcode, " +
                 "araction.tag_ref AS TenancyRef, " +
                 "araction.action_code AS LastActionCode, " +
                 "araction.action_date AS LastActionDate, " +
@@ -34,6 +39,8 @@ namespace LBHTenancyAPI.Gateways
                 "FROM tenagree " +
                 "LEFT JOIN contacts " +
                 "ON contacts.tag_ref = tenagree.tag_ref " +
+                "LEFT JOIN property " +
+                "ON property.prop_ref = tenagree.prop_ref " +
                 "LEFT JOIN ( " +
                 "SELECT " +
                 "araction.tag_ref, " +
@@ -86,7 +93,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -96,14 +103,14 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
-                "trans_type AS TransactionType, " +
-                "real_value AS TransactionAmount, " +
-                "post_date AS TransactionDate, " +
+                "trans_type AS Type, " +
+                "real_value AS Amount, " +
+                "post_date AS Date, " +
                 "trans_ref AS TransactionRef " +
                 "FROM rtrans " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY post_date DESC",
-                new {tref = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -113,18 +120,21 @@ namespace LBHTenancyAPI.Gateways
                 "SELECT " +
                 "tenagree.tag_ref as TenancyRef, " +
                 "tenagree.cur_bal as CurrentBalance, " +
+                "tenagree.tenure as Tenure, " +
                 "contacts.con_name as PrimaryContactName, " +
-                "contacts.con_address as PrimaryContactLongAddress, " +
-                "contacts.con_postcode as PrimaryContactPostcode, " +
+                "property.address1 as PrimaryContactLongAddress, " +
+                "property.post_code as PrimaryContactPostcode, " +
                 "contacts.con_phone1 as PrimaryContactPhone " +
                 "FROM tenagree " +
                 "LEFT JOIN arag " +
                 "ON arag.tag_ref = tenagree.tag_ref " +
                 "LEFT JOIN contacts " +
                 "ON contacts.tag_ref = tenagree.tag_ref " +
+                "LEFT JOIN property " +
+                "ON property.prop_ref = tenagree.prop_ref " +
                 "WHERE tenagree.tag_ref = @tRef " +
                 "ORDER BY arag.arag_startdate DESC",
-                new {tref = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
@@ -148,7 +158,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM arag " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY arag_startdate DESC ",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
 
@@ -166,7 +176,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef}
+                new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
         }
     }
