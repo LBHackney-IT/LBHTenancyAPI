@@ -5,7 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Interfaces;
+using LBHTenancyAPI.Services;
 using LBHTenancyAPI.UseCases;
+using LBHTenancyAPI.UseCases.ArrearsActions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +37,11 @@ namespace LBHTenancyAPI
             services.AddTransient<IListAllPayments, ListAllPayments>();
             services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
+            services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
+            services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
+            services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
             services.AddTransient<IArrearsAgreementService, ArrearsAgreementServiceClient>();
+            services.AddTransient<ICredentialsService, CredentialsService>();
 
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>

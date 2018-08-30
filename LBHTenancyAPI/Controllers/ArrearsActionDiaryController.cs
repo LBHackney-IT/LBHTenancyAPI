@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using LBHTenancyAPI.UseCases.ArrearsActions;
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/tenancies/{id}/arrearsactiondiary/")]
+    [Route("api/v1/tenancies/arrearsactiondiary/")]
     public class ArrearsActionDiaryController : Controller
     {
         private readonly ICreateArrearsActionDiaryUseCase _createArrearsActionDiaryUseCase;
@@ -21,8 +22,11 @@ namespace LBHTenancyAPI.Controllers
             _createArrearsActionDiaryUseCase = createArrearsActionDiaryUseCase;
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ArrearsActionCreateRequest request)
+        public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
         {
+            if (!ModelState.IsValid || request == null)
+                return BadRequest(ModelState);
+
             var response = await _createArrearsActionDiaryUseCase.CreateActionDiaryRecordsAsync(request);
 
             if (!response.Success)
@@ -31,4 +35,3 @@ namespace LBHTenancyAPI.Controllers
         }
     }
 }
- 

@@ -27,14 +27,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 Success = true
             });
 
-
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest()
-            {
+            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest();
 
-            };
-
-             var response = await classUnderTest.Post(request);
+            var response = await classUnderTest.Post(request);
 
             //Assert
             Assert.IsType<OkObjectResult>(response);
@@ -52,15 +48,30 @@ namespace LBHTenancyAPITest.Test.Controllers
             });
 
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest()
-            {
-
-            };
+            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest();
 
             var response = await classUnderTest.Post(request);
 
             //Assert
             Assert.IsType<ObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task WhenProvidedWithIncorrectParameters_AndThereIsErrorFromWebService_ApiResponseWith400()
+        {
+            //Arrange
+            var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
+            var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
+            fakeUseCase.Setup(a => a.CreateActionDiaryRecordsAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
+            {
+                Success = false
+            });
+
+            //Act
+            var response = await classUnderTest.Post(null);
+
+            //Assert
+            Assert.IsType<BadRequestResult>(response);
         }
     }
 }
