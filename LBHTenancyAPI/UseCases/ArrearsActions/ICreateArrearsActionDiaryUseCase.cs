@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using AgreementService;
 
-namespace LBHTenancyAPI.UseCases
+namespace LBHTenancyAPI.UseCases.ArrearsActions
 {
     public interface ICreateArrearsActionDiaryUseCase
     {

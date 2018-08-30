@@ -1,20 +1,22 @@
+using System;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.UseCases;
+using LBHTenancyAPI.UseCases.ArrearsActions;
 using Moq;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
 {
-    public class CreateActionDiaryEventTests
+    public class CreateArrearsActionDiaryUseCaseTests
     {
         private ICreateArrearsActionDiaryUseCase _classUnderTest;
         private Mock<IArrearsActionDiaryGateway> _fakeGateway;
 
-        public CreateActionDiaryEventTests()
+        public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
             ICredentialsService credentialsService = new CredentialsService();
@@ -83,11 +85,50 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         public async Task GivenInvalidInput_GatewayResponseWith_Failure()
         {
             //arrange
-            var tenancyAgreementRef = "test";
-            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
+            var tenancyAgreementRef = "InvalidTest";
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals(string.Empty))))
                 .ReturnsAsync(new ArrearsActionResponse
                 {
                     Success = false,
+                    ArrearsAction = new ArrearsActionLogDto
+                    {
+                        TenancyAgreementRef = string.Empty
+                    }
+
+                });
+            var request = new ArrearsActionCreateRequest
+            {
+                ArrearsAction = new ArrearsActionInfo
+                {
+                    TenancyAgreementRef = string.Empty
+                }
+            };
+            //act
+            var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
+            //assert
+            Assert.Equal(false, response.Success);
+        }
+
+        [Fact]
+        public void GivenNull_GatewayResponseWith_Failure()
+        {
+            //arrange            
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i == null)))
+                .Throws<AggregateException>();
+            //act
+            //assert
+            Assert.Throws<AggregateException>(()=> _classUnderTest.CreateActionDiaryRecordsAsync(null).Result);
+        }
+
+        [Fact]
+        public async Task GivenValidInput_ThenRequestBuilder_AddsCredentials_ToRequest()
+        {
+            //arange
+            var tenancyAgreementRef = "Test";
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
+                .ReturnsAsync(new ArrearsActionResponse
+                {
+                    Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
                         TenancyAgreementRef = tenancyAgreementRef
@@ -104,7 +145,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
             //act
             var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
             //assert
-            Assert.Equal(false, response.Success);
+            _fakeGateway.Verify(v => v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.DirectUser != null && !string.IsNullOrEmpty(i.SourceSystem))));
         }
     }
 }

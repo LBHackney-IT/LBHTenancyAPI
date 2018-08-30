@@ -3,6 +3,7 @@ using LBHTenancyAPI.Interfaces;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.UseCases.ArrearsActions;
 
 namespace LBHTenancyAPI.UseCases
 {
@@ -20,7 +21,8 @@ namespace LBHTenancyAPI.UseCases
 
         public async Task<ArrearsActionResponse> CreateActionDiaryRecordsAsync(ArrearsActionCreateRequest request)
         {
-            var actionDiaryRequest = requestBuilder.BuildArrearsRequest(request);
+            request = requestBuilder.BuildArrearsRequest(request);
+
             var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(request);
 
             return response;
