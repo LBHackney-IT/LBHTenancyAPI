@@ -1,11 +1,9 @@
-using System;
-using LBHTenancyAPI.Interfaces;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
-using LBHTenancyAPI.UseCases.ArrearsActions;
+using LBHTenancyAPI.Interfaces;
 
-namespace LBHTenancyAPI.UseCases
+namespace LBHTenancyAPI.UseCases.ArrearsActions
 {
     public class CreateArrearsActionDiaryUseCase: ICreateArrearsActionDiaryUseCase
     {

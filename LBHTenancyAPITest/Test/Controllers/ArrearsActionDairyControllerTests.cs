@@ -11,10 +11,6 @@ namespace LBHTenancyAPITest.Test.Controllers
 {
     public class ArrearsActionDairyControllerTests
     {
-        public ArrearsActionDairyControllerTests()
-        {
-
-        }
 
         [Fact]
         public async Task WhenProvidedWithCorrectParamaters_ApiResponseWith200()
@@ -28,7 +24,16 @@ namespace LBHTenancyAPITest.Test.Controllers
             });
 
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest();
+            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest
+            {
+                ArrearsAction = new ArrearsActionInfo
+                {
+                    TenancyAgreementRef = "s",
+                    ActionBalance = 1,
+                    Comment = "test",
+                    ActionCode = "t1"
+                }
+            };
 
             var response = await classUnderTest.Post(request);
 
@@ -48,7 +53,16 @@ namespace LBHTenancyAPITest.Test.Controllers
             });
 
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest();
+            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest
+            {
+                ArrearsAction = new ArrearsActionInfo
+                {
+                    TenancyAgreementRef = "s",
+                    ActionBalance = 1,
+                    Comment = "test",
+                    ActionCode = "t1"
+                }
+            };
 
             var response = await classUnderTest.Post(request);
 
@@ -62,10 +76,6 @@ namespace LBHTenancyAPITest.Test.Controllers
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
             var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
-            fakeUseCase.Setup(a => a.CreateActionDiaryRecordsAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
-            {
-                Success = false
-            });
 
             //Act
             var response = await classUnderTest.Post(null);

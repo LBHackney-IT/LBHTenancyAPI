@@ -15,13 +15,6 @@ namespace LBHTenancyAPI.Services
         {
             arrears.DirectUser = _credentialsService.GetUhUserCredentials();
             arrears.SourceSystem = _credentialsService.GetUhSourceSystem();
-            arrears.ArrearsAction = new ArrearsActionInfo
-            {
-                ActionBalance = arrears.ArrearsAction.ActionBalance,
-                ActionCode = arrears.ArrearsAction.ActionCode,
-                Comment = arrears.ArrearsAction.Comment,
-                TenancyAgreementRef = arrears.ArrearsAction.TenancyAgreementRef
-            };
             return arrears;
         }
     }
