@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;
@@ -6,6 +6,7 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases
 {
+
     public class ListAllArrearsActionsForTenancyTest
     {
         [Fact]
