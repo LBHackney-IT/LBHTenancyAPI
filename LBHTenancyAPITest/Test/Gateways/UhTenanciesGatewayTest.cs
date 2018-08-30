@@ -24,8 +24,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             db = fixture.Db;
         }
 
-        #region GetTenanciesByRef.
-
         [Fact]
         public void WhenGivenNoTenancyRefs_GetTenanciesByRefs_ShouldReturnNoTenancies()
         {
@@ -118,10 +116,11 @@ namespace LBHTenancyAPITest.Test.Gateways
         public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldTrimCharacterFields()
         {
             string commandText =
-                "INSERT INTO tenagree (tag_ref) VALUES (@tenancyRef);" +
+                "INSERT INTO tenagree (tag_ref, prop_ref) VALUES (@tenancyRef, @propRef);" +
                 "INSERT INTO araction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
                 "INSERT INTO arag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
-                "INSERT INTO contacts (tag_ref, con_postcode, con_phone1) VALUES (@tenancyRef, @postcode, @phone)";
+                "INSERT INTO contacts (tag_ref, con_phone1) VALUES (@tenancyRef, @phone)" +
+                "INSERT INTO property (prop_ref, short_address, post_code) VALUES (@propRef, @shortAddress, @postcode)";
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
@@ -134,6 +133,10 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@postcode"].Value = "pcode";
             command.Parameters.Add("@phone", SqlDbType.Char);
             command.Parameters["@phone"].Value = "phone";
+            command.Parameters.Add("@propRef", SqlDbType.Char);
+            command.Parameters["@propRef"].Value = "pref";
+            command.Parameters.Add("@shortAddress", SqlDbType.Char);
+            command.Parameters["@shortAddress"].Value = "short addr";
 
             command.ExecuteNonQuery();
 
@@ -146,18 +149,28 @@ namespace LBHTenancyAPITest.Test.Gateways
             retrieved_value = db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("status    ", retrieved_value);
 
-            List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_postcode, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
+            List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
 
-            Assert.Contains("pcode     ", row.Values);
             Assert.Contains("phone                ", row.Values);
 
+            retrieved_values = db.Query("SELECT prop_ref, short_address, address1, post_code FROM property WHERE property.prop_ref = 'pref        '").ToList();
+            row = retrieved_values[0];
+
+            Assert.Contains("pref        ", row.Values);
+            Assert.Contains("pcode     ", row.Values);
+
+            row.TryGetValue("short_address", out var saved_address);
+            Assert.Equal(200, saved_address.ToString().Length);
 
             TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
 
             Assert.Equal("not11chars", trimmedTenancy.TenancyRef);
+            Assert.Equal("pref", trimmedTenancy.PropertyRef);
             Assert.Equal("ee", trimmedTenancy.LastActionCode);
             Assert.Equal("status", trimmedTenancy.ArrearsAgreementStatus);
+            Assert.Equal("pcode", trimmedTenancy.PrimaryContactPostcode);
+            Assert.Equal("short addr", trimmedTenancy.PrimaryContactShortAddress);
             Assert.Equal("pcode", trimmedTenancy.PrimaryContactPostcode);
         }
 
@@ -196,10 +209,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactShortAddress, tenancies[0].PrimaryContactShortAddress);
         }
 
-        #endregion
-
-        #region GetSingleTenancyByRef
-
         [Fact]
         public void WhenGivenNoTenancyRefs_GetSingleTenancyByRefs_ShouldReturnEmptyTenancy()
         {
@@ -208,8 +217,21 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Null(tenancy.TenancyRef);
         }
 
+
         [Fact]
-        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicContactDetails()
+        public void WhenGivenTenancyRefThatisUrlEncoded_GetSingleTenancyByRefs_ShouldRespondWithResults()
+        {
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            expectedTenancy.TenancyRef = "Test/01";
+            InsertSingleTenancyAttributes(expectedTenancy);
+
+            var tenancy = GetSingleTenacyForRef("Test%2F01");
+
+            Assert.Equal("Test/01", tenancy.TenancyRef);
+        }
+
+        [Fact]
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
         {
             Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
@@ -220,6 +242,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+            Assert.Equal(expectedTenancy.CurrentBalance, tenancy.CurrentBalance);
         }
 
         [Fact]
@@ -264,10 +287,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.True(tenancy.ArrearsAgreements[4].Startdate.Ticks >= oldestDate.Startdate.Ticks);
         }
 
-        #endregion
-
-        #region GetActionDiaryDetailsbyTenancyRef
-
         [Fact]
         public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnAllArrearsActions()
         {
@@ -281,10 +300,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(numberOfExpectedActions, actions.Count);
         }
 
-        #endregion
-
-        #region GetPaymentTransactionsByTenancyRef
-
         [Fact]
         public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnAllPayments()
         {
@@ -297,10 +312,6 @@ namespace LBHTenancyAPITest.Test.Gateways
 
             Assert.Equal(numberOfExpectedTransactions, transactions.Count);
         }
-
-        #endregion
-
-
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
@@ -332,6 +343,11 @@ namespace LBHTenancyAPITest.Test.Gateways
             return new Tenancy
             {
                 TenancyRef = random.Random.Hash(11),
+                PropertyRef = random.Random.Hash(12),
+                Tenure = random.Random.Hash(3),
+                Rent = random.Finance.Amount(),
+                Service = random.Finance.Amount(),
+                OtherCharge = random.Finance.Amount(),
                 CurrentBalance = random.Finance.Amount(),
                 PrimaryContactName = random.Name.FullName(),
                 PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
@@ -348,6 +364,8 @@ namespace LBHTenancyAPITest.Test.Gateways
             return new TenancyListItem
             {
                 TenancyRef = random.Random.Hash(11),
+                PropertyRef = random.Random.Hash(12),
+                Tenure = random.Random.Hash(3),
                 CurrentBalance = random.Finance.Amount(),
                 LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 LastActionCode = random.Random.Hash(3),
@@ -371,8 +389,9 @@ namespace LBHTenancyAPITest.Test.Gateways
         private string InsertQueries()
         {
             string commandText =
-                "INSERT INTO tenagree (tag_ref, cur_bal) VALUES (@tenancyRef, @currentBalance);" +
-                "INSERT INTO contacts (tag_ref, con_name, con_address, con_postcode, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactAddress, @primaryContactPostcode, @primaryContactPhone);";
+                "INSERT INTO tenagree (tag_ref, prop_ref, cur_bal, tenure, rent, service, other_charge) VALUES (@tenancyRef, @propRef, @currentBalance, @tenure, @rent, @service, @otherCharge);" +
+                "INSERT INTO contacts (tag_ref, con_name, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactPhone);" +
+                "INSERT INTO property (short_address, address1, prop_ref, post_code) VALUES (@primaryContactAddress, @primaryContactAddress, @propRef, @primaryContactPostcode);";
 
             return commandText;
         }
@@ -383,6 +402,16 @@ namespace LBHTenancyAPITest.Test.Gateways
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
+            command.Parameters.Add("@propRef", SqlDbType.Char);
+            command.Parameters["@propRef"].Value = tenancyAttributes.PropertyRef;
+            command.Parameters.Add("@tenure", SqlDbType.Char);
+            command.Parameters["@tenure"].Value = tenancyAttributes.Tenure;
+            command.Parameters.Add("@rent", SqlDbType.Decimal);
+            command.Parameters["@rent"].Value = DBNull.Value;
+            command.Parameters.Add("@service", SqlDbType.Decimal);
+            command.Parameters["@service"].Value = DBNull.Value;
+            command.Parameters.Add("@otherCharge", SqlDbType.Decimal);
+            command.Parameters["@otherCharge"].Value = DBNull.Value;
             command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
             command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
             command.Parameters.Add("@primaryContactName", SqlDbType.Char);
@@ -410,6 +439,16 @@ namespace LBHTenancyAPITest.Test.Gateways
             command.Parameters["@tenancyRef"].Value = tenancyValues.TenancyRef;
             command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
             command.Parameters["@currentBalance"].Value = tenancyValues.CurrentBalance;
+            command.Parameters.Add("@propRef", SqlDbType.Char);
+            command.Parameters["@propRef"].Value = tenancyValues.PropertyRef;
+            command.Parameters.Add("@tenure", SqlDbType.Char);
+            command.Parameters["@tenure"].Value = tenancyValues.Tenure;
+            command.Parameters.Add("@rent", SqlDbType.Decimal);
+            command.Parameters["@rent"].Value = tenancyValues.Rent;
+            command.Parameters.Add("@service", SqlDbType.Decimal);
+            command.Parameters["@service"].Value = tenancyValues.Service;
+            command.Parameters.Add("@otherCharge", SqlDbType.Decimal);
+            command.Parameters["@otherCharge"].Value = tenancyValues.OtherCharge;
             command.Parameters.Add("@primaryContactName", SqlDbType.Char);
             command.Parameters["@primaryContactName"].Value = tenancyValues.PrimaryContactName;
             command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
