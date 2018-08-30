@@ -14,7 +14,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
             var response = classUnderTest.GetUhSourceSystem();
             //assert
             Assert.NotNull(response);
-            Assert.Equal("Hackney1", response);
+            Assert.Equal("HackneyAPI", response);
         }
 
         [Fact]

@@ -1,18 +1,17 @@
 using System;
-using Xunit;
-using LBHTenancyAPI.Gateways;
-using AgreementService;
-using Moq;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Interfaces;
+using AgreementService;
+using LBHTenancyAPI.Gateways;
 using LBHTenancyAPITest.Helpers;
+using Moq;
+using Xunit;
 
-namespace LBHTenancyAPITest.Test.Gateways
+namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
 {
     public class UHArrearsDiaryCreationGatewayTest
     {
         [Fact]
-        public async Task Given_TenancyAgreementRef_When_CreateActionDiaryEntry_WithCorrectParameters_ShouldNotBeNull()
+        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldNotBeNull()
         {
             //Arrange
             Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
@@ -49,7 +48,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public async Task Given_TenancyAgreementRef_When_CreateActionDiaryEntry_WithCorrectParameters_ShouldReturnAValidObject()
+        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldReturnAValidObject()
         {
             //Arrange
             Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
@@ -84,7 +83,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public void Given_TenancyAgreementRef_When_CreateActionDiaryEntry_WithNull_ShouldThrowAnException()
+        public void GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithNull_ShouldThrowAnException()
         {
             //Arrange
             Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();

@@ -25,7 +25,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         }
 
         [Fact]
-        public async Task gateway_receives_correct_input()
+        public async Task GivenValidedInput_GatewayReceivesCorrectInput()
         {
             //arrange
             var tenancyAgreementRef = "Test";

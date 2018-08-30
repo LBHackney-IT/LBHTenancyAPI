@@ -13,7 +13,7 @@ namespace LBHTenancyAPITest.Test.Controllers
     {
 
         [Fact]
-        public async Task WhenProvidedWithCorrectParamaters_ApiResponseWith200()
+        public async Task WhenGivenCorrectParamaters_ApiShouldRespondWith200()
         {
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
@@ -42,7 +42,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenProvidedWithCorrectParamaters_AndThereIsErrorFromWebService_ApiResponseWith500()
+        public async Task WhenGivenCorrectParamaters_AndThereIsErrorFromWebService_ApiShouldRespondWith500()
         {
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
@@ -71,7 +71,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenProvidedWithIncorrectParameters_AndThereIsErrorFromWebService_ApiResponseWith400()
+        public async Task WhenGivenIncorrectParameters_AndThereIsErrorFromWebService_ApiShouldRespondWith400()
         {
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
