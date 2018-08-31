@@ -28,7 +28,7 @@ namespace LBHTenancyAPI.Controllers
             if (!request.IsValid())
                 return BadRequest();
 
-            var response = await _createArrearsActionDiaryUseCase.CreateActionDiaryRecordsAsync(request);
+            var response = await _createArrearsActionDiaryUseCase.ExecuteAsync(request);
 
             if (!response.Success)
                 return StatusCode(500, response);

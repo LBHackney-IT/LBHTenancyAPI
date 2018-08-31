@@ -5,6 +5,6 @@ namespace LBHTenancyAPI.UseCases.ArrearsActions
 {
     public interface ICreateArrearsActionDiaryUseCase
     {
-        Task<ArrearsActionResponse> CreateActionDiaryRecordsAsync(ArrearsActionCreateRequest request);
+        Task<ArrearsActionResponse> ExecuteAsync(ArrearsActionCreateRequest request);
     }
 }

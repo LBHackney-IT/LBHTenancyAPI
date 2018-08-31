@@ -18,7 +18,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
             var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
-            fakeUseCase.Setup(a => a.CreateActionDiaryRecordsAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
+            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
             {
                 Success = true
             });
@@ -47,7 +47,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
             var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
-            fakeUseCase.Setup(a => a.CreateActionDiaryRecordsAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
+            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
             {
                 Success = false
             });

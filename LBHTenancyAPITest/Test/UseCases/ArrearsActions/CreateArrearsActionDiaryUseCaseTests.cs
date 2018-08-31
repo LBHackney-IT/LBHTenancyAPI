@@ -47,7 +47,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 }
             };
             //act
-            var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
+            var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
         }
@@ -75,7 +75,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 }
             };
             //act
-            var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
+            var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             Assert.Equal(true, response.Success);
             Assert.Equal("Test", response.ArrearsAction.TenancyAgreementRef);
@@ -104,7 +104,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 }
             };
             //act
-            var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
+            var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             Assert.Equal(false, response.Success);
         }
@@ -117,7 +117,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 .Throws<AggregateException>();
             //act
             //assert
-            Assert.Throws<AggregateException>(()=> _classUnderTest.CreateActionDiaryRecordsAsync(null).Result);
+            Assert.Throws<AggregateException>(()=> _classUnderTest.ExecuteAsync(null).Result);
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 }
             };
             //act
-            var response = await _classUnderTest.CreateActionDiaryRecordsAsync(request);
+            var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v => v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.DirectUser != null && !string.IsNullOrEmpty(i.SourceSystem))));
         }

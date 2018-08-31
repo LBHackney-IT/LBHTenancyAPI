@@ -5,21 +5,24 @@ using LBHTenancyAPI.Interfaces;
 
 namespace LBHTenancyAPI.UseCases.ArrearsActions
 {
+    /// <summary>
+    /// Use Case for creating Arrears actions diary entry
+    /// </summary>
     public class CreateArrearsActionDiaryUseCase: ICreateArrearsActionDiaryUseCase
     {
         private readonly IArrearsActionDiaryGateway _arrearsActionDiaryGateway;
-        public IArrearsServiceRequestBuilder requestBuilder;
+        public readonly IArrearsServiceRequestBuilder _requestBuilder;
         public CreateArrearsActionDiaryUseCase(
             IArrearsActionDiaryGateway arrearsActionDiaryGateway,
-            IArrearsServiceRequestBuilder ArrearsRequestBuilder)
+            IArrearsServiceRequestBuilder arrearsRequestBuilder)
         {
             _arrearsActionDiaryGateway = arrearsActionDiaryGateway;
-            requestBuilder = ArrearsRequestBuilder;
+            _requestBuilder = arrearsRequestBuilder;
         }
 
-        public async Task<ArrearsActionResponse> CreateActionDiaryRecordsAsync(ArrearsActionCreateRequest request)
+        public async Task<ArrearsActionResponse> ExecuteAsync(ArrearsActionCreateRequest request)
         {
-            request = requestBuilder.BuildArrearsRequest(request);
+            request = _requestBuilder.BuildArrearsRequest(request);
 
             var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(request);
 
