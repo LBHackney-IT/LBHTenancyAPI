@@ -6,7 +6,7 @@ FROM microsoft/dotnet:latest AS build
 WORKDIR /src
 COPY LBHTenancyAPI.sln ./
 COPY LBHTenancyAPITest/LBHTenancyAPITest.csproj LBHTenancyAPITest/
-RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet restore LBHTenancyAPITest/LBHTenancyAPITest.csproj -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR /src/LBHTenancyAPITest
 RUN dotnet build -c Debug -o /app
