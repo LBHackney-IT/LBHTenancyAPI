@@ -5,7 +5,7 @@ EXPOSE 80
 FROM microsoft/dotnet:latest AS build
 WORKDIR /src
 COPY LBHTenancyAPI.sln ./
-#COPY LBHTenancyAPITest/LBHTenancyAPITest.csproj LBHTenancyAPITest/
+COPY LBHTenancyAPITest/LBHTenancyAPITest.csproj LBHTenancyAPITest/
 RUN dotnet restore -nowarn:msb3202,nu1503,CS1591
 COPY . .
 WORKDIR /src/LBHTenancyAPITest
