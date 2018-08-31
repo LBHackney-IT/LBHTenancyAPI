@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,16 +47,16 @@
     <None Remove="Web References\UHArrearsAgreement\Reference.map" />
     <None Remove="Web References\UHArrearsAgreement\tempconvert.wsdl" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <WebReferences Include="Web References" />
-  </ItemGroup>
-  <ItemGroup>
+  </ItemGroup>-->
+  <!--<ItemGroup>
     <WebReferenceUrl Include="http://lbhuhwwebp01/civica-uh-gateway-dev/webservices/ArrearsAgreementService.svc">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\ArrearsAgreementService</RelPath>
       <UpdateFromURL>http://lbhuhwwebp01/civica-uh-gateway-dev/webservices/ArrearsAgreementService.svc</UpdateFromURL>
     </WebReferenceUrl>
-  </ItemGroup>
+  </ItemGroup>-->
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
