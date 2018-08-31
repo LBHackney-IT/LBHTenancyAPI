@@ -4,8 +4,10 @@ using AgreementService;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Settings.Credentials;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
@@ -19,8 +21,14 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
-            ICredentialsService credentialsService = new CredentialsService();
-            IArrearsServiceRequestBuilder requestBuilder = new ArrearsServiceRequestBuilder(credentialsService);
+            Mock<ICredentialsService> credentialsService = new Mock<ICredentialsService>();
+            credentialsService.Setup(s => s.GetUhSourceSystem()).Returns("TestSystem");
+            credentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
+            {
+                UserName = "TestUseName",
+                UserPassword = "TestUserPassword",
+            });
+            IArrearsServiceRequestBuilder requestBuilder = new ArrearsServiceRequestBuilder(credentialsService.Object);
             _classUnderTest = new CreateArrearsActionDiaryUseCase(_fakeGateway.Object, requestBuilder);
         }
 

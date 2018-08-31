@@ -2,27 +2,42 @@ using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
 using AgreementService;
+using LBHTenancyAPI.Settings.Credentials;
+using Microsoft.Extensions.Configuration;
+using Moq;
 
 namespace LBHTenancyAPITest.Test.Services
 {
     public class ArrearsServiceRequestBuilderTests
     {
+        private ArrearsServiceRequestBuilder _builder;
+
+        public ArrearsServiceRequestBuilderTests()
+        {
+            //pre-arrange
+            var credentialsService = new Mock<ICredentialsService>();
+            _builder = new ArrearsServiceRequestBuilder(credentialsService.Object);
+        }
+
         [Fact]
         public void Return_A_Built_Request_Object()
         {
-            var builder = new ArrearsServiceRequestBuilder(new CredentialsService());
-            var request = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
+            //arrange
+            //act
+            var request = _builder.BuildArrearsRequest(new ArrearsActionCreateRequest
             {
                 ArrearsAction = new ArrearsActionInfo()
             });
+            //assert
             Assert.IsType<ArrearsActionCreateRequest>(request);
         }
 
         [Fact]
         public void WhenGivenActionDiaryDetails_BuildValidArrearsActionDiaryRequest()
         {
-            var builder = new ArrearsServiceRequestBuilder(new CredentialsService());
-            var request = builder.BuildArrearsRequest(new ArrearsActionCreateRequest
+            //arrange
+            //act
+            var request = _builder.BuildArrearsRequest(new ArrearsActionCreateRequest
             {
                 ArrearsAction = new ArrearsActionInfo
                 {
@@ -32,6 +47,7 @@ namespace LBHTenancyAPITest.Test.Services
                     TenancyAgreementRef = "000017/01"
                 }
             });
+            //assert
             Assert.Equal(17, request.ArrearsAction.ActionBalance);
             Assert.Equal("GEN", request.ArrearsAction.ActionCode);
             Assert.Equal("Added by webservice", request.ArrearsAction.Comment);
