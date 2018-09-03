@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AgreementService;
 using LBHTenancyAPI.Extensions.Validation;
 using LBHTenancyAPI.UseCases.ArrearsActions;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LBHTenancyAPI.Controllers
 {
@@ -22,6 +17,7 @@ namespace LBHTenancyAPI.Controllers
         {
             _createArrearsActionDiaryUseCase = createArrearsActionDiaryUseCase;
         }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
         {
