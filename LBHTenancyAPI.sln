@@ -1,13 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHTenancyAPI", "LBHTenancyAPI\LBHTenancyAPI.csproj", "{02B8F2DD-70C2-4388-8D93-78665E3F43CF}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHTenancyAPI", "LBHTenancyAPI\LBHTenancyAPI.csproj", "{02B8F2DD-70C2-4388-8D93-78665E3F43CF}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6F342255-FBBF-4361-B55C-01FAC96EE5AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHTenancyAPITest", "LBHTenancyAPITest\LBHTenancyAPITest.csproj", "{DEBE7005-3893-410B-8AB9-F9A6757469BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHTenancyAPITest", "LBHTenancyAPITest\LBHTenancyAPITest.csproj", "{DEBE7005-3893-410B-8AB9-F9A6757469BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StubUniversalHousing", "StubUniversalHousing\StubUniversalHousing.csproj", "{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubUniversalHousing", "StubUniversalHousing\StubUniversalHousing.csproj", "{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHWebservices.AuthenticationService", "..\LBHWebservices.AuthenticationService\LBHWebservices.AuthenticationService.csproj", "{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UHWebServices", "UHWebServices", "{9EF8C5F0-C2CB-4009-843C-D7792C5E6AC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHWebservices.AuthenticationService.Tests.Integration", "LBHWebservices.AuthenticationService.Tests.Integration\LBHWebservices.AuthenticationService.Tests.Integration.csproj", "{378F1027-3BB9-4844-8425-325E06E610A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHAuthenticationAPI", "LBHAuthenticationAPI\LBHAuthenticationAPI.csproj", "{A3BD4D4B-B93E-4E70-A01C-28CEA433B11A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +40,27 @@ Global
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{378F1027-3BB9-4844-8425-325E06E610A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{378F1027-3BB9-4844-8425-325E06E610A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{378F1027-3BB9-4844-8425-325E06E610A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{378F1027-3BB9-4844-8425-325E06E610A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3BD4D4B-B93E-4E70-A01C-28CEA433B11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3BD4D4B-B93E-4E70-A01C-28CEA433B11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3BD4D4B-B93E-4E70-A01C-28CEA433B11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3BD4D4B-B93E-4E70-A01C-28CEA433B11A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{053EB60F-E2FF-4BF4-8DBF-58FB595B3B77} = {9EF8C5F0-C2CB-4009-843C-D7792C5E6AC7}
+		{378F1027-3BB9-4844-8425-325E06E610A1} = {9EF8C5F0-C2CB-4009-843C-D7792C5E6AC7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6CA7B39A-1371-4829-AC28-085EBFEEE5F9}
 	EndGlobalSection
 EndGlobal
