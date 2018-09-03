@@ -6,7 +6,6 @@ FROM microsoft/dotnet:latest AS build
 WORKDIR /src
 COPY LBHTenancyAPI.sln ./
 COPY LBHTenancyAPI/LBHTenancyAPI.csproj LBHTenancyAPI/
-RUN ls
 RUN dotnet restore LBHTenancyAPI/LBHTenancyAPI.csproj -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR /src/LBHTenancyAPI
