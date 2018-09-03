@@ -1,4 +1,5 @@
 using AgreementService;
+using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.Settings.Credentials;
 using Microsoft.Extensions.Configuration;
 
