@@ -1,8 +1,8 @@
-﻿{
+{
   "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
   "Version": "15.0.20119.1312",
   "ExtendedData": {
-    "Uri": "http://lbhuhwwebp01/civica-uh-gateway-dev/webservices/ArrearsAgreementService.svc",
+    
     "Namespace": "ArrearsAgreementService",
     "SelectedAccessLevelForGeneratedClass": "Public",
     "GenerateMessageContract": false,
