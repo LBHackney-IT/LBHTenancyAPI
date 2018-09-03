@@ -58,7 +58,6 @@ namespace LBHTenancyAPI.Controllers
                 {"tenancies", tenancies}
             };
 
-            
             return Ok(result);
         }
 
