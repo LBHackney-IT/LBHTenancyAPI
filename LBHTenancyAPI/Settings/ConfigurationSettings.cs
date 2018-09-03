@@ -1,7 +1,8 @@
-namespace LBHTenancyAPI.Settings.Credentials
+namespace LBHTenancyAPI.Settings
 {
     public class ConfigurationSettings
     {
-        public Credentials Credentials { get; set; }
+        public Credentials.Credentials Credentials { get; set; }
+        public ServiceSettings.ServiceSettings ServiceSettings { get; set; }
     }
 }

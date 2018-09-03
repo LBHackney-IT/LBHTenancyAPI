@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using AgreementService;
+using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +40,10 @@ namespace LBHTenancyAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var environmentVariables = Environment.GetEnvironmentVariables();
+            //get settings from appSettings.json and EnvironmentVariables
+            var settings = Configuration.Get<ConfigurationSettings>();
+
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
             services.AddTransient<IListAllArrearsActions, ListAllArrearsActions>();
@@ -46,7 +53,16 @@ namespace LBHTenancyAPI
             services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
             services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
             services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
-            services.AddTransient<IArrearsAgreementService, ArrearsAgreementServiceClient>();
+            services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
+
+            services.AddTransient<IArrearsAgreementService>(s=>
+            {
+                var clientFactory = s.GetService<IWCFClientFactory>();
+                var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(settings.ServiceSettings.AgreementServiceEndpoint);
+                if(client.State != CommunicationState.Opened)
+                    client.Open();
+                return client;
+            });
             services.AddTransient<ICredentialsService, CredentialsService>();
 
             //add swagger gen to generate the swagger.json file
