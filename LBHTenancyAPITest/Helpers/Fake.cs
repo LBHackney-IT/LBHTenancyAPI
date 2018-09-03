@@ -153,7 +153,6 @@ namespace LBHTenancyAPITest.Helpers
                     ActionBalance = random.Finance.Amount(),
                     ActionCode = random.Random.Hash(3),
                     ActionCategory = random.Random.Hash(10),
-                    //Comment = random.Random.Hash(100)
                 },
                 ErrorCode = 100,
                 ErrorMessage = "",
