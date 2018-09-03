@@ -34,10 +34,10 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                 },
                 DirectUser = new UserCredential
                 {
-                    UserName = "HackneyAPI",
-                    UserPassword = "Hackney1"
+                    UserName = "TestUserName",
+                    UserPassword = "TestUserPassword"
                 },
-                SourceSystem = "HackneyAPI"
+                SourceSystem = "TestSystem"
             };
 
             //act
@@ -67,10 +67,10 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                 },
                 DirectUser = new UserCredential
                 {
-                    UserName = "HackneyAPI",
-                    UserPassword = "Hackney1"
+                    UserName = "TestUserName",
+                    UserPassword = "TestUserPassword"
                 },
-                SourceSystem = "HackneyAPI"
+                SourceSystem = "TestSystem"
             };
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsActionAsync(It.IsAny<ArrearsActionCreateRequest>()))
