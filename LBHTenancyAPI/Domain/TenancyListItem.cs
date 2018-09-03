@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace LBHTenancyAPI.Domain
 {
-    public struct TenancyListItem
+    public class TenancyListItem
     {
         public DateTime ArrearsAgreementStartDate { get; set; }
 

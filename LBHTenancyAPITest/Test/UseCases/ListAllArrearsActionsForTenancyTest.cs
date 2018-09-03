@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
-using LBHTenancyAPITest.Helpers;
+using LBHTenancyAPITest.Helper;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases

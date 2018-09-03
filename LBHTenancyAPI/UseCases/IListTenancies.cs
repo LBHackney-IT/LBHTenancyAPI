@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LBHTenancyAPI.UseCases
 {
     public interface IListTenancies
     {
-        ListTenancies.Response Execute(List<string> tenancyRefs);
+        Task<ListTenancies.Response> ExecuteAsync(List<string> tenancyRefs);
     }
 }

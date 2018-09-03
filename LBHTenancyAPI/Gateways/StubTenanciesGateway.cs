@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LBHTenancyAPI.Domain;
 
 namespace LBHTenancyAPI.Gateways
@@ -19,7 +20,7 @@ namespace LBHTenancyAPI.Gateways
             StoredTenancyDetails = new Dictionary<string, Tenancy>();
         }
 
-        public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
+        public Task<List<TenancyListItem>>GetTenanciesByRefsAsync(List<string> tenancyRefs)
         {
             var tenancies = new List<TenancyListItem>();
             foreach (var tenancyRef in tenancyRefs)
@@ -30,7 +31,7 @@ namespace LBHTenancyAPI.Gateways
                 }
             }
 
-            return tenancies;
+            return Task.FromResult(tenancies);
         }
 
         public List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef)

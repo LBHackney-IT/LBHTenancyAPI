@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Bogus;
 using LBHTenancyAPI.Domain;
-using LBHTenancyAPI.UseCases;
 
-namespace LBHTenancyAPITest.Helpers
+namespace LBHTenancyAPITest.Helper
 {
     public static class Fake
     {
@@ -21,8 +20,7 @@ namespace LBHTenancyAPITest.Helpers
               LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
               LastActionCode = random.Random.Hash(3),
               ArrearsAgreementStatus = random.Random.Hash(10),
-              ArrearsAgreementStartDate =
-                  new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
+              ArrearsAgreementStartDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
               PrimaryContactName = random.Name.FullName(),
               PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
               PrimaryContactPostcode = random.Random.Hash(10)

@@ -1,50 +1,50 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using LBHTenancyAPI.Domain;
+using System.Linq;
+using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
-using LBHTenancyAPITest.Helpers;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
-using SQLitePCL;
+using LBHTenancyAPITest.Helper;
 using Xunit;
-using Xunit.Abstractions;
+
+using FluentAssertions;
 
 namespace LBHTenancyAPITest.Test.UseCases
 {
     public class ListTenanciesTest
     {
         [Fact]
-        public void WhenThereAreNoTenancyRefsGiven_ShouldReturnNone()
+        public async Task WhenThereAreNoTenancyRefsGiven_ShouldReturnNone()
         {
             var gateway = new StubTenanciesGateway();
             var listTenancies = new ListTenancies(gateway);
-            var response = listTenancies.Execute(new List<string>());
+            var response = await listTenancies.ExecuteAsync(new List<string>());
 
             Assert.Empty(response.Tenancies);
         }
 
         [Fact]
-        public void WhenGivenNoTenancyRefs_ShouldReturnATenancyResponse()
+        public async Task WhenGivenNoTenancyRefs_ShouldReturnATenancyResponse()
         {
             var gateway = new StubTenanciesGateway();
             var listTenancies = new ListTenancies(gateway);
-            var response = listTenancies.Execute(new List<string>());
+            var response = await listTenancies.ExecuteAsync(new List<string>());
 
             Assert.IsType(typeof(ListTenancies.Response), response);
         }
 
         [Fact]
-        public void WhenGivenATenancyRef_ShouldReturnATenancyResponse()
+        public async Task WhenGivenATenancyRef_ShouldReturnATenancyResponse()
         {
             var gateway = new StubTenanciesGateway();
             var listTenancies = new ListTenancies(gateway);
-            var response = listTenancies.Execute(new List<string>());
+            var response = await listTenancies.ExecuteAsync(new List<string>());
 
             Assert.IsType(typeof(ListTenancies.Response), response);
         }
 
         [Fact]
-        public void WhenGivenSomeTenanciesAndSomeVoid_ShouldReturnMatchedTenancies()
+        public async Task WhenGivenSomeTenanciesAndSomeVoid_ShouldReturnMatchedTenancies()
         {
             var gateway = new StubTenanciesGateway();
             var tenancy1 = Fake.GenerateTenancyListItem();
@@ -54,7 +54,7 @@ namespace LBHTenancyAPITest.Test.UseCases
             gateway.SetTenancyListItem(tenancy2.TenancyRef, tenancy2);
 
             var listTenancies = new ListTenancies(gateway);
-            var actualResponse = listTenancies.Execute(new List<string> {tenancy1.TenancyRef, tenancy2.TenancyRef, "FAKE/01"});
+            var actualResponse = await listTenancies.ExecuteAsync(new List<string> {tenancy1.TenancyRef, tenancy2.TenancyRef, "FAKE/01"});
             var expectedResponse = new ListTenancies.Response
             {
                 Tenancies = new List<ListTenancies.ResponseTenancy>
@@ -64,35 +64,48 @@ namespace LBHTenancyAPITest.Test.UseCases
                         TenancyRef = tenancy1.TenancyRef,
                         PropertyRef = tenancy1.PropertyRef,
                         Tenure = tenancy1.Tenure,
-                        LastActionCode = tenancy1.LastActionCode,
-                        LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
+                        LatestTenancyAction = new ListTenancies.LatestTenancyAction
+                        {
+                            LastActionCode = tenancy1.LastActionCode,
+                            LastActionDate = tenancy1.LastActionDate.ToString("u")
+                        },
                         CurrentBalance = tenancy1.CurrentBalance.ToString("C"),
                         ArrearsAgreementStatus = tenancy1.ArrearsAgreementStatus,
-                        PrimaryContactName = tenancy1.PrimaryContactName,
-                        PrimaryContactShortAddress = tenancy1.PrimaryContactShortAddress,
-                        PrimaryContactPostcode = tenancy1.PrimaryContactPostcode
+                        PrimaryContact = new ListTenancies.PrimaryContact
+                        {
+                            PrimaryContactName = tenancy1.PrimaryContactName,
+                            PrimaryContactShortAddress = tenancy1.PrimaryContactShortAddress,
+                            PrimaryContactPostcode = tenancy1.PrimaryContactPostcode
+                        }
                     },
                     new ListTenancies.ResponseTenancy
                     {
                         TenancyRef = tenancy2.TenancyRef,
                         PropertyRef = tenancy2.PropertyRef,
                         Tenure = tenancy2.Tenure,
-                        LastActionCode = tenancy2.LastActionCode,
-                        LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
+                        LatestTenancyAction = new ListTenancies.LatestTenancyAction
+                        {
+                            LastActionCode = tenancy2.LastActionCode,
+                            LastActionDate = tenancy2.LastActionDate.ToString("u")
+                        },
                         CurrentBalance = tenancy2.CurrentBalance.ToString("C"),
                         ArrearsAgreementStatus = tenancy2.ArrearsAgreementStatus,
-                        PrimaryContactName = tenancy2.PrimaryContactName,
-                        PrimaryContactShortAddress = tenancy2.PrimaryContactShortAddress,
-                        PrimaryContactPostcode = tenancy2.PrimaryContactPostcode
+                        PrimaryContact = new ListTenancies.PrimaryContact
+                        {
+                            PrimaryContactName = tenancy2.PrimaryContactName,
+                            PrimaryContactShortAddress = tenancy2.PrimaryContactShortAddress,
+                            PrimaryContactPostcode = tenancy2.PrimaryContactPostcode
+                        }
                     }
                 }
             };
 
-            Assert.Equal(expectedResponse.Tenancies, actualResponse.Tenancies);
+            expectedResponse.Tenancies.ElementAt(0).Should().BeEquivalentTo(actualResponse.Tenancies.ElementAt(0));
+            expectedResponse.Tenancies.ElementAt(1).Should().BeEquivalentTo(actualResponse.Tenancies.ElementAt(1));
         }
 
         [Fact]
-        public void WhenATenancyRefIsGiven_ResponseShouldIncludeDetailsOnThatTenancy_Example1()
+        public async Task WhenATenancyRefIsGiven_ResponseShouldIncludeDetailsOnThatTenancy_Example1()
         {
             var gateway = new StubTenanciesGateway();
             var tenancy = Fake.GenerateTenancyListItem();
@@ -100,7 +113,7 @@ namespace LBHTenancyAPITest.Test.UseCases
             gateway.SetTenancyListItem(tenancy.TenancyRef, tenancy);
 
             var listTenancies = new ListTenancies(gateway);
-            var actualResponse = listTenancies.Execute(new List<string> {tenancy.TenancyRef});
+            var actualResponse = await listTenancies.ExecuteAsync(new List<string> {tenancy.TenancyRef});
             var expectedResponse = new ListTenancies.Response
             {
                 Tenancies = new List<ListTenancies.ResponseTenancy>
@@ -110,18 +123,24 @@ namespace LBHTenancyAPITest.Test.UseCases
                         TenancyRef = tenancy.TenancyRef,
                         PropertyRef = tenancy.PropertyRef,
                         Tenure = tenancy.Tenure,
-                        LastActionCode = tenancy.LastActionCode,
-                        LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
+                        LatestTenancyAction = new ListTenancies.LatestTenancyAction
+                        {
+                            LastActionCode = tenancy.LastActionCode,
+                            LastActionDate = tenancy.LastActionDate.ToString("u")
+                        },
                         CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                         ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
-                        PrimaryContactName = tenancy.PrimaryContactName,
-                        PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,
-                        PrimaryContactPostcode = tenancy.PrimaryContactPostcode
+                        PrimaryContact = new ListTenancies.PrimaryContact
+                        {
+                            PrimaryContactName = tenancy.PrimaryContactName,
+                            PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,
+                            PrimaryContactPostcode = tenancy.PrimaryContactPostcode
+                        }
                     }
                 }
             };
 
-            Assert.Equal(expectedResponse.Tenancies, actualResponse.Tenancies);
+            expectedResponse.Tenancies.ElementAt(0).Should().BeEquivalentTo(actualResponse.Tenancies.ElementAt(0));
         }
     }
 }

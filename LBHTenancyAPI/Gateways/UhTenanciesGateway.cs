@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Dapper;
 using LBHTenancyAPI.Domain;
 
@@ -17,50 +19,61 @@ namespace LBHTenancyAPI.Gateways
             conn.Open();
         }
 
-        public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
+        public async Task<List<TenancyListItem>> GetTenanciesByRefsAsync(List<string> tenancyRefs)
         {
-            var all = conn.Query<TenancyListItem>(
-                "SELECT " +
-                "tenagree.tag_ref as TenancyRef, " +
-                "tenagree.cur_bal as CurrentBalance, " +
-                "tenagree.prop_ref as PropertyRef, " +
-                "tenagree.tenure as Tenure, " +
-                "tenagree.rent as Rent, " +
-                "tenagree.service as Service, " +
-                "tenagree.other_charge as OtherCharge, " +
-                "contacts.con_name as PrimaryContactName, " +
-                "property.short_address as PrimaryContactShortAddress, " +
-                "property.post_code as PrimaryContactPostcode, " +
-                "araction.tag_ref AS TenancyRef, " +
-                "araction.action_code AS LastActionCode, " +
-                "araction.action_date AS LastActionDate, " +
-                "arag.arag_status as ArrearsAgreementStatus, " +
-                "arag.arag_startdate as ArrearsAgreementStartDate " +
-                "FROM tenagree " +
-                "LEFT JOIN contacts " +
-                "ON contacts.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN property " +
-                "ON property.prop_ref = tenagree.prop_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "araction.tag_ref, " +
-                "araction.action_code, " +
-                "araction.action_date " +
-                "FROM araction " +
-                "WHERE araction.tag_ref IN @allRefs " +
-                ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "arag.tag_ref," +
-                "arag.arag_status, " +
-                "arag.arag_startdate " +
-                "FROM arag " +
-                "WHERE arag.tag_ref IN @allRefs " +
-                ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
-                "WHERE tenagree.tag_ref IN @allRefs " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
-                new {allRefs = tenancyRefs}
-            ).ToList();
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  tenagree.tag_ref as TenancyRef,");
+            sb.AppendLine("  tenagree.cur_bal as CurrentBalance,");
+            sb.AppendLine("  contacts.con_name as PrimaryContactName,");
+            sb.AppendLine("  property.short_address as PrimaryContactShortAddress,");
+            sb.AppendLine("  property.post_code as PrimaryContactPostcode,");
+            sb.AppendLine("  araction.action_code AS LastActionCode,");
+            sb.AppendLine("  araction.action_date AS LastActionDate,");
+            sb.AppendLine("  arag.arag_status as ArrearsAgreementStatus,");
+            sb.AppendLine("  arag.arag_startdate as ArrearsAgreementStartDate");
+            sb.AppendLine("FROM tenagree");
+            sb.AppendLine("LEFT JOIN contacts");
+            sb.AppendLine("ON contacts.tag_ref = tenagree.tag_ref");
+            sb.AppendLine("LEFT JOIN property");
+            sb.AppendLine("ON property.prop_ref = tenagree.prop_ref");
+            sb.AppendLine("LEFT JOIN(");
+            sb.AppendLine("  SELECT");
+            sb.AppendLine("    tag_ref,");
+            sb.AppendLine("    action_code,");
+            sb.AppendLine("    action_date");
+            sb.AppendLine("  FROM(");
+            sb.AppendLine("    SELECT");
+            sb.AppendLine("      tag_ref,");
+            sb.AppendLine("      action_code,");
+            sb.AppendLine("      action_date,");
+            sb.AppendLine("      ROW_NUMBER() OVER(PARTITION BY tag_ref ORDER BY action_date DESC) as row");
+            sb.AppendLine("      FROM araction");
+            sb.AppendLine("  ) t");
+            sb.AppendLine("  WHERE row = 1");
+            sb.AppendLine(") AS araction ON araction.tag_ref = tenagree.tag_ref");
+            sb.AppendLine("LEFT JOIN(");
+            sb.AppendLine("  SELECT");
+            sb.AppendLine("    tag_ref,");
+            sb.AppendLine("    arag_status,");
+            sb.AppendLine("    arag_startdate");
+            sb.AppendLine("  FROM(");
+            sb.AppendLine("    SELECT");
+            sb.AppendLine("      tag_ref,");
+            sb.AppendLine("      arag_status,");
+            sb.AppendLine("      arag_startdate,");
+            sb.AppendLine("      ROW_NUMBER() OVER(PARTITION BY tag_ref ORDER BY arag_startdate DESC) AS row");
+            sb.AppendLine("    FROM arag");
+            sb.AppendLine("  ) t");
+            sb.AppendLine("  WHERE row = 1");
+            sb.AppendLine(") AS arag ON arag.tag_ref = tenagree.tag_ref");
+            sb.AppendLine("WHERE tenagree.tag_ref IN @allRefs");
+
+            var allEnum = await conn.QueryAsync<TenancyListItem>(
+                sb.ToString(),new { allRefs = tenancyRefs }
+            ).ConfigureAwait(false);
+
+            var all = allEnum.ToList();
 
             var results = new List<TenancyListItem>();
 
@@ -93,7 +106,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef.Replace("%2F", "/")}
+                new { tRef = tenancyRef.Replace("%2F", "/") }
             ).ToList();
         }
 
@@ -110,7 +123,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM rtrans " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY post_date DESC",
-                new {tRef = tenancyRef.Replace("%2F", "/")}
+                new { tRef = tenancyRef.Replace("%2F", "/") }
             ).ToList();
         }
 
@@ -134,7 +147,7 @@ namespace LBHTenancyAPI.Gateways
                 "ON property.prop_ref = tenagree.prop_ref " +
                 "WHERE tenagree.tag_ref = @tRef " +
                 "ORDER BY arag.arag_startdate DESC",
-                new {tRef = tenancyRef.Replace("%2F", "/")}
+                new { tRef = tenancyRef.Replace("%2F", "/") }
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
@@ -158,7 +171,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM arag " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY arag_startdate DESC ",
-                new {tRef = tenancyRef.Replace("%2F", "/")}
+                new { tRef = tenancyRef.Replace("%2F", "/") }
             ).ToList();
         }
 
@@ -176,7 +189,7 @@ namespace LBHTenancyAPI.Gateways
                 "FROM araction " +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
-                new {tRef = tenancyRef.Replace("%2F", "/")}
+                new { tRef = tenancyRef.Replace("%2F", "/") }
             ).ToList();
         }
     }

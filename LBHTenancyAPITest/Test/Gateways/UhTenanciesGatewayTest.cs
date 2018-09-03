@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,8 +7,6 @@ using Bogus;
 using Dapper;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
-using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways
@@ -322,7 +319,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
-            return gateway.GetTenanciesByRefs(refs);
+            return gateway.GetTenanciesByRefsAsync(refs).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private List<ArrearsActionDiaryEntry> GetArrearsActionsByRef(string tenancyRef)

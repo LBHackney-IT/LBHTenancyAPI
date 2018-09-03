@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,37 +27,9 @@ namespace LBHTenancyAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery(Name = "tenancy_refs")] List<string> tenancyRefs)
         {
-            var response = listTenancies.Execute(tenancyRefs);
-            var tenancies = response.Tenancies.ConvertAll(tenancy => new Dictionary<string, object>
-            {
-                {"ref", tenancy.TenancyRef},
-                {"prop_ref", tenancy.PropertyRef},
-                {"tenure", tenancy.Tenure},
-                {"current_balance", tenancy.CurrentBalance},
-                {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
-                {
-                    "latest_action", new Dictionary<string, string>
-                    {
-                        {"code", tenancy.LastActionCode},
-                        {"date", tenancy.LastActionDate}
-                    }
-                },
-                {
-                    "primary_contact", new Dictionary<string, string>
-                    {
-                        {"name", tenancy.PrimaryContactName},
-                        {"short_address", tenancy.PrimaryContactShortAddress},
-                        {"postcode", tenancy.PrimaryContactPostcode}
-                    }
-                }
-            });
+            var response = await listTenancies.ExecuteAsync(tenancyRefs);
 
-            var result = new Dictionary<string, object>
-            {
-                {"tenancies", tenancies}
-            };
-
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpGet]

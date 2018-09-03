@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
@@ -50,13 +50,19 @@ namespace LBHTenancyAPITest.Test.Controllers
                 TenancyRef = "000001/01",
                 PropertyRef = "prop/01",
                 Tenure = "SEC",
-                LastActionCode = "CALLED",
-                LastActionDate = "2018-01-01 00:00:00Z",
+                LatestTenancyAction = new ListTenancies.LatestTenancyAction
+                {
+                    LastActionCode = "CALLED",
+                    LastActionDate = "2018-01-01 00:00:00Z"
+                },
                 CurrentBalance = "10.66",
                 ArrearsAgreementStatus = "ACTIVE",
-                PrimaryContactName = "Steven Leighton",
-                PrimaryContactShortAddress = "123 Test Street",
-                PrimaryContactPostcode = "AB12 C12"
+                PrimaryContact = new ListTenancies.PrimaryContact
+                {
+                    PrimaryContactName = "Steven Leighton",
+                    PrimaryContactShortAddress = "123 Test Street",
+                    PrimaryContactPostcode = "AB12 C12"
+                }
             });
 
             var response = await GetIndex(listTenancies, new List<string> {"000001/01"});
@@ -107,13 +113,19 @@ namespace LBHTenancyAPITest.Test.Controllers
                 TenancyRef = faker.Random.Hash(),
                 PropertyRef = faker.Random.Hash(),
                 Tenure = faker.Random.Word(),
-                LastActionCode = faker.Random.Word(),
-                LastActionDate = faker.Date.Recent().ToLongDateString(),
+                LatestTenancyAction = new ListTenancies.LatestTenancyAction
+                { 
+                    LastActionCode = faker.Random.Word(),
+                    LastActionDate = faker.Date.Recent().ToLongDateString()
+                },
                 CurrentBalance = faker.Finance.Amount().ToString("C"),
                 ArrearsAgreementStatus = faker.Random.Word(),
-                PrimaryContactName = faker.Person.FullName,
-                PrimaryContactShortAddress = faker.Address.StreetAddress(),
-                PrimaryContactPostcode = faker.Address.ZipCode()
+                PrimaryContact = new ListTenancies.PrimaryContact
+                {
+                    PrimaryContactName = faker.Person.FullName,
+                    PrimaryContactShortAddress = faker.Address.StreetAddress(),
+                    PrimaryContactPostcode = faker.Address.ZipCode()
+                }
             };
 
             var listTenancies = new ListTenanciesStub();
@@ -137,16 +149,16 @@ namespace LBHTenancyAPITest.Test.Controllers
                                 {
                                     "latest_action", new Dictionary<string, string>
                                     {
-                                        {"code", expectedTenancyResponse.LastActionCode},
-                                        {"date", expectedTenancyResponse.LastActionDate}
+                                        {"code", expectedTenancyResponse.LatestTenancyAction.LastActionCode},
+                                        {"date", expectedTenancyResponse.LatestTenancyAction.LastActionDate}
                                     }
                                 },
                                 {
                                     "primary_contact", new Dictionary<string, string>
                                     {
-                                        {"name", expectedTenancyResponse.PrimaryContactName},
-                                        {"short_address", expectedTenancyResponse.PrimaryContactShortAddress},
-                                        {"postcode", expectedTenancyResponse.PrimaryContactPostcode}
+                                        {"name", expectedTenancyResponse.PrimaryContact.PrimaryContactName},
+                                        {"short_address", expectedTenancyResponse.PrimaryContact.PrimaryContactShortAddress},
+                                        {"postcode", expectedTenancyResponse.PrimaryContact.PrimaryContactPostcode}
                                     }
                                 }
                             }
@@ -179,10 +191,11 @@ namespace LBHTenancyAPITest.Test.Controllers
                 calledWith = new List<object>();
             }
 
-            public ListTenancies.Response Execute(List<string> tenancyRefs)
+            public Task<ListTenancies.Response> ExecuteAsync(List<string> tenancyRefs)
             {
                 calledWith.Add(new List<object> {tenancyRefs});
-                return new ListTenancies.Response {Tenancies = new List<ListTenancies.ResponseTenancy>()};
+                var response = new ListTenancies.Response {Tenancies = new List<ListTenancies.ResponseTenancy>()};
+                return Task.FromResult(response);
             }
 
             public void AssertCalledOnce()
@@ -210,12 +223,13 @@ namespace LBHTenancyAPITest.Test.Controllers
                 stubTenancies[tenancyRef] = tenancyResponse;
             }
 
-            public ListTenancies.Response Execute(List<string> tenancyRefs)
+            public Task<ListTenancies.Response> ExecuteAsync(List<string> tenancyRefs)
             {
-                return new ListTenancies.Response
+                var result = new ListTenancies.Response
                 {
                     Tenancies = tenancyRefs.ConvertAll(tenancyRef => stubTenancies[tenancyRef])
                 };
+                return Task.FromResult(result);
             }
 
         }
