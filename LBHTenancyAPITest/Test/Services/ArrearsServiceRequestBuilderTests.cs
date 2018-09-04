@@ -1,3 +1,4 @@
+using System;
 using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
@@ -17,6 +18,15 @@ namespace LBHTenancyAPITest.Test.Services
             //pre-arrange
             var credentialsService = new Mock<ICredentialsService>();
             _builder = new ArrearsServiceRequestBuilder(credentialsService.Object);
+        }
+
+        [Fact]
+        public void Throws_If_Null()
+        {
+            //arrange
+            //act
+            //assert
+            Assert.Throws<ArgumentNullException>(()=>_builder.BuildArrearsRequest(null));
         }
 
         [Fact]
@@ -52,6 +62,28 @@ namespace LBHTenancyAPITest.Test.Services
             Assert.Equal("GEN", request.ArrearsAction.ActionCode);
             Assert.Equal("Added by webservice", request.ArrearsAction.Comment);
             Assert.Equal("000017/01", request.ArrearsAction.TenancyAgreementRef);
+        }
+
+        [Fact]
+        public void WhenGivenActionDiaryDetails2_BuildValidArrearsActionDiaryRequest()
+        {
+            //arrange
+            //act
+            var request = _builder.BuildArrearsRequest(new ArrearsActionCreateRequest
+            {
+                ArrearsAction = new ArrearsActionInfo
+                {
+                    ActionBalance = 10,
+                    ActionCode = "TEST",
+                    Comment = "Testing",
+                    TenancyAgreementRef = "000017/02"
+                }
+            });
+            //assert
+            Assert.Equal(10, request.ArrearsAction.ActionBalance);
+            Assert.Equal("TEST", request.ArrearsAction.ActionCode);
+            Assert.Equal("Testing", request.ArrearsAction.Comment);
+            Assert.Equal("000017/02", request.ArrearsAction.TenancyAgreementRef);
         }
     }
 }
