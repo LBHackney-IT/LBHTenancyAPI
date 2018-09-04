@@ -8,7 +8,7 @@ using LBHTenancyAPI.UseCases.ArrearsActions;
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/tenancies/arrearsactiondiary/")]
+    [Route("api/v1/tenancies/arrears-action-diary/")]
     public class ArrearsActionDiaryController : Controller
     {
         private readonly ICreateArrearsActionDiaryUseCase _createArrearsActionDiaryUseCase;
