@@ -1,3 +1,4 @@
+using System;
 using AgreementService;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.Settings.Credentials;
@@ -13,17 +14,18 @@ namespace LBHTenancyAPI.Services
         {
             _configuration = configuration;
         }
+
         public string GetUhSourceSystem()
         {
-            return _configuration.Get<ConfigurationSettings>().Credentials.UHServiceSystemCredentials.UserName;
+            return Environment.GetEnvironmentVariable("Credentials__UHServiceSystemCredentials__UserName");
         }
 
         public UserCredential GetUhUserCredentials()
         {
             return new UserCredential
             {
-                UserName = _configuration.Get<ConfigurationSettings>().Credentials.UHServiceUserCredentials.UserName,
-                UserPassword = _configuration.Get<ConfigurationSettings>().Credentials.UHServiceUserCredentials.UserPassword
+                UserName = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserName"),
+                UserPassword = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserPassword")
             };
         }
     }

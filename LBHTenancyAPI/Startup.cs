@@ -32,6 +32,7 @@ namespace LBHTenancyAPI
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+                
             Configuration = builder.Build();
         }
 
@@ -41,8 +42,14 @@ namespace LBHTenancyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var environmentVariables = Environment.GetEnvironmentVariables();
+            Console.WriteLine("Environment Variables");
+            Console.WriteLine(environmentVariables);
             //get settings from appSettings.json and EnvironmentVariables
+            services.Configure<ConfigurationSettings>(Configuration);
             var settings = Configuration.Get<ConfigurationSettings>();
+
+            Console.WriteLine("Settings");
+            Console.WriteLine(settings);
 
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
@@ -58,7 +65,7 @@ namespace LBHTenancyAPI
             services.AddTransient<IArrearsAgreementService>(s=>
             {
                 var clientFactory = s.GetService<IWCFClientFactory>();
-                var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(settings.ServiceSettings.AgreementServiceEndpoint);
+                var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(Environment.GetEnvironmentVariable("ServiceSettings__AgreementServiceEndpoint"));
                 if(client.State != CommunicationState.Opened)
                     client.Open();
                 return client;
