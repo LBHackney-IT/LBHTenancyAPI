@@ -150,11 +150,11 @@ namespace LBHTenancyAPITest.Helpers
                 ArrearsAction = new ArrearsActionLogDto
                 {
                     TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef,
-                    ActionBalance = random.Finance.Amount(),
-                    ActionCode = random.Random.Hash(3),
-                    ActionCategory = random.Random.Hash(10),
+                    ActionBalance = request.ArrearsAction.ActionBalance ?? random.Finance.Amount() ,
+                    ActionCode = request.ArrearsAction.ActionCode,
+                    ActionCategory = request.ArrearsAction.ActionCategory,
                 },
-                ErrorCode = 100,
+                ErrorCode = 0,
                 ErrorMessage = "",
                 Success = true
             };

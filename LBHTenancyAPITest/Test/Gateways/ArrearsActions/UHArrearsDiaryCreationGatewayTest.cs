@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
+using FluentAssertions;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPITest.Helpers;
 using Moq;
@@ -47,11 +48,14 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             Assert.NotNull(response);
         }
 
-        [Fact]
-        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldReturnAValidObject()
+        [Theory]
+        [InlineData("000017/01", 10, "8", "GEN", "Webservice action")]
+        [InlineData("000017/02", 17, "9", "Test", "Testing")]
+        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldReturnAValidObject(
+            string tenancyRef, decimal actionBalance, string actionCategory, string actionCode, string comment )
         {
             //Arrange
-            Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
 
@@ -59,11 +63,12 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             {
                 ArrearsAction = new ArrearsActionInfo
                 {
-                    ActionBalance = 10,
-                    ActionCategory = "8",
-                    ActionCode = "GEN",
-                    Comment = "Testing",
-                    TenancyAgreementRef = "000017/01"
+                    TenancyAgreementRef = tenancyRef,
+                    ActionBalance = actionBalance,
+                    ActionCategory = actionCategory,
+                    ActionCode = actionCode,
+                    Comment = comment
+                    
                 },
                 DirectUser = new UserCredential
                 {
@@ -79,7 +84,10 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             //act
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
             //assert
-            Assert.Equal(response.ArrearsAction.TenancyAgreementRef, request.ArrearsAction.TenancyAgreementRef);
+            response.ArrearsAction.TenancyAgreementRef.Should().Be(tenancyRef);
+            response.ArrearsAction.ActionBalance.Should().Be(actionBalance);
+            response.ArrearsAction.ActionCategory.Should().Be(actionCategory);
+            response.ArrearsAction.ActionCode.Should().Be(actionCode);
         }
 
         [Fact]
