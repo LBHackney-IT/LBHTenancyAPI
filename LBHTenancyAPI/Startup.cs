@@ -2,9 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
+using AgreementService;
+using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Interfaces;
+using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
+using LBHTenancyAPI.UseCases.ArrearsActions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,9 +24,16 @@ namespace LBHTenancyAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+                
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -27,12 +41,36 @@ namespace LBHTenancyAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var environmentVariables = Environment.GetEnvironmentVariables();
+            Console.WriteLine("Environment Variables");
+            Console.WriteLine(environmentVariables);
+            //get settings from appSettings.json and EnvironmentVariables
+            services.Configure<ConfigurationSettings>(Configuration);
+            var settings = Configuration.Get<ConfigurationSettings>();
+
+            Console.WriteLine("Settings");
+            Console.WriteLine(settings);
+
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
             services.AddTransient<IListAllArrearsActions, ListAllArrearsActions>();
             services.AddTransient<IListAllPayments, ListAllPayments>();
             services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
+            services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
+            services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
+            services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
+            services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
+
+            services.AddTransient<IArrearsAgreementService>(s=>
+            {
+                var clientFactory = s.GetService<IWCFClientFactory>();
+                var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(Environment.GetEnvironmentVariable("ServiceSettings__AgreementServiceEndpoint"));
+                if(client.State != CommunicationState.Opened)
+                    client.Open();
+                return client;
+            });
+            services.AddTransient<ICredentialsService, CredentialsService>();
 
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>

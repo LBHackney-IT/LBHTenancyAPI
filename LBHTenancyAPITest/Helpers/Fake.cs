@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using AgreementService;
 using Bogus;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
@@ -120,6 +121,42 @@ namespace LBHTenancyAPITest.Helpers
                 Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
                 Comment = random.Random.Hash(100),
                 UniversalHousingUsername = random.Random.Hash(50)
+            };
+        }
+
+        public static ArrearsActionCreateRequest GenerateActionDiaryRequest()
+        {
+            var random = new Faker();
+
+            return new ArrearsActionCreateRequest
+            {
+                ArrearsAction = new ArrearsActionInfo
+                {
+                    TenancyAgreementRef = random.Random.Hash(11),
+                    ActionBalance = random.Finance.Amount(),
+                    ActionCode = random.Random.Hash(3),
+                    ActionCategory = random.Random.Hash(10),
+                    Comment = random.Random.Hash(100)
+                }
+            };
+        }
+
+        public static ArrearsActionResponse CreateArrearsActionAsync(AgreementService.ArrearsActionCreateRequest request)
+        {
+            var random = new Faker();
+
+            return new ArrearsActionResponse
+            {
+                ArrearsAction = new ArrearsActionLogDto
+                {
+                    TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef,
+                    ActionBalance = request.ArrearsAction.ActionBalance ?? random.Finance.Amount() ,
+                    ActionCode = request.ArrearsAction.ActionCode,
+                    ActionCategory = request.ArrearsAction.ActionCategory,
+                },
+                ErrorCode = 0,
+                ErrorMessage = "",
+                Success = true
             };
         }
     }
