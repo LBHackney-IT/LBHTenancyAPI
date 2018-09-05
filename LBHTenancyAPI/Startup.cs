@@ -47,17 +47,18 @@ namespace LBHTenancyAPI
             var environmentVariables = Environment.GetEnvironmentVariables();
             
             Console.WriteLine("Environment Variables");
-            foreach (DictionaryEntry environmentVariable in environmentVariables)
-            {
-                Console.WriteLine($"{environmentVariable.Key}-{environmentVariable.Value}");
-            }
+
+            var serviceUserName = Environment.GetEnvironmentVariable("Credentials__UHServiceSystemCredentials__UserName");
+            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserPassword isNullOrEmpty: {string.IsNullOrEmpty(serviceUserName)}");
+            var userName = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserName");
+            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserName isNullOrEmpty: {string.IsNullOrEmpty(userName)}");
+            var password = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserPassword");
+            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserPassword isNullOrEmpty: {string.IsNullOrEmpty(password)}");
+
             Console.WriteLine(environmentVariables);
             //get settings from appSettings.json and EnvironmentVariables
             services.Configure<ConfigurationSettings>(Configuration);
             var settings = Configuration.Get<ConfigurationSettings>();
-
-            Console.WriteLine("Settings");
-            Console.WriteLine(settings);
 
             services.AddMvc();
             services.AddTransient<IListTenancies, ListTenancies>();
