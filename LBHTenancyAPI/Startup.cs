@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,12 +9,14 @@ using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Interfaces;
+using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Extensions.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,7 +45,12 @@ namespace LBHTenancyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var environmentVariables = Environment.GetEnvironmentVariables();
+            
             Console.WriteLine("Environment Variables");
+            foreach (DictionaryEntry environmentVariable in environmentVariables)
+            {
+                Console.WriteLine($"{environmentVariable.Key}-{environmentVariable.Value}");
+            }
             Console.WriteLine(environmentVariables);
             //get settings from appSettings.json and EnvironmentVariables
             services.Configure<ConfigurationSettings>(Configuration);
@@ -77,15 +85,28 @@ namespace LBHTenancyAPI
             {
                 c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
             });
+
+            services.AddLogging(configure =>
+            {
+                configure.AddConfiguration(Configuration.GetSection("Logging"));
+                configure.AddConsole();
+                configure.AddDebug();
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
+                
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
@@ -93,12 +114,16 @@ namespace LBHTenancyAPI
             });
             app.UseSwagger();
 
+            app.UseExceptionHandler();
+
             //required for swagger to work
             app.UseMvc(routes =>
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }
