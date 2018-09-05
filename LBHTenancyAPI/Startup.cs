@@ -49,9 +49,11 @@ namespace LBHTenancyAPI
             Console.WriteLine("Environment Variables");
 
             var serviceUserName = Environment.GetEnvironmentVariable("Credentials__UHServiceSystemCredentials__UserName");
-            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserPassword isNullOrEmpty: {string.IsNullOrEmpty(serviceUserName)}");
+            Console.WriteLine($"Credentials__UHServiceSystemCredentials__UserName isNullOrEmpty: {string.IsNullOrEmpty(serviceUserName)}");
+
             var userName = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserName");
             Console.WriteLine($"Credentials__UHServiceUserCredentials__UserName isNullOrEmpty: {string.IsNullOrEmpty(userName)}");
+
             var password = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserPassword");
             Console.WriteLine($"Credentials__UHServiceUserCredentials__UserPassword isNullOrEmpty: {string.IsNullOrEmpty(password)}");
 
