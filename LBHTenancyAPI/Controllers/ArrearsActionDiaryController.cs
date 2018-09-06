@@ -22,7 +22,7 @@ namespace LBHTenancyAPI.Controllers
         public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
         {
             if (!request.IsValid())
-                return BadRequest();
+                return BadRequest(request);
 
             var response = await _createArrearsActionDiaryUseCase.ExecuteAsync(request);
 
@@ -31,4 +31,6 @@ namespace LBHTenancyAPI.Controllers
             return Ok(response);
         }
     }
+
+
 }
