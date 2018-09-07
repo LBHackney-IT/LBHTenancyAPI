@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Interfaces;
-using LBHTenancyAPI.UseCases;
 
 namespace LBHTenancyAPI.Gateways
 {

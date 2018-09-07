@@ -26,7 +26,7 @@ namespace LBHTenancyAPITest.Test.Services
             //arrange
             //act
             //assert
-            Assert.Throws<ArgumentNullException>(()=>_builder.BuildArrearsRequest(null));
+            Assert.Throws<ArgumentNullException>(()=>_builder.BuildArrearsRequest(default(WebRequest)));
         }
 
         [Fact]

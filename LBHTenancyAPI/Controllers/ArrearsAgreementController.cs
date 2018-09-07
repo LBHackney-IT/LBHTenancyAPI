@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using AgreementService;
 using LBHTenancyAPI.Extensions.Validation;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.UseCases.ArrearsActions;
@@ -24,9 +23,10 @@ namespace LBHTenancyAPI.Controllers
         public async Task<IActionResult> Post([FromBody][Required]CreateArrearsAgreementRequest request)
         {
             var result = await _createArrearsAgreementUseCase.ExecuteAsync(request, HttpContext.RequestAborted).ConfigureAwait(false);
-            var response = new  APIResponse(result);
 
-            return StatusCode( response.StatusCode, response);
+            var response = new APIResponse(result);
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

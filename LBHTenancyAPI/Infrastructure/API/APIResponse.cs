@@ -4,7 +4,7 @@ using System.Net;
 using FluentValidation.Results;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using Newtonsoft.Json;
-using WebResponse = AgreementService.WebResponse;
+using AgreementService;
 
 namespace LBHTenancyAPI.Infrastructure.API
 {
@@ -30,67 +30,21 @@ namespace LBHTenancyAPI.Infrastructure.API
             Errors =  new List<APIError> { new APIError(ex) };
         }
 
-        public APIResponse(IResponse<object> response)
+        public APIResponse(IExecuteWrapper<object> executeWrapper)
         {
-            if (response == null)
-                StatusCode = (int) HttpStatusCode.BadRequest;
-            if(response.Errors != null)
+            if (executeWrapper == null)
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest;
+                return;
+            }
+                
+            if (executeWrapper.Errors != null)
+            {
+                StatusCode = (int) HttpStatusCode.InternalServerError;
+                Errors = executeWrapper.Errors;
+            }
 
         }
-
-        //public APIResponse(WebResponse response)
-        //{
-        //    if (response == null)
-        //    {
-        //        StatusCode = 
-        //        return;
-        //    }
-
-        //    IsSuccess = response.Success;
-        //    Errors = response.Success
-        //        ? null
-        //        : new List<APIError>{new APIError(response)};
-        //}
-    }
-
-    public class APIError
-    {
-        public string Message { get; set; }
-        public string Code { get; set; }
-
-        public APIError()
-        {
-
-        }
-
-        public APIError(ValidationFailure validationFailure)
-        {
-            Message = validationFailure?.ErrorMessage;
-            
-        }
-
-        public APIError(Exception ex)
-        {
-            Message = ex?.Message; 
-        }
-
-        public APIError(WebResponse response)
-        {
-            Code = $"UH_{response?.ErrorCode}";
-            Message = response?.ErrorMessage;
-        }
-    }
-
-    public class ValidationError
-    {
-        public string Message { get; set; }
-        public string FieldName { get; set; }
-    }
-
-    public class APIErrorCode
-    {
-        public string Code { get; set; }
-        public string Description { get; set; }
     }
 
     public abstract class ApiException:Exception
