@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using LBHTenancyAPI.Gateways;
+using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.UseCases
 {
@@ -24,25 +25,35 @@ namespace LBHTenancyAPI.UseCases
                     Amount= paymentTrans.Amount.ToString("C"),
                     Date = string.Format("{0:u}", paymentTrans.Date),
                     Type = paymentTrans.Type,
-                    PropertyRef = paymentTrans.PropertyRef
+                    PropertyRef = paymentTrans.PropertyRef,
+                    Description = paymentTrans.Description
                 }
             );
 
             return response;
         }
 
-        public struct PaymentTransactionResponse
+        public class PaymentTransactionResponse
         {
+            [JsonProperty("payment_transactions")]
             public List<PaymentTransaction> PaymentTransactions { get; set; }
         }
 
-        public struct PaymentTransaction
+
+        public class PaymentTransaction
         {
+            [JsonProperty("ref")]
             public string Ref { get; set; }
-            public string Date { get; set; }
-            public string PropertyRef{ get; set; }
-            public string Type { get; set; }
+            [JsonProperty("amount")]
             public string Amount { get; set; }
+            [JsonProperty("date")]
+            public string Date { get; set; }
+            [JsonProperty("type")]
+            public string Type { get; set; }
+            [JsonProperty("property_ref")]
+            public string PropertyRef{ get; set; }
+            [JsonProperty("description")]
+            public string Description { get; set; }
         }
     }
 }

@@ -66,22 +66,8 @@ namespace LBHTenancyAPI.Controllers
         public async Task<IActionResult> PaymentTransactionDetails(string tenancyRef)
         {
             var response = listAllPayments.Execute(tenancyRef);
-            var paymentsTransaction = response.PaymentTransactions.ConvertAll(paymentTrans =>
-                new Dictionary<string, object>
-                {
-                    {"ref", paymentTrans.Ref},
-                    {"amount", paymentTrans.Amount},
-                    {"date", paymentTrans.Date},
-                    {"type", paymentTrans.Type},
-                    {"property_ref", paymentTrans.PropertyRef}
-                });
 
-            var result = new Dictionary<string, object>
-            {
-                {"payment_transactions", paymentsTransaction}
-            };
-
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpGet]

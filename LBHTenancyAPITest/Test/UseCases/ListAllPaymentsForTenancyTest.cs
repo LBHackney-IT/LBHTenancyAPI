@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;
@@ -55,12 +56,13 @@ namespace LBHTenancyAPITest.Test.UseCases
                         Amount= payment.Amount.ToString("C"),
                         Date = string.Format("{0:u}", payment.Date),
                         Type = payment.Type,
-                        PropertyRef = payment.PropertyRef
+                        PropertyRef = payment.PropertyRef,
+                        Description = payment.Description
                     }
                 }
             };
 
-            Assert.Equal(expectedResponse.PaymentTransactions, response.PaymentTransactions);
+            expectedResponse.PaymentTransactions[0].Should().BeEquivalentTo(response.PaymentTransactions[0]);
         }
     }
 }
