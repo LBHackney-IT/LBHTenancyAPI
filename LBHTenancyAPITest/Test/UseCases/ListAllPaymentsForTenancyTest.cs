@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentAssertions;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;
@@ -10,18 +12,18 @@ namespace LBHTenancyAPITest.Test.UseCases
     public class ListAllPaymentsForTenancyTest
     {
         [Fact]
-        public void WhenGivenATenancyRefThatDoesntExist_ShouldReturnAnEmptyPaymentResponse()
+        public async Task WhenGivenATenancyRefThatDoesntExist_ShouldReturnAnEmptyPaymentResponse()
         {
             var gateway = new StubTenanciesGateway();
             var listAllPayments = new ListAllPayments(gateway);
-            var response = listAllPayments.Execute("");
+            var response = await listAllPayments.ExecuteAsync("");
 
             Assert.IsType(typeof(ListAllPayments.PaymentTransactionResponse), response);
             Assert.Empty(response.PaymentTransactions);
         }
 
         [Fact]
-        public void WhenGivenATenancyRef_ShouldReturnAPaymentResponse()
+        public async Task WhenGivenATenancyRef_ShouldReturnAPaymentResponse()
         {
             var gateway = new StubTenanciesGateway();
             var listAllPayments = new ListAllPayments(gateway);
@@ -29,13 +31,13 @@ namespace LBHTenancyAPITest.Test.UseCases
             var payment = Fake.GeneratePaymentTransactionDetails();
             gateway.SetPaymentTransactionDetails(payment.TenancyRef, payment);
 
-            var response = listAllPayments.Execute(payment.TenancyRef);
+            var response = await listAllPayments.ExecuteAsync(payment.TenancyRef);
 
             Assert.IsType(typeof(ListAllPayments.PaymentTransactionResponse), response);
         }
 
         [Fact]
-        public void WhenATenancyRefIsGiven_ResponseShouldIncludePaymentsForThatTenancy()
+        public async Task WhenATenancyRefIsGiven_ResponseShouldIncludePaymentsForThatTenancy()
         {
             var gateway = new StubTenanciesGateway();
             var payment = Fake.GeneratePaymentTransactionDetails();
@@ -43,7 +45,7 @@ namespace LBHTenancyAPITest.Test.UseCases
             gateway.SetPaymentTransactionDetails(payment.TenancyRef, payment);
 
             var listAllPayments = new ListAllPayments(gateway);
-            var response = listAllPayments.Execute(payment.TenancyRef);
+            var response = await listAllPayments.ExecuteAsync(payment.TenancyRef);
 
             var expectedResponse = new ListAllPayments.PaymentTransactionResponse
             {
@@ -55,12 +57,13 @@ namespace LBHTenancyAPITest.Test.UseCases
                         Amount= payment.Amount.ToString("C"),
                         Date = string.Format("{0:u}", payment.Date),
                         Type = payment.Type,
-                        PropertyRef = payment.PropertyRef
+                        PropertyRef = payment.PropertyRef,
+                        Description = payment.Description
                     }
                 }
             };
 
-            Assert.Equal(expectedResponse.PaymentTransactions, response.PaymentTransactions);
+            expectedResponse.PaymentTransactions[0].Should().BeEquivalentTo(response.PaymentTransactions[0]);
         }
     }
 }

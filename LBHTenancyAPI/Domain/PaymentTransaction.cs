@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 namespace LBHTenancyAPI.Domain
 {
-    public struct PaymentTransaction
+    public class PaymentTransaction
     {
         public string TransactionRef { get; set; }
         public string PropertyRef { get; set; }
@@ -9,5 +9,6 @@ namespace LBHTenancyAPI.Domain
         public string Type{ get; set; }
         public DateTime Date { get; set; }
         public decimal Amount{ get; set; }
+        public string Description { get; set; }
     }
 }

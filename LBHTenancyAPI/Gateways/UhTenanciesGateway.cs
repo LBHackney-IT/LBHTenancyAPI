@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using LBHTenancyAPI.Domain;
 
@@ -9,10 +10,12 @@ namespace LBHTenancyAPI.Gateways
 {
     public class UhTenanciesGateway : ITenanciesGateway
     {
+        private readonly IUhPaymentTransactionsGateway _paymentTransactionsGateway;
         private readonly SqlConnection conn;
 
-        public UhTenanciesGateway(string connectionString)
+        public UhTenanciesGateway(string connectionString, IUhPaymentTransactionsGateway paymentTransactionsGateway)
         {
+            _paymentTransactionsGateway = paymentTransactionsGateway;
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
@@ -97,9 +100,9 @@ namespace LBHTenancyAPI.Gateways
             ).ToList();
         }
 
-        public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
+        public async Task<List<PaymentTransaction>> GetPaymentTransactionsByTenancyRefAsync(string tenancyRef)
         {
-            return conn.Query<PaymentTransaction>(
+            var query = await conn.QueryAsync<PaymentTransaction>(
                 "SELECT " +
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
@@ -111,7 +114,19 @@ namespace LBHTenancyAPI.Gateways
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY post_date DESC",
                 new {tRef = tenancyRef.Replace("%2F", "/")}
-            ).ToList();
+            ).ConfigureAwait(false);
+
+            var paymentTransactions = query.ToList();
+
+            for (var i = 0; i < paymentTransactions?.Count; i++)
+            {
+                var paymentTransaction = paymentTransactions.ElementAtOrDefault(i);
+                if (paymentTransaction == null)
+                    continue;
+                paymentTransaction.Description = _paymentTransactionsGateway.GetTransactionDescription(paymentTransaction?.Type);
+            }
+
+            return paymentTransactions;
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)
