@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using Bogus;
-using Dapper;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Xunit;
 using FluentAssertions;
