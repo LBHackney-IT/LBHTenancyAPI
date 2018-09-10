@@ -466,15 +466,23 @@ namespace LBHTenancyAPITest.Test.Gateways
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate) VALUES (@tenancyRef, @agreementStatus, @startDate)";
+                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)" +
+                "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @frequency, @aragSid)";
+
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
+            command.Parameters.Add("@amount", SqlDbType.Decimal);
+            command.Parameters["@amount"].Value = new Faker().Finance.Amount();
+            command.Parameters.Add("@frequency", SqlDbType.Char);
+            command.Parameters["@frequency"].Value = '1';
             command.Parameters.Add("@agreementStatus", SqlDbType.Char);
             command.Parameters["@agreementStatus"].Value = status;
             command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
             command.Parameters["@startDate"].Value = startDate;
+            command.Parameters.Add("@aragSid", SqlDbType.Int);
+            command.Parameters["@aragSid"].Value = new Random().Next();
 
             command.ExecuteNonQuery();
         }
@@ -485,8 +493,9 @@ namespace LBHTenancyAPITest.Test.Gateways
             List<ArrearsAgreement> items = new List<ArrearsAgreement>();
 
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_amount, arag_startbal, arag_frequency, arag_breached, arag_clearby) " +
-                "VALUES (@tenancyRef, @agreementStatus, @startDate, @amount, @startBal, @frequency, @breached, @clearBy)";
+                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_startbal, arag_breached, arag_clearby) " +
+                "VALUES (@tenancyRef, @agreementStatus, @startDate, @startBal, @breached, @clearBy)" +
+                "INSERT INTO aragdet (arag_sid, aragdet_amount, aragdet_frequency) VALUES (@aragSid, @amount, @frequency)";
 
             foreach (int i in Enumerable.Range(0, num))
             {
@@ -519,6 +528,8 @@ namespace LBHTenancyAPITest.Test.Gateways
                 command.Parameters["@breached"].Value = 1;
                 command.Parameters.Add("@clearBy", SqlDbType.SmallDateTime);
                 command.Parameters["@clearBy"].Value = arrearsAgreement.ClearBy;
+                command.Parameters.Add("@aragSid", SqlDbType.Int);
+                command.Parameters["@aragSid"].Value = new Random().Next();
 
                 items.Add(arrearsAgreement);
                 command.ExecuteNonQuery();
