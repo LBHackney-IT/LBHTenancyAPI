@@ -190,10 +190,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 calledWith = new List<object>();
             }
 
-            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
+            public Task<ListAllPayments.PaymentTransactionResponse> ExecuteAsync(string tenancyRef)
             {
                 calledWith.Add(tenancyRef);
-                return new ListAllPayments.PaymentTransactionResponse {PaymentTransactions = new List<ListAllPayments.PaymentTransaction>()};
+                return Task.FromResult(new ListAllPayments.PaymentTransactionResponse {PaymentTransactions = new List<ListAllPayments.PaymentTransaction>()});
             }
 
             public void AssertCalledOnce()
@@ -221,7 +221,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 stubPaymentsTransactionsDetails[tenancyRef] = paymentTransactions;
             }
 
-            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
+            public Task<ListAllPayments.PaymentTransactionResponse> ExecuteAsync(string tenancyRef)
             {
                 var savedPayments = new List<ListAllPayments.PaymentTransaction>();
 
@@ -230,10 +230,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                     savedPayments = stubPaymentsTransactionsDetails[tenancyRef];
                 }
 
-                return new ListAllPayments.PaymentTransactionResponse
+                return Task.FromResult(new ListAllPayments.PaymentTransactionResponse
                 {
                     PaymentTransactions = savedPayments
-                };
+                });
             }
         }
     }

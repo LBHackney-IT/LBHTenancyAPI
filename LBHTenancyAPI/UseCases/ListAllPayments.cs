@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways;
 using Newtonsoft.Json;
 
@@ -14,10 +15,10 @@ namespace LBHTenancyAPI.UseCases
             tenanciesGateway = gateway;
         }
 
-        public PaymentTransactionResponse Execute(string tenancyRef)
+        public async Task<PaymentTransactionResponse> ExecuteAsync(string tenancyRef)
         {
             var response = new PaymentTransactionResponse();
-            var paymentTransaction = tenanciesGateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
+            var paymentTransaction = await tenanciesGateway.GetPaymentTransactionsByTenancyRefAsync(tenancyRef).ConfigureAwait(false);
 
             response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction()
                 {

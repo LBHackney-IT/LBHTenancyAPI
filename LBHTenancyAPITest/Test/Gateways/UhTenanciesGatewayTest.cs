@@ -334,7 +334,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         private List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
             var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"), new UhPaymentTransactionsGateway());
-            return gateway.GetPaymentTransactionsByTenancyRef(tenancyRef);
+            return gateway.GetPaymentTransactionsByTenancyRefAsync(tenancyRef).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private Tenancy CreateRandomSingleTenancyItem()

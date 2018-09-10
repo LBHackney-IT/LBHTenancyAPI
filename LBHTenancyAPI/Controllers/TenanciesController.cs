@@ -65,7 +65,7 @@ namespace LBHTenancyAPI.Controllers
         [Route("{tenancyRef}/payments")]
         public async Task<IActionResult> PaymentTransactionDetails(string tenancyRef)
         {
-            var response = listAllPayments.Execute(tenancyRef);
+            var response = await listAllPayments.ExecuteAsync(tenancyRef).ConfigureAwait(false);
 
             return Ok(response);
         }
