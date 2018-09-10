@@ -1,4 +1,4 @@
-﻿CREATE DATABASE StubUH;
+CREATE DATABASE StubUH;
 GO
 
 USE StubUH;
@@ -15,5 +15,43 @@ CREATE TABLE contacts (tag_ref CHAR(11), con_name VARCHAR(73), con_address CHAR(
 CREATE TABLE property (short_address CHAR (200), address1 CHAR(255), prop_ref CHAR (12), post_code CHAR (10));
 CREATE TABLE rtrans (prop_ref CHAR(12) DEFAULT SPACE(1), tag_ref CHAR(11) DEFAULT SPACE(1), trans_type CHAR(3) DEFAULT SPACE(1),
                      post_date SMALLDATETIME DEFAULT '', trans_ref CHAR(12) DEFAULT SPACE(1), real_value NUMERIC(9, 2))
+create table debtype
+(
+  deb_code          char(3) default space(1) not null,
+  deb_desc          char(20)   default space(1),
+  deb_cat           char(1)    default space(1),
+  deb_link          char(1)    default space(1),
+  deb_review        char(3)    default space(1),
+  deb_group         numeric(1) default 0,
+  vatable           bit default 0          not null,
+  apportion         bit default 1          not null,
+  freeprd           bit default 1          not null,
+  protected_code    char(3)    default space(1),
+  differential_code char(3)    default space(1),
+  rs_code           char(3)    default space(1),
+  deb_effective     char(1)    default 'C',
+  deb_vatrate       char(1)    default space(1),
+  u_hbeligable      bit default 0          not null,
+  debtype_sid       int        default 0,
+  tstamp            timestamp              null,
+  comp_avail        char(200)  default '',
+  comp_display      char(200)  default '',
+  def_days          int        default 0,
+  void_charge       bit        default 0,
+  core_category     char(3)    default space(1)
+);
+create table rectype
+(
+  rec_code     char(3) default space(1) not null,
+  rec_desc     char(20)   default space(1),
+  rec_group    numeric(1) default 0,
+  rec_hb       bit default 0          not null,
+  rectype_sid  int        default 0,
+  tstamp       timestamp              null,
+  comp_avail   char(200)  default '',
+  comp_display char(200)  default '',
+  rec_dd       bit default 0          not null
+)
+go
 GO
 

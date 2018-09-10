@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using Bogus;
 using Dapper;
+using FluentAssertions;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Remotion.Linq.Clauses;
@@ -313,27 +314,44 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(numberOfExpectedTransactions, transactions.Count);
         }
 
+        [Fact]
+        public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnTransactionDescription()
+        {
+            int numberOfExpectedTransactions = 1;
+            string expectedTenancyRef = "12345/01";
+
+            InsertRandomTransactions(expectedTenancyRef, numberOfExpectedTransactions);
+
+            var transactions = GetPaymentTransactionsByTenancyRef(expectedTenancyRef);
+
+            "Direct Debit".Should().Be(transactions[0].Description);
+        }
+
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
-            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"), new UhPaymentTransactionsGateway());
+            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var gateway = new UhTenanciesGateway(connectionString, new UhPaymentTransactionsGateway(connectionString));
             return gateway.GetTenancyForRef(tenancyRef);
         }
 
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
         {
-            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"), new UhPaymentTransactionsGateway());
+            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var gateway = new UhTenanciesGateway(connectionString, new UhPaymentTransactionsGateway(connectionString));
             return gateway.GetTenanciesByRefs(refs);
         }
 
         private List<ArrearsActionDiaryEntry> GetArrearsActionsByRef(string tenancyRef)
         {
-            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"), new UhPaymentTransactionsGateway());
+            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var gateway = new UhTenanciesGateway(connectionString, new UhPaymentTransactionsGateway(connectionString));
             return gateway.GetActionDiaryEntriesbyTenancyRef(tenancyRef);
         }
 
         private List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            var gateway = new UhTenanciesGateway(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"), new UhPaymentTransactionsGateway());
+            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var gateway = new UhTenanciesGateway(connectionString, new UhPaymentTransactionsGateway(connectionString));
             return gateway.GetPaymentTransactionsByTenancyRefAsync(tenancyRef).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
@@ -611,7 +629,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                      PaymentTransaction payment = new PaymentTransaction
                      {
                         TenancyRef = tenancyRef,
-                        Type = random.Random.Hash(3),
+                        Type = "RTrans",
                         PropertyRef = random.Random.Hash(12),
                         TransactionRef= random.Random.Hash(12),
                         Amount = random.Finance.Amount(),
