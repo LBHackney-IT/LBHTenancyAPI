@@ -4,10 +4,7 @@ using AgreementService;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
-using LBHTenancyAPI.Settings.Credentials;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 

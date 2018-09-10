@@ -1,8 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Bogus;
 using LBHTenancyAPI.UseCases;
 using Xunit;
 using LBHTenancyAPI.Controllers;
@@ -51,7 +48,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Amount = "23.01",
                     Date = "2018-01-01 00:00:00Z",
                     Type = "Direct Debit",
-                    Ref = "12345678"
+                    Ref = "12345678",
+                    Description = "Direct Debit"
                 },
                 new ListAllPayments.PaymentTransaction
                 {
@@ -59,7 +57,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Amount = "24.01",
                     Date = "2018-01-03 00:00:00Z",
                     Type = "Direct Debit",
-                    Ref = "123456789"
+                    Ref = "123456789",
+                    Description = "Online Payment"
                 }
             });
 
@@ -71,7 +70,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"amount", "23.01"},
                 {"date", "2018-01-01 00:00:00Z"},
                 {"type", "Direct Debit"},
-                {"property_ref", "000002/01/11"}
+                {"property_ref", "000002/01/11"},
+                {"description", "Direct Debit"},
             };
 
             var second = new Dictionary<string, object>
@@ -80,7 +80,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"amount", "24.01"},
                 {"date", "2018-01-03 00:00:00Z"},
                 {"type", "Direct Debit"},
-                {"property_ref", "000002/02/12"}
+                {"property_ref", "000002/02/12"},
+                {"description", "Online Payment"},
             };
 
             var output = new Dictionary<string, object>
@@ -114,7 +115,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Amount = "459.99",
                     Date = "2017-11-30 00:00:00Z",
                     Type = "PayPoint",
-                    Ref = "6645352"
+                    Ref = "6645352",
+                    Description = "Direct Debit"
                 },
                 new ListAllPayments.PaymentTransaction
                 {
@@ -122,7 +124,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                     Amount = "32.22",
                     Date = "2018-02-23 00:00:00Z",
                     Type = "type!",
-                    Ref = "098765"
+                    Ref = "098765",
+                    Description = "Online Payment"
                 }
             });
 
@@ -134,7 +137,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"amount", "459.99"},
                 {"date", "2017-11-30 00:00:00Z"},
                 {"type", "PayPoint"},
-                {"property_ref", "010101/02/99"}
+                {"property_ref", "010101/02/99"},
+                {"description", "Direct Debit"},
             };
 
             var second = new Dictionary<string, object>
@@ -143,7 +147,8 @@ namespace LBHTenancyAPITest.Test.Controllers
                 {"amount", "32.22"},
                 {"date", "2018-02-23 00:00:00Z"},
                 {"type", "type!"},
-                {"property_ref", "33333/55/77"}
+                {"property_ref", "33333/55/77"},
+                {"description", "Online Payment"},
             };
 
             var output = new Dictionary<string, object>
@@ -185,10 +190,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                 calledWith = new List<object>();
             }
 
-            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
+            public Task<ListAllPayments.PaymentTransactionResponse> ExecuteAsync(string tenancyRef)
             {
                 calledWith.Add(tenancyRef);
-                return new ListAllPayments.PaymentTransactionResponse {PaymentTransactions = new List<ListAllPayments.PaymentTransaction>()};
+                return Task.FromResult(new ListAllPayments.PaymentTransactionResponse {PaymentTransactions = new List<ListAllPayments.PaymentTransaction>()});
             }
 
             public void AssertCalledOnce()
@@ -216,7 +221,7 @@ namespace LBHTenancyAPITest.Test.Controllers
                 stubPaymentsTransactionsDetails[tenancyRef] = paymentTransactions;
             }
 
-            public ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef)
+            public Task<ListAllPayments.PaymentTransactionResponse> ExecuteAsync(string tenancyRef)
             {
                 var savedPayments = new List<ListAllPayments.PaymentTransaction>();
 
@@ -225,10 +230,10 @@ namespace LBHTenancyAPITest.Test.Controllers
                     savedPayments = stubPaymentsTransactionsDetails[tenancyRef];
                 }
 
-                return new ListAllPayments.PaymentTransactionResponse
+                return Task.FromResult(new ListAllPayments.PaymentTransactionResponse
                 {
                     PaymentTransactions = savedPayments
-                };
+                });
             }
         }
     }

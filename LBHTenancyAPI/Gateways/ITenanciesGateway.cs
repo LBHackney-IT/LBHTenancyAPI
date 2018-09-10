@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using LBHTenancyAPI.Domain;
 
 namespace LBHTenancyAPI.Gateways
@@ -7,7 +8,7 @@ namespace LBHTenancyAPI.Gateways
     {
         List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs);
         List<ArrearsActionDiaryEntry> GetActionDiaryEntriesbyTenancyRef(string tenancyRef);
-        List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef);
+        Task<List<PaymentTransaction>> GetPaymentTransactionsByTenancyRefAsync(string tenancyRef);
         Tenancy GetTenancyForRef(string tenancyRef);
     }
 }

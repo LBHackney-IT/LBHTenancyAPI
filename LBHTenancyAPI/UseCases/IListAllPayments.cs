@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LBHTenancyAPI.UseCases
 {
     public interface IListAllPayments
     {
-        ListAllPayments.PaymentTransactionResponse Execute(string tenancyRef);
+        Task<ListAllPayments.PaymentTransactionResponse> ExecuteAsync(string tenancyRef);
     }
 }
