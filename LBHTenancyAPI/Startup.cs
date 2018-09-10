@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
+using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;

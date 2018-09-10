@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.UseCases.ArrearsActions;

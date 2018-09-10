@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 
-namespace LBHTenancyAPI.Gateways
+namespace LBHTenancyAPI.Gateways.Arrears
 {
     public interface IArrearsAgreementGateway
     {

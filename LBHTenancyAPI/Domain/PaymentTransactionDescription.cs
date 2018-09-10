@@ -1,4 +1,4 @@
-namespace LBHTenancyAPI.Gateways
+namespace LBHTenancyAPI.Domain
 {
     public class PaymentTransactionDescription
     {

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using AgreementService;
 using FluentAssertions;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
+using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPITest.Helpers;
 using Moq;
 using Xunit;

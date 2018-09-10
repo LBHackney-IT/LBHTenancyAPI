@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation.Results;
 using LBHTenancyAPI.Infrastructure.API;
 
-namespace LBHTenancyAPI.Validation
+namespace LBHTenancyAPI.Extensions.Validation
 {
     public static class APIErrorExtensions
     {

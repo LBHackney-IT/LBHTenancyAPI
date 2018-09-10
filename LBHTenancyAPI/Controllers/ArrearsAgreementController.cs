@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using LBHTenancyAPI.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using LBHTenancyAPI.Domain;
 
 namespace LBHTenancyAPI.Gateways
 {

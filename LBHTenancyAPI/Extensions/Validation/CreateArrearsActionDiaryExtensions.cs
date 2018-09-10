@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AgreementService;
 using FluentValidation;
 using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.Validation;
 
 namespace LBHTenancyAPI.Extensions.Validation
 {
