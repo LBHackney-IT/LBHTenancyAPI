@@ -9,14 +9,14 @@ namespace LBHTenancyAPI.Validation
 {
     public static class APIErrorExtensions
     {
-        public static IList<APIError> GetAPIErrors(this IList<ValidationFailure> validationFailures)
+        public static IList<ExecutionError> GetAPIErrors(this IList<ValidationFailure> validationFailures)
         {
             if (validationFailures == null)
                 return null;
-            var apiErrors = new List<APIError>(validationFailures.Count);
+            var apiErrors = new List<ExecutionError>(validationFailures.Count);
             foreach (var validationFailure in validationFailures)
             {
-                var error = new APIError(validationFailure);
+                var error = new ExecutionError(validationFailure);
                 apiErrors.Add(error);
             }
 

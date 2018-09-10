@@ -18,10 +18,10 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public async Task<IExecuteWrapper<CreateArrearsAgreementResponse>> ExecuteAsync(CreateArrearsAgreementRequest request, CancellationToken cancellationToken)
         {
             //validate
-            if(request == null || request.IsValid().IsValid)
-                return new ExecuteWrapper<CreateArrearsAgreementResponse>(request?.IsValid().ValidationErrors);
+            if(request == null || !request.Validate().IsValid)
+                return new ExecuteWrapper<CreateArrearsAgreementResponse>(request?.Validate());
             //execute business logic
-            var webServiceRequest = new ArrearsAgreementRequest()
+            var webServiceRequest = new ArrearsAgreementRequest
             {
                 Agreement = request?.AgreementInfo,
                 PaymentSchedule = request?.PaymentSchedule?.ToArray()
@@ -29,7 +29,7 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
             var response = await _arrearsAgreementGateway.CreateArrearsAgreementAsync(webServiceRequest,cancellationToken).ConfigureAwait(false);
             //marshall response
 
-            return null;
+            return response as IExecuteWrapper<CreateArrearsAgreementResponse>;
         }
     }
 }

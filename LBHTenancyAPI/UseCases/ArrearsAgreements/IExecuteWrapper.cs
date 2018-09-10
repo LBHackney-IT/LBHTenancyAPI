@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using LBHTenancyAPI.Infrastructure.API;
-
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     public interface IExecuteWrapper<T>
     {
-        T Response { get; set; }
-        IList<APIError> Errors { get; set; }
-        IList<ValidationError> ValidationErrors { get; set; }
+        bool IsSuccess { get; set; }
+        T Result { get; set; }
+        APIError Error { get; set; }
     }
 }

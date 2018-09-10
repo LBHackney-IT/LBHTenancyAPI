@@ -4,9 +4,9 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     public abstract class RequestBase : IRequest
     {
-        public virtual RequestValidationResponse IsValid()
+        public virtual RequestValidationResponse Validate()
         {
-            throw new NotImplementedException("This is the Generic IsValid in the RequestBase");
+            throw new NotImplementedException("This is the Generic Validate in the RequestBase");
         }
     }
 }

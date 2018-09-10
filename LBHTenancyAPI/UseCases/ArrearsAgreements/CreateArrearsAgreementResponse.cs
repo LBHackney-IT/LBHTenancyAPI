@@ -1,6 +1,8 @@
+using AgreementService;
+
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
-    public class CreateArrearsAgreementResponse
+    public class CreateArrearsAgreementResponse:ArrearsAgreementResponse
     {
         
     }

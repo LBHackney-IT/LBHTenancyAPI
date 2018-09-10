@@ -6,40 +6,27 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     public class ExecuteWrapper<T>: IExecuteWrapper<T> where T:class
     {
-        public T Response { get; set; }
-        public IList<APIError> Errors { get; set; }
-        public IList<ValidationError> ValidationErrors { get; set; }
+        public bool IsSuccess { get; set; }
+        public T Result { get; set; }
+        public APIError Error { get; set; }
 
         public ExecuteWrapper(T response)
         {
-            
             if (typeof(T).IsSubclassOf(typeof(WebResponse)))
             {
-                var webResponse =  response as WebResponse;
+                var webResponse = response as WebResponse;
                 if (!webResponse.Success)
-                {
-                    Errors = new List<APIError>(){new APIError()};
-                }
+                    Error = new APIError(webResponse);
                 else
-                {
-                    Response = response;
-                }
+                    Result = response;
             }
             else
-            {
-                Response = response;
-            }
-
+                Result = response;
         }
 
-        public ExecuteWrapper(IList<APIError> errors)
+        public ExecuteWrapper(RequestValidationResponse validationResponse)
         {
-            Errors = errors;
-        }
-
-        public ExecuteWrapper(IList<ValidationError> validationErrors)
-        {
-            ValidationErrors = validationErrors;
+            Error = new APIError(validationResponse);
         }
     }
 }

@@ -17,8 +17,6 @@ namespace LBHTenancyAPI.Extensions.Validation
             if (request?.ArrearsAction == null)
                 return false;
             var result = validator.Validate(request);
-            if(!result.IsValid)
-                throw new BadRequestException(result.Errors.GetAPIErrors());
             return result.IsValid;
         }
     }
