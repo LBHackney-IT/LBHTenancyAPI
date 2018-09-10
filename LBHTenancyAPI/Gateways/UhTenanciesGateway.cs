@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,10 +9,12 @@ namespace LBHTenancyAPI.Gateways
 {
     public class UhTenanciesGateway : ITenanciesGateway
     {
+        private readonly IUhPaymentTransactionsGateway _paymentTransactionsGateway;
         private readonly SqlConnection conn;
 
-        public UhTenanciesGateway(string connectionString)
+        public UhTenanciesGateway(string connectionString, IUhPaymentTransactionsGateway paymentTransactionsGateway)
         {
+            _paymentTransactionsGateway = paymentTransactionsGateway;
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
@@ -99,7 +101,7 @@ namespace LBHTenancyAPI.Gateways
 
         public List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            return conn.Query<PaymentTransaction>(
+            var paymentTransactions = conn.Query<PaymentTransaction>(
                 "SELECT " +
                 "tag_ref AS TenancyRef," +
                 "prop_ref AS PropertyRef, " +
@@ -112,6 +114,16 @@ namespace LBHTenancyAPI.Gateways
                 "ORDER BY post_date DESC",
                 new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
+
+            for (var i = 0; i < paymentTransactions?.Count; i++)
+            {
+                var paymentTransaction = paymentTransactions.ElementAtOrDefault(i);
+                if (paymentTransaction == null)
+                    continue;
+                paymentTransaction.Description = _paymentTransactionsGateway.GetTransactionDescription(paymentTransaction?.Type);
+            }
+
+            return paymentTransactions;
         }
 
         public Tenancy GetTenancyForRef(string tenancyRef)

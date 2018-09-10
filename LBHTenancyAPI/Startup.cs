@@ -67,11 +67,12 @@ namespace LBHTenancyAPI
             services.AddTransient<IListAllArrearsActions, ListAllArrearsActions>();
             services.AddTransient<IListAllPayments, ListAllPayments>();
             services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
-            services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL")));
+            services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(Environment.GetEnvironmentVariable("UH_URL"), s.GetService<IUhPaymentTransactionsGateway>()));
             services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
             services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
             services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
             services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
+            services.AddSingleton<IUhPaymentTransactionsGateway>(s => new UhPaymentTransactionsGateway());
 
             services.AddTransient<IArrearsAgreementService>(s=>
             {
