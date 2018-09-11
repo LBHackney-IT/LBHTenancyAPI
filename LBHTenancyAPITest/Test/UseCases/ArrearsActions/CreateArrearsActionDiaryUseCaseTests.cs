@@ -129,7 +129,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         [Fact]
         public async Task GivenValidInput_ThenRequestBuilder_AddsCredentials_ToRequest()
         {
-            //arange
+            //arrange
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
                 .ReturnsAsync(new ArrearsActionResponse

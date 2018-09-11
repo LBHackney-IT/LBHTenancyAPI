@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using AgreementService;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Services;
-using LBHTenancyAPITest.Helpers;
 using Moq;
 using Xunit;
 
@@ -105,10 +102,10 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             //act
             var response = await classUnderTest.CreateArrearsAgreementAsync(request, CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.Response.Agreement.TenancyAgreementRef.Should().Be(tenancyRef);
-            response.Response.Agreement.Comment.Should().Be(comment);
-            response.Response.Agreement.PaymentSchedule.Should().NotBeNull();
-            response.Response.Agreement.PaymentSchedule[0].Amount.Should().Be(amount);
+            response.Result.Agreement.TenancyAgreementRef.Should().Be(tenancyRef);
+            response.Result.Agreement.Comment.Should().Be(comment);
+            response.Result.Agreement.PaymentSchedule.Should().NotBeNull();
+            response.Result.Agreement.PaymentSchedule[0].Amount.Should().Be(amount);
         }
 
         [Fact]
