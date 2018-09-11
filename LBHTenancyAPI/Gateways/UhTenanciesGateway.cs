@@ -10,12 +10,10 @@ namespace LBHTenancyAPI.Gateways
 {
     public class UhTenanciesGateway : ITenanciesGateway
     {
-        private readonly IUhPaymentTransactionsGateway _paymentTransactionsGateway;
         private readonly SqlConnection conn;
 
-        public UhTenanciesGateway(string connectionString, IUhPaymentTransactionsGateway paymentTransactionsGateway)
+        public UhTenanciesGateway(string connectionString)
         {
-            _paymentTransactionsGateway = paymentTransactionsGateway;
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
@@ -110,21 +108,19 @@ namespace LBHTenancyAPI.Gateways
                 "real_value AS Amount, " +
                 "post_date AS Date, " +
                 "trans_ref AS TransactionRef " +
-                "FROM rtrans " +
+                "d.Description AS Description" +
+                "FROM rtrans r with(nolock),( " +
+                "select d.deb_code as Code, d.deb_desc as Description from dbo.debtype d with(nolock)" +
+                "where d.deb_code <> ''" +
+                "UNION" +
+                "select rec_code as Code, rec_desc as Description from dbo.rectype with(nolock)" +
+                "where rectype.rec_code <> '') as d" +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY post_date DESC",
                 new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ConfigureAwait(false);
 
             var paymentTransactions = query.ToList();
-
-            for (var i = 0; i < paymentTransactions?.Count; i++)
-            {
-                var paymentTransaction = paymentTransactions.ElementAtOrDefault(i);
-                if (paymentTransaction == null)
-                    continue;
-                paymentTransaction.Description = _paymentTransactionsGateway.GetTransactionDescription(paymentTransaction?.Type);
-            }
 
             return paymentTransactions;
         }
