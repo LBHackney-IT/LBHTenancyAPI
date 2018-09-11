@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Bogus;
 using Dapper;
 using FluentAssertions;
+using LBH.Data.Repository;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPITest.Test.Controllers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
@@ -19,10 +23,12 @@ namespace LBHTenancyAPITest.Test.Gateways
     {
         private readonly SqlConnection db;
         private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
+        private IRepository<PaymentTransaction> _paymentTransactionsGateway;
 
         public UhTenanciesGatewayTest(DatabaseFixture fixture)
         {
             db = fixture.Db;
+            _paymentTransactionsGateway = new UHStubPaymentTransactionGateway(db);
         }
 
         [Fact]
@@ -314,17 +320,21 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(numberOfExpectedTransactions, transactions.Count);
         }
 
-        [Fact]
-        public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnTransactionDescription()
+        [Theory]
+        [InlineData("12345/01", "DVA", "VAT Charge")]
+        [InlineData("12345/02", "DCC","Court Costs")]
+        public async Task WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnTransactionDescription(
+            string tenancyRef, string type, string expectedDescription)
         {
-            int numberOfExpectedTransactions = 1;
-            string expectedTenancyRef = "12345/01";
+            await InsertTransaction(new PaymentTransaction
+            {
+                TenancyRef = tenancyRef,
+                Type = type
+            });
 
-            InsertRandomTransactions(expectedTenancyRef, numberOfExpectedTransactions);
+            var transactions = GetPaymentTransactionsByTenancyRef(tenancyRef);
 
-            var transactions = GetPaymentTransactionsByTenancyRef(expectedTenancyRef);
-
-            "Direct Debit".Should().Be(transactions[0].Description);
+            expectedDescription.Should().Be(transactions[0].Description);
         }
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
@@ -629,7 +639,7 @@ namespace LBHTenancyAPITest.Test.Gateways
                      PaymentTransaction payment = new PaymentTransaction
                      {
                         TenancyRef = tenancyRef,
-                        Type = "RTrans",
+                        Type = "RBA",
                         PropertyRef = random.Random.Hash(12),
                         TransactionRef= random.Random.Hash(12),
                         Amount = random.Finance.Amount(),
@@ -669,6 +679,12 @@ namespace LBHTenancyAPITest.Test.Gateways
             {
                 command = null;
             }
+        }
+
+        private async Task<PaymentTransaction> InsertTransaction(PaymentTransaction paymentTransaction)
+        {
+            paymentTransaction = await _paymentTransactionsGateway.CreateAsync(paymentTransaction, CancellationToken.None).ConfigureAwait(false);
+            return paymentTransaction;
         }
 
 
