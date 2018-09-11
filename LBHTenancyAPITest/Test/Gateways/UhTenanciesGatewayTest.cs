@@ -323,6 +323,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Theory]
         [InlineData("12345/01", "DVA", "VAT Charge")]
         [InlineData("12345/02", "DCC","Court Costs")]
+        [InlineData("12345/03", null, "")]
         public async Task WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnTransactionDescription(
             string tenancyRef, string type, string expectedDescription)
         {
