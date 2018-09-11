@@ -55,6 +55,7 @@ create table rectype
 
 INSERT INTO debtype (deb_code, deb_desc)
 VALUES
+
  ('D20','Section 20 Rebate')
 ,('D25','Section 125 Rebate')
 ,('DAT','Assignment SC Trans')
@@ -100,7 +101,8 @@ VALUES
 
 INSERT INTO rectype (rec_code, rec_desc)
 VALUES
- ('RBA','Bailiff Payment')     
+('','')   
+,('RBA','Bailiff Payment')     
 ,('RBP','Bank Payment')
 ,('RBR','Post Office Payment')
 ,('RCI','Rep. Cash Incentive')

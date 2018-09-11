@@ -323,21 +323,31 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Theory]
-        [InlineData("12345/01", "DVA", "VAT Charge")]
-        [InlineData("12345/02", "DCC","Court Costs")]
-        [InlineData("12345/03", null, "")]
+        [InlineData("12345/05", "DVA", "VAT Charge")]
+        [InlineData("12345/06", "DCC","Court Costs")]
+        [InlineData("12345/07", "", "")]
         public async Task WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnTransactionDescription(
             string tenancyRef, string type, string expectedDescription)
         {
+            //arrange
+            var expectedTenancy = CreateRandomTenancyListItem();
+            expectedTenancy.TenancyRef = tenancyRef;
+            InsertTenancyAttributes(expectedTenancy);
+            //act
+            var random = new Faker();
             await InsertTransaction(new PaymentTransaction
             {
                 TenancyRef = tenancyRef,
-                Type = type
+                Type = type,
+                PropertyRef = random.Random.Hash(12),
+                TransactionRef = random.Random.Hash(12),
+                Amount = random.Finance.Amount(),
+                Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0)
             });
 
             var transactions = GetPaymentTransactionsByTenancyRef(tenancyRef);
 
-            expectedDescription.Should().Be(transactions[0].Description);
+            expectedDescription.Should().Be(transactions[0].Description.Trim());
         }
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
@@ -689,7 +699,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             paymentTransaction = await _paymentTransactionsGateway.CreateAsync(paymentTransaction, CancellationToken.None).ConfigureAwait(false);
             return paymentTransaction;
         }
-
 
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
         {
