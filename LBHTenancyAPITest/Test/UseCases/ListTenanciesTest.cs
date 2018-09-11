@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Helpers;

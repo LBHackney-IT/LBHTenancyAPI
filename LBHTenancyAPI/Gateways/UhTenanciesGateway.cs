@@ -2,20 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using LBHTenancyAPI.Domain;
+using LBH.Data.Domain;
 
 namespace LBHTenancyAPI.Gateways
 {
     public class UhTenanciesGateway : ITenanciesGateway
     {
-        private readonly IUhPaymentTransactionsGateway _paymentTransactionsGateway;
         private readonly SqlConnection conn;
 
-        public UhTenanciesGateway(string connectionString, IUhPaymentTransactionsGateway paymentTransactionsGateway)
+        public UhTenanciesGateway(string connectionString)
         {
-            _paymentTransactionsGateway = paymentTransactionsGateway;
             conn = new SqlConnection(connectionString);
             conn.Open();
         }
@@ -102,29 +101,29 @@ namespace LBHTenancyAPI.Gateways
 
         public async Task<List<PaymentTransaction>> GetPaymentTransactionsByTenancyRefAsync(string tenancyRef)
         {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("tag_ref AS TenancyRef,");
+            sb.AppendLine("prop_ref AS PropertyRef,");
+            sb.AppendLine("trans_type AS Type,");
+            sb.AppendLine("real_value AS Amount,");
+            sb.AppendLine("post_date AS Date,");
+            sb.AppendLine("trans_ref AS TransactionRef,");
+            sb.AppendLine("d.Description");
+            sb.AppendLine("FROM rtrans r with(nolock),");
+            sb.AppendLine("(select deb.deb_code as Code, deb.deb_desc as Description from dbo.debtype deb with(nolock)");
+            sb.AppendLine("UNION");
+            sb.AppendLine("select rec_code as Code, rec_desc as Description from dbo.rectype with(nolock)");
+            sb.AppendLine(") as d");
+            sb.AppendLine("WHERE tag_ref = @tRef");
+            sb.AppendLine("and d.Code = r.trans_type");
+            sb.AppendLine("ORDER BY post_date DESC");
             var query = await conn.QueryAsync<PaymentTransaction>(
-                "SELECT " +
-                "tag_ref AS TenancyRef," +
-                "prop_ref AS PropertyRef, " +
-                "trans_type AS Type, " +
-                "real_value AS Amount, " +
-                "post_date AS Date, " +
-                "trans_ref AS TransactionRef " +
-                "FROM rtrans " +
-                "WHERE tag_ref = @tRef " +
-                "ORDER BY post_date DESC",
+                sb.ToString(),
                 new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ConfigureAwait(false);
 
             var paymentTransactions = query.ToList();
-
-            for (var i = 0; i < paymentTransactions?.Count; i++)
-            {
-                var paymentTransaction = paymentTransactions.ElementAtOrDefault(i);
-                if (paymentTransaction == null)
-                    continue;
-                paymentTransaction.Description = _paymentTransactionsGateway.GetTransactionDescription(paymentTransaction?.Type);
-            }
 
             return paymentTransactions;
         }

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHTenancyAPITest", "LBHTen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubUniversalHousing", "StubUniversalHousing\StubUniversalHousing.csproj", "{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBH.Data.Domain", "LBH.Data.Domain\LBH.Data.Domain.csproj", "{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

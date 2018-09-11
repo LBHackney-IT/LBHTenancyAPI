@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace LBHTenancyAPI.Domain
+namespace LBH.Data.Domain
 {
     public struct ArrearsAgreement
     {

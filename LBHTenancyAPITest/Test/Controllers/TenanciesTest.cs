@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Domain;
+using LBH.Data.Domain;
 
 namespace LBHTenancyAPI.Gateways
 {

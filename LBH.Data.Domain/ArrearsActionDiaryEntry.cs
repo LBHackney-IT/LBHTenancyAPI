@@ -1,5 +1,6 @@
-﻿using System;
-namespace LBHTenancyAPI.Domain
+using System;
+
+namespace LBH.Data.Domain
 {
     public struct ArrearsActionDiaryEntry
     {

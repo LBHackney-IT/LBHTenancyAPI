@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace LBHTenancyAPI.Domain
+namespace LBH.Data.Domain
 {
     public struct Tenancy
     {

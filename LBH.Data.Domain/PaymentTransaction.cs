@@ -1,5 +1,6 @@
 using System;
-namespace LBHTenancyAPI.Domain
+
+namespace LBH.Data.Domain
 {
     public class PaymentTransaction
     {
