@@ -33,6 +33,7 @@ namespace LBHTenancyAPITest.Test
                 "DELETE FROM arag;" +
                 "DELETE FROM contacts;" +
                 "DELETE FROM tenagree;" +
+                "DELETE FROM aragdet;" +
                 "DELETE FROM rtrans"
             );
 
