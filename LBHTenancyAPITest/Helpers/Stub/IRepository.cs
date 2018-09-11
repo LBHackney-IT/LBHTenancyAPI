@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 
 namespace LBHTenancyAPITest.Helpers.Stub
 {
-    public interface IRepository<T> //where T //: IEntity
+    public interface IRepository<T> 
     {
         Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
-        //Task<T> ReadAsync(TIndex index, CancellationToken cancellationToken);
+        
         Task<T> UpdateAsync(T entity, CancellationToken cancellationToken);
-        //Task<bool> DeleteAsync(TIndex index, CancellationToken cancellationToken);
     }
 }
