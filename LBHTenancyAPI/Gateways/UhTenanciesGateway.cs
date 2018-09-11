@@ -163,15 +163,17 @@ namespace LBHTenancyAPI.Gateways
             return conn.Query<ArrearsAgreement>(
                 "SELECT TOP 5" +
                 "tag_ref AS TenancyRef," +
-                "arag_status AS Status, " +
-                "arag_startdate Startdate, " +
-                "arag_amount Amount, " +
-                "arag_frequency AS Frequency, " +
-                "arag_breached AS Breached, " +
-                "arag_startbal AS StartBalance, " +
-                "arag_clearby AS ClearBy " +
+                "arag.arag_status AS Status, " +
+                "arag.arag_startdate Startdate, " +
+                "aragdet.aragdet_amount Amount, " +
+                "aragdet.aragdet_frequency AS Frequency, " +
+                "arag.arag_breached AS Breached, " +
+                "arag.arag_startbal AS StartBalance, " +
+                "arag.arag_clearby AS ClearBy " +
                 "FROM arag " +
-                "WHERE tag_ref = @tRef " +
+                "LEFT JOIN aragdet " +
+                "ON aragdet.arag_sid = arag.arag_sid " +
+                "WHERE arag.tag_ref = @tRef " +
                 "ORDER BY arag_startdate DESC ",
                 new {tRef = tenancyRef.Replace("%2F", "/")}
             ).ToList();
