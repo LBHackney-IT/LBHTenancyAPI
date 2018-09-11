@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using Bogus;
 using Dapper;
 using FluentAssertions;
-using LBH.Data.Repository;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Test.Controllers;
@@ -18,6 +16,8 @@ using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
 using AgreementService;
+using LBH.Data.Domain;
+using LBHTenancyAPITest.Helpers.Stub;
 
 namespace LBHTenancyAPITest.Test.Gateways
 {

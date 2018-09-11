@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LBH.Data.Domain\LBH.Data.Domain.csproj" />
-    <ProjectReference Include="..\LBH.Data.Repository\LBH.Data.Repository.csproj" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />

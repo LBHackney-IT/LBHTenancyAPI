@@ -31,7 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LBH.Data.Domain\LBH.Data.Domain.csproj" />
-    <ProjectReference Include="..\LBH.Data.Repository\LBH.Data.Repository.csproj" />
     <ProjectReference Include="..\LBHTenancyAPI\LBHTenancyAPI.csproj" />
   </ItemGroup>
   <ItemGroup>

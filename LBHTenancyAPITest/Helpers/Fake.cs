@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AgreementService;
 using Bogus;
-using LBHTenancyAPI.Domain;
+using LBH.Data.Domain;
 using LBHTenancyAPI.UseCases;
 
 namespace LBHTenancyAPITest.Helpers

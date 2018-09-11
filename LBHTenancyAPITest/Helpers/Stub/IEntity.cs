@@ -1,4 +1,4 @@
-﻿namespace LBH.Data.Repository
+namespace LBHTenancyAPITest.Helpers.Stub
 {
     public interface IEntity<TIndex>
     {

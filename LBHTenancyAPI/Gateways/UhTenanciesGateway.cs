@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using LBHTenancyAPI.Domain;
+using LBH.Data.Domain;
 
 namespace LBHTenancyAPI.Gateways
 {

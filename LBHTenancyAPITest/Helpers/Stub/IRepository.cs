@@ -1,7 +1,7 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace LBH.Data.Repository
+namespace LBHTenancyAPITest.Helpers.Stub
 {
     public interface IRepository<T> //where T //: IEntity
     {

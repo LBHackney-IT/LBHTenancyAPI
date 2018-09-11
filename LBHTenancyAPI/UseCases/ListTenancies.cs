@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.Internal.Networking;
 
