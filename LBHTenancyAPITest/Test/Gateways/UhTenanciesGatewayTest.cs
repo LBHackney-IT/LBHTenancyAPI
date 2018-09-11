@@ -12,10 +12,12 @@ using FluentAssertions;
 using LBH.Data.Repository;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.UseCases;
 using LBHTenancyAPITest.Test.Controllers;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
+using AgreementService;
 
 namespace LBHTenancyAPITest.Test.Gateways
 {

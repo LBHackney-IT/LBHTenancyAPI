@@ -4,7 +4,7 @@
     <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Y:\Dropbox\Repos\MadeTech\TenancyApi\LBHTenancyAPI\LBHTenancyAPI.xml</DocumentationFile>
+    <DocumentationFile>TenancyApi\LBHTenancyAPI\LBHTenancyAPI.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
@@ -47,7 +47,8 @@
     <None Remove="Web References\UHArrearsAgreement\tempconvert.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LBH.Data.Repository\LBH.Data.Repository.csproj" />
+    <ProjectReference Include="..\LBH.Data.Domain\LBH.Data.Domain.csproj" />
+    <ProjectReference Include="..\LBH.Data.Repository\LBH.Data.Repository.csproj" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
