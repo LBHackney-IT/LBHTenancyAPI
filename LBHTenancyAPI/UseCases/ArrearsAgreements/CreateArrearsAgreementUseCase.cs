@@ -19,8 +19,11 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public async Task<IExecuteWrapper<CreateArrearsAgreementResponse>> ExecuteAsync(CreateArrearsAgreementRequest request, CancellationToken cancellationToken)
         {
             //validate
-            if(request == null || !request.Validate().IsValid)
-                return new ExecuteWrapper<CreateArrearsAgreementResponse>(request?.Validate());
+            if(request == null)
+                return new ExecuteWrapper<CreateArrearsAgreementResponse>(new RequestValidationResponse(false, ""));
+            var validationResponse = request.Validate(request);
+            if(!validationResponse.IsValid)
+                return new ExecuteWrapper<CreateArrearsAgreementResponse>(validationResponse);
             //execute business logic
             var webServiceRequest = new ArrearsAgreementRequest
             {

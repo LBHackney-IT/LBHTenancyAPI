@@ -8,10 +8,13 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
     {
         public ArrearsAgreementInfo AgreementInfo { get; set; }
         public IList<ArrearsScheduledPaymentInfo> PaymentSchedule { get; set; }
-        public override RequestValidationResponse Validate()
+        public override RequestValidationResponse Validate<T>(T request)
         {
             var validator = new CreateArrearsAgreementRequestValidator();
-            var validationResult = validator.Validate(this);
+            var createRequest = request as CreateArrearsAgreementRequest;
+            if (createRequest?.AgreementInfo == null || createRequest?.PaymentSchedule == null)
+                return new RequestValidationResponse(false, "Agreement Info or Payment Schedule is null");
+            var validationResult = validator.Validate(createRequest);
             return new RequestValidationResponse(validationResult);
         }
 
@@ -20,6 +23,7 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
             public CreateArrearsAgreementRequestValidator()
             {
                 RuleFor(x => x).NotNull();
+                RuleFor(x => x.AgreementInfo).NotNull();
                 RuleFor(x => x.AgreementInfo).NotNull().WithMessage("AgreementInfo cannot be null");
                 RuleFor(x => x.AgreementInfo.ArrearsAgreementStatusCode).NotNull().WithMessage("Arrears Agreement Status Code cannot be null");
                 RuleFor(x => x.AgreementInfo.StartBalance).NotNull().WithMessage("StartBalance cannot be null");
@@ -35,9 +39,21 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
                                        .GreaterThan(x => x.AgreementInfo.StartDate).WithMessage("FCA date must be after Start date")
                                        .When(x => x.AgreementInfo.StartDate.HasValue);
                 RuleFor(x => x.AgreementInfo.MonitorBalanceCode).NotNull().WithMessage("MonitorBalanceCode cannot be null");
+                RuleFor(x => x.PaymentSchedule).NotNull().WithMessage("Payment Schedule cannot be null");
+                RuleFor(x => x.PaymentSchedule).NotEmpty().WithMessage("Payment Schedule cannot be empty");
+                RuleForEach(x => x.PaymentSchedule).SetValidator(new ArrearsScheduledPaymentInfoValidator());
+            }
+        }
 
-                RuleFor(x => x.PaymentSchedule).NotEmpty().WithMessage("Please specify a payment schedule");
-                RuleFor(x => x.PaymentSchedule).NotNull().WithMessage("FCADate cannot be null");
+        public class ArrearsScheduledPaymentInfoValidator : AbstractValidator<ArrearsScheduledPaymentInfo>
+        {
+            public ArrearsScheduledPaymentInfoValidator()
+            {
+                RuleFor(x => x).NotNull();
+                RuleFor(x => x.Amount).NotNull().WithMessage("Amount cannot be null");
+                RuleFor(x => x.ArrearsFrequencyCode).NotNull().WithMessage("ArrearsFrequencyCode cannot be null");
+                RuleFor(x => x.StartDate).NotNull().WithMessage("Start Date cannot be null");
+                RuleFor(x => x.Comments).NotNull().WithMessage("Comments cannot be null");
             }
         }
     }

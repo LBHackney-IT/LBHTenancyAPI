@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,8 +7,6 @@ using Bogus;
 using Dapper;
 using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.Gateways;
-using Remotion.Linq.Clauses;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways

@@ -16,6 +16,25 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public RequestValidationResponse(bool isValid)
         {
             IsValid = isValid;
+            ValidationErrors = new List<ExecutionError>
+            {
+                new ExecutionError
+                {
+                    Message = "request is null or required sub objects are null"
+                }
+            };
+        }
+
+        public RequestValidationResponse(bool isValid, string message)
+        {
+            IsValid = isValid;
+            ValidationErrors = new List<ExecutionError>
+            {
+                new ExecutionError
+                {
+                    Message = message
+                }
+            };
         }
         public RequestValidationResponse(ValidationResult validationResult)
         {

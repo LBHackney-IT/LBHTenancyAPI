@@ -2,6 +2,6 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     public interface IRequest
     {
-        RequestValidationResponse Validate();
+        RequestValidationResponse Validate<T>(T request);
     }
 }
