@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using AgreementService;
-using LBHTenancyAPI.Infrastructure.API;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
@@ -18,15 +16,29 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
                 if (!webResponse.Success)
                     Error = new APIError(webResponse);
                 else
+                {
+                    IsSuccess = true;
                     Result = response;
+                }
+                    
             }
             else
+            {
+                IsSuccess = true;
                 Result = response;
+            }
+                
         }
 
         public ExecuteWrapper(RequestValidationResponse validationResponse)
         {
             Error = new APIError(validationResponse);
+        }
+
+        public ExecuteWrapper(WebResponse response)
+        {
+            if (!response.Success)
+                Error = new APIError(response);
         }
     }
 }

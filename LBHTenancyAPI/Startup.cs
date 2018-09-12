@@ -120,8 +120,6 @@ namespace LBHTenancyAPI
             });
             app.UseSwagger();
 
-            app.UseExceptionHandler();
-
             //required for swagger to work
             app.UseMvc(routes =>
             {

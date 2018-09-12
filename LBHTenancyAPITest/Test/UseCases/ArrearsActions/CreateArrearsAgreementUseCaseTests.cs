@@ -85,8 +85,6 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         [Theory]
         [InlineData("000017/01", "New Agreement", 400.00, "2018-08-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
             100.00, "1", "2018-09-01 14:59:00", "Test124")]
-        [InlineData("000017/02", "New Agreemenw", 500.00, "2018-09-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-12-08 14:59:00", "TOT",
-            100.00, "1", "2018-09-01 14:59:00", "Test123")]
         public async Task GivenValidInput_ThenRequestBuilder_AddsCredentials_ToRequest(
             string tenancyRef, string comment, decimal startBalance, string startDate, string agreementStatusCode,
             bool isBreached, int firstCheck, string firstCheckFrequencyTypeCode, int nextCheck, string nextCheckFrequencyTypeCode,
@@ -177,6 +175,101 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
             await classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             fakeArrearsAgreementService.Verify(v => v.CreateArrearsAgreementAsync(It.Is<ArrearsAgreementRequest>(i => i.DirectUser != null && !string.IsNullOrEmpty(i.SourceSystem))));
+        }
+
+        [Theory]
+        [InlineData("000017/01", "New Agreement", 400.00, "2018-08-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
+    100.00, "1", "2018-09-01 14:59:00", "Test124")]
+        public async Task GivenValidInput_ThenUseCase_ShouldReturnValidResponse(
+    string tenancyRef, string comment, decimal startBalance, string startDate, string agreementStatusCode,
+    bool isBreached, int firstCheck, string firstCheckFrequencyTypeCode, int nextCheck, string nextCheckFrequencyTypeCode,
+    string fcaDate, string monitorBalanceCode, decimal amount, string arrearsFrequencyCode,
+    string payementInfoStartDate, string payemntInfoComments)
+        {
+            //Arrange
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+
+            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
+                .ReturnsAsync(new ArrearsAgreementResponse
+                {
+                    Success = true,
+                    Agreement = new ArrearsAgreementDto
+                    {
+                        TenancyAgreementRef = tenancyRef,
+                        Comment = comment,
+                        ArrearsAgreementStatusCode = agreementStatusCode,
+                        FcaDate = DateTime.Parse(fcaDate),
+                        FirstCheck = firstCheck,
+                        FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
+                        IsBreached = isBreached,
+                        MonitorBalanceCode = monitorBalanceCode,
+                        NextCheck = nextCheck,
+                        NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
+                        StartBalance = startBalance,
+                        StartDate = DateTime.Parse(startDate),
+
+                        PaymentSchedule = new List<ArrearsScheduledPaymentDto>
+                        {
+                            new ArrearsScheduledPaymentDto
+                            {
+                                Amount = amount,
+                                ArrearsFrequencyCode = arrearsFrequencyCode,
+                                Comments = payemntInfoComments,
+                                StartDate = DateTime.Parse(payementInfoStartDate)
+                            }
+                        }.ToArray()
+                    },
+                });
+
+            var fakeCredentialsService = new Mock<ICredentialsService>();
+            fakeCredentialsService.Setup(s => s.GetUhSourceSystem()).Returns("testSourceSystem");
+            fakeCredentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
+            {
+                UserName = "TestUserName",
+                UserPassword = "TestUserPassword",
+            });
+            var serviceRequestBuilder = new ArrearsServiceRequestBuilder(fakeCredentialsService.Object);
+
+            IArrearsAgreementGateway gateway = new ArrearsAgreementGateway(fakeArrearsAgreementService.Object, serviceRequestBuilder);
+            var classUnderTest = new CreateArrearsAgreementUseCase(gateway);
+
+            var request = new CreateArrearsAgreementRequest
+            {
+
+                AgreementInfo = new ArrearsAgreementInfo
+                {
+
+                    TenancyAgreementRef = tenancyRef,
+                    Comment = comment,
+                    ArrearsAgreementStatusCode = agreementStatusCode,
+                    FcaDate = DateTime.Parse(fcaDate),
+                    FirstCheck = firstCheck,
+                    FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
+                    IsBreached = isBreached,
+                    MonitorBalanceCode = monitorBalanceCode,
+                    NextCheck = nextCheck,
+                    NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
+                    StartBalance = startBalance,
+                    StartDate = DateTime.Parse(startDate)
+                },
+                PaymentSchedule = new List<ArrearsScheduledPaymentInfo>
+                {
+                    new ArrearsScheduledPaymentInfo
+                    {
+                        Amount = amount,
+                        ArrearsFrequencyCode = arrearsFrequencyCode,
+                        Comments = payemntInfoComments,
+                        StartDate = DateTime.Parse(payementInfoStartDate)
+                    }
+                }.ToArray()
+            };
+
+
+            //act
+            var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            //assert
+            response.IsSuccess.Should().BeTrue();
+            response.Result.Should().NotBeNull();
         }
     }
 }

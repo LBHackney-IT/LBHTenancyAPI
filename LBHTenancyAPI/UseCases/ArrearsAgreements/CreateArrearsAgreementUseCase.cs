@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
@@ -21,9 +20,11 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
             //validate
             if(request == null)
                 return new ExecuteWrapper<CreateArrearsAgreementResponse>(new RequestValidationResponse(false, ""));
+
             var validationResponse = request.Validate(request);
             if(!validationResponse.IsValid)
                 return new ExecuteWrapper<CreateArrearsAgreementResponse>(validationResponse);
+
             //execute business logic
             var webServiceRequest = new ArrearsAgreementRequest
             {
@@ -31,9 +32,16 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
                 PaymentSchedule = request?.PaymentSchedule?.ToArray()
             };
             var response = await _arrearsAgreementGateway.CreateArrearsAgreementAsync(webServiceRequest,cancellationToken).ConfigureAwait(false);
-            //marshall response
+            //marshall unsuccessful WCF Service response
+            if (!response.IsSuccess)
+                return new ExecuteWrapper<CreateArrearsAgreementResponse>(response.Result);
+            //marshall successful WCF Service response
+            var useCaseResponse = new CreateArrearsAgreementResponse
+            {
+                Agreement = response?.Result?.Agreement
+            };
 
-            return response as IExecuteWrapper<CreateArrearsAgreementResponse>;
+            return new ExecuteWrapper<CreateArrearsAgreementResponse>(useCaseResponse);
         }
     }
 }
