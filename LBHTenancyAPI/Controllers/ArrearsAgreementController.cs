@@ -9,6 +9,9 @@ namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1/tenancies/arrears-agreement/")]
+    [ProducesResponseType(typeof(APIResponse<CreateArrearsAgreementResponse>), 200)]
+    [ProducesResponseType(typeof(APIResponse<object>), 400)]
+    [ProducesResponseType(typeof(APIResponse<object>), 500)]
     public class ArrearsAgreementController : BaseController
     {
         private readonly ICreateArrearsAgreementUseCase _createArrearsAgreementUseCase;
