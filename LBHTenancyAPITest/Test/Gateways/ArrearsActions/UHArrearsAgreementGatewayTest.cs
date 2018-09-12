@@ -50,10 +50,10 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
         [InlineData("000017/02", "New Agreemenw", 500.00, "2018-09-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-12-08 14:59:00", "TOT",
             100.00, "1", "2018-09-01 14:59:00", "Test123")]
         public async Task GivenTenancyAgreementRef_WhenCreateAgreementsWithCorrectParameters_ShouldReturnAValidObject(
-            string tenancyRef,  string comment,decimal startBalance,DateTime startDate,string agreementStatusCode,
+            string tenancyRef,  string comment, decimal startBalance, string startDate, string agreementStatusCode,
             bool isBreached,int firstCheck,string firstCheckFrequencyTypeCode,int nextCheck,string nextCheckFrequencyTypeCode,
-            DateTime fcaDate,string monitorBalanceCode, decimal amount,string arrearsFrequencyCode,
-            DateTime payementInfoStartDate,string payemntInfoComments)
+            string fcaDate,string monitorBalanceCode, decimal amount,string arrearsFrequencyCode,
+            string payementInfoStartDate,string payemntInfoComments)
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
@@ -74,7 +74,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                     TenancyAgreementRef = tenancyRef,
                     Comment = comment,
                     ArrearsAgreementStatusCode= agreementStatusCode,
-                    FcaDate = fcaDate,
+                    FcaDate = DateTime.Parse(fcaDate),
                     FirstCheck = firstCheck,
                     FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
                     IsBreached = isBreached,
@@ -82,7 +82,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                     NextCheck = nextCheck,
                     NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
                     StartBalance = startBalance,
-                    StartDate = startDate                    
+                    StartDate = DateTime.Parse(startDate)                    
                 },
                 PaymentSchedule = new List<ArrearsScheduledPaymentInfo>
                 {
@@ -91,7 +91,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                         Amount = amount,
                         ArrearsFrequencyCode = arrearsFrequencyCode,
                         Comments = payemntInfoComments,
-                        StartDate = payementInfoStartDate
+                        StartDate = DateTime.Parse(payementInfoStartDate)
                     }
                 }.ToArray()
             };
@@ -105,7 +105,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                         TenancyAgreementRef = tenancyRef,
                         Comment = comment,
                         ArrearsAgreementStatusCode = agreementStatusCode,
-                        FcaDate = fcaDate,
+                        FcaDate = DateTime.Parse(fcaDate),
                         FirstCheck = firstCheck,
                         FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
                         IsBreached = isBreached,
@@ -113,7 +113,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                         NextCheck = nextCheck,
                         NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
                         StartBalance = startBalance,
-                        StartDate = startDate,
+                        StartDate = DateTime.Parse(startDate),
 
                         PaymentSchedule = new List<ArrearsScheduledPaymentDto>
                         {
@@ -122,7 +122,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
                                 Amount = amount,
                                 ArrearsFrequencyCode = arrearsFrequencyCode,
                                 Comments = payemntInfoComments,
-                                StartDate = payementInfoStartDate
+                                StartDate = DateTime.Parse(payementInfoStartDate)
                             }
                         }.ToArray()
                     },
@@ -134,7 +134,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             response.Result.Agreement.TenancyAgreementRef.Should().Be(tenancyRef);
             response.Result.Agreement.Comment.Should().Be(comment);
             response.Result.Agreement.ArrearsAgreementStatusCode.Should().Be(agreementStatusCode);
-            response.Result.Agreement.FcaDate.Should().Be(fcaDate);
+            response.Result.Agreement.FcaDate.Should().Be(DateTime.Parse(fcaDate));
             response.Result.Agreement.FirstCheck.Should().Be(firstCheck);
             response.Result.Agreement.FirstCheckFrequencyTypeCode.Should().Be(firstCheckFrequencyTypeCode);
             response.Result.Agreement.IsBreached.Should().Be(isBreached);
@@ -142,15 +142,14 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             response.Result.Agreement.NextCheck.Should().Be(nextCheck);
             response.Result.Agreement.NextCheckFrequencyTypeCode.Should().Be(nextCheckFrequencyTypeCode);
             response.Result.Agreement.StartBalance.Should().Be(startBalance);
-            response.Result.Agreement.StartDate.Should().Be(startDate);
+            response.Result.Agreement.StartDate.Should().Be(DateTime.Parse(startDate));
 
             response.Result.Agreement.PaymentSchedule.Should().NotBeNull();
             var paymentSchedule = response.Result.Agreement.PaymentSchedule[0];
             paymentSchedule.Amount.Should().Be(amount);
             paymentSchedule.ArrearsFrequencyCode.Should().Be(arrearsFrequencyCode);
             paymentSchedule.Comments.Should().Be(payemntInfoComments);
-            paymentSchedule.StartDate.Should().Be(payementInfoStartDate);
-            response.Result.Agreement.PaymentSchedule[0].Comments.Should();
+            paymentSchedule.StartDate.Should().Be(DateTime.Parse(payementInfoStartDate));
         }
 
         [Fact]
