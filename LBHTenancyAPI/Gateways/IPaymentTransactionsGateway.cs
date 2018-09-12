@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 
 namespace LBHTenancyAPI.Gateways
 {
-    public interface IUhPaymentTransactionsGateway
+    public interface IPaymentTransactionsGateway
     {
         string GetTransactionDescription(string transactionType);
+
     }
 }

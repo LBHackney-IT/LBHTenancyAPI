@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Domain;
 using LBHTenancyAPI.UseCases;
 using Microsoft.AspNetCore.Mvc;
 

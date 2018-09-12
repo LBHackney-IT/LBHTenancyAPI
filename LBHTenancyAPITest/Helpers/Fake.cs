@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Bogus;
+using LBH.Data.Domain;
 using AgreementService;
-using LBHTenancyAPI.Domain;
-using LBHTenancyAPI.UseCases;
 
 namespace LBHTenancyAPITest.Helpers
 {

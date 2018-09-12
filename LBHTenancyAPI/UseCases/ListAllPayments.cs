@@ -20,7 +20,7 @@ namespace LBHTenancyAPI.UseCases
             var response = new PaymentTransactionResponse();
             var paymentTransaction = await tenanciesGateway.GetPaymentTransactionsByTenancyRefAsync(tenancyRef).ConfigureAwait(false);
 
-            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction()
+            response.PaymentTransactions = paymentTransaction.ConvertAll(paymentTrans => new PaymentTransaction
                 {
                     Ref= paymentTrans.TransactionRef,
                     Amount= paymentTrans.Amount.ToString("C"),

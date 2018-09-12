@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 
-namespace LBHTenancyAPI.Domain
+namespace LBH.Data.Domain
 {
     public struct TenancyListItem
     {
