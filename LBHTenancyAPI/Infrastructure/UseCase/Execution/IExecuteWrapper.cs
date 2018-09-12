@@ -1,4 +1,6 @@
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+using LBHTenancyAPI.UseCases.ArrearsAgreements;
+
+namespace LBHTenancyAPI.Infrastructure.UseCase.Execution
 {
     public interface IExecuteWrapper<T>
     {

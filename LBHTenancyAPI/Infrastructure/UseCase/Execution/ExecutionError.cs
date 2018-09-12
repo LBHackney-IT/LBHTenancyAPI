@@ -1,7 +1,7 @@
 using System;
 using FluentValidation.Results;
 
-namespace LBHTenancyAPI.Infrastructure.API
+namespace LBHTenancyAPI.Infrastructure.UseCase.Execution
 {
     public class ExecutionError
     {

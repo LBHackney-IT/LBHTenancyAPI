@@ -4,11 +4,11 @@ using FluentValidation;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
-    public class CreateArrearsAgreementRequest : RequestBase
+    public class CreateArrearsAgreementRequest : IRequest
     {
         public ArrearsAgreementInfo AgreementInfo { get; set; }
         public IList<ArrearsScheduledPaymentInfo> PaymentSchedule { get; set; }
-        public override RequestValidationResponse Validate<T>(T request)
+        public RequestValidationResponse Validate<T>(T request)
         {
             var validator = new CreateArrearsAgreementRequestValidator();
             var createRequest = request as CreateArrearsAgreementRequest;

@@ -5,6 +5,7 @@ using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using Moq;
 using Xunit;

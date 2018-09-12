@@ -8,6 +8,7 @@ using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using Moq;
 using Xunit;

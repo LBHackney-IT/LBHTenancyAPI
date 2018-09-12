@@ -2,7 +2,7 @@ using System;
 using AgreementService;
 using LBHTenancyAPI.Interfaces;
 
-namespace LBHTenancyAPI.Services
+namespace LBHTenancyAPI.Services.Impl
 {
     public class ArrearsServiceRequestBuilder : IArrearsServiceRequestBuilder
     {

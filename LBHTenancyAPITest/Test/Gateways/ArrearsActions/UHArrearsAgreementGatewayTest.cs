@@ -7,6 +7,7 @@ using AgreementService;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Services.Impl;
 using Moq;
 using Xunit;
 

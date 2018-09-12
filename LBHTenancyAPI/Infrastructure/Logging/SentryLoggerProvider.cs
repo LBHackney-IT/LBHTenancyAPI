@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 
-namespace LBHTenancyAPI.Infrastructure
+namespace LBHTenancyAPI.Infrastructure.Logging
 {
     public class SentryLoggerProvider : ILoggerProvider
     {

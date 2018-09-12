@@ -3,6 +3,7 @@ using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
 using AgreementService;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings.Credentials;
 using Microsoft.Extensions.Configuration;
 using Moq;
