@@ -1,10 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.ServiceModel;
-using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
@@ -17,11 +12,9 @@ using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore.Extensions.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LBHTenancyAPI
@@ -97,7 +90,7 @@ namespace LBHTenancyAPI
                 configure.AddConfiguration(Configuration.GetSection("Logging"));
                 configure.AddConsole();
                 configure.AddDebug();
-                configure.AddProvider(new SentryLoggerProvider());
+                configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
             });
 
         }
