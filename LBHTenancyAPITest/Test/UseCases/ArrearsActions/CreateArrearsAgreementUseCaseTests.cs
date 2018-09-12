@@ -26,30 +26,6 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         }
 
         [Fact]
-        public async Task GivenValidedInput_GatewayReceivesCorrectInput()
-        {
-            //arrange
-            _fakeGateway.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>(),CancellationToken.None))
-                .ReturnsAsync(new ExecuteWrapper<ArrearsAgreementResponse>(new ArrearsAgreementResponse
-                {
-                    Success = true
-                }) );
-
-            var request = new CreateArrearsAgreementRequest
-            {
-                AgreementInfo = new ArrearsAgreementInfo
-                {
-                    Reference = "ref"
-                },
-                PaymentSchedule = new List<ArrearsScheduledPaymentInfo>()
-            };
-            //act
-            await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
-            //assert
-            _fakeGateway.Verify(v => v.CreateArrearsAgreementAsync(It.Is<ArrearsAgreementRequest>(i => i.Agreement.Reference.Equals("ref")), CancellationToken.None));
-        }
-
-        [Fact]
         public async Task GivenValidedInput_GatewayResponseWith_Success()
         {
             //arrange
@@ -124,9 +100,16 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 .ReturnsAsync(new ArrearsAgreementResponse());
 
             var fakeCredentialsService = new Mock<ICredentialsService>();
+            fakeCredentialsService.Setup(s => s.GetUhSourceSystem()).Returns("testSourceSystem");
+            fakeCredentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
+            {
+                UserName = "TestUserName",
+                UserPassword = "TestUserPassword",
+            });
             var serviceRequestBuilder = new ArrearsServiceRequestBuilder(fakeCredentialsService.Object);
 
-            IArrearsAgreementGateway classUnderTest = new ArrearsAgreementGateway(fakeArrearsAgreementService.Object, serviceRequestBuilder);
+            IArrearsAgreementGateway gateway = new ArrearsAgreementGateway(fakeArrearsAgreementService.Object, serviceRequestBuilder);
+            var classUnderTest = new CreateArrearsAgreementUseCase(gateway);
 
             var request = new CreateArrearsAgreementRequest
             {
@@ -191,9 +174,9 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                     },
                 });
             //act
-            var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            await classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            _fakeGateway.Verify(v => v.CreateArrearsAgreementAsync(It.Is<ArrearsAgreementRequest>(i => i.DirectUser != null && !string.IsNullOrEmpty(i.SourceSystem)), CancellationToken.None));
+            fakeArrearsAgreementService.Verify(v => v.CreateArrearsAgreementAsync(It.Is<ArrearsAgreementRequest>(i => i.DirectUser != null && !string.IsNullOrEmpty(i.SourceSystem))));
         }
     }
 }
