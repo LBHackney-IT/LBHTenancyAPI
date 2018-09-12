@@ -31,6 +31,4 @@ namespace LBHTenancyAPI.Controllers
             return Ok(response);
         }
     }
-
-
 }
