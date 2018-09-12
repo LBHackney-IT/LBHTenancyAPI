@@ -106,7 +106,6 @@ namespace LBHTenancyAPI
             
             if (env.IsDevelopment())
             {
-                
                 app.UseDeveloperExceptionPage();
             }
 
@@ -118,8 +117,6 @@ namespace LBHTenancyAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
             });
             app.UseSwagger();
-
-            app.UseExceptionHandler();
 
             //required for swagger to work
             app.UseMvc(routes =>
