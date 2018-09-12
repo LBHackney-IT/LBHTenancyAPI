@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
@@ -96,6 +97,7 @@ namespace LBHTenancyAPI
                 configure.AddConfiguration(Configuration.GetSection("Logging"));
                 configure.AddConsole();
                 configure.AddDebug();
+                configure.AddProvider(new SentryLoggerProvider());
             });
 
         }
