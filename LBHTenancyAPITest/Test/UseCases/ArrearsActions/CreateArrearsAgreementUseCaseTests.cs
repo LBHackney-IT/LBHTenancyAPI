@@ -86,6 +86,8 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         [Theory]
         [InlineData("000017/01", "New Agreement", 400.00, "2018-08-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
             100.00, "1", "2018-09-01 14:59:00", "Test124")]
+        [InlineData("000017/01", "New Agreement2", 500.00, "2018-08-18 15:00:00Z", "300", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
+            300.00, "1", "2018-09-01 15:00:00", "Test125")]
         public async Task GivenValidInput_ThenRequestBuilder_AddsCredentials_ToRequest(
             string tenancyRef, string comment, decimal startBalance, string startDate, string agreementStatusCode,
             bool isBreached, int firstCheck, string firstCheckFrequencyTypeCode, int nextCheck, string nextCheckFrequencyTypeCode,
@@ -181,6 +183,8 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         [Theory]
         [InlineData("000017/01", "New Agreement", 400.00, "2018-08-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
     100.00, "1", "2018-09-01 14:59:00", "Test124")]
+        [InlineData("000017/01", "New Agreement2", 500.00, "2018-08-18 15:00:00Z", "300", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
+            300.00, "1", "2018-09-01 15:00:00", "Test125")]
         public async Task GivenValidInput_ThenUseCase_ShouldReturnValidResponse(
     string tenancyRef, string comment, decimal startBalance, string startDate, string agreementStatusCode,
     bool isBreached, int firstCheck, string firstCheckFrequencyTypeCode, int nextCheck, string nextCheckFrequencyTypeCode,
