@@ -272,5 +272,57 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
             response.IsSuccess.Should().BeTrue();
             response.Result.Should().NotBeNull();
         }
+
+        [Theory]
+        [InlineData("000017/01", "New Agreement")]
+        public async Task GivenInValidInput_ThenUseCase_ShouldReturnInValidResponse(string tenancyRef, string comment)
+        {
+            //Arrange
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+
+            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
+                .ReturnsAsync(new ArrearsAgreementResponse
+                {
+                    Success = false,
+                    ErrorCode = 1,
+                    ErrorMessage = "Not enough field",
+                    Agreement = new ArrearsAgreementDto
+                    {
+                        TenancyAgreementRef = tenancyRef,
+                        Comment = comment,
+                    },
+                });
+
+            var fakeCredentialsService = new Mock<ICredentialsService>();
+            fakeCredentialsService.Setup(s => s.GetUhSourceSystem()).Returns("testSourceSystem");
+            fakeCredentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
+            {
+                UserName = "TestUserName",
+                UserPassword = "TestUserPassword",
+            });
+            var serviceRequestBuilder = new ArrearsServiceRequestBuilder(fakeCredentialsService.Object);
+
+            IArrearsAgreementGateway gateway = new ArrearsAgreementGateway(fakeArrearsAgreementService.Object, serviceRequestBuilder);
+            var classUnderTest = new CreateArrearsAgreementUseCase(gateway);
+
+            var request = new CreateArrearsAgreementRequest
+            {
+
+                AgreementInfo = new ArrearsAgreementInfo
+                {
+
+                    TenancyAgreementRef = tenancyRef,
+                    Comment = comment
+                },
+            };
+
+
+            //act
+            var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            //assert
+            response.IsSuccess.Should().BeFalse();
+            response.Result.Should().BeNull();
+            response.Error.Errors.Should().NotBeNullOrEmpty();
+        }
     }
 }
