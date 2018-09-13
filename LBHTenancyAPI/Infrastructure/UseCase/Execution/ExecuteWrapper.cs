@@ -29,7 +29,6 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
                 IsSuccess = true;
                 Result = response;
             }
-                
         }
 
         public ExecuteWrapper(RequestValidationResponse validationResponse)
@@ -51,6 +50,11 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public ExecuteWrapper(ExecutionError ex)
         {
             Error = new APIError(ex);
+        }
+
+        public ExecuteWrapper(APIError apiError)
+        {
+            Error = apiError;
         }
     }
 }

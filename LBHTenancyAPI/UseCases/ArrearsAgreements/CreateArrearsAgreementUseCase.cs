@@ -35,7 +35,7 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
             var response = await _arrearsAgreementGateway.CreateArrearsAgreementAsync(webServiceRequest,cancellationToken).ConfigureAwait(false);
             //marshall unsuccessful WCF Service response
             if (!response.IsSuccess)
-                return new ExecuteWrapper<CreateArrearsAgreementResponse>(response.Result);
+                return new ExecuteWrapper<CreateArrearsAgreementResponse>(response.Error);
             //marshall successful WCF Service response
             var useCaseResponse = new CreateArrearsAgreementResponse
             {

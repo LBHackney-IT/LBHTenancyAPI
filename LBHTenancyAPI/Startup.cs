@@ -94,7 +94,8 @@ namespace LBHTenancyAPI
                 configure.AddConfiguration(Configuration.GetSection("Logging"));
                 configure.AddConsole();
                 configure.AddDebug();
-                configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
+                if(!string.IsNullOrEmpty(settings.SentrySettings?.Url))
+                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
             });
 
         }
