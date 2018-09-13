@@ -1,5 +1,6 @@
 using AgreementService;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
+using System;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
@@ -40,6 +41,16 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         {
             if (!response.Success)
                 Error = new APIError(response);
+        }
+
+        public ExecuteWrapper(Exception ex)
+        {
+            Error = new APIError(ex);
+        }
+
+        public ExecuteWrapper(ExecutionError ex)
+        {
+            Error = new APIError(ex);
         }
     }
 }

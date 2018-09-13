@@ -28,6 +28,11 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
             Errors = new List<ExecutionError> { new ExecutionError(ex) };
         }
 
+        public APIError(ExecutionError error)
+        {
+            Errors = new List<ExecutionError> { error };
+        }
+
         public APIError(WebResponse response)
         {
             Errors = new List<ExecutionError>

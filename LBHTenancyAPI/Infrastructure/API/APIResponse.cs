@@ -13,7 +13,7 @@ namespace LBHTenancyAPI.Infrastructure.API
     ///     Then the Error property will be populated
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class APIResponse<T>
+    public class APIResponse<T> where T: class
     {
         [JsonProperty("data")]
         public T Data { get; set; }
@@ -26,9 +26,10 @@ namespace LBHTenancyAPI.Infrastructure.API
 
         public APIResponse(IExecuteWrapper<T> executeWrapper)
         {
-            if (executeWrapper == null)
+            if (executeWrapper == null || (executeWrapper?.Error != null && !executeWrapper.Error.IsValid))
             {
                 StatusCode = (int)HttpStatusCode.BadRequest;
+                Error = executeWrapper.Error;
                 return;
             }
 
@@ -36,6 +37,12 @@ namespace LBHTenancyAPI.Infrastructure.API
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError;
                 Error = executeWrapper?.Error;
+            }
+            if (executeWrapper.IsSuccess)
+            {
+                StatusCode = (int)HttpStatusCode.OK;
+                Data = executeWrapper?.Result;
+                return;
             }
         }
     }
