@@ -274,8 +274,15 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         }
 
         [Theory]
-        [InlineData("000017/01", "New Agreement")]
-        public async Task GivenInValidInput_ThenUseCase_ShouldReturnInValidResponse(string tenancyRef, string comment)
+        [InlineData("000017/01", "New Agreement", 400.00, "2018-08-18 14:59:00Z", "200", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
+            100.00, "1", "2018-09-01 14:59:00", "Test124")]
+        [InlineData("000017/01", "New Agreement2", 500.00, "2018-08-18 15:00:00Z", "300", false, 10, "8", 1, "1", "2018-11-08 14:59:00", "TOT",
+            300.00, "1", "2018-09-01 15:00:00", "Test125")]
+        public async Task GivenInValidInput_ThenUseCase_ShouldReturnInValidResponse(
+            string tenancyRef, string comment, decimal startBalance, string startDate, string agreementStatusCode,
+            bool isBreached, int firstCheck, string firstCheckFrequencyTypeCode, int nextCheck, string nextCheckFrequencyTypeCode,
+            string fcaDate, string monitorBalanceCode, decimal amount, string arrearsFrequencyCode,
+            string payementInfoStartDate, string payemntInfoComments)
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
@@ -312,9 +319,37 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 {
 
                     TenancyAgreementRef = tenancyRef,
-                    Comment = comment
+                    Comment = comment,
+                    ArrearsAgreementStatusCode = agreementStatusCode,
+                    FcaDate = DateTime.Parse(fcaDate),
+                    FirstCheck = firstCheck,
+                    FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
+                    IsBreached = isBreached,
+                    MonitorBalanceCode = monitorBalanceCode,
+                    NextCheck = nextCheck,
+                    NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
+                    StartBalance = startBalance,
+                    StartDate = DateTime.Parse(startDate)
                 },
+                PaymentSchedule = new List<ArrearsScheduledPaymentInfo>
+                {
+                    new ArrearsScheduledPaymentInfo
+                    {
+                        Amount = amount,
+                        ArrearsFrequencyCode = arrearsFrequencyCode,
+                        Comments = payemntInfoComments,
+                        StartDate = DateTime.Parse(payementInfoStartDate)
+                    }
+                }.ToArray()
             };
+
+            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
+                .ReturnsAsync(new ArrearsAgreementResponse
+                {
+                    Success = false,
+                    ErrorCode = 1,
+                    ErrorMessage = "Not enough field",
+                });
 
 
             //act
@@ -323,6 +358,8 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
             response.IsSuccess.Should().BeFalse();
             response.Result.Should().BeNull();
             response.Error.Errors.Should().NotBeNullOrEmpty();
+            response.Error.Errors[0].Code.Should().Be("UH_1");
+            response.Error.Errors[0].Message.Should().Be("Not enough field");
         }
     }
 }

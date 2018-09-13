@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,7 +10,6 @@ using Xunit;
 using Moq;
 using AgreementService;
 using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
@@ -52,7 +50,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             //Act
             var response = await _classUnderTest.Post(null);
 
-            //Assert);
+            //Assert
             Assert.IsType<ObjectResult>(response);
             var responseResult = response as ObjectResult;
             responseResult.StatusCode.Should().Be(400);
@@ -98,60 +96,13 @@ namespace LBHTenancyAPITest.Test.Controllers
             var response = await _classUnderTest.Post(request);
 
             //Assert
-            //Assert);
             Assert.IsType<ObjectResult>(response);
             var responseResult = response as ObjectResult;
             responseResult.StatusCode.Should().Be(500);
             responseResult.Value.Should().NotBeNull();
             var apiResponse = responseResult.Value as APIResponse<CreateArrearsAgreementResponse>;
             apiResponse.Data.Should().BeNull();
-            apiResponse.Error.ValidationErrors.Should().NotBeNull();
+            apiResponse.Error.Errors.Should().NotBeNull();
         }
-
-
-        [Fact]
-        public async Task WhenGivenCorrectParamaters_AndThereIsErrorFromWebService_ApiShouldRespondWith500()
-        {
-            //Arrange
-
-            _mock.Setup(s => s.ExecuteAsync(It.IsAny<CreateArrearsAgreementRequest>(), CancellationToken.None))
-               .ReturnsAsync(new ExecuteWrapper<CreateArrearsAgreementResponse>(new ExecutionError()));
-
-            //Act
-            var request = new CreateArrearsAgreementRequest
-            {
-                AgreementInfo = new ArrearsAgreementInfo
-                {
-
-                    TenancyAgreementRef = "s",
-                    Comment = "testing",
-                    ArrearsAgreementStatusCode = "1",
-
-                },
-                PaymentSchedule = new List<ArrearsScheduledPaymentInfo>
-                {
-                    new ArrearsScheduledPaymentInfo
-                    {
-                        Amount = 10,
-                        ArrearsFrequencyCode = "200",
-                        Comments = "testing",
-
-                    }
-                }.ToArray()
-            };
-
-            var response = await _classUnderTest.Post(request);
-
-            //Assert
-            //Assert);
-            Assert.IsType<ObjectResult>(response);
-            var responseResult = response as ObjectResult;
-            responseResult.StatusCode.Should().Be(500);
-            responseResult.Value.Should().NotBeNull();
-            var apiResponse = responseResult.Value as APIResponse<CreateArrearsAgreementResponse>;
-            apiResponse.Data.Should().BeNull();
-            apiResponse.Error.ValidationErrors.Should().NotBeNull();
-        }
-
     }
 }

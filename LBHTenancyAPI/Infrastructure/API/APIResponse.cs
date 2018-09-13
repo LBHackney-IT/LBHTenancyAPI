@@ -26,7 +26,14 @@ namespace LBHTenancyAPI.Infrastructure.API
 
         public APIResponse(IExecuteWrapper<T> executeWrapper)
         {
-            if (executeWrapper == null || (executeWrapper?.Error != null && !executeWrapper.Error.IsValid))
+            if (executeWrapper.IsSuccess)
+            {
+                StatusCode = (int)HttpStatusCode.OK;
+                Data = executeWrapper?.Result;
+                return;
+            }
+
+            if (executeWrapper == null || (executeWrapper?.Error != null && !executeWrapper.Error.IsValid && executeWrapper.Error.ValidationErrors != null))
             {
                 StatusCode = (int)HttpStatusCode.BadRequest;
                 Error = executeWrapper.Error;
@@ -38,12 +45,7 @@ namespace LBHTenancyAPI.Infrastructure.API
                 StatusCode = (int)HttpStatusCode.InternalServerError;
                 Error = executeWrapper?.Error;
             }
-            if (executeWrapper.IsSuccess)
-            {
-                StatusCode = (int)HttpStatusCode.OK;
-                Data = executeWrapper?.Result;
-                return;
-            }
+
         }
     }
 }
