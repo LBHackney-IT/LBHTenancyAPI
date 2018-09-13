@@ -347,14 +347,6 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
                 }.ToArray()
             };
 
-            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
-                .ReturnsAsync(new ArrearsAgreementResponse
-                {
-                    Success = false,
-                    ErrorCode = 1,
-                    ErrorMessage = "Not enough field",
-                });
-
 
             //act
             var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);

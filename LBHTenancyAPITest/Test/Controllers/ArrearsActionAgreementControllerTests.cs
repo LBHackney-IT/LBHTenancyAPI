@@ -68,7 +68,12 @@ namespace LBHTenancyAPITest.Test.Controllers
             //Arrange
 
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<CreateArrearsAgreementRequest>(), CancellationToken.None))
-               .ReturnsAsync(new ExecuteWrapper<CreateArrearsAgreementResponse>(new Exception("Test Exception")));
+               .ReturnsAsync(new ExecuteWrapper<CreateArrearsAgreementResponse>(new ArrearsAgreementResponse
+                {
+                    Success = false,
+                    ErrorMessage = "there is no field",
+                    ErrorCode = 1
+                }));
 
             //Act
             var request = new CreateArrearsAgreementRequest
@@ -103,6 +108,8 @@ namespace LBHTenancyAPITest.Test.Controllers
             var apiResponse = responseResult.Value as APIResponse<CreateArrearsAgreementResponse>;
             apiResponse.Data.Should().BeNull();
             apiResponse.Error.Errors.Should().NotBeNull();
+            apiResponse.Error.Errors[0].Code = "UH_1";
+            apiResponse.Error.Errors[0].Message = "there is no field";
         }
     }
 }
