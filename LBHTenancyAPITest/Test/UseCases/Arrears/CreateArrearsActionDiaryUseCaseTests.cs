@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
@@ -10,7 +9,7 @@ using LBHTenancyAPI.UseCases.ArrearsActions;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
+namespace LBHTenancyAPITest.Test.UseCases.Arrears
 {
     public class CreateArrearsActionDiaryUseCaseTests
     {

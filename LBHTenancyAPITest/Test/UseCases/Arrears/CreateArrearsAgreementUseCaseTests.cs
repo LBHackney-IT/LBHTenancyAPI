@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
 using FluentAssertions;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Services;
@@ -13,7 +12,7 @@ using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
+namespace LBHTenancyAPITest.Test.UseCases.Arrears
 {
     public class CreateArrearsAgreementUseCaseTests
     {
