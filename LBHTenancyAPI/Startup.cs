@@ -14,6 +14,7 @@ using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
+using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -71,6 +72,10 @@ namespace LBHTenancyAPI
             services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
             services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
             services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
+
+            services.AddTransient<IArrearsAgreementGateway, ArrearsAgreementGateway>();
+            services.AddTransient<ICreateArrearsAgreementUseCase, CreateArrearsAgreementUseCase>();
+
             services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
 
             services.AddTransient<IArrearsAgreementService>(s=>
