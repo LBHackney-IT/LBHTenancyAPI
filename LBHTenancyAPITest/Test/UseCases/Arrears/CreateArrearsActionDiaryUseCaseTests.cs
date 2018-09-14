@@ -1,14 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
+namespace LBHTenancyAPITest.Test.UseCases.Arrears
 {
     public class CreateArrearsActionDiaryUseCaseTests
     {
@@ -128,7 +129,7 @@ namespace LBHTenancyAPITest.Test.UseCases.ArrearsActions
         [Fact]
         public async Task GivenValidInput_ThenRequestBuilder_AddsCredentials_ToRequest()
         {
-            //arange
+            //arrange
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
                 .ReturnsAsync(new ArrearsActionResponse

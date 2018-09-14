@@ -3,10 +3,14 @@ using System.ServiceModel;
 using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.Arrears;
+using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Infrastructure;
+using LBHTenancyAPI.Infrastructure.Logging;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
@@ -90,7 +94,8 @@ namespace LBHTenancyAPI
                 configure.AddConfiguration(Configuration.GetSection("Logging"));
                 configure.AddConsole();
                 configure.AddDebug();
-                configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
+                if(!string.IsNullOrEmpty(settings.SentrySettings?.Url))
+                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
             });
 
         }

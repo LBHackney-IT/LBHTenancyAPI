@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using AgreementService;
 using Bogus;
 using LBH.Data.Domain;
-using LBHTenancyAPI.UseCases;
+using AgreementService;
 
 namespace LBHTenancyAPITest.Helpers
 {
@@ -142,7 +141,7 @@ namespace LBHTenancyAPITest.Helpers
             };
         }
 
-        public static ArrearsActionResponse CreateArrearsActionAsync(AgreementService.ArrearsActionCreateRequest request)
+        public static ArrearsActionResponse CreateArrearsActionAsync(ArrearsActionCreateRequest request)
         {
             var random = new Faker();
 

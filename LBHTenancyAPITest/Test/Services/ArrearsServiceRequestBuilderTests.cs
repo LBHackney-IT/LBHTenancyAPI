@@ -3,6 +3,7 @@ using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
 using AgreementService;
+using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings.Credentials;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -26,7 +27,7 @@ namespace LBHTenancyAPITest.Test.Services
             //arrange
             //act
             //assert
-            Assert.Throws<ArgumentNullException>(()=>_builder.BuildArrearsRequest(null));
+            Assert.Throws<ArgumentNullException>(()=>_builder.BuildArrearsRequest(default(WebRequest)));
         }
 
         [Fact]

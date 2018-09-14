@@ -2,7 +2,7 @@ using System;
 using AgreementService;
 using LBHTenancyAPI.Interfaces;
 
-namespace LBHTenancyAPI.Services
+namespace LBHTenancyAPI.Services.Impl
 {
     public class ArrearsServiceRequestBuilder : IArrearsServiceRequestBuilder
     {
@@ -12,7 +12,7 @@ namespace LBHTenancyAPI.Services
             _credentialsService = credentialsService;
         }
 
-        public ArrearsActionCreateRequest BuildArrearsRequest(ArrearsActionCreateRequest arrears)
+        public T BuildArrearsRequest<T>(T arrears) where T:WebRequest
         {
             if(arrears == null)
                 throw new ArgumentNullException("ArrearsServiceRequestBuilder-BuildArrearsRequest:arrears is null");

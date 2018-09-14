@@ -1,8 +1,7 @@
-using System;
-using AgreementService;
 using System.Threading.Tasks;
+using AgreementService;
 
-namespace LBHTenancyAPI.Gateways
+namespace LBHTenancyAPI.Gateways.Arrears
 {
     public interface IArrearsActionDiaryGateway
     {

@@ -4,9 +4,11 @@
     <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>TenancyApi\LBHTenancyAPI\LBHTenancyAPI.xml</DocumentationFile>
+    <DocumentationFile>\TenancyApi\LBHTenancyAPI\LBHTenancyAPI.xml</DocumentationFile>
+      <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
@@ -17,10 +19,10 @@
     <PackageReference Include="SharpRaven" Version="2.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="3.0.0" />
-    <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.3" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.3" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
