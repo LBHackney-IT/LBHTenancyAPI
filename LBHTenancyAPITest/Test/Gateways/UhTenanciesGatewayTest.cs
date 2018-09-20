@@ -309,14 +309,14 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Theory]
-        [InlineData("78908/01", 1)]
-        [InlineData("12345/06", 1)]
+        [InlineData("78908121/01", 4)]
+        [InlineData("12345121/06", 2)]
         public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions(string strTenancyRef,int num)
         {
             var insertedAction = InsertRandomActionDiaryDetails(strTenancyRef, num)[0];
             var returnedAction = GetArrearsActionsByRef(strTenancyRef)[0];
 
-            Assert.Equal(insertedAction.TenancyRef.Trim(), returnedAction.TenancyRef.Trim());
+            Assert.Equal(insertedAction.TenancyRef, returnedAction.TenancyRef);
             Assert.Equal(insertedAction.Balance, returnedAction.Balance);
             Assert.Equal(insertedAction.Code, returnedAction.Code);
             Assert.Equal(insertedAction.Comment, returnedAction.Comment);
