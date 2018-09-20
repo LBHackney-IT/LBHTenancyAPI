@@ -309,6 +309,15 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
+        public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions()
+        {
+            var insertedAction = InsertRandomActionDiaryDetails("12345/01", 1)[0];
+            var returnedAction = GetArrearsActionsByRef("12345/01")[0];
+
+            Assert.Equal(insertedAction, returnedAction);
+        }
+
+        [Fact]
         public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnAllPayments()
         {
             int numberOfExpectedTransactions = 10;
