@@ -308,13 +308,21 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(numberOfExpectedActions, actions.Count);
         }
 
-        [Fact]
-        public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions()
+        [Theory]
+        [InlineData("78908/01", 1)]
+        [InlineData("12345/06", 1)]
+        public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions(string strTenancyRef,int num)
         {
-            var insertedAction = InsertRandomActionDiaryDetails("12345/01", 1)[0];
-            var returnedAction = GetArrearsActionsByRef("12345/01")[0];
+            var insertedAction = InsertRandomActionDiaryDetails(strTenancyRef, num)[0];
+            var returnedAction = GetArrearsActionsByRef(strTenancyRef)[0];
 
-            Assert.Equal(insertedAction, returnedAction);
+            Assert.Equal(insertedAction.TenancyRef.Trim(), returnedAction.TenancyRef.Trim());
+            Assert.Equal(insertedAction.Balance, returnedAction.Balance);
+            Assert.Equal(insertedAction.Code, returnedAction.Code);
+            Assert.Equal(insertedAction.Comment, returnedAction.Comment);
+            Assert.Equal(insertedAction.Date, returnedAction.Date);
+            Assert.Equal(insertedAction.Type, returnedAction.Type);
+            Assert.Equal(insertedAction.UniversalHousingUsername, returnedAction.UniversalHousingUsername);
         }
 
         [Fact]
