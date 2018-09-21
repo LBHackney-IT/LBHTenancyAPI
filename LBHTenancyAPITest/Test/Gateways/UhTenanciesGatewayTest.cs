@@ -308,6 +308,23 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(numberOfExpectedActions, actions.Count);
         }
 
+        [Theory]
+        [InlineData("78908121/01", 4)]
+        [InlineData("12345121/06", 2)]
+        public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions(string strTenancyRef,int num)
+        {
+            var insertedAction = InsertRandomActionDiaryDetails(strTenancyRef, num)[0];
+            var returnedAction = GetArrearsActionsByRef(strTenancyRef)[0];
+
+            Assert.Equal(insertedAction.TenancyRef, returnedAction.TenancyRef);
+            Assert.Equal(insertedAction.Balance, returnedAction.Balance);
+            Assert.Equal(insertedAction.Code, returnedAction.Code);
+            Assert.Equal(insertedAction.Comment, returnedAction.Comment);
+            Assert.Equal(insertedAction.Date, returnedAction.Date);
+            Assert.Equal(insertedAction.Type, returnedAction.Type);
+            Assert.Equal(insertedAction.UniversalHousingUsername, returnedAction.UniversalHousingUsername);
+        }
+
         [Fact]
         public void WhenGivenTenancyRef_GetPaymentTransactionsByTenancyRef_ShouldReturnAllPayments()
         {
