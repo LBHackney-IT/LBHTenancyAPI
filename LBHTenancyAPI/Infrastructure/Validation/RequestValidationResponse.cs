@@ -12,14 +12,14 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
     public class RequestValidationResponse
     {
         public bool IsValid { get; set; }
-        public IList<ExecutionError> ValidationErrors { get; set; }
+        public IList<ValidationError> ValidationErrors { get; set; }
 
         public RequestValidationResponse(bool isValid)
         {
             IsValid = isValid;
-            ValidationErrors = new List<ExecutionError>
+            ValidationErrors = new List<ValidationError>
             {
-                new ExecutionError
+                new ValidationError
                 {
                     Message = "request is null or required sub objects are null"
                 }
@@ -29,9 +29,9 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public RequestValidationResponse(bool isValid, string message)
         {
             IsValid = isValid;
-            ValidationErrors = new List<ExecutionError>
+            ValidationErrors = new List<ValidationError>
             {
-                new ExecutionError
+                new ValidationError
                 {
                     Message = message
                 }
@@ -40,10 +40,10 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
         public RequestValidationResponse(ValidationResult validationResult)
         {
             IsValid = validationResult.IsValid;
-            ValidationErrors = new List<ExecutionError>();
+            ValidationErrors = new List<ValidationError>();
             foreach (var validationResultError in validationResult.Errors)
             {
-                var apiError = new ExecutionError(validationResultError);
+                var apiError = new ValidationError(validationResultError);
                 ValidationErrors.Add(apiError);
             }
         }

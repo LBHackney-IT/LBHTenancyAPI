@@ -10,7 +10,7 @@ namespace LBHTenancyAPI.UseCases.ArrearsAgreements
     {
         public bool IsValid { get; set; }
         public IList<ExecutionError> Errors { get; set; }
-        public IList<ExecutionError> ValidationErrors { get; set; }
+        public IList<ValidationError> ValidationErrors { get; set; }
 
         public APIError(RequestValidationResponse validationResponse)
         {
