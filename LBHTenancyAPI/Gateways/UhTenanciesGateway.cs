@@ -152,7 +152,7 @@ namespace LBHTenancyAPI.Gateways
             ).FirstOrDefault();
 
             result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(tenancyRef);
-            result.ArrearsActionDiary = GetLatestFiveArrearsActionForRef(tenancyRef);
+            result.ArrearsActionDiary = GetLatestTenArrearsActionForRef(tenancyRef);
 
             return result;
         }
@@ -178,10 +178,10 @@ namespace LBHTenancyAPI.Gateways
             ).ToList();
         }
 
-        public List<ArrearsActionDiaryEntry> GetLatestFiveArrearsActionForRef(string tenancyRef)
+        public List<ArrearsActionDiaryEntry> GetLatestTenArrearsActionForRef(string tenancyRef)
         {
             return conn.Query<ArrearsActionDiaryEntry>(
-                "SELECT top 5" +
+                "SELECT top 10" +
                 "tag_ref as TenancyRef, " +
                 "action_code as Code, " +
                 "action_type as Type, " +

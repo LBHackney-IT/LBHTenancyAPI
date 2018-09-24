@@ -254,12 +254,12 @@ namespace LBHTenancyAPITest.Test.Gateways
         }
 
         [Fact]
-        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestFiveArrearsActions()
+        public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestTenArrearsActions()
         {
             Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
 
-            expectedTenancy.ArrearsActionDiary = InsertRandomActionDiaryDetails(expectedTenancy.TenancyRef, 6);
+            expectedTenancy.ArrearsActionDiary = InsertRandomActionDiaryDetails(expectedTenancy.TenancyRef, 11);
 
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
@@ -267,7 +267,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
 
-            Assert.Equal(5, tenancy.ArrearsActionDiary.Count);
+            Assert.Equal(10, tenancy.ArrearsActionDiary.Count);
             Assert.True(tenancy.ArrearsActionDiary[0].Date.Ticks >= tenancy.ArrearsActionDiary[1].Date.Ticks);
 
             var oldestDate = expectedTenancy.ArrearsActionDiary.OrderBy(d => d.Date).First();
