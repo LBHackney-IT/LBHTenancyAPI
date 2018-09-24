@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
@@ -46,6 +47,18 @@ namespace LBHTenancyAPI.Infrastructure.API
                 Error = executeWrapper?.Error;
             }
 
+        }
+
+        public APIResponse(Exception ex)
+        {
+            StatusCode = (int) HttpStatusCode.InternalServerError;
+            Error = new APIError(ex);
+        }
+
+        public APIResponse(ApiException ex)
+        {
+            StatusCode = (int)ex.StatusCode;
+            Error = new APIError(ex);
         }
     }
 }
