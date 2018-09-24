@@ -8,8 +8,14 @@
       <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="wwwroot\" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Interfaces\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
@@ -32,8 +38,6 @@
     <Compile Remove="UseCases\IListAllArrearsAgreements.cs" />
     <Compile Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.cs" />
     <Compile Remove="Service References\ArrearsAgreementService\Reference.cs" />
-    <Compile Remove="Interfaces\Mock Web Service Interfaces\IUHWRepository.cs" />
-    <Compile Remove="Interfaces\Mock Web Service Interfaces\IUHWebServiceSimulator.cs" />
     <Compile Remove="Services\FakeServices\FakeArrearsActionDiaryService.cs" />
   </ItemGroup>
   <ItemGroup>
