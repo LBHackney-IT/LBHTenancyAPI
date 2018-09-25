@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHTenancyAPI", "LBHTenancyAPI\LBHTenancyAPI.csproj", "{02B8F2DD-70C2-4388-8D93-78665E3F43CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHTenancyAPI", "LBHTenancyAPI\LBHTenancyAPI.csproj", "{02B8F2DD-70C2-4388-8D93-78665E3F43CF}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6F342255-FBBF-4361-B55C-01FAC96EE5AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHTenancyAPITest", "LBHTenancyAPITest\LBHTenancyAPITest.csproj", "{DEBE7005-3893-410B-8AB9-F9A6757469BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHTenancyAPITest", "LBHTenancyAPITest\LBHTenancyAPITest.csproj", "{DEBE7005-3893-410B-8AB9-F9A6757469BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubUniversalHousing", "StubUniversalHousing\StubUniversalHousing.csproj", "{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StubUniversalHousing", "StubUniversalHousing\StubUniversalHousing.csproj", "{B63ADA1B-A6C3-4DA7-B840-2E5ADFF6D95B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBH.Data.Domain", "LBH.Data.Domain\LBH.Data.Domain.csproj", "{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBH.Data.Domain", "LBH.Data.Domain\LBH.Data.Domain.csproj", "{E340A6E4-0C29-461D-A8DC-6A85C0B1D409}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
