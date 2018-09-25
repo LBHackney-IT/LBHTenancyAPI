@@ -44,7 +44,7 @@ namespace LBHTenancyAPITest.Test.Infrastructure
             });
             //act
             //assert
-            await Assert.ThrowsAsync<Dynamics365AuthenticationService.GetCRM365TokenServiceException>(async () => await _classUnderTest.GetAccessTokenAsync().ConfigureAwait(false));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _classUnderTest.GetAccessTokenAsync().ConfigureAwait(false));
         }
     }
 }
