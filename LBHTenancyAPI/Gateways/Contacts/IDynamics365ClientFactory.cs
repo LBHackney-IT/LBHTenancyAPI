@@ -5,6 +5,11 @@ namespace LBHTenancyAPI.Gateways.Contacts
 {
     public interface IDynamics365ClientFactory
     {
-        Task<HttpClient> CreateClientAsync();
+        Task<IHttpClient> CreateClientAsync();
     }
+
+
+
+
+
 }

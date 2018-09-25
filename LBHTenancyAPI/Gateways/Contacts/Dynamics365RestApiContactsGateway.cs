@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Infrastructure.Exceptions;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.Gateways.Contacts
 {
@@ -27,6 +24,19 @@ namespace LBHTenancyAPI.Gateways.Contacts
             var response = await httpClient.GetAsync(query, cancellationToken).ConfigureAwait(false);
             if(!response.IsSuccessStatusCode)
                 throw new Dynamics365RestApiException(response);
+            //call dynamics 365
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //maybe no records found so return null
+            if (string.IsNullOrEmpty(json))
+                return null;
+            var contacts = JsonConvert.DeserializeObject<GetContactsResults>(json);
+            return contacts?.Contacts;
+        }
+
+        private class GetContactsResults
+        {
+            [JsonProperty("values")]
+            public IList<Contact> Contacts { get; set; }
         }
 
         private string GetContactQuery(string tagReference)
@@ -70,17 +80,6 @@ namespace LBHTenancyAPI.Gateways.Contacts
 
             var query = sb.ToString();
             return query;
-        }
-    }
-
-    public class Dynamics365RestApiException : APIException
-    {
-        public ExecutionError ExecutionError { get; set; }
-
-        public Dynamics365RestApiException(HttpResponseMessage response)
-        {
-            StatusCode = HttpStatusCode.BadGateway;
-            ExecutionError = new ExecutionError(response);
         }
     }
 }
