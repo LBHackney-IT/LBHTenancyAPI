@@ -1,30 +1,34 @@
 using System;
 using Newtonsoft.Json;
 
-namespace LBH.Data.Domain
+namespace LBHTenancyAPI.UseCases.Contacts.Models
 {
-
-    public class Contact
+    public class ContactsForTenancy
     {
+        public ContactsForTenancy(LBH.Data.Domain.Contact contact)
+        {
+
+        }
+
         [JsonProperty("contactId")]
         public Guid ContactId { get; set; }
-        [JsonProperty("emailAddress1")]
+        [JsonProperty("emailAddress")]
         public string EmailAddress { get; set; }
-        [JsonProperty("hackney_uprn")]
+        [JsonProperty("uprn")]
         public int UniquePropertyReferenceNumber { get; set; }
-        [JsonProperty("address1_line1")]
+        [JsonProperty("addressLine1")]
         public string AddressLine1 { get; set; }
-        [JsonProperty("address1_line2")]
+        [JsonProperty("addressLine2")]
         public string AddressLine2 { get; set; }
-        [JsonProperty("address1_line3")]
+        [JsonProperty("addressLine3")]
         public string AddressLine3 { get; set; }
-        [JsonProperty("firstname")]
+        [JsonProperty("firstName")]
         public string Firstname { get; set; }
-        [JsonProperty("lastname")]
+        [JsonProperty("lastName")]
         public string LastName { get; set; }
-        [JsonProperty("fullname")]
+        [JsonProperty("fullName")]
         public string FullName { get; set; }
-        [JsonProperty("hackney_larn")]
+        [JsonProperty("larn")]
         public string Larn { get; set; }
         [JsonProperty("telephone1")]
         public string Telephone1 { get; set; }
@@ -32,27 +36,23 @@ namespace LBH.Data.Domain
         public string Telephone2 { get; set; }
         [JsonProperty("telephone3")]
         public string Telephone3 { get; set; }
-        [JsonProperty("hackney_cautionaryalert")]
+        [JsonProperty("cautionaryAlert")]
         public bool CautionaryAlert { get; set; }
-        [JsonProperty("hackney_propertycautionaryalert")]
+        [JsonProperty("propertyCautionaryAlert")]
         public bool PropertyCautionaryAlert { get; set; }
-        [JsonProperty("housing_house_ref")]
+        [JsonProperty("houseRef")]
         public string HouseRef { get; set; }
-        [JsonProperty("hackney_title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
-        [JsonProperty("address1_composite")]
+        [JsonProperty("fullAddressDisplay")]
         public string FullAddressDisplay { get; set; }
-        [JsonProperty("address1_name")]
+        [JsonProperty("fullAddressSearch")]
         public string FullAddressSearch { get; set; }
-        [JsonProperty("address1_postalcode")]
+        [JsonProperty("postCode")]
         public string PostCode { get; set; }
-        [JsonProperty("birthdate")]
+        [JsonProperty("dateOfBirth")]
         public string DateOfBirth { get; set; }
-        [JsonProperty("hackney_hackneyhomesid")]
+        [JsonProperty("hackneyHomesId")]
         public string HackneyHomesId { get; set; }
-        [JsonProperty("hackney_age")]
-        public int Age { get; set; }
     }
-
-    
 }

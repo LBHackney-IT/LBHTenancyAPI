@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Arrears;
+using LBHTenancyAPI.Gateways.Contacts;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 

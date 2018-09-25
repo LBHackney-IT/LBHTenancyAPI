@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+using System;
 using FluentValidation;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.Infrastructure.Validation;
+using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.UseCases.Contacts.Models
 {
@@ -26,19 +27,6 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         {
             RuleFor(x => x).NotNull();
             RuleFor(x => x.TenancyAgreementReference).NotNull().NotEmpty();
-        }
-    }
-
-    public class GetContactsForTenancyResponse
-    {
-        public IList<ContactsForTenancy> Contacts { get; set; }
-    }
-
-    public class ContactsForTenancy
-    {
-        public ContactsForTenancy(LBH.Data.Domain.Contact contact)
-        {
-
         }
     }
 }
