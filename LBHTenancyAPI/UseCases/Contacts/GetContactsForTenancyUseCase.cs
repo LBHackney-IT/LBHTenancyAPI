@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AgreementService;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Infrastructure.Exceptions;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
-using LBHTenancyAPI.Infrastructure.Validation;
-using LBHTenancyAPI.UseCases.ArrearsAgreements.Models;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 
 namespace LBHTenancyAPI.UseCases.Contacts

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AgreementService;
+using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using LBHTenancyAPI.Infrastructure.Validation;
 

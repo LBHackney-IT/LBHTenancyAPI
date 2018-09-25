@@ -40,7 +40,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
             //act
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            _fakeGateway.Verify(v => v.GetContactsByTenancyReferenceAsync(It.Is<GetContactsForTenancyRequest>(i => i.TenancyAgreementReference.Equals("Test"))));
+            _fakeGateway.Verify(v => v.GetContactsByTenancyReferenceAsync(It.Is<GetContactsForTenancyRequest>(i => i.TenancyAgreementReference.Equals("Test")), CancellationToken.None));
         }
 
         //[Fact]

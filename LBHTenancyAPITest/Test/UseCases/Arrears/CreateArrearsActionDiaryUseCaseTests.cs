@@ -19,7 +19,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
         public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
-            Mock<ICredentialsService> credentialsService = new Mock<ICredentialsService>();
+            var credentialsService = new Mock<ICredentialsService>();
             credentialsService.Setup(s => s.GetUhSourceSystem()).Returns("TestSystem");
             credentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
             {
