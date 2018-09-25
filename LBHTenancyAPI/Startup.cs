@@ -8,6 +8,7 @@ using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Gateways.Contacts;
 using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
 using LBHTenancyAPI.Infrastructure.Logging;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;

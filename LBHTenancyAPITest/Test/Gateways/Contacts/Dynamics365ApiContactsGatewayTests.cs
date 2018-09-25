@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -8,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBHTenancyAPI.Gateways.Contacts;
-using LBHTenancyAPI.Settings.CRM;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Client;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Exceptions;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 using Moq;
 using Xunit;

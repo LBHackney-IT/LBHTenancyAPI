@@ -111,7 +111,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
-            Assert.Equal(false, response.Success);
+            Assert.False(response.Success);
         }
 
         [Fact]

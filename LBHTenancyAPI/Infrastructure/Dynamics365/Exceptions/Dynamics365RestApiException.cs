@@ -3,7 +3,7 @@ using System.Net.Http;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 
-namespace LBHTenancyAPI.Gateways.Contacts
+namespace LBHTenancyAPI.Infrastructure.Dynamics365.Exceptions
 {
     public class Dynamics365RestApiException : APIException
     {
