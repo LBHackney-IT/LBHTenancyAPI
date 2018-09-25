@@ -20,8 +20,8 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
         private IContactsGateway _classUnderTest;
 
         [Theory]
-        [InlineData("")]
-        [InlineData("")]
+        [InlineData("7b1975f1-c363-409d-8816-4399bc9c91c1")]
+        [InlineData("762b4418-0dfa-4877-a22e-18f594d40ba4")]
         public async Task GivenValidInput_WhenCallingGetContactsByTenancyReferenceAsync_ThenShouldReturnContacts(string contactIdGuid)
         {
             //arrange
@@ -34,7 +34,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
                         'values':
                         [
                             {{
-                                'contactid' : {new Guid(contactIdGuid).ToString()}
+                                'contactId' : {new Guid(contactIdGuid).ToString()}
                             }}
                         ]
                     }}";
