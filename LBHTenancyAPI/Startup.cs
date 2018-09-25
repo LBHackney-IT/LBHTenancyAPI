@@ -18,6 +18,7 @@ using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
+using LBHTenancyAPI.UseCases.Contacts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -91,8 +92,7 @@ namespace LBHTenancyAPI
             });
             services.AddTransient<ICredentialsService, CredentialsService>();
 
-            services.AddSingleton<IDynamics365AuthenticationService>(s=> new Dynamics365AuthenticationService(settings.Dynamics365Settings));
-            services.AddSingleton<IDynamics365ClientFactory>(s => new Dynamics365ClientFactory(settings.Dynamics365Settings, s.GetService<IDynamics365AuthenticationService>()));
+            ConfigureContacts(services, settings);
 
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
@@ -109,6 +109,14 @@ namespace LBHTenancyAPI
                     configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url));
             });
 
+        }
+
+        private static void ConfigureContacts(IServiceCollection services, ConfigurationSettings settings)
+        {
+            services.AddTransient<IDynamics365AuthenticationService>(s => new Dynamics365AuthenticationService(settings.Dynamics365Settings));
+            services.AddSingleton<IDynamics365ClientFactory>(s => new Dynamics365ClientFactory(settings.Dynamics365Settings, s.GetService<IDynamics365AuthenticationService>()));
+            services.AddTransient<IContactsGateway, Dynamics365RestApiContactsGateway>();
+            services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
