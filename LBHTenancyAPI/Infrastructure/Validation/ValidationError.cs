@@ -1,6 +1,6 @@
 using FluentValidation.Results;
 
-namespace LBHTenancyAPI.Infrastructure.API
+namespace LBHTenancyAPI.Infrastructure.Validation
 {
     public class ValidationError
     {

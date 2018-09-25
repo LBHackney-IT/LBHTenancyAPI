@@ -1,29 +1,29 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Extensions.Controller;
-using Microsoft.AspNetCore.Mvc;
 using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.UseCases.ArrearsAgreements;
-using LBHTenancyAPI.UseCases.ArrearsAgreements.Models;
+using LBHTenancyAPI.UseCases.Contacts;
+using LBHTenancyAPI.UseCases.Contacts.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/tenancies/arrears-agreement/")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
-    public class ArrearsAgreementController : BaseController
+    public class ContactController : BaseController
     {
-        private readonly ICreateArrearsAgreementUseCase _createArrearsAgreementUseCase;
+        private readonly IGetContactsForTenancyUseCase _createArrearsAgreementUseCase;
 
-        public ArrearsAgreementController(ICreateArrearsAgreementUseCase createArrearsAgreementUseCase)
+        public ContactController(IGetContactsForTenancyUseCase createArrearsAgreementUseCase)
         {
             _createArrearsAgreementUseCase = createArrearsAgreementUseCase;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(APIResponse<CreateArrearsAgreementResponse>), 200)]
-        public async Task<IActionResult> Post([FromBody][Required]CreateArrearsAgreementRequest request)
+        [Route("api/v1/tenancies/{TenancyAgreementReference}/contacts/")]
+        [ProducesResponseType(typeof(APIResponse<GetContactsForTenancyResponse>), 200)]
+        public async Task<IActionResult> Get([FromRoute][Required]GetContactsForTenancyRequest request)
         {
             var result = await _createArrearsAgreementUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
 

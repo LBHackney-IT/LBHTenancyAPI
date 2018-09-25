@@ -1,4 +1,7 @@
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.UseCases.ArrearsAgreements;
+
+namespace LBHTenancyAPI.Infrastructure.API
 {
     /// <summary>
     /// Request Interface

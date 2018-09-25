@@ -49,6 +49,12 @@ namespace LBHTenancyAPI.Infrastructure.API
 
         }
 
+        public APIResponse(T result)
+        {
+            StatusCode = (int)HttpStatusCode.OK;
+            Data = result;
+        }
+
         public APIResponse(Exception ex)
         {
             StatusCode = (int) HttpStatusCode.InternalServerError;

@@ -6,9 +6,11 @@ using AgreementService;
 using FluentAssertions;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
+using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
+using LBHTenancyAPI.UseCases.ArrearsAgreements.Models;
 using Moq;
 using Xunit;
 

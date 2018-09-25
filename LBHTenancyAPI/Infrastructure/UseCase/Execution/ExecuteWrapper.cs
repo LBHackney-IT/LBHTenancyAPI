@@ -1,8 +1,9 @@
-using AgreementService;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using System;
+using AgreementService;
+using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.Validation;
 
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+namespace LBHTenancyAPI.Infrastructure.UseCase.Execution
 {
     public class ExecuteWrapper<T>: IExecuteWrapper<T> where T:class
     {

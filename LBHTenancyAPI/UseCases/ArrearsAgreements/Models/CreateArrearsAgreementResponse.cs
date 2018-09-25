@@ -1,6 +1,6 @@
 using AgreementService;
 
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+namespace LBHTenancyAPI.UseCases.ArrearsAgreements.Models
 {
     public class CreateArrearsAgreementResponse
     {

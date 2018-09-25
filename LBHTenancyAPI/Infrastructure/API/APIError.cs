@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using AgreementService;
-using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
+using LBHTenancyAPI.Infrastructure.Validation;
 
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+namespace LBHTenancyAPI.Infrastructure.API
 {
     public class APIError
     {
