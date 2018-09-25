@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
-using LBHTenancyAPI.Infrastructure.Validation;
-using LBHTenancyAPI.UseCases.ArrearsAgreements.Models;
 
 namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {

@@ -1,4 +1,3 @@
-using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 
 namespace LBHTenancyAPI.Infrastructure.UseCase.Execution

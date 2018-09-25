@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
+using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 
-namespace LBHTenancyAPI.Infrastructure.Validation
+namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     /// <summary>
     /// Encapsulates a valid response using some sort of validation extensions

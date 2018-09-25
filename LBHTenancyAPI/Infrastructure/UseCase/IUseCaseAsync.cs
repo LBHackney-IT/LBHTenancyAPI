@@ -1,9 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 
-namespace LBHTenancyAPI.Infrastructure.UseCase
+namespace LBHTenancyAPI.UseCases.ArrearsAgreements
 {
     public interface IUseCaseAsync<TRequest, TResponse> where TRequest: IRequest 
     {
