@@ -6,6 +6,7 @@ using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Infrastructure;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.Logging;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;
@@ -87,6 +88,7 @@ namespace LBHTenancyAPI
                 return client;
             });
             services.AddTransient<ICredentialsService, CredentialsService>();
+            services.AddSingleton<IDynamics365AuthenticationService>(s=> new Dynamics365AuthenticationService(settings.Dynamics365Settings));
 
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>

@@ -71,7 +71,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
                     {
                         TenancyAgreementRef = tenancyAgreementRef
                     }
-
                 });
             var request = new ArrearsActionCreateRequest
             {

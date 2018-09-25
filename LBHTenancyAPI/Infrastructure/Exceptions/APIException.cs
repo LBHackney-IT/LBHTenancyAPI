@@ -12,6 +12,11 @@ namespace LBHTenancyAPI.Infrastructure.Exceptions
             StatusCode = HttpStatusCode.InternalServerError;
         }
 
+        public APIException(Exception ex):base(ex?.Message, ex)
+        {
+            StatusCode = HttpStatusCode.InternalServerError;
+        }
+
         public APIException(HttpStatusCode status)
         {
             StatusCode = status;
