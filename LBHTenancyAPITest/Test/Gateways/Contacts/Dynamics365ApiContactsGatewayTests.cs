@@ -34,7 +34,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
                         'values':
                         [
                             {{
-                                'contactId' : {new Guid(contactIdGuid).ToString()}
+                                'contactId' : '{new Guid(contactIdGuid).ToString()}'
                             }}
                         ]
                     }}";
