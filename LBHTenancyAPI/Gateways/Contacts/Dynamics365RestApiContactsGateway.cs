@@ -21,9 +21,11 @@ namespace LBHTenancyAPI.Gateways.Contacts
         {
             var query = GetContactQuery(request?.TenancyAgreementReference);
             var httpClient = await _dynamics365ClientFactory.CreateClientAsync().ConfigureAwait(false);
+
             var response = await httpClient.GetAsync(query, cancellationToken).ConfigureAwait(false);
             if(!response.IsSuccessStatusCode)
                 throw new Dynamics365RestApiException(response);
+
             //call dynamics 365
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             //maybe no records found so return null
