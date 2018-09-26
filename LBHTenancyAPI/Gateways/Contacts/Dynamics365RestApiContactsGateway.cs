@@ -13,7 +13,7 @@ namespace LBHTenancyAPI.Gateways.Contacts
     public class Dynamics365RestApiContactsGateway : IContactsGateway
     {
         private readonly IDynamics365ClientFactory _dynamics365ClientFactory;
-        private const string UNWANTED_ENCODED_PREFIX = "contact1_x002e";
+        private const string UNWANTED_ENCODED_PREFIX = "contact1_x002e_";
 
         public Dynamics365RestApiContactsGateway(IDynamics365ClientFactory dynamics365ClientFactory)
         {
