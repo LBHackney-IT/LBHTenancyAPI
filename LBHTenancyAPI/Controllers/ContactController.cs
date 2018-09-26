@@ -20,7 +20,7 @@ namespace LBHTenancyAPI.Controllers
             _createArrearsAgreementUseCase = createArrearsAgreementUseCase;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("api/v1/tenancies/{TenancyAgreementReference}/contacts/")]
         [ProducesResponseType(typeof(APIResponse<GetContactsForTenancyResponse>), 200)]
         public async Task<IActionResult> Get([FromRoute][Required]GetContactsForTenancyRequest request)

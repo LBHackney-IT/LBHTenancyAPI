@@ -16,7 +16,7 @@ namespace LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory
             _dynamics365AuthenticationService = dynamics365AuthenticationService;
         }
 
-        public async Task<IHttpClient> CreateClientAsync()
+        public async Task<IHttpClient> CreateClientAsync(bool formatForFetchXml)
         {
             var accessToken = await _dynamics365AuthenticationService.GetAccessTokenAsync().ConfigureAwait(false);
 
@@ -26,6 +26,9 @@ namespace LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory
             _client.AddDefaultHeader("OData-Version", "4.0");
             _client.AddDefaultHeader("Accept", "application/json");
             _client.AddDefaultHeader("Authorization", "Bearer " + accessToken);
+
+            if(formatForFetchXml)
+                _client.AddDefaultHeader("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
 
             return _client;
         }

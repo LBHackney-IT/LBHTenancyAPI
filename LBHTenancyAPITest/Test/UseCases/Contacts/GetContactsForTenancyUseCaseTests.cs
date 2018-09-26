@@ -119,7 +119,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
             response.Should().NotBeNull();
             response.Contacts.Should().NotBeNullOrEmpty();
             response.Contacts[0].Should().BeEquivalentTo(contact1);
-            response.Contacts[0].Should().BeEquivalentTo(contact2);
+            response.Contacts[1].Should().BeEquivalentTo(contact2);
         }
     }
 }

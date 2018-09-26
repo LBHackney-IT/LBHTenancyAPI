@@ -27,7 +27,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
             //arrange
             var mockClientFactory = new Mock<IDynamics365ClientFactory>();
             var mockHttpClient = new Mock<IHttpClient>();
-            mockClientFactory.Setup(s => s.CreateClientAsync()).ReturnsAsync(mockHttpClient.Object);
+            mockClientFactory.Setup(s => s.CreateClientAsync(true)).ReturnsAsync(mockHttpClient.Object);
 
             var json =
                 $@"{{
@@ -64,7 +64,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
             //arrange
             var mockClientFactory = new Mock<IDynamics365ClientFactory>();
             var mockHttpClient = new Mock<IHttpClient>();
-            mockClientFactory.Setup(s => s.CreateClientAsync()).ReturnsAsync(mockHttpClient.Object);
+            mockClientFactory.Setup(s => s.CreateClientAsync(true)).ReturnsAsync(mockHttpClient.Object);
 
             mockHttpClient.Setup(s => s.GetAsync(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.BadRequest));
@@ -86,7 +86,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
             //arrange
             var mockClientFactory = new Mock<IDynamics365ClientFactory>();
             var mockHttpClient = new Mock<IHttpClient>();
-            mockClientFactory.Setup(s => s.CreateClientAsync()).ReturnsAsync(mockHttpClient.Object);
+            mockClientFactory.Setup(s => s.CreateClientAsync(true)).ReturnsAsync(mockHttpClient.Object);
 
             var json = string.Empty;
 

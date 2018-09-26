@@ -11,7 +11,7 @@ namespace LBH.Data.Domain
         [JsonProperty("emailAddress1")]
         public string EmailAddress { get; set; }
         [JsonProperty("hackney_uprn")]
-        public int UniquePropertyReferenceNumber { get; set; }
+        public string UniquePropertyReferenceNumber { get; set; }
         [JsonProperty("address1_line1")]
         public string AddressLine1 { get; set; }
         [JsonProperty("address1_line2")]

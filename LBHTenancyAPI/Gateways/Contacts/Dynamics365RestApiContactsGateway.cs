@@ -33,20 +33,20 @@ namespace LBHTenancyAPI.Gateways.Contacts
             //maybe no records found so return null
             if (string.IsNullOrEmpty(json))
                 return null;
-            var contacts = JsonConvert.DeserializeObject<GetContactsResults>(json);
+            var contacts = JsonConvert.DeserializeObject<GetContactsResults>(json.Replace("contact1_x002e_", ""));
             return contacts?.Contacts;
         }
 
         private class GetContactsResults
         {
-            [JsonProperty("values")]
+            [JsonProperty("value")]
             public IList<Contact> Contacts { get; set; }
         }
 
         private string GetContactQuery(string tagReference)
         {
             var fetchXml = $@"
-            <fetch version ='1.0' output-format='xml-platform' mapping='logical' distinct='true' >
+            <fetch>
               <entity name ='account' >
               <filter type ='and' >
                 <condition attribute ='housing_tag_ref' operator='eq' value='{tagReference}' />
