@@ -13,11 +13,11 @@ namespace LBHTenancyAPI.Controllers
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
     public class ContactController : BaseController
     {
-        private readonly IGetContactsForTenancyUseCase _createArrearsAgreementUseCase;
+        private readonly IGetContactsForTenancyUseCase _getContactsForTenancyUseCase;
 
-        public ContactController(IGetContactsForTenancyUseCase createArrearsAgreementUseCase)
+        public ContactController(IGetContactsForTenancyUseCase getContactsForTenancyUseCase)
         {
-            _createArrearsAgreementUseCase = createArrearsAgreementUseCase;
+            _getContactsForTenancyUseCase = getContactsForTenancyUseCase;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace LBHTenancyAPI.Controllers
         [ProducesResponseType(typeof(APIResponse<GetContactsForTenancyResponse>), 200)]
         public async Task<IActionResult> Get([FromRoute][Required]GetContactsForTenancyRequest request)
         {
-            var result = await _createArrearsAgreementUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+            var result = await _getContactsForTenancyUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
 
             return HandleResponse(result);
         }
