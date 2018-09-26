@@ -21,7 +21,7 @@ namespace LBHTenancyAPITest.Test.Infrastructure
                 AppKey = Environment.GetEnvironmentVariable("Dynamics365Settings__AppKey"),
                 ClientId = Environment.GetEnvironmentVariable("Dynamics365Settings__ClientId"),
                 OrganizationUrl = Environment.GetEnvironmentVariable("Dynamics365Settings__OrganizationUrl"),
-                TenantID = Environment.GetEnvironmentVariable("Dynamics365Settings__TenantID"),
+                TenantId = Environment.GetEnvironmentVariable("Dynamics365Settings__TenantId"),
                 AadInstance = Environment.GetEnvironmentVariable("Dynamics365Settings__AadInstance"),
             });
             //act
@@ -39,7 +39,7 @@ namespace LBHTenancyAPITest.Test.Infrastructure
                 AppKey = "",
                 ClientId = Environment.GetEnvironmentVariable("Dynamics365Settings__ClientId"),
                 OrganizationUrl = Environment.GetEnvironmentVariable("Dynamics365Settings__OrganizationUrl"),
-                TenantID = Environment.GetEnvironmentVariable("Dynamics365Settings__TenantID"),
+                TenantId = Environment.GetEnvironmentVariable("Dynamics365Settings__TenantId"),
                 AadInstance = Environment.GetEnvironmentVariable("Dynamics365Settings__AadInstance"),
             });
             //act

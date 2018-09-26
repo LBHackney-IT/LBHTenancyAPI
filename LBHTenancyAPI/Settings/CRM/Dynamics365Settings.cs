@@ -6,6 +6,6 @@ namespace LBHTenancyAPI.Settings.CRM
         public string ClientId { get; set; }
         public string AppKey { get; set; }
         public string AadInstance { get; set; }
-        public string TenantID { get; set; }
+        public string TenantId { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace LBHTenancyAPI.Infrastructure.Dynamics365.Authentication
         public async Task<string> GetAccessTokenAsync()
         {
             var clientcred = new ClientCredential(_dynamics365Settings?.ClientId, _dynamics365Settings?.AppKey);
-            var authenticationContext = new AuthenticationContext(_dynamics365Settings?.AadInstance + _dynamics365Settings?.TenantID);
+            var authenticationContext = new AuthenticationContext(_dynamics365Settings?.AadInstance + _dynamics365Settings?.TenantId);
             var authenticationResult = await authenticationContext.AcquireTokenAsync(_dynamics365Settings?.OrganizationUrl, clientcred).ConfigureAwait(false);
 
             var requestedToken = authenticationResult.AccessToken;
