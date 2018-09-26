@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -95,7 +96,15 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
             //arrange
             var contact1 = new Contact
             {
+                ContactId = Guid.NewGuid(),
+                EmailAddress = "test@test.com",
+                UniquePropertyReferenceNumber = "",
+                AddressLine1 = "Add1",
+                AddressLine2 = "Add2",
+                AddressLine3 = "Add3",
 
+                
+                
             };
             var contact2 = new Contact
             {

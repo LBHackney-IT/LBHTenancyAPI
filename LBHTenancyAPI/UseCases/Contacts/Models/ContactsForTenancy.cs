@@ -7,7 +7,31 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
     {
         public ContactsForTenancy(LBH.Data.Domain.Contact contact)
         {
-
+            if (contact == null)
+                return;
+            ContactId = contact.ContactId;
+            EmailAddress = contact.EmailAddress;
+            UniquePropertyReferenceNumber = contact.UniquePropertyReferenceNumber;
+            AddressLine1 = contact.AddressLine1;
+            AddressLine2 = contact.AddressLine2;
+            AddressLine3 = contact.AddressLine3;
+            Firstname = contact.Firstname;
+            LastName = contact.LastName;
+            FullName = contact.FullName;
+            Larn = contact.Larn;
+            Telephone1 = contact.Telephone1;
+            Telephone2 = contact.Telephone2;
+            Telephone3 = contact.Telephone3;
+            CautionaryAlert = contact.CautionaryAlert;
+            PropertyCautionaryAlert = contact.PropertyCautionaryAlert;
+            HouseRef = contact.HouseRef;
+            Title = contact.Title;
+            FullAddressDisplay = contact.FullAddressDisplay;
+            FullAddressSearch = contact.FullAddressSearch;
+            PostCode = contact.PostCode;
+            DateOfBirth = contact.DateOfBirth;
+            HackneyHomesId = contact.HackneyHomesId;
+            Age = contact.Age;
         }
 
         [JsonProperty("contactId")]
@@ -15,7 +39,7 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         [JsonProperty("emailAddress")]
         public string EmailAddress { get; set; }
         [JsonProperty("uprn")]
-        public int UniquePropertyReferenceNumber { get; set; }
+        public string UniquePropertyReferenceNumber { get; set; }
         [JsonProperty("addressLine1")]
         public string AddressLine1 { get; set; }
         [JsonProperty("addressLine2")]
@@ -51,8 +75,10 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         [JsonProperty("postCode")]
         public string PostCode { get; set; }
         [JsonProperty("dateOfBirth")]
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         [JsonProperty("hackneyHomesId")]
         public string HackneyHomesId { get; set; }
+        [JsonProperty("age")]
+        public int Age { get; set; }
     }
 }

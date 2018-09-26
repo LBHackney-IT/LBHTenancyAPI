@@ -47,12 +47,10 @@ namespace LBH.Data.Domain
         [JsonProperty("address1_postalcode")]
         public string PostCode { get; set; }
         [JsonProperty("birthdate")]
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         [JsonProperty("hackney_hackneyhomesid")]
         public string HackneyHomesId { get; set; }
         [JsonProperty("hackney_age")]
         public int Age { get; set; }
     }
-
-    
 }
