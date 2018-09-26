@@ -4,6 +4,7 @@ using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
 using LBHTenancyAPI.Settings.CRM;
 using Xunit;
 using FluentAssertions;
+using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication.Exceptions;
 
 namespace LBHTenancyAPITest.Test.Infrastructure
 {
@@ -44,7 +45,17 @@ namespace LBHTenancyAPITest.Test.Infrastructure
             });
             //act
             //assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _classUnderTest.GetAccessTokenAsync().ConfigureAwait(false));
+            await Assert.ThrowsAsync<Dynamics365IsNotConfiguredException>(async () => await _classUnderTest.GetAccessTokenAsync().ConfigureAwait(false));
+        }
+
+        [Fact]
+        public async Task GivenNullSettings_When_CallingGetAccessTokenAsync_Should_ThrowException()
+        {
+            //arrange
+            _classUnderTest = new Dynamics365AuthenticationService(null);
+            //act
+            //assert
+            await Assert.ThrowsAsync<Dynamics365IsNotConfiguredException>(async () => await _classUnderTest.GetAccessTokenAsync().ConfigureAwait(false));
         }
     }
 }
