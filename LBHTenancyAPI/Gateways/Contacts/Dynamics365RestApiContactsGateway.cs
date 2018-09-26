@@ -13,6 +13,7 @@ namespace LBHTenancyAPI.Gateways.Contacts
     public class Dynamics365RestApiContactsGateway : IContactsGateway
     {
         private readonly IDynamics365ClientFactory _dynamics365ClientFactory;
+        private const string UNWANTED_ENCODED_PREFIX = "contact1_x002e";
 
         public Dynamics365RestApiContactsGateway(IDynamics365ClientFactory dynamics365ClientFactory)
         {
@@ -33,7 +34,7 @@ namespace LBHTenancyAPI.Gateways.Contacts
             //maybe no records found so return null
             if (string.IsNullOrEmpty(json))
                 return null;
-            var contacts = JsonConvert.DeserializeObject<GetContactsResults>(json.Replace("contact1_x002e_", ""));
+            var contacts = JsonConvert.DeserializeObject<GetContactsResults>(json.Replace(UNWANTED_ENCODED_PREFIX, ""));
             return contacts?.Contacts;
         }
 
