@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using AgreementService;
 using FluentValidation;
+using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.Validation;
 
-namespace LBHTenancyAPI.UseCases.ArrearsAgreements
+namespace LBHTenancyAPI.UseCases.ArrearsAgreements.Models
 {
     public class CreateArrearsAgreementRequest : IRequest
     {

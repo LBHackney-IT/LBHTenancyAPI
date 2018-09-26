@@ -19,7 +19,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
         public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
-            Mock<ICredentialsService> credentialsService = new Mock<ICredentialsService>();
+            var credentialsService = new Mock<ICredentialsService>();
             credentialsService.Setup(s => s.GetUhSourceSystem()).Returns("TestSystem");
             credentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
             {
@@ -71,7 +71,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
                     {
                         TenancyAgreementRef = tenancyAgreementRef
                     }
-
                 });
             var request = new ArrearsActionCreateRequest
             {
@@ -112,7 +111,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
-            Assert.Equal(false, response.Success);
+            Assert.False(response.Success);
         }
 
         [Fact]

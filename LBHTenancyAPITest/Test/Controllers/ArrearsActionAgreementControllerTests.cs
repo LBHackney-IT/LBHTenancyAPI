@@ -10,6 +10,9 @@ using Xunit;
 using Moq;
 using AgreementService;
 using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.UseCase.Execution;
+using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.UseCases.ArrearsAgreements.Models;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {

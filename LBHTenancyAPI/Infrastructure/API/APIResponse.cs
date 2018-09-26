@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.Infrastructure.UseCase.Execution;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using Newtonsoft.Json;
@@ -49,16 +50,29 @@ namespace LBHTenancyAPI.Infrastructure.API
 
         }
 
-        public APIResponse(Exception ex)
+
+        public APIResponse(BadRequestException ex)
         {
-            StatusCode = (int) HttpStatusCode.InternalServerError;
-            Error = new APIError(ex);
+            StatusCode = (int)ex.StatusCode;
+            Error = new APIError(ex?.ValidationResponse);
         }
 
         public APIResponse(ApiException ex)
         {
             StatusCode = (int)ex.StatusCode;
             Error = new APIError(ex);
+        }
+
+        public APIResponse(Exception ex)
+        {
+            StatusCode = (int)HttpStatusCode.InternalServerError;
+            Error = new APIError(ex);
+        }
+
+        public APIResponse(T result)
+        {
+            StatusCode = (int)HttpStatusCode.OK;
+            Data = result;
         }
     }
 }
