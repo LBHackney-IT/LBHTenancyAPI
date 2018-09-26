@@ -34,23 +34,23 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
             Age = contact.Age;
         }
 
-        [JsonProperty("contactId")]
+        [JsonProperty("contact_id")]
         public Guid ContactId { get; set; }
-        [JsonProperty("emailAddress")]
+        [JsonProperty("email_address")]
         public string EmailAddress { get; set; }
         [JsonProperty("uprn")]
         public string UniquePropertyReferenceNumber { get; set; }
-        [JsonProperty("addressLine1")]
+        [JsonProperty("address_line1")]
         public string AddressLine1 { get; set; }
-        [JsonProperty("addressLine2")]
+        [JsonProperty("address_line2")]
         public string AddressLine2 { get; set; }
-        [JsonProperty("addressLine3")]
+        [JsonProperty("address_line3")]
         public string AddressLine3 { get; set; }
-        [JsonProperty("firstName")]
+        [JsonProperty("first_name")]
         public string Firstname { get; set; }
-        [JsonProperty("lastName")]
+        [JsonProperty("last_name")]
         public string LastName { get; set; }
-        [JsonProperty("fullName")]
+        [JsonProperty("full_name")]
         public string FullName { get; set; }
         [JsonProperty("larn")]
         public string Larn { get; set; }
@@ -60,23 +60,23 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         public string Telephone2 { get; set; }
         [JsonProperty("telephone3")]
         public string Telephone3 { get; set; }
-        [JsonProperty("cautionaryAlert")]
+        [JsonProperty("cautionary_alert")]
         public bool CautionaryAlert { get; set; }
-        [JsonProperty("propertyCautionaryAlert")]
+        [JsonProperty("propertyCautionary_alert")]
         public bool PropertyCautionaryAlert { get; set; }
-        [JsonProperty("houseRef")]
+        [JsonProperty("house_ref")]
         public string HouseRef { get; set; }
         [JsonProperty("title")]
         public string Title { get; set; }
-        [JsonProperty("fullAddressDisplay")]
+        [JsonProperty("full_address_display")]
         public string FullAddressDisplay { get; set; }
-        [JsonProperty("fullAddressSearch")]
+        [JsonProperty("full_address_search")]
         public string FullAddressSearch { get; set; }
-        [JsonProperty("postCode")]
+        [JsonProperty("post_code")]
         public string PostCode { get; set; }
-        [JsonProperty("dateOfBirth")]
+        [JsonProperty("date_of_birth")]
         public DateTime DateOfBirth { get; set; }
-        [JsonProperty("hackneyHomesId")]
+        [JsonProperty("hackney_homes_id")]
         public string HackneyHomesId { get; set; }
         [JsonProperty("age")]
         public int Age { get; set; }
