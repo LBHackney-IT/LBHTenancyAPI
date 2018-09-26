@@ -74,10 +74,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
             //arrange
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.GetContactsByTenancyReferenceAsync(It.Is<GetContactsForTenancyRequest>(i => i.TenancyAgreementReference.Equals("Test")), CancellationToken.None))
-                .ReturnsAsync(new List<LBH.Data.Domain.Contact>
-                {
-
-                });
+                .ReturnsAsync((List<Contact>)null);
 
             var request = new GetContactsForTenancyRequest
             {
@@ -102,9 +99,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
                 AddressLine1 = "Add1",
                 AddressLine2 = "Add2",
                 AddressLine3 = "Add3",
-
-                
-                
             };
             var contact2 = new Contact
             {

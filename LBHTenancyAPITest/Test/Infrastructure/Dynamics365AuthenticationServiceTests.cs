@@ -12,7 +12,7 @@ namespace LBHTenancyAPITest.Test.Infrastructure
     {
         private IDynamics365AuthenticationService _classUnderTest;
 
-        [Fact]
+        [Fact(Skip = "Need Environment Variables to be set, this is an integration test")]
         public async Task Given_CorrectCredentials_When_CallingGetAccessTokenAsync_Should_ReturnValidToken()
         {
             //arrange
