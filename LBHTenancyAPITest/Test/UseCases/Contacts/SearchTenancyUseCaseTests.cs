@@ -13,17 +13,16 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases.Contacts
 {
-
-    public class GetContactsForTenancyUseCaseTests
+    public class SearchTenancyUseCaseTests
     {
-        private readonly IGetContactsForTenancyUseCase _classUnderTest;
-        private readonly Mock<IContactsGateway> _fakeGateway;
+        private ISearchTenancyUseCase _classUnderTest;
+        private Mock<ISearchGateway> _fakeGateway;
 
-        public GetContactsForTenancyUseCaseTests()
+        public SearchTenancyUseCaseTests()
         {
-            _fakeGateway = new Mock<IContactsGateway>();
-            
-            _classUnderTest = new GetContactsForTenancyUseCase(_fakeGateway.Object);
+            _fakeGateway = new Mock<ISearchGateway>();
+
+            _classUnderTest = new SearchTenancyUseCase(_fakeGateway.Object);
         }
 
         [Fact]
@@ -54,7 +53,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
             GetContactsForTenancyRequest request = null;
             //act
             //assert
-            await Assert.ThrowsAsync<BadRequestException>(async ()=> await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
+            await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
         }
 
         [Fact]
