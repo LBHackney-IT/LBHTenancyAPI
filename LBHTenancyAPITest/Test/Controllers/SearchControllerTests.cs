@@ -32,7 +32,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancySearch>
+                    SearchResults = new List<TenancyListItem>
                     {
 
                     }
@@ -58,7 +58,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancySearch>
+                    SearchResults = new List<TenancyListItem>
                     {
 
                     }
@@ -85,17 +85,19 @@ namespace LBHTenancyAPITest.Test.Controllers
             string firstName, string lastName)
         {
             //arrange
-            var tenancySummary = new TenancySummary
+            var tenancySummary = new TenancyListItem
             {
-                FirstName = firstName,
-                LastName = lastName,
+                PrimaryContactName = $"{firstName} {lastName}"
             };
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancySearch>
+                    SearchResults = new List<TenancyListItem>
                     {
-                        new TenancySearch(tenancySummary)
+                        new TenancyListItem
+                        {
+                            PrimaryContactName = $"{firstName} {lastName}"
+                        }
                     }
                 });
 

@@ -17,7 +17,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
     {
         public async Task<IList<TenancySummary>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
-
+            throw new NotImplementedException();
         }
     }
 }
