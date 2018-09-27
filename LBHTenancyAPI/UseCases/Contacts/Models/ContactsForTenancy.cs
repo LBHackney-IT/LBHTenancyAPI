@@ -62,7 +62,7 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         public string Telephone3 { get; set; }
         [JsonProperty("cautionary_alert")]
         public bool CautionaryAlert { get; set; }
-        [JsonProperty("propertyCautionary_alert")]
+        [JsonProperty("property_cautionary_alert")]
         public bool PropertyCautionaryAlert { get; set; }
         [JsonProperty("house_ref")]
         public string HouseRef { get; set; }
