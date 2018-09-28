@@ -1,16 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
-using LBH.Data.Domain;
-using LBHTenancyAPI.Gateways.Contacts;
 using LBHTenancyAPI.Gateways.Search;
-using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.UseCases.Contacts;
-using LBHTenancyAPI.UseCases.Contacts.Models;
 using Moq;
-using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases.Contacts
 {
