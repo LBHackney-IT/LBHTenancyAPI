@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Test\Services\" />
-    <Folder Include="Test\UseCases\Search\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Bogus" Version="23.0.3" />
