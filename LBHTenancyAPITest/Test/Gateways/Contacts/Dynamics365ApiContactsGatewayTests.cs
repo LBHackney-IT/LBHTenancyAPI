@@ -24,15 +24,15 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
         [InlineData(
             "e7150cbd-844b-45ff-a8fc-475ef62887ff", "test@email.com", "t", "add1", "add2", "add3", "fName", "lName", "fName",
             "larn", "tel1", "tel2", "tel3", true, true, "hRef", "title", "fullAddDisp",
-            "fullAddSearch", "postcode", "2017-09-08T19:01:55.714942+03:00Z", "homeId", 2)]
+            "fullAddSearch", "postcode", "2017-09-08T19:01:55.714942+03:00Z", "homeId", 2, true)]
         [InlineData(
             "e7150cbd-844b-45ff-a8fc-475ef62887fe", "test@email.com2", "t2", "add12", "add22", "add32", "fName2", "lName2", "fName2",
             "larn2", "tel12", "tel22", "tel32", true, true, "hRef2", "title2", "fullAddDisp2",
-            "fullAddSearch2", "postcode2", "2018-09-08T19:01:55.714942+03:00Z", "homeId2", 2)]
+            "fullAddSearch2", "postcode2", "2018-09-08T19:01:55.714942+03:00Z", "homeId2", 2, true)]
         public async Task GivenValidInput_WhenCallingGetContactsByTenancyReferenceAsync_ThenShouldReturnContacts(
             string contactId, string emailAddress, string uprn, string add1, string add2, string add3, string firstName, string lastName, string fullName,
             string larn, string tel1, string tel2, string tel3, bool cautionAlert, bool propCautionAlert, string houseRef, string title, string fullAddDisp,
-            string fullAddSearch, string postCode, string dateOfBirth, string hackneyHomesId, int age)
+            string fullAddSearch, string postCode, string dateOfBirth, string hackneyHomesId, int age, bool responsible)
         {
             //arrange
             var mockClientFactory = new Mock<IDynamics365ClientFactory>();
@@ -71,7 +71,8 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
                                 'contact1_x002e_address1_line2': '{add2}',
                                 'contact1_x002e_address1_line1': '{add1}',
                                 'contact1_x002e_telephone1': '{tel1}',
-                                'contact1_x002e_emailAddress1': '{emailAddress}'
+                                'contact1_x002e_emailAddress1': '{emailAddress}',
+                                'contact1_x002e_hackney_responsible': '{responsible}'
                             }}
                         ]
                     }}";
@@ -118,6 +119,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Contacts
                 DateOfBirth = DateTime.Parse(dateOfBirth),
                 HackneyHomesId = hackneyHomesId,
                 Age = age,
+                Responsible = responsible
             };
             response[0].Should().BeEquivalentTo(contact);
         }

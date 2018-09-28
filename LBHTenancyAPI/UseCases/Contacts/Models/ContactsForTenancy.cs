@@ -32,6 +32,7 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
             DateOfBirth = contact.DateOfBirth;
             HackneyHomesId = contact.HackneyHomesId;
             Age = contact.Age;
+            Responsible = contact.Responsible;
         }
 
         [JsonProperty("contact_id")]
@@ -80,5 +81,11 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
         public string HackneyHomesId { get; set; }
         [JsonProperty("age")]
         public int Age { get; set; }
+        /// <summary>
+        /// Denotes whether or not a contact is on the tenancy agreement as a tenant
+        /// and can be contacted via 
+        /// </summary>
+        [JsonProperty("responsible")]
+        public bool Responsible { get; set; }
     }
 }
