@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.UseCases.Contacts;
@@ -8,6 +9,8 @@ using System.Threading;
 using System.Collections.Generic;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using FluentAssertions;
+using LBH.Data.Domain;
+using LBHTenancyAPI.UseCases.Search;
 
 namespace LBHTenancyAPITest.Test.UseCases.Search
 {
@@ -83,42 +86,57 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.SearchResults.Should().BeNull();
         }
 
-        //[Fact]
-        //public async Task GivenValidedInput__WhenExecuteAsync_ThenShouldReturnListOfContacts()
-        //{
-        //    //arrange
-        //    var contact1 = new Contact
-        //    {
-        //        ContactId = Guid.NewGuid(),
-        //        EmailAddress = "test@test.com",
-        //        UniquePropertyReferenceNumber = "",
-        //        AddressLine1 = "Add1",
-        //        AddressLine2 = "Add2",
-        //        AddressLine3 = "Add3",
-        //    };
-        //    var contact2 = new Contact
-        //    {
+        [Fact]
+        public async Task GivenValidedInput__WhenExecuteAsync_ThenShouldReturnListOfContacts()
+        {
+            //arrange
+            var tenancy1 = new TenancyListItem
+            {
+                PrimaryContactName = "test",
+                TenancyRef = "tRef",
+                ArrearsAgreementStartDate = DateTime.Now,
+                ArrearsAgreementStatus = "Active",
+                CurrentBalance = 0,
+                LastActionCode = "ACC",
+                LastActionDate = DateTime.Now.AddDays(-1),
+                PrimaryContactPostcode = "test",
+                PrimaryContactShortAddress = "123DreryLane",
+                PropertyRef = "2",
+                Tenure = "LongLease"
+            };
+            var tenancy2 = new TenancyListItem
+            {
+                PrimaryContactName = "test2",
+                TenancyRef = "tRef2",
+                ArrearsAgreementStartDate = DateTime.Now,
+                ArrearsAgreementStatus = "Active2",
+                CurrentBalance = 1,
+                LastActionCode = "ACC2",
+                LastActionDate = DateTime.Now.AddDays(-2),
+                PrimaryContactPostcode = "test2",
+                PrimaryContactShortAddress = "123DreryLane2",
+                PropertyRef = "22",
+                Tenure = "LongLease2"
+            };
+            var tenancyAgreementRef = "Test";
+            _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
+                .ReturnsAsync(new List<TenancyListItem>
+                {
+                    tenancy1,
+                    tenancy2
+                } as IList<TenancyListItem>);
 
-        //    };
-        //    var tenancyAgreementRef = "Test";
-        //    _fakeGateway.Setup(s => s.GetContactsByTenancyReferenceAsync(It.Is<GetContactsForTenancyRequest>(i => i.TenancyAgreementReference.Equals("Test")), CancellationToken.None))
-        //        .ReturnsAsync(new List<LBH.Data.Domain.Contact>
-        //        {
-        //            contact1,
-        //            contact2
-        //        });
-
-        //    var request = new GetContactsForTenancyRequest
-        //    {
-        //        TenancyAgreementReference = tenancyAgreementRef
-        //    };
-        //    //act
-        //    var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
-        //    //assert
-        //    response.Should().NotBeNull();
-        //    response.Contacts.Should().NotBeNullOrEmpty();
-        //    response.Contacts[0].Should().BeEquivalentTo(contact1);
-        //    response.Contacts[1].Should().BeEquivalentTo(contact2);
-        //}
+            var request = new SearchTenancyRequest
+            {
+                SearchTerm = tenancyAgreementRef
+            };
+            //act
+            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.SearchResults.Should().NotBeNullOrEmpty();
+            response.SearchResults[0].Should().BeEquivalentTo(tenancy1);
+            response.SearchResults[1].Should().BeEquivalentTo(tenancy2);
+        }
     }
 }

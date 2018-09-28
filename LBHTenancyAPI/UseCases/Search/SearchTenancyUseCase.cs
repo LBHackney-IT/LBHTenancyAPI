@@ -1,10 +1,11 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure.Exceptions;
+using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 
-namespace LBHTenancyAPI.UseCases.Contacts
+namespace LBHTenancyAPI.UseCases.Search
 {
     public class SearchTenancyUseCase : ISearchTenancyUseCase
     {
