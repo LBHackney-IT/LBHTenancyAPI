@@ -150,7 +150,7 @@ namespace LBHTenancyAPI.Gateways
             using (var conn = new SqlConnection(_connectionString))
             {
                 result = conn.Query<Tenancy>(
-                    "SELECT " +
+                    "SELECT TOP 1" +
                     "tenagree.tag_ref as TenancyRef, " +
                     "tenagree.cur_bal as CurrentBalance, " +
                     "tenagree.tenure as Tenure, " +
@@ -169,8 +169,6 @@ namespace LBHTenancyAPI.Gateways
                     "ORDER BY arag.arag_startdate DESC",
                     new {tRef = tenancyRef.Replace("%2F", "/")}
                 ).FirstOrDefault();
-                if (result == null)
-                    return null;
                 result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
                 result.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
             }

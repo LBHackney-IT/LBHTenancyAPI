@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LBH.Data.Domain
 {
-    public class Tenancy
+    public struct Tenancy
     {
         public List<ArrearsAgreement> ArrearsAgreements { get; set; }
         public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
