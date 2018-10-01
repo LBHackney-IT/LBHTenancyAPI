@@ -19,7 +19,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
         public async Task GivenTenancyAgreementRef_WhenCreateAgreementsWithCorrectParameters_ShouldNotBeNull()
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
                 .ReturnsAsync(new ArrearsAgreementResponse());
@@ -57,7 +57,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             string payementInfoStartDate,string payemntInfoComments)
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
                 .ReturnsAsync(new ArrearsAgreementResponse());
@@ -157,7 +157,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
         public void GivenTenancyAgreementRef_WhenCreateArrearsAgreementWithNull_ShouldThrowAnException()
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             var fakeCredentialsService = new Mock<ICredentialsService>();
             var serviceRequestBuilder = new ArrearsServiceRequestBuilder(fakeCredentialsService.Object);
