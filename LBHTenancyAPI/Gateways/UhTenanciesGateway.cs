@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,12 @@ namespace LBHTenancyAPI.Gateways
         {
             conn = new SqlConnection(connectionString);
             conn.Open();
+        }
+
+        ~UhTenanciesGateway()
+        {
+            if(conn != null && conn.State != ConnectionState.Closed)
+                conn.Close();
         }
 
         public List<TenancyListItem> GetTenanciesByRefs(List<string> tenancyRefs)
