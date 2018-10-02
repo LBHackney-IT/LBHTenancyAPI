@@ -13,8 +13,18 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways.Search
 {
-    public class SearchGatewayTests
+    public class SearchGatewayTests : IClassFixture<DatabaseFixture>
     {
+
+        readonly SqlConnection db;
+        private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
+        private IRepository<TenancyListItem> _tenancyListGateway;
+
+        public SearchGatewayTests(DatabaseFixture fixture)
+        {
+            db = fixture.Db;
+            _tenancyListGateway = new UHStubPaymentTransactionGateway(db);
+        }
         private ISearchGateway _classUnderTest;
 
         [Theory]
