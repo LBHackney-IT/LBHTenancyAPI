@@ -32,7 +32,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancyListItem>
+                    Tenancies = new List<TenancyListItem>
                     {
 
                     }
@@ -58,7 +58,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancyListItem>
+                    Tenancies = new List<TenancyListItem>
                     {
 
                     }
@@ -92,7 +92,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    SearchResults = new List<TenancyListItem>
+                    Tenancies = new List<TenancyListItem>
                     {
                         new TenancyListItem
                         {
@@ -113,8 +113,8 @@ namespace LBHTenancyAPITest.Test.Controllers
             var objectResult = response as ObjectResult;
             var getContacts = objectResult?.Value as APIResponse<SearchTenancyResponse>;
             getContacts.Should().NotBeNull();
-            getContacts.Data.SearchResults.Should().NotBeNullOrEmpty();
-            getContacts.Data.SearchResults.Should().BeEquivalentTo(tenancySummary);
+            getContacts.Data.Tenancies.Should().NotBeNullOrEmpty();
+            getContacts.Data.Tenancies.Should().BeEquivalentTo(tenancySummary);
         }
     }
 }

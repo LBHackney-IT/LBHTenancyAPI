@@ -83,7 +83,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
-            response.SearchResults.Should().BeNull();
+            response.Tenancies.Should().BeNull();
         }
 
         [Fact]
@@ -134,9 +134,9 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
-            response.SearchResults.Should().NotBeNullOrEmpty();
-            response.SearchResults[0].Should().BeEquivalentTo(tenancy1);
-            response.SearchResults[1].Should().BeEquivalentTo(tenancy2);
+            response.Tenancies.Should().NotBeNullOrEmpty();
+            response.Tenancies[0].Should().BeEquivalentTo(tenancy1);
+            response.Tenancies[1].Should().BeEquivalentTo(tenancy2);
         }
     }
 }
