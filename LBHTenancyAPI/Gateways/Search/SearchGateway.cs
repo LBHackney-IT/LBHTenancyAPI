@@ -27,6 +27,9 @@ namespace LBHTenancyAPI.Gateways.Search
                     @"
                     DECLARE @Upper Integer;
                     DECLARE @Lower integer;
+                    DECLARE @lowerSearchTerm nvarchar(256);
+
+                    SET @lowerSearchTerm = LOWER(@searchTerm) 
 
                     if(@page = 0) 
                     begin
@@ -71,10 +74,10 @@ namespace LBHTenancyAPI.Gateways.Search
                         LEFT JOIN dbo.member member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref
                         WHERE tenagree.tag_ref = @searchTerm
-                        OR member.forename = @searchTerm
-                        OR member.surname = @searchTerm
-                        OR property.short_address = @searchTerm
-                        OR property.post_code = @searchTerm
+                        OR LOWER(member.forename) = @lowerSearchTerm
+                        OR LOWER(member.surname) = @lowerSearchTerm
+                        OR LOWER(property.short_address) = @lowerSearchTerm
+                        OR LOWER(property.post_code) = @lowerSearchTerm
                         OR arag.arag_ref = @searchTerm
                     )
                     t
