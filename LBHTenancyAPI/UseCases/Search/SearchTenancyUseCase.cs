@@ -35,7 +35,7 @@ namespace LBHTenancyAPI.UseCases.Search
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                SearchResults = response
+                Tenancies = response
             };
 
             return useCaseResponse;
