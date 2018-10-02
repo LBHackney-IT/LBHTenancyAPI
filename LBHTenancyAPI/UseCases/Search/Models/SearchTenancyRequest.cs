@@ -3,7 +3,7 @@ using LBHTenancyAPI.Infrastructure.Validation;
 
 namespace LBHTenancyAPI.UseCases.Contacts.Models
 {
-    public class SearchTenancyRequest : IRequest
+    public class SearchTenancyRequest : IRequest, IPagedRequest
     {
         public string SearchTerm { get; set; }
 
@@ -14,7 +14,12 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
             var validator = new SearchTenancyRequestValidator();
             var castedRequest = request as SearchTenancyRequest;
             var validationResult = validator.Validate(castedRequest);
+            if (PageSize == 0)
+                PageSize = 10;
             return new RequestValidationResponse(validationResult);
         }
+
+        public int Page { get; set; }
+        public int PageSize { get; set; }
     }
 }

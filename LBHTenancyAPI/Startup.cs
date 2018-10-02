@@ -6,6 +6,7 @@ using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Arrears.Impl;
 using LBHTenancyAPI.Gateways.Contacts;
+using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
@@ -19,6 +20,7 @@ using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.ArrearsActions;
 using LBHTenancyAPI.UseCases.ArrearsAgreements;
 using LBHTenancyAPI.UseCases.Contacts;
+using LBHTenancyAPI.UseCases.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -92,6 +94,9 @@ namespace LBHTenancyAPI
             });
             services.AddTransient<ICredentialsService, CredentialsService>();
 
+            services.AddTransient<ISearchTenancyUseCase, SearchTenancyUseCase>();
+            services.AddTransient<ISearchGateway>(s=>new SearchGateway(connectionString));
+
             ConfigureContacts(services, settings);
 
             //add swagger gen to generate the swagger.json file
@@ -117,6 +122,9 @@ namespace LBHTenancyAPI
             services.AddSingleton<IDynamics365ClientFactory>(s => new Dynamics365ClientFactory(settings.Dynamics365Settings, s.GetService<IDynamics365AuthenticationService>()));
             services.AddTransient<IContactsGateway, Dynamics365RestApiContactsGateway>();
             services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
+
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

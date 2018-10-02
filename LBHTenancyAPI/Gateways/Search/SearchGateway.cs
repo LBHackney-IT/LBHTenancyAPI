@@ -11,61 +11,82 @@ namespace LBHTenancyAPI.Gateways.Search
 {
     public class SearchGateway : ISearchGateway
     {
-        private readonly SqlConnection _connection;
+        private readonly string _connectionString;
         public SearchGateway(string connectionString)
         {
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            _connectionString = connectionString;
         }
+
         public async Task<IList<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
-            var all = await _connection.QueryAsync<TenancyListItem>(
-                "SELECT " +
-                "tenagree.tag_ref as TenancyRef, " +
-                "tenagree.cur_bal as CurrentBalance, " +
-                "tenagree.prop_ref as PropertyRef, " +
-                "tenagree.tenure as Tenure, " +
-                "tenagree.rent as Rent, " +
-                "tenagree.service as Service, " +
-                "tenagree.other_charge as OtherCharge, " +
-                "contacts.con_name as PrimaryContactName, " +
-                "property.short_address as PrimaryContactShortAddress, " +
-                "property.post_code as PrimaryContactPostcode, " +
-                "araction.tag_ref AS TenancyRef, " +
-                "araction.action_code AS LastActionCode, " +
-                "araction.action_date AS LastActionDate, " +
-                "arag.arag_status as ArrearsAgreementStatus, " +
-                "arag.arag_startdate as ArrearsAgreementStartDate " +
-                "FROM tenagree " +
-                "LEFT JOIN contacts " +
-                "ON contacts.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN property " +
-                "ON property.prop_ref = tenagree.prop_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "araction.tag_ref, " +
-                "araction.action_code, " +
-                "araction.action_date " +
-                "FROM araction " +
-                "WHERE araction.tag_ref IN @allRefs " +
-                ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
-                "LEFT JOIN ( " +
-                "SELECT " +
-                "arag.tag_ref," +
-                "arag.arag_status, " +
-                "arag.arag_startdate " +
-                "FROM arag " +
-                "WHERE arag.tag_ref IN @allRefs " +
-                ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
-                "WHERE tenagree.tag_ref IN @allRefs " +
-                "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
-                new { searchTerm = request.SearchTerm }
-            ).ConfigureAwait(false);
+            IList<TenancyListItem> results;
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                var all = await conn.QueryAsync<TenancyListItem>(
+                    @"
+                    DECLARE @Upper Integer;
+                    DECLARE @Lower integer;
 
-            var results = all.ToList();
+                    if(@page = 0) 
+                    begin
+                    Set @Lower = 1
+                    Set @Upper = @Lower + @pageSize -1
+                    end
+                    if(@page > 0)
+                    begin
+                    Set @Lower = (@pageSize * @page) + 1
+                    Set @Upper = @Lower + @pageSize -1
+                    end
 
+                    SELECT
+                    Seq,
+                    ArrearsAgreementStartDate,AgreementRef,
+                    AgreementStatus,
+                    CurrentBalance,
+                    TenancyRef,PropertyRef,
+                    Tenure,PrimaryContactPostcode,
+                    PrimaryContactShortAddress,
+                    PrimaryContactName
+                    FROM
+                    (
+                        SELECT
+                        arag.arag_startdate as ArrearsAgreementStartDate,arag.arag_ref as AgreementRef,
+                        arag.arag_status as AgreementStatus,
+                        tenagree.cur_bal as CurrentBalance,
+                        tenagree.tag_ref as TenancyRef,
+                        tenagree.prop_ref as PropertyRef,
+                        tenagree.tenure as Tenure,
+                        property.post_code as PrimaryContactPostcode,
+                        property.short_address as PrimaryContactShortAddress,
+                        contacts.con_name as PrimaryContactName,
+                        ROW_NUMBER() OVER (ORDER BY arag.arag_startdate DESC) AS Seq
+                        FROM tenagree
+                        RIGHT JOIN contacts WITH(NOLOCK)
+                        ON contacts.tag_ref = tenagree.tag_ref
+                        RIGHT JOIN property WITH(NOLOCK)
+                        ON property.prop_ref = tenagree.prop_ref
+                        RIGHt JOIN  arag AS arag WITH(NOLOCK)
+                        ON arag.tag_ref = tenagree.tag_ref
+                        LEFT JOIN dbo.member member WITH(NOLOCK)
+                        ON member.house_ref = tenagree.house_ref
+                        WHERE tenagree.tag_ref = @searchTerm
+                        OR member.forename = @searchTerm
+                        OR member.surname = @searchTerm
+                        OR property.short_address = @searchTerm
+                        OR property.post_code = @searchTerm
+                        OR arag.arag_ref = @searchTerm
+                    )
+                    t
+                    WHERE Seq BETWEEN @Lower AND @Upper",
+                    new { searchTerm = request.SearchTerm, page = request.Page, pageSize = request.PageSize }
+                ).ConfigureAwait(false);
+
+                results = all?.ToList();
+            }
             return results;
-
         }
+
+
     }
 }
