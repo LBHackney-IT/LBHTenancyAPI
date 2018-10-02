@@ -21,9 +21,9 @@ namespace LBHTenancyAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/tenancies/{SearchTerm}/search/")]
+        [Route("api/v1/tenancies/search/")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
-        public async Task<IActionResult> Get([FromRoute][Required]SearchTenancyRequest request)
+        public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)
         {
             var result = await _searchTenancyUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
 

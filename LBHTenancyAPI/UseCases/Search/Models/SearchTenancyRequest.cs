@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.Infrastructure.Validation;
 
@@ -5,6 +6,7 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
 {
     public class SearchTenancyRequest : IRequest, IPagedRequest
     {
+        [Required]
         public string SearchTerm { get; set; }
 
         public RequestValidationResponse Validate<T>(T request)
