@@ -96,7 +96,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
             string payementInfoStartDate, string payemntInfoComments)
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
                 .ReturnsAsync(new ArrearsAgreementResponse());
@@ -193,7 +193,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
     string payementInfoStartDate, string payemntInfoComments)
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
                 .ReturnsAsync(new ArrearsAgreementResponse
@@ -290,7 +290,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Arrears
             string payementInfoStartDate, string payemntInfoComments)
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
                 .ReturnsAsync(new ArrearsAgreementResponse
