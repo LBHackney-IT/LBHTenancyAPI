@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LBHTenancyAPITest.EF
+namespace LBHTenancyAPITest.EF.Entities
 {
     [Table("member")]
     public class Member
@@ -17,22 +17,29 @@ namespace LBHTenancyAPITest.EF
         [Required]
         [Column("oap")]
         public bool oap { get; set; }
-
-
         [Required]
         [Column("at_risk")]
         public bool at_risk{ get; set; }
-
         [Required]
         [Column("full_ed")]
         public bool full_ed { get; set; }
-
         [Required]
         [MaxLength(3)]
         [Column("bank_acc_type")]
         public string bank_acc_type { get; set; }
 
-        //[person_no] [numeric] (2, 0) NOT NULL,
+        
+        [MaxLength(10)]
+        [Column("title")]
+        public string title { get; set; }
+
+        [MaxLength(24)]
+        [Column("forename")]
+        public string forename { get; set; }
+
+        [MaxLength(20)]
+        [Column("surname")]
+        public string surname { get; set; }
 
         //[ethnic_origin] [char](3) NULL,
         //[gender] [char](1) NULL,
@@ -41,9 +48,6 @@ namespace LBHTenancyAPITest.EF
         //[forename] [char](24) NULL,
         //[surname] [char](20) NULL,
         //[age] [numeric] (3, 0) NULL,
-        //[oap]
-        //[bit]
-        //NOT NULL,
 
         //[relationship] [char](1) NULL,
         //[econ_status] [char](1) NULL,

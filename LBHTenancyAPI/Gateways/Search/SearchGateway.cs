@@ -44,7 +44,7 @@ namespace LBHTenancyAPI.Gateways.Search
 
                     SELECT
                     Seq,
-                    ArrearsAgreementStartDate,AgreementRef,
+                    ArrearsAgreementStartDate,
                     ArrearsAgreementStatus,
                     CurrentBalance,
                     TenancyRef,PropertyRef,
@@ -54,7 +54,7 @@ namespace LBHTenancyAPI.Gateways.Search
                     FROM
                     (
                         SELECT
-                        arag.arag_startdate as ArrearsAgreementStartDate,arag.arag_ref as AgreementRef,
+                        arag.arag_startdate as ArrearsAgreementStartDate,
                         arag.arag_status as ArrearsAgreementStatus,
                         tenagree.cur_bal as CurrentBalance,
                         tenagree.tag_ref as TenancyRef,

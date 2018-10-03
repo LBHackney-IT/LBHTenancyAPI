@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Bogus;
 using LBH.Data.Domain;
 using AgreementService;
+using LBHTenancyAPITest.EF.Entities;
 
 namespace LBHTenancyAPITest.Helpers
 {
@@ -158,6 +159,19 @@ namespace LBHTenancyAPITest.Helpers
                 ErrorMessage = "",
                 Success = true
             };
+        }
+
+        public static Member GenerateFakeMember()
+        {
+            var faker = new Faker<Member>()
+                
+                .RuleFor(property => property.house_ref, (fake, model) => fake.Random.String().Substring(0, 10).Trim())
+                .RuleFor(property => property.surname, (fake, model) => fake.Name.LastName())
+                .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
+                .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Finance.TransactionType().Substring(0, 3).Trim()); ;
+
+            var member = faker.Generate();
+            return member;
         }
     }
 }
