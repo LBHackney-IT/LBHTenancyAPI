@@ -84,7 +84,7 @@ namespace LBHTenancyAPI
 
             services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
 
-            services.AddTransient<IArrearsAgreementService>(s=>
+            services.AddTransient<IArrearsAgreementServiceChannel>(s=>
             {
                 var clientFactory = s.GetService<IWCFClientFactory>();
                 var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(Environment.GetEnvironmentVariable("ServiceSettings__AgreementServiceEndpoint"));

@@ -17,7 +17,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
         public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldNotBeNull()
         {
             //Arrange
-            Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsActionAsync(It.IsAny<ArrearsActionCreateRequest>()))
                 .ReturnsAsync(new ArrearsActionResponse());
@@ -57,7 +57,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
             string tenancyRef, decimal actionBalance, string actionCategory, string actionCode, string comment )
         {
             //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
 
@@ -96,7 +96,7 @@ namespace LBHTenancyAPITest.Test.Gateways.ArrearsActions
         public void GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithNull_ShouldThrowAnException()
         {
             //Arrange
-            Mock<IArrearsAgreementService> fakeArrearsAgreementService = new Mock<IArrearsAgreementService>();
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
 

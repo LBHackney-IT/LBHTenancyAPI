@@ -1,4 +1,5 @@
 using System;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
@@ -16,10 +17,10 @@ namespace LBHTenancyAPI.Gateways.Arrears.Impl
         /// <summary>
         /// WCF Service Interface which allows us to create action diary entries
         /// </summary>
-        private readonly IArrearsAgreementService _actionDiaryService;
+        private readonly IArrearsAgreementServiceChannel _actionDiaryService;
         private readonly IArrearsServiceRequestBuilder _arrearsServiceRequestBuilder;
 
-        public ArrearsAgreementGateway(IArrearsAgreementService actionDiaryService, IArrearsServiceRequestBuilder arrearsServiceRequestBuilder)
+        public ArrearsAgreementGateway(IArrearsAgreementServiceChannel actionDiaryService, IArrearsServiceRequestBuilder arrearsServiceRequestBuilder)
         {
             _actionDiaryService = actionDiaryService;
             _arrearsServiceRequestBuilder = arrearsServiceRequestBuilder;
@@ -32,6 +33,8 @@ namespace LBHTenancyAPI.Gateways.Arrears.Impl
 
             request = _arrearsServiceRequestBuilder.BuildArrearsRequest<ArrearsAgreementRequest>(request);
             var response = await _actionDiaryService.CreateArrearsAgreementAsync(request).ConfigureAwait(false);
+            if(_actionDiaryService.State != CommunicationState.Closed)
+                _actionDiaryService.Close();
             var executeResponse = new ExecuteWrapper<ArrearsAgreementResponse>(response);
             return executeResponse;
         }

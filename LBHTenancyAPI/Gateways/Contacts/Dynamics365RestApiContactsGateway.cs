@@ -76,6 +76,7 @@ namespace LBHTenancyAPI.Gateways.Contacts
                   <attribute name ='birthdate'/>
                   <attribute name ='hackney_hackneyhomesid'/>
                   <attribute name ='hackney_age' />
+                  <attribute name ='hackney_responsible' />
                 </link-entity>
               </entity>
             </fetch>";

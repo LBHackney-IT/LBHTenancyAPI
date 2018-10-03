@@ -52,5 +52,7 @@ namespace LBH.Data.Domain
         public string HackneyHomesId { get; set; }
         [JsonProperty("hackney_age")]
         public int Age { get; set; }
+        [JsonProperty("hackney_responsible")]
+        public bool Responsible { get; set; }
     }
 }

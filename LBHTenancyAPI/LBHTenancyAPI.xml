@@ -58,5 +58,11 @@
             Use Case for creating Arrears actions diary entry
             </summary>
         </member>
+        <member name="P:LBHTenancyAPI.UseCases.Contacts.Models.ContactsForTenancy.Responsible">
+            <summary>
+            Denotes whether or not a contact is on the tenancy agreement as a tenant
+            and can be contacted via 
+            </summary>
+        </member>
     </members>
 </doc>
