@@ -39,22 +39,34 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
-            var member = Fake.GenerateFakeMember();
+            //member
+            var member = Fake.UniversalHousing.GenerateFakeMember();
             member.surname = lastName;
-            var result = await _universalHousingContext.member.AddAsync(member, CancellationToken.None).ConfigureAwait(false);
-
-            //var tenancyAgreement = new Faker<TenancyAgreement>();
-            //var tenancyAgreementResult = await _universalHousingContext.tenagree.AddAsync(tenancyAgreement, CancellationToken.None).ConfigureAwait(false);
-
-            var saveResult = await _universalHousingContext.SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
+            await _universalHousingContext.member.AddAsync(member, CancellationToken.None).ConfigureAwait(false);
+            //property
+            var property = Fake.UniversalHousing.GenerateFakeProperty();
+            await _universalHousingContext.property.AddAsync(property, CancellationToken.None).ConfigureAwait(false);
+            //tenancy
+            var tenancyAgreement = Fake.UniversalHousing.GenerateFakeTenancy();
+            tenancyAgreement.house_ref = member.house_ref;
+            tenancyAgreement.prop_ref = property.prop_ref;
+            await _universalHousingContext.tenagree.AddAsync(tenancyAgreement, CancellationToken.None).ConfigureAwait(false);
+            //arrears agreement
+            var arrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
+            await _universalHousingContext.arag.AddAsync(arrearsAgreement, CancellationToken.None).ConfigureAwait(false);
+            //save
+            await _universalHousingContext.SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
             //act
             var searchResponse = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName
+                SearchTerm = lastName,
+                Page = 0,
+                PageSize = 10
             }, CancellationToken.None).ConfigureAwait(false);
+            
             //assert
             searchResponse.Should().NotBeNullOrEmpty();
-            searchResponse[0].PrimaryContactName.Should().Be(lastName);
+            searchResponse[0].PrimaryContactName.Should().Contain(lastName);
         }
 
         [Theory]

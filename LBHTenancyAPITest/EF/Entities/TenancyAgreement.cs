@@ -23,10 +23,16 @@ namespace LBHTenancyAPITest.EF.Entities
         public string prop_ref { get; set; }
 
         /// <summary>
+        /// House Reference
+        /// </summary>
+        [Column("house_ref")]
+        [MaxLength(10)]
+        public string house_ref { get; set; }
+
+        /// <summary>
         /// Current Balance
         /// </summary>
         [Column("cur_bal")]
-        [MaxLength(12)]
         public decimal cur_bal { get; set; }
 
         /// <summary>

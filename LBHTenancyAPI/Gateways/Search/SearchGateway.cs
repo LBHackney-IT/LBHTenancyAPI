@@ -47,8 +47,10 @@ namespace LBHTenancyAPI.Gateways.Search
                     ArrearsAgreementStartDate,
                     ArrearsAgreementStatus,
                     CurrentBalance,
-                    TenancyRef,PropertyRef,
-                    Tenure,PrimaryContactPostcode,
+                    TenancyRef,
+                    PropertyRef,
+                    Tenure,
+                    PrimaryContactPostcode,
                     PrimaryContactShortAddress,
                     PrimaryContactName
                     FROM

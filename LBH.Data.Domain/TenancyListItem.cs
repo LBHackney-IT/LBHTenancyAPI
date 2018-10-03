@@ -1,12 +1,16 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LBH.Data.Domain
 {
     public struct TenancyListItem
     {
+        [JsonProperty("current_arrears_agreement_status")]
         public DateTime ArrearsAgreementStartDate { get; set; }
 
+        [JsonProperty("current_arrears_agreement_status")]
         private string arrearsAgreementStatus;
         public string ArrearsAgreementStatus
         {
@@ -16,6 +20,7 @@ namespace LBH.Data.Domain
         }
 
         private decimal currentBalance;
+        [JsonProperty("current_balance")]
         public Decimal CurrentBalance
         {
             get => currentBalance;
@@ -23,7 +28,9 @@ namespace LBH.Data.Domain
             set => currentBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
+        
         private string tenancyRef;
+        [JsonProperty("ref")]
         public string TenancyRef
         {
             get => tenancyRef;
@@ -31,7 +38,10 @@ namespace LBH.Data.Domain
             set => tenancyRef = value.Trim();
         }
 
+
+
         private string propertyRef;
+        [JsonProperty("prop_ref")]
         public string PropertyRef
         {
             get => propertyRef;
@@ -39,7 +49,9 @@ namespace LBH.Data.Domain
             set => propertyRef = value.Trim();
         }
 
+        
         private string tenure;
+        [JsonProperty("tenure")]
         public string Tenure
         {
             get => tenure;

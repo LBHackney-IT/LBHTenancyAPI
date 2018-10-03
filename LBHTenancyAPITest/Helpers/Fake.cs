@@ -161,17 +161,61 @@ namespace LBHTenancyAPITest.Helpers
             };
         }
 
-        public static Member GenerateFakeMember()
+        public static class UniversalHousing
         {
-            var faker = new Faker<Member>()
-                
-                .RuleFor(property => property.house_ref, (fake, model) => fake.Random.String().Substring(0, 10).Trim())
-                .RuleFor(property => property.surname, (fake, model) => fake.Name.LastName())
-                .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
-                .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Finance.TransactionType().Substring(0, 3).Trim()); ;
+            public static Member GenerateFakeMember()
+            {
+                var faker = new Faker<Member>()
 
-            var member = faker.Generate();
-            return member;
+                    .RuleFor(property => property.house_ref, (fake, model) => fake.Random.String().Substring(0, 10).Trim())
+                    .RuleFor(property => property.surname, (fake, model) => fake.Name.LastName())
+                    .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
+                    .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Finance.TransactionType().Substring(0, 3).Trim()); ;
+
+                var member = faker.Generate();
+                return member;
+            }
+
+            public static TenancyAgreement GenerateFakeTenancy()
+            {
+                var faker = new Faker<EF.Entities.TenancyAgreement>()
+                        .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
+                        .RuleFor(property => property.cur_bal, (fake, model) => fake.Finance.Amount())
+                        .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
+                    ;
+
+                var faked = faker.Generate();
+                return faked;
+            }
+
+            public static Property GenerateFakeProperty()
+            {
+                var faker = new Faker<EF.Entities.Property>()
+                        
+                        .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
+                        .RuleFor(property => property.address1, (fake, model) => fake.Address.FullAddress())
+                        .RuleFor(property => property.post_code, (fake, model) => fake.Address.ZipCode())
+                        .RuleFor(property => property.short_address, (fake, model) => model.address1)
+                    ;
+
+                var faked = faker.Generate();
+                return faked;
+            }
+
+            public static EF.Entities.ArrearsAgreement GenerateFakeArrearsAgreement()
+            {
+                var faker = new Faker<EF.Entities.ArrearsAgreement>()
+
+                        .RuleFor(property => property.arag_ref, (fake, model) => fake.Random.AlphaNumeric(15))
+                        .RuleFor(property => property.arag_status, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.arag_startdate, (fake, model) => DateTime.Now)
+                    ;
+
+                var faked = faker.Generate();
+                return faked;
+            }
         }
     }
 }

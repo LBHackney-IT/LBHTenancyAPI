@@ -17,5 +17,7 @@ namespace LBHTenancyAPITest.EF
 
         public DbSet<TenancyAgreement> tenagree { get; set; }
         public DbSet<Member> member { get; set; }
+        public DbSet<Property> property { get; set; }
+        public DbSet<ArrearsAgreement> arag { get; set; }
     }
 }
