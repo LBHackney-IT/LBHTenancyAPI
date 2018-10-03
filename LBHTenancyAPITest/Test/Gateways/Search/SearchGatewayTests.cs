@@ -9,6 +9,9 @@ using Bogus;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPITest.EF;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways.Search
@@ -16,6 +19,15 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
     public class SearchGatewayTests
     {
         private ISearchGateway _classUnderTest;
+        private UniversalHousingContext _universalHousingContext;
+
+
+        public SearchGatewayTests()
+        {
+            var dbContextOptions = new DbContextOptionsBuilder();
+            dbContextOptions.UseSqlServer(new SqlConnection("Server=JEFFPINKHAMD5D5\\SQLEXPRESS;Database=StubUH;Trusted_Connection=true"));
+            _universalHousingContext = new UniversalHousingContext(dbContextOptions.Options);
+        }
 
         [Theory]
         [InlineData("Smith")]
@@ -23,7 +35,14 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
+            var member = await _universalHousingContext.Members.AddAsync(new Member
+            {
+                
+                bank_acc_type = "TES",
+                house_ref = "10",
+                person_no = 1
 
+            }, CancellationToken.None).ConfigureAwait(false);
             //act
 
             //assert
