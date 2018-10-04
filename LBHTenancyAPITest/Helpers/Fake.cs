@@ -220,6 +220,18 @@ namespace LBHTenancyAPITest.Helpers
                 var faked = faker.Generate();
                 return faked;
             }
+
+            public static EF.Entities.Contact GenerateFakeContact()
+            {
+                var faker = new Faker<EF.Entities.Contact>()
+                        .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.con_name, (fake, model) => fake.Name.FullName())
+                        .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
+                    ;
+
+                var faked = faker.Generate();
+                return faked;
+            }
         }
     }
 }

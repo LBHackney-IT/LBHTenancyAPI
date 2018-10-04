@@ -14,6 +14,7 @@ using LBHTenancyAPITest.EF;
 using LBHTenancyAPITest.EF.Entities;
 using LBHTenancyAPITest.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Xunit;
 
@@ -29,6 +30,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             var dbContextOptions = new DbContextOptionsBuilder();
             var connectionString = "Server=JEFFPINKHAMD5D5\\SQLEXPRESS;Database=StubUH;Trusted_Connection=true";
             dbContextOptions.UseSqlServer(new SqlConnection(connectionString));
+            
             _universalHousingContext = new UniversalHousingContext(dbContextOptions.Options);
             _classUnderTest = new SearchGateway(connectionString);
         }
@@ -54,10 +56,17 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //arrears agreement
             var arrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             await _universalHousingContext.arag.AddAsync(arrearsAgreement, CancellationToken.None).ConfigureAwait(false);
+
+            //contact
+            var contact = Fake.UniversalHousing.GenerateFakeContact();
+            contact.prop_ref = property.prop_ref;
+            contact.tag_ref = tenancyAgreement.tag_ref;
+            _universalHousingContext.contacts.Add(contact);
             //save
             try
             {
-                await _universalHousingContext.SaveChangesAsync(CancellationToken.None);
+                var saveResult = await _universalHousingContext.SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
+                Console.WriteLine(saveResult);
             }
             catch (Exception ex)
             {

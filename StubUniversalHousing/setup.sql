@@ -828,8 +828,95 @@ GO
 
 
 CREATE TABLE aragdet (arag_sid INT, aragdet_amount NUMERIC(10, 3), aragdet_frequency CHAR(3));
-CREATE TABLE contacts (tag_ref CHAR(11), con_name VARCHAR(73), con_address CHAR(200), con_postcode CHAR(10),
-                      con_phone1 CHAR(21));
+CREATE TABLE [dbo].[contacts](
+	[con_key] [int] NULL,
+	[con_ref] [char](12) NULL,
+	[con_name] [varchar](73) NULL,
+	[con_address] [char](200) NULL,
+	[con_phone1] [char](21) NULL,
+	[con_phone2] [char](21) NULL,
+	[con_phone3] [char](21) NULL,
+	[con_postcode] [char](10) NULL,
+	[con_type] [char](1) NULL,
+	[tag_ref] [char](11) NULL,
+	[prop_ref] [char](12) NULL,
+	[email_address] [char](50) NULL,
+	[app_ref] [char](10) NULL,
+	[contacts_sid] [int] NULL,
+	[intreason] [char](3) NULL,
+	[vunreason] [char](3) NULL,
+	[locreason] [char](3) NULL,
+	[intcomment] [text] NULL,
+	[vuncomment] [text] NULL,
+	[loccomment] [text] NULL,
+	[tstamp] [timestamp] NULL,
+	[comp_avail] [char](200) NULL,
+	[comp_display] [char](200) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ke__0F2D40CE]  DEFAULT ((0)) FOR [con_key]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_re__10216507]  DEFAULT (space((1))) FOR [con_ref]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ad__1209AD79]  DEFAULT (space((1))) FOR [con_address]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ph__12FDD1B2]  DEFAULT (space((1))) FOR [con_phone1]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ph__13F1F5EB]  DEFAULT (space((1))) FOR [con_phone2]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ph__14E61A24]  DEFAULT (space((1))) FOR [con_phone3]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_po__15DA3E5D]  DEFAULT (space((1))) FOR [con_postcode]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ty__16CE6296]  DEFAULT (space((1))) FOR [con_type]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__tag_re__17C286CF]  DEFAULT (space((1))) FOR [tag_ref]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__prop_r__18B6AB08]  DEFAULT (space((1))) FOR [prop_ref]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__email___19AACF41]  DEFAULT (space((1))) FOR [email_address]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__app_re__1A9EF37A]  DEFAULT (space((1))) FOR [app_ref]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__contac__41648637]  DEFAULT ((0)) FOR [contacts_sid]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__intrea__17442F39]  DEFAULT (space((1))) FOR [intreason]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__vunrea__18385372]  DEFAULT (space((1))) FOR [vunreason]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__locrea__192C77AB]  DEFAULT (space((1))) FOR [locreason]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__intcom__1A209BE4]  DEFAULT (space((1))) FOR [intcomment]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__vuncom__1B14C01D]  DEFAULT (space((1))) FOR [vuncomment]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__loccom__1C08E456]  DEFAULT (space((1))) FOR [loccomment]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__comp_a__7175EE11]  DEFAULT ('') FOR [comp_avail]
+GO
+
+ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__comp_d__726A124A]  DEFAULT ('') FOR [comp_display]
+GO
 CREATE TABLE property (short_address CHAR (200), address1 CHAR(255), prop_ref CHAR (12), post_code CHAR (10));
 CREATE TABLE rtrans (prop_ref CHAR(12) DEFAULT SPACE(1), tag_ref CHAR(11) DEFAULT SPACE(1), trans_type CHAR(3) DEFAULT SPACE(1),
                      post_date SMALLDATETIME DEFAULT '', trans_ref CHAR(12) DEFAULT SPACE(1), real_value NUMERIC(9, 2))

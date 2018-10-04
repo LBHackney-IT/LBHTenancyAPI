@@ -8,6 +8,7 @@ using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.Search;
 using LBHTenancyAPI.UseCases.Search.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
