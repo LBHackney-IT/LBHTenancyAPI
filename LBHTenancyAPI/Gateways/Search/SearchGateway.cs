@@ -75,12 +75,12 @@ namespace LBHTenancyAPI.Gateways.Search
                         ON arag.tag_ref = tenagree.tag_ref
                         LEFT JOIN dbo.member member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref
-                        WHERE tenagree.tag_ref = @searchTerm
+                        WHERE
+                        tenagree.tag_ref = @searchTerm
                         OR LOWER(member.forename) = @lowerSearchTerm
                         OR LOWER(member.surname) = @lowerSearchTerm
                         OR LOWER(property.short_address) = '%' + @lowerSearchTerm + '%'
                         OR LOWER(property.post_code) = @lowerSearchTerm
-                        OR arag.arag_ref = @searchTerm
                     )
                     t
                     WHERE Seq BETWEEN @Lower AND @Upper",
