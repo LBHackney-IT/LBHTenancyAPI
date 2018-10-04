@@ -8,9 +8,11 @@ using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Infrastructure.API;
 using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.Search.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using TenancySummary = LBHTenancyAPI.UseCases.Search.Models.TenancySummary;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
@@ -32,7 +34,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancyListItem>
+                    Tenancies = new List<TenancySummary>
                     {
 
                     }
@@ -58,7 +60,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancyListItem>
+                    Tenancies = new List<TenancySummary>
                     {
 
                     }
@@ -92,11 +94,14 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancyListItem>
+                    Tenancies = new List<TenancySummary>
                     {
-                        new TenancyListItem
+                        new TenancySummary
                         {
-                            PrimaryContactName = $"{firstName} {lastName}"
+                            PrimaryContact = new PrimaryContact
+                            {
+                                Name = $"{firstName} {lastName}"
+                            }
                         }
                     }
                 });

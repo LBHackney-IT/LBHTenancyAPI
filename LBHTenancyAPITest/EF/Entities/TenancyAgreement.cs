@@ -52,14 +52,12 @@ namespace LBHTenancyAPITest.EF.Entities
         /// Service Charges
         /// </summary>
         [Column("service")]
-        [MaxLength(3)]
         public decimal service { get; set; }
 
         /// <summary>
         /// Other Charges
         /// </summary>
         [Column("other_charge")]
-        [MaxLength(3)]
         public decimal other_charge { get; set; }
     }
 }

@@ -17,9 +17,9 @@ namespace LBHTenancyAPI.Gateways.Search
             _connectionString = connectionString;
         }
 
-        public async Task<IList<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
+        public async Task<List<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
-            IList<TenancyListItem> results;
+            List<TenancyListItem> results;
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -78,7 +78,7 @@ namespace LBHTenancyAPI.Gateways.Search
                         WHERE tenagree.tag_ref = @searchTerm
                         OR LOWER(member.forename) = @lowerSearchTerm
                         OR LOWER(member.surname) = @lowerSearchTerm
-                        OR LOWER(property.short_address) = @lowerSearchTerm
+                        OR LOWER(property.short_address) = '%' + @lowerSearchTerm + '%'
                         OR LOWER(property.post_code) = @lowerSearchTerm
                         OR arag.arag_ref = @searchTerm
                     )

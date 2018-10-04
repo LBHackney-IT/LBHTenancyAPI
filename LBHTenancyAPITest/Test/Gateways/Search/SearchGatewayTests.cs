@@ -55,7 +55,15 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             var arrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             await _universalHousingContext.arag.AddAsync(arrearsAgreement, CancellationToken.None).ConfigureAwait(false);
             //save
-            await _universalHousingContext.SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
+            try
+            {
+                await _universalHousingContext.SaveChangesAsync(CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            
             //act
             var searchResponse = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {

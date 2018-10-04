@@ -7,10 +7,10 @@ namespace LBH.Data.Domain
 {
     public struct TenancyListItem
     {
-        [JsonProperty("current_arrears_agreement_status")]
+        
         public DateTime ArrearsAgreementStartDate { get; set; }
 
-        [JsonProperty("current_arrears_agreement_status")]
+        
         private string arrearsAgreementStatus;
         public string ArrearsAgreementStatus
         {

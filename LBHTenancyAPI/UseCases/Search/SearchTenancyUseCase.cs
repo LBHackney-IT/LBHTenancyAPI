@@ -1,9 +1,12 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.Search.Models;
+using System.Collections.Generic;
 
 namespace LBHTenancyAPI.UseCases.Search
 {
@@ -35,7 +38,25 @@ namespace LBHTenancyAPI.UseCases.Search
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response
+                Tenancies = response.ConvertAll(tenancy => new TenancySummary
+                {
+                    TenancyRef = tenancy.TenancyRef,
+                    PropertyRef = tenancy.PropertyRef,
+                    Tenure = tenancy.Tenure,
+                    LatestTenancyAction = new LatestTenancyAction
+                    {
+                        LastActionCode = tenancy.LastActionCode,
+                        LastActionDate = String.Format("{0:u}", tenancy.LastActionDate)
+                    },
+                    CurrentBalance = tenancy.CurrentBalance.ToString("C"),
+                    ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
+                    PrimaryContact = new PrimaryContact
+                    {
+                        Name = tenancy.PrimaryContactName,
+                        ShortAddress = tenancy.PrimaryContactShortAddress,
+                        Postcode = tenancy.PrimaryContactPostcode
+                    }
+                })
             };
 
             return useCaseResponse;

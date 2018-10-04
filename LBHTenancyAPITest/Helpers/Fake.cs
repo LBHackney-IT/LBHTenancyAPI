@@ -85,9 +85,9 @@ namespace LBHTenancyAPITest.Helpers
                         UniversalHousingUsername = random.Random.Hash(50)
                      }
                 },
-                ArrearsAgreements= new List<ArrearsAgreement>
+                ArrearsAgreements= new List<LBH.Data.Domain.ArrearsAgreement>
                 {
-                   new ArrearsAgreement()
+                   new LBH.Data.Domain.ArrearsAgreement()
                    {
                        Amount = random.Finance.Amount(),
                        Breached= random.Random.Bool(),
@@ -96,7 +96,7 @@ namespace LBHTenancyAPITest.Helpers
                        StartBalance = random.Finance.Amount(),
                        Status = random.Random.Hash(10)
                    },
-                    new ArrearsAgreement()
+                    new LBH.Data.Domain.ArrearsAgreement()
                     {
                         Amount = random.Finance.Amount(),
                         Breached= random.Random.Bool(),
@@ -167,10 +167,10 @@ namespace LBHTenancyAPITest.Helpers
             {
                 var faker = new Faker<Member>()
 
-                    .RuleFor(property => property.house_ref, (fake, model) => fake.Random.String().Substring(0, 10).Trim())
+                    .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
                     .RuleFor(property => property.surname, (fake, model) => fake.Name.LastName())
                     .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
-                    .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Finance.TransactionType().Substring(0, 3).Trim()); ;
+                    .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Random.AlphaNumeric(3)); ;
 
                 var member = faker.Generate();
                 return member;
@@ -183,6 +183,10 @@ namespace LBHTenancyAPITest.Helpers
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.cur_bal, (fake, model) => fake.Finance.Amount())
                         .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
+                        .RuleFor(property => property.tenure, (fake, model) => fake.Random.AlphaNumeric(3))
+                        .RuleFor(property => property.service, (fake, model) => fake.Finance.Amount())
+                        .RuleFor(property => property.rent, (fake, model) => fake.Finance.Amount())
+                        .RuleFor(property => property.other_charge, (fake, model) => fake.Finance.Amount())
                     ;
 
                 var faked = faker.Generate();
