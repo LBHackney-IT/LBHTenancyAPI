@@ -19,7 +19,7 @@ namespace LBHTenancyAPITest.Test
                 // do nothing
             }
 
-            Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            Db = new SqlConnection("Server=JEFFPINKHAMD5D5\\SQLEXPRESS;Database=StubUH;Trusted_Connection=True");
 
             Db.Open();
         }

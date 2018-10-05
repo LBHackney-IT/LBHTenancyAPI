@@ -5,24 +5,24 @@ using Dapper;
 
 namespace LBHTenancyAPITest.EF.Entities
 {
-    [Dapper.Table("arag")]
+    [Table("arag")]
     public class ArrearsAgreement
     {
-        [Dapper.Key]
-        [Dapper.Column("arag_ref")]
+        [Key]
+        [Column("arag_ref")]
         [MaxLength(15)]
-        [Dapper.Required]
+        [Required]
         public string arag_ref { get; set; }
 
-        [Dapper.Column("tag_ref")]
+        [Column("tag_ref")]
         [MaxLength(11)]
         public string tag_ref { get; set; }
 
-        [Dapper.Column("arag_status")]
+        [Column("arag_status")]
         [MaxLength(11)]
         public string arag_status { get; set; }
 
-        [Dapper.Column("arag_startdate")]
+        [Column("arag_startdate")]
         public DateTime arag_startdate { get; set; }
     }
 }
