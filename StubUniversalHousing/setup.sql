@@ -13,7 +13,7 @@ CREATE TABLE [dbo].[tenagree](
   [rent] [numeric](9, 2) NULL,
   [service] [numeric](9, 2) NULL,
   [other_charge] [numeric](9, 2) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] 
 GO
 
 ALTER TABLE [dbo].[tenagree] ADD  CONSTRAINT [DF____tenagre__tag_r__2BAB1A99]  DEFAULT (space((1))) FOR [tag_ref]
@@ -78,7 +78,7 @@ CREATE TABLE [dbo].[arag](
 	[u_no_payments] [int] NULL,
 	[arag_fcadate] [smalldatetime] NULL,
 	[arag_noprepay] [bit] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] 
 GO
 
 ALTER TABLE [dbo].[arag] ADD  DEFAULT (space(1)) FOR [arag_ref]
@@ -210,7 +210,7 @@ CREATE TABLE [dbo].[contacts](
 	[tstamp] [timestamp] NULL,
 	[comp_avail] [char](200) NULL,
 	[comp_display] [char](200) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY] 
 GO
 
 ALTER TABLE [dbo].[contacts] ADD  CONSTRAINT [DF__contacts__con_ke__0F2D40CE]  DEFAULT ((0)) FOR [con_key]
