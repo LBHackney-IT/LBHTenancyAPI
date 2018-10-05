@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using LBHTenancyAPITest.EF.Entities;
 
 namespace LBHTenancyAPITest.Helpers.Data
@@ -35,6 +31,26 @@ namespace LBHTenancyAPITest.Helpers.Data
 
             command.Parameters.Add("@responsible", SqlDbType.Bit);
             command.Parameters["@responsible"].Value = member.responsible;
+
+            command.ExecuteNonQuery();
+        }
+
+        public static void InsertPropertyAttributes(Property property, SqlConnection db)
+        {
+            var commandText = "INSERT INTO property(short_address, address1, prop_ref, post_code) VALUES(@short_address, @address1, @prop_ref, @post_code);";
+            var command = new SqlCommand(commandText, db);
+
+            command.Parameters.Add("@short_address", SqlDbType.Char);
+            command.Parameters["@short_address"].Value = property.short_address;
+
+            command.Parameters.Add("@address1", SqlDbType.Char);
+            command.Parameters["@address1"].Value = property.address1;
+
+            command.Parameters.Add("@prop_ref", SqlDbType.Char);
+            command.Parameters["@prop_ref"].Value = property.prop_ref;
+
+            command.Parameters.Add("@post_code", SqlDbType.Char);
+            command.Parameters["@post_code"].Value = property.post_code;
 
             command.ExecuteNonQuery();
         }

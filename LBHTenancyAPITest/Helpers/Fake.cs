@@ -164,6 +164,8 @@ namespace LBHTenancyAPITest.Helpers
 
         public static class UniversalHousing
         {
+
+
             public static Member GenerateFakeMember()
             {
                 var faker = new Faker<Member>()
@@ -173,7 +175,7 @@ namespace LBHTenancyAPITest.Helpers
                     .RuleFor(property => property.title, (fake, model) => "Mr")
                     .RuleFor(property => property.age, (fake, model) => fake.Random.Int(20, 50))
                     .RuleFor(property => property.responsible, (fake, model) => true)
-                    .RuleFor(property => property.person_no, (fake, model) => fake.Random.Int(1,1000000))
+                    .RuleFor(property => property.person_no, (fake, model) => fake.IndexFaker)
                     ;
                 var member = faker.Generate();
                 return member;

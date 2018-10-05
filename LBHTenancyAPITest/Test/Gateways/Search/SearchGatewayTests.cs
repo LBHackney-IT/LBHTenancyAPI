@@ -36,13 +36,13 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
-            var expectedTenancy = Fake.GenerateTenancyListItem();
-            
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
-            //expectedMember.house_ref = expectedTenancy.hou
-            TestDataHelper.InsertMemberAttributes(expectedMember, db);
-            InsertTenancyAttributes(expectedTenancy);
             
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            
+            TestDataHelper.InsertMemberAttributes(expectedMember, db);
+            TestDataHelper.InsertPropertyAttributes(expectedProperty,db);
+
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
