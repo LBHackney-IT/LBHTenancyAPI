@@ -28,15 +28,15 @@ namespace LBHTenancyAPITest.Test
 
         public void Dispose()
         {
-            Db.Query(
-                "DELETE FROM araction;" +
-                "DELETE FROM arag;" +
-                "DELETE FROM contacts;" +
-                "DELETE FROM tenagree;" +
-                "DELETE FROM aragdet;" +
-                "DELETE FROM rtrans;" +
-                "DELETE FROM member;"
-            );
+            //Db.Query(
+            //    "DELETE FROM araction;" +
+            //    "DELETE FROM arag;" +
+            //    "DELETE FROM contacts;" +
+            //    "DELETE FROM tenagree;" +
+            //    "DELETE FROM aragdet;" +
+            //    "DELETE FROM rtrans;" +
+            //    "DELETE FROM member;"
+            //);
 
             Db.Close();
             Db.Dispose();
