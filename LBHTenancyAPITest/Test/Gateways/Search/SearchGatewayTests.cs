@@ -19,7 +19,8 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public SearchGatewayTests(DatabaseFixture fixture)
         {
             db = fixture.Db;
-            _classUnderTest = new SearchGateway(fixture.Db.ConnectionString);
+            var connection = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            _classUnderTest = new SearchGateway(connection);
         }
 
         [Theory]
