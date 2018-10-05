@@ -24,5 +24,9 @@ namespace LBHTenancyAPITest.EF.Entities
 
         [Column("arag_startdate")]
         public DateTime arag_startdate { get; set; }
+
+        [Column("arag_sid")]
+        public int arag_sid { get; set; }
+
     }
 }

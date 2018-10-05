@@ -217,9 +217,23 @@ namespace LBHTenancyAPITest.Helpers
                 var faker = new Faker<EF.Entities.ArrearsAgreement>()
 
                         .RuleFor(property => property.arag_ref, (fake, model) => fake.Random.AlphaNumeric(14))
-                        .RuleFor(property => property.arag_status, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.arag_status, (fake, model) => fake.Random.AlphaNumeric(10))
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.arag_startdate, (fake, model) => DateTime.Now.Date)
+                        .RuleFor(property => property.arag_sid, (fake, model) => fake.IndexFaker)
+                    ;
+
+                var faked = faker.Generate();
+                return faked;
+            }
+
+            public static EF.Entities.ArrearsAgreementDet GenerateFakeArrearsAgreementDet()
+            {
+                var faker = new Faker<EF.Entities.ArrearsAgreementDet>()
+                        .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.arag_sid, (fake, model) => fake.IndexFaker)
+                        .RuleFor(property => property.amount, (fake, model) => fake.Finance.Amount())
+                        .RuleFor(property => property.aragdet_frequency, (fake, model) => "1")
                     ;
 
                 var faked = faker.Generate();

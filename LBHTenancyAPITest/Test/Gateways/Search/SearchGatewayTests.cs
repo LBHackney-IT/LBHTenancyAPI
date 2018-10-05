@@ -36,23 +36,32 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
+            //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             TestDataHelper.InsertProperty(expectedProperty, db);
-
+            //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             TestDataHelper.InsertTenancy(expectedTenancy, db);
-
+            //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             TestDataHelper.InsertMember(expectedMember, db);
-            
+            //arrears agreement
+            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
+            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, db);
+            //arrears agreement det
+            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
+            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, db);
+
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = "smith",
+                SearchTerm = lastName,
                 PageSize = 10,
                 Page = 0
             }, CancellationToken.None);
@@ -85,6 +94,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response.Should().NotBeNullOrEmpty();
             response[0].PrimaryContactName.Should().Contain(firstName);
         }
+
         [Theory]
         [InlineData("E8 1HH")]
         [InlineData("E8 1EA")]
@@ -121,63 +131,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 
             return commandText;
         }
-        private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
-        {
-            var commandText = InsertQueries();
-            var command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
-            command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
-            command.Parameters.Add("@propRef", SqlDbType.Char);
-            command.Parameters["@propRef"].Value = tenancyAttributes.PropertyRef;
-            command.Parameters.Add("@tenure", SqlDbType.Char);
-            command.Parameters["@tenure"].Value = tenancyAttributes.Tenure;
-            command.Parameters.Add("@rent", SqlDbType.Decimal);
-            command.Parameters["@rent"].Value = DBNull.Value;
-            command.Parameters.Add("@service", SqlDbType.Decimal);
-            command.Parameters["@service"].Value = DBNull.Value;
-            command.Parameters.Add("@otherCharge", SqlDbType.Decimal);
-            command.Parameters["@otherCharge"].Value = DBNull.Value;
-            command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
-            command.Parameters["@currentBalance"].Value = tenancyAttributes.CurrentBalance;
-            command.Parameters.Add("@primaryContactName", SqlDbType.Char);
-            command.Parameters["@primaryContactName"].Value = tenancyAttributes.PrimaryContactName;
-            command.Parameters.Add("@primaryContactAddress", SqlDbType.Char);
-            command.Parameters["@primaryContactAddress"].Value =
-                tenancyAttributes.PrimaryContactShortAddress == null
-                    ? DBNull.Value.ToString()
-                    : tenancyAttributes.PrimaryContactShortAddress + "\n";
-            command.Parameters.Add("@primaryContactPostcode", SqlDbType.Char);
-            command.Parameters["@primaryContactPostcode"].Value = tenancyAttributes.PrimaryContactPostcode;
-            command.Parameters.Add("@primaryContactPhone", SqlDbType.Char);
-            command.Parameters["@primaryContactPhone"].Value = DBNull.Value.ToString();
-            command.ExecuteNonQuery();
-            InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus, tenancyAttributes.ArrearsAgreementStartDate);
-            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode, tenancyAttributes.LastActionDate);
-            
-        }
-
         
-
-        void InsertAgreement(string tenancyRef, string status, DateTime startDate)
-        {
-            string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)" +
-                "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @frequency, @aragSid)";
-            SqlCommand command = new SqlCommand(commandText, db);
-            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
-            command.Parameters["@tenancyRef"].Value = tenancyRef;
-            command.Parameters.Add("@amount", SqlDbType.Decimal);
-            command.Parameters["@amount"].Value = new Faker().Finance.Amount();
-            command.Parameters.Add("@frequency", SqlDbType.Char);
-            command.Parameters["@frequency"].Value = '1';
-            command.Parameters.Add("@agreementStatus", SqlDbType.Char);
-            command.Parameters["@agreementStatus"].Value = status;
-            command.Parameters.Add("@startDate", SqlDbType.SmallDateTime);
-            command.Parameters["@startDate"].Value = startDate;
-            command.Parameters.Add("@aragSid", SqlDbType.Int);
-            command.Parameters["@aragSid"].Value = new Random().Next();
-            command.ExecuteNonQuery();
-        }
         private List<ArrearsAgreement> InsertRandomAgreementDetails(string tenancyRef, int num)
         {
             var random = new Faker();
