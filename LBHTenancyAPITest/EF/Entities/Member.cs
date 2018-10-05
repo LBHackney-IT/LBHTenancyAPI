@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,6 +41,14 @@ namespace LBHTenancyAPITest.EF.Entities
         [MaxLength(20)]
         [Column("surname")]
         public string surname { get; set; }
+
+        
+        [Column("age")]
+        public int age { get; set; }
+
+        [Column("responsible")]
+        public bool responsible { get; set; }
+
 
         //[ethnic_origin] [char](3) NULL,
         //[gender] [char](1) NULL,

@@ -6,36 +6,50 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bogus;
+using FluentAssertions;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPITest.EF.Entities;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
+using ArrearsAgreement = LBH.Data.Domain.ArrearsAgreement;
+
 namespace LBHTenancyAPITest.Test.Gateways.Search
 {
     public class SearchGatewayTests : IClassFixture<DatabaseFixture>
     {
         readonly SqlConnection db;
         private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
+        private ISearchGateway _classUnderTest;
+
         public SearchGatewayTests(DatabaseFixture fixture)
         {
             db = fixture.Db;
-
+            _classUnderTest = new SearchGateway(fixture.Db.ConnectionString);
         }
-        private ISearchGateway _classUnderTest;
+
         [Theory]
         [InlineData("Smith")]
         [InlineData("Shetty")]
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
-            TenancyListItem expectedTenancy = Fake.GenerateTenancyListItem();
+            var expectedTenancy = Fake.GenerateTenancyListItem();
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            InsertMemberAttributes(expectedMember);
             InsertTenancyAttributes(expectedTenancy);
-            InsertMembersAttributes()
-           // var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
-           // Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
-           //act
-           //assert
+            
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = "smith",
+                PageSize = 10,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNullOrEmpty();
+            response[0].PrimaryContactName.Should().Contain(lastName);
         }
         [Theory]
         [InlineData("Jeff")]
@@ -78,15 +92,14 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             string commandText =
                 "INSERT INTO tenagree (tag_ref, prop_ref, cur_bal, tenure, rent, service, other_charge) VALUES (@tenancyRef, @propRef, @currentBalance, @tenure, @rent, @service, @otherCharge);" +
                 "INSERT INTO contacts (tag_ref, con_name, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactPhone);" +
-                "INSERT INTO property (short_address, address1, prop_ref, post_code) VALUES (@primaryContactAddress, @primaryContactAddress, @propRef, @primaryContactPostcode);" +
-                "INSERT INTO members (house_ref, person_no, title,forename,surname,age,responsible,dob)" +
-                " VALUES (@house_ref, @person_no, @title,@forename,@surname,@age,@responsible,@dob);";
+                "INSERT INTO property (short_address, address1, prop_ref, post_code) VALUES (@primaryContactAddress, @primaryContactAddress, @propRef, @primaryContactPostcode);";
+                
             return commandText;
         }
         private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
         {
-            string commandText = InsertQueries();
-            SqlCommand command = new SqlCommand(commandText, db);
+            var commandText = InsertQueries();
+            var command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
             command.Parameters.Add("@propRef", SqlDbType.Char);
@@ -115,7 +128,38 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             command.ExecuteNonQuery();
             InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus, tenancyAttributes.ArrearsAgreementStartDate);
             InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode, tenancyAttributes.LastActionDate);
+            
         }
+
+        private void InsertMemberAttributes(Member member)
+        {
+            var commandText = "INSERT INTO member (house_ref, person_no, title,forename,surname,age,responsible) VALUES (@house_ref, @person_no, @title,@forename,@surname,@age,@responsible);";
+            var command = new SqlCommand(commandText, db);
+
+            command.Parameters.Add("@house_ref", SqlDbType.Char);
+            command.Parameters["@house_ref"].Value = member.house_ref;
+
+            command.Parameters.Add("@title", SqlDbType.Char);
+            command.Parameters["@title"].Value = member.title;
+
+            command.Parameters.Add("@person_no", SqlDbType.Char);
+            command.Parameters["@person_no"].Value = member.person_no;
+
+            command.Parameters.Add("@forename", SqlDbType.Char);
+            command.Parameters["@forename"].Value = member.forename;
+
+            command.Parameters.Add("@surname", SqlDbType.Char);
+            command.Parameters["@surname"].Value = member.surname;
+
+            command.Parameters.Add("@age", SqlDbType.Int);
+            command.Parameters["@age"].Value = member.age;
+
+            command.Parameters.Add("@responsible", SqlDbType.Bit);
+            command.Parameters["@responsible"].Value = member.responsible;
+
+            command.ExecuteNonQuery();
+        }
+
         void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
             string commandText =

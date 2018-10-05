@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Bogus;
 using LBH.Data.Domain;
 using AgreementService;
+using Bogus.DataSets;
 using LBHTenancyAPITest.EF.Entities;
 
 namespace LBHTenancyAPITest.Helpers
@@ -166,12 +167,11 @@ namespace LBHTenancyAPITest.Helpers
             public static Member GenerateFakeMember()
             {
                 var faker = new Faker<Member>()
-
                     .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
                     .RuleFor(property => property.surname, (fake, model) => fake.Name.LastName())
                     .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
-                    .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Random.AlphaNumeric(3)); ;
-
+                    .RuleFor(property => property.bank_acc_type, (fake, model) => fake.Random.AlphaNumeric(3))
+                    .RuleFor(property => property.title, (fake, model) => "Mr")
                 var member = faker.Generate();
                 return member;
             }
