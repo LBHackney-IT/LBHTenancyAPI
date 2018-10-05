@@ -14,7 +14,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
     public class SearchGatewayTests : IClassFixture<DatabaseFixture>
     {
         readonly SqlConnection db;
-        private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
         private ISearchGateway _classUnderTest;
 
         public SearchGatewayTests(DatabaseFixture fixture)

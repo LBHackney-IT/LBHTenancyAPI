@@ -19,7 +19,7 @@ namespace LBHTenancyAPITest.Test
                 // do nothing
             }
 
-            Db = new SqlConnection("Server=JEFFPINKHAMD5D5\\SQLEXPRESS;Database=StubUH;Trusted_Connection=True");
+            Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
 
             Db.Open();
         }
@@ -28,15 +28,15 @@ namespace LBHTenancyAPITest.Test
 
         public void Dispose()
         {
-            //Db.Query(
-            //    "DELETE FROM araction;" +
-            //    "DELETE FROM arag;" +
-            //    "DELETE FROM contacts;" +
-            //    "DELETE FROM tenagree;" +
-            //    "DELETE FROM aragdet;" +
-            //    "DELETE FROM rtrans;" +
-            //    "DELETE FROM member;"
-            //);
+            Db.Query(
+                "DELETE FROM araction;" +
+                "DELETE FROM arag;" +
+                "DELETE FROM contacts;" +
+                "DELETE FROM tenagree;" +
+                "DELETE FROM aragdet;" +
+                "DELETE FROM rtrans;" +
+                "DELETE FROM member;"
+            );
 
             Db.Close();
             Db.Dispose();
