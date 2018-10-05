@@ -6,7 +6,7 @@ namespace LBHTenancyAPITest.Helpers.Data
 {
     public static class TestDataHelper
     {
-        public static void InsertMemberAttributes(Member member, SqlConnection db)
+        public static void InsertMember(Member member, SqlConnection db)
         {
             var commandText = "INSERT INTO member (house_ref, person_no, title,forename,surname,age,responsible) VALUES (@house_ref, @person_no, @title,@forename,@surname,@age,@responsible);";
             var command = new SqlCommand(commandText, db);
@@ -35,7 +35,7 @@ namespace LBHTenancyAPITest.Helpers.Data
             command.ExecuteNonQuery();
         }
 
-        public static void InsertPropertyAttributes(Property property, SqlConnection db)
+        public static void InsertProperty(Property property, SqlConnection db)
         {
             var commandText = "INSERT INTO property(short_address, address1, prop_ref, post_code) VALUES(@short_address, @address1, @prop_ref, @post_code);";
             var command = new SqlCommand(commandText, db);
@@ -51,6 +51,41 @@ namespace LBHTenancyAPITest.Helpers.Data
 
             command.Parameters.Add("@post_code", SqlDbType.Char);
             command.Parameters["@post_code"].Value = property.post_code;
+
+            command.ExecuteNonQuery();
+        }
+        public static void InsertTenancy(TenancyAgreement tenancyAgreement, SqlConnection db)
+        {
+            var commandText = @"INSERT INTO [dbo].[tenagree]
+                                ([tag_ref],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge]) 
+                                VALUES
+                                (@tag_ref,@prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge)";
+
+            var command = new SqlCommand(commandText, db);
+
+            command.Parameters.Add("@tag_ref", SqlDbType.Char);
+            command.Parameters["@tag_ref"].Value = tenancyAgreement.tag_ref;
+
+            command.Parameters.Add("@prop_ref", SqlDbType.Char);
+            command.Parameters["@prop_ref"].Value = tenancyAgreement.prop_ref;
+
+            command.Parameters.Add("@house_ref", SqlDbType.Char);
+            command.Parameters["@house_ref"].Value = tenancyAgreement.house_ref;
+
+            command.Parameters.Add("@cur_bal", SqlDbType.Char);
+            command.Parameters["@cur_bal"].Value = tenancyAgreement.cur_bal;
+
+            command.Parameters.Add("@tenure", SqlDbType.Char);
+            command.Parameters["@tenure"].Value = tenancyAgreement.tenure;
+
+            command.Parameters.Add("@rent", SqlDbType.Decimal);
+            command.Parameters["@rent"].Value = tenancyAgreement.rent;
+
+            command.Parameters.Add("@service", SqlDbType.Decimal);
+            command.Parameters["@service"].Value = tenancyAgreement.service;
+
+            command.Parameters.Add("@other_charge", SqlDbType.Decimal);
+            command.Parameters["@other_charge"].Value = tenancyAgreement.other_charge;
 
             command.ExecuteNonQuery();
         }

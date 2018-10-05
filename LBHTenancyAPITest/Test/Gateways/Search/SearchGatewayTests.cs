@@ -36,13 +36,19 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         public async Task can_search_on_last_name(string lastName)
         {
             //arrange
-            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
-            
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            
-            TestDataHelper.InsertMemberAttributes(expectedMember, db);
-            TestDataHelper.InsertPropertyAttributes(expectedProperty,db);
+            TestDataHelper.InsertProperty(expectedProperty, db);
 
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, db);
+
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, db);
+            
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -54,14 +60,30 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response.Should().NotBeNullOrEmpty();
             response[0].PrimaryContactName.Should().Contain(lastName);
         }
+
         [Theory]
         [InlineData("Jeff")]
         [InlineData("Rashmi")]
         public async Task can_search_on_first_name(string firstName)
         {
             //arrange
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+
+            TestDataHelper.InsertMember(expectedMember, db);
+            TestDataHelper.InsertProperty(expectedProperty, db);
+
             //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = "Jeff",
+                PageSize = 10,
+                Page = 0
+            }, CancellationToken.None);
             //assert
+            response.Should().NotBeNullOrEmpty();
+            response[0].PrimaryContactName.Should().Contain(firstName);
         }
         [Theory]
         [InlineData("E8 1HH")]
