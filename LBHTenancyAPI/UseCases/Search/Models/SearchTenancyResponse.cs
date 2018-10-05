@@ -6,10 +6,10 @@ namespace LBHTenancyAPI.UseCases.Search.Models
     public class SearchTenancyResponse
     {
         [JsonProperty("tenancies")]
-        public List<TenancySummary> Tenancies { get; set; }
+        public List<SearchSummary> Tenancies { get; set; }
     }
 
-    public class TenancySummary
+    public class SearchSummary
     {
         [JsonProperty("ref")]
         public string TenancyRef { get; set; }
@@ -21,8 +21,6 @@ namespace LBHTenancyAPI.UseCases.Search.Models
         public string CurrentBalance { get; set; }
         [JsonProperty("current_arrears_agreement_status")]
         public string ArrearsAgreementStatus { get; set; }
-        [JsonProperty("latest_action")]
-        public LatestTenancyAction LatestTenancyAction { get; set; }
         [JsonProperty("primary_contact")]
         public PrimaryContact PrimaryContact { get; set; }
     }

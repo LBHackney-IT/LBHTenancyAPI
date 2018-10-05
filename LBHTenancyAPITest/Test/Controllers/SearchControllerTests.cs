@@ -13,7 +13,6 @@ using LBHTenancyAPI.UseCases.Search.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using TenancySummary = LBHTenancyAPI.UseCases.Search.Models.TenancySummary;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
@@ -35,7 +34,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancySummary>
+                    Tenancies = new List<SearchSummary>
                     {
 
                     }
@@ -61,7 +60,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancySummary>
+                    Tenancies = new List<SearchSummary>
                     {
 
                     }
@@ -95,9 +94,9 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<TenancySummary>
+                    Tenancies = new List<SearchSummary>
                     {
-                        new TenancySummary
+                        new SearchSummary
                         {
                             PrimaryContact = new PrimaryContact
                             {

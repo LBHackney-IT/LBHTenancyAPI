@@ -38,16 +38,11 @@ namespace LBHTenancyAPI.UseCases.Search
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response.ConvertAll(tenancy => new TenancySummary
+                Tenancies = response.ConvertAll(tenancy => new SearchSummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     Tenure = tenancy.Tenure,
-                    LatestTenancyAction = new LatestTenancyAction
-                    {
-                        LastActionCode = tenancy.LastActionCode,
-                        LastActionDate = String.Format("{0:u}", tenancy.LastActionDate)
-                    },
                     CurrentBalance = tenancy.CurrentBalance.ToString("C"),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContact = new PrimaryContact

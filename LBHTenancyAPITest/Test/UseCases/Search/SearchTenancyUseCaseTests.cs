@@ -143,9 +143,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy1.PrimaryContactPostcode);
             response.Tenancies[0].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy1.PrimaryContactShortAddress);
             response.Tenancies[0].ArrearsAgreementStatus.Should().BeEquivalentTo(tenancy1.ArrearsAgreementStatus);
-            response.Tenancies[0].LatestTenancyAction.Should().NotBeNull();
-            response.Tenancies[0].LatestTenancyAction.LastActionCode.Should().BeEquivalentTo(tenancy1.LastActionCode);
-            response.Tenancies[0].LatestTenancyAction.LastActionDate.Should().BeEquivalentTo(string.Format("{0}:u",tenancy1.LastActionDate));
+            
 
             response.Tenancies[1].PropertyRef.Should().BeEquivalentTo(tenancy2.PropertyRef);
             response.Tenancies[1].TenancyRef.Should().BeEquivalentTo(tenancy2.TenancyRef);
@@ -155,9 +153,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
             response.Tenancies[1].ArrearsAgreementStatus.Should().BeEquivalentTo(tenancy2.ArrearsAgreementStatus);
-            response.Tenancies[1].LatestTenancyAction.Should().NotBeNull();
-            response.Tenancies[1].LatestTenancyAction.LastActionCode.Should().BeEquivalentTo(tenancy2.LastActionCode);
-            response.Tenancies[1].LatestTenancyAction.LastActionDate.Should().BeEquivalentTo(string.Format("{0}:u", tenancy2.LastActionDate));
 
         }
     }
