@@ -685,8 +685,8 @@ GO
 CREATE TABLE araction (tag_ref CHAR(11), action_code CHAR(3), action_type CHAR(3), action_balance NUMERIC(7,2),
                       action_date SMALLDATETIME, action_comment VARCHAR(100), username VARCHAR(40));
 CREATE TABLE [dbo].[arag](
-	[arag_ref] [char](15) NULL,
-	[tag_ref] [char](11) NULL,
+	[arag_ref] VARCHAR(15) NULL,
+	[tag_ref] VARCHAR(11) NULL,
 	[arag_startbal] [numeric](10, 2) NULL,
 	[arag_whichbal] [char](3) NULL,
 	[arag_startdate] [smalldatetime] NULL,
@@ -698,9 +698,9 @@ CREATE TABLE [dbo].[arag](
 	[arag_lastcheckdate] [smalldatetime] NULL,
 	[arag_lastexpectedbal] [numeric](10, 2) NULL,
 	[arag_breached] [bit] NOT NULL,
-	[arag_status] [char](10) NULL,
+	[arag_status] VARCHAR(10) NULL,
 	[arag_cancelbal] [numeric](10, 2) NULL,
-	[arag_statusdate] [smalldatetime] NULL,
+	[arag_statusdate] datetime NULL,
 	[arag_statususer] [char](3) NULL,
 	[arag_amount] [numeric](10, 2) NULL,
 	[arag_clearby] [smalldatetime] NULL,

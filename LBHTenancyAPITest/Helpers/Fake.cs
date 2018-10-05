@@ -211,10 +211,10 @@ namespace LBHTenancyAPITest.Helpers
             {
                 var faker = new Faker<EF.Entities.ArrearsAgreement>()
 
-                        .RuleFor(property => property.arag_ref, (fake, model) => fake.Random.AlphaNumeric(15))
+                        .RuleFor(property => property.arag_ref, (fake, model) => fake.Random.AlphaNumeric(14))
                         .RuleFor(property => property.arag_status, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
-                        .RuleFor(property => property.arag_startdate, (fake, model) => DateTime.Now)
+                        .RuleFor(property => property.arag_startdate, (fake, model) => DateTime.Now.Date)
                     ;
 
                 var faked = faker.Generate();

@@ -64,23 +64,20 @@ namespace LBHTenancyAPI.Gateways.Search
                         tenagree.tenure as Tenure,
                         property.post_code as PrimaryContactPostcode,
                         property.short_address as PrimaryContactShortAddress,
-                        contacts.con_name as PrimaryContactName,
+                        RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                         ROW_NUMBER() OVER (ORDER BY arag.arag_startdate DESC) AS Seq
                         FROM tenagree
-                        RIGHT JOIN contacts WITH(NOLOCK)
-                        ON contacts.tag_ref = tenagree.tag_ref
+                        Left JOIN dbo.member member WITH(NOLOCK)
+                        ON member.house_ref = tenagree.house_ref
                         RIGHT JOIN property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
                         RIGHt JOIN  arag AS arag WITH(NOLOCK)
                         ON arag.tag_ref = tenagree.tag_ref
-                        LEFT JOIN dbo.member member WITH(NOLOCK)
-                        ON member.house_ref = tenagree.house_ref
-                        WHERE
-                        tenagree.tag_ref = @searchTerm
-                        OR LOWER(member.forename) = @lowerSearchTerm
-                        OR LOWER(member.surname) = @lowerSearchTerm
-                        OR LOWER(property.short_address) = '%' + @lowerSearchTerm + '%'
-                        OR LOWER(property.post_code) = @lowerSearchTerm
+                        WHERE tenagree.tag_ref = @searchTerm
+                        OR member.forename = @searchTerm
+                        OR member.surname = @searchTerm
+                        OR property.short_address like '%'+ @searchTerm +'%'
+                        OR property.post_code like  '%'+ @searchTerm +'%'
                     )
                     t
                     WHERE Seq BETWEEN @Lower AND @Upper",
