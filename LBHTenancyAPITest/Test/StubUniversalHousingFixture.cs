@@ -1,9 +1,13 @@
+using Xunit;
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace LBHTenancyAPITest.Test
 {
     using System;
     using System.Data.SqlClient;
     using System.IO;
     using Dapper;
+
 
     public class DatabaseFixture : IDisposable
     {
