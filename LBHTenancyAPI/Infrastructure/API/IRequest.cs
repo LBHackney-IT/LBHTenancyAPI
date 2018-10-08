@@ -16,4 +16,18 @@ namespace LBHTenancyAPI.Infrastructure.API
         /// <returns></returns>
         RequestValidationResponse Validate<T>(T request);
     }
+
+    public interface IPagedRequest
+    {
+        int Page { get; set; }
+        int PageSize { get; set; }
+    }
+
+    public interface IPagedResponse
+    {
+        int Page { get; set; }
+        int PageCount { get; set; }
+        int PageSize { get; set; }
+        int TotalCount { get; set; }
+    }
 }

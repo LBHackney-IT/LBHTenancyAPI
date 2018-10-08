@@ -4,21 +4,77 @@ GO
 USE StubUH;
 GO
 
-CREATE TABLE tenagree (tag_ref CHAR(11), prop_ref CHAR(12), cur_bal NUMERIC (9,3), tenure char (3), rent NUMERIC (9,2), service NUMERIC (9,2), other_charge NUMERIC (9,2));
-CREATE TABLE araction (tag_ref CHAR(11), action_code CHAR(3), action_type CHAR(3), action_balance NUMERIC(7,2),
-                      action_date SMALLDATETIME, action_comment VARCHAR(100), username VARCHAR(40));
-CREATE TABLE arag (tag_ref CHAR(11), arag_sid INT, arag_status CHAR(10), arag_startdate SMALLDATETIME,
-                  arag_breached BIT, arag_startbal NUMERIC (9,3),
-                  arag_clearby SMALLDATETIME);
-CREATE TABLE aragdet (arag_sid INT, aragdet_amount NUMERIC(10, 3), aragdet_frequency CHAR(3));
-CREATE TABLE contacts (tag_ref CHAR(11), con_name VARCHAR(73), con_address CHAR(200), con_postcode CHAR(10),
-                      con_phone1 CHAR(21));
-CREATE TABLE property (short_address CHAR (200), address1 CHAR(255), prop_ref CHAR (12), post_code CHAR (10));
-CREATE TABLE rtrans (prop_ref CHAR(12) DEFAULT SPACE(1), tag_ref CHAR(11) DEFAULT SPACE(1), trans_type CHAR(3) DEFAULT SPACE(1),
-                     post_date SMALLDATETIME DEFAULT '', trans_ref CHAR(12) DEFAULT SPACE(1), real_value NUMERIC(9, 2))
+CREATE TABLE [dbo].[tenagree]
+(
+  [tag_ref]       char(11)        DEFAULT (space((1)))      NOT NULL,
+  [prop_ref]      char(12)        DEFAULT (space((1)))      NULL,
+  [house_ref]     char(10)        DEFAULT (space((1)))      NULL,
+  [cur_bal]       numeric(9, 2)   DEFAULT ((0))             NULL,
+  [tenure]        char(3)         DEFAULT (space((1)))      NULL,
+  [rent]          numeric(9, 2)   DEFAULT ((0))             NULL,
+  [service]       numeric(9, 2)   DEFAULT ((0))             NULL,
+  [other_charge]  numeric(9, 2)   DEFAULT ((0))             NULL
+) ON [PRIMARY] 
+
+CREATE TABLE araction
+(
+  tag_ref CHAR(11),
+  action_code CHAR(3),
+  action_type CHAR(3),
+  action_balance NUMERIC(7,2),
+  action_date SMALLDATETIME,
+  action_comment VARCHAR(100),
+  username VARCHAR(40)
+);
+
+CREATE TABLE arag
+(
+  tag_ref           CHAR(11)          DEFAULT (space(1)),
+  arag_sid          INT               DEFAULT (0),
+  arag_status       CHAR(10)          DEFAULT (space(1)),
+  arag_startdate    SMALLDATETIME     DEFAULT (''),
+  arag_breached     BIT               DEFAULT (0),
+  arag_startbal     NUMERIC (9,3)     DEFAULT (0),
+  arag_clearby      SMALLDATETIME     DEFAULT ('')
+);
+
+CREATE TABLE aragdet
+(
+  arag_sid INT,
+  aragdet_amount NUMERIC(10, 3),
+  aragdet_frequency CHAR(3)
+);
+
+CREATE TABLE contacts
+(
+  tag_ref CHAR(11)        DEFAULT (space((1))),
+  con_name VARCHAR(73),
+  con_address CHAR(200)   DEFAULT (space((1))),
+  con_postcode CHAR(10)   DEFAULT (space((1))),
+  con_phone1 CHAR(21)     DEFAULT (space((1)))
+);
+
+CREATE TABLE property
+(
+  short_address CHAR (200),
+  address1 CHAR(255),
+  prop_ref CHAR (12),
+  post_code CHAR (10)
+);
+
+CREATE TABLE rtrans
+(
+  prop_ref CHAR(12) DEFAULT SPACE(1),
+  tag_ref CHAR(11) DEFAULT SPACE(1),
+  trans_type CHAR(3) DEFAULT SPACE(1),
+  post_date SMALLDATETIME DEFAULT '',
+  trans_ref CHAR(12) DEFAULT SPACE(1),
+  real_value NUMERIC(9, 2)
+);
+
 create table debtype
 (
-  deb_code          char(3) default space(1) not null,
+  deb_code          char(3)    default space(1) not null,
   deb_desc          char(20)   default space(1),
   deb_cat           char(1)    default space(1),
   deb_link          char(1)    default space(1),
@@ -53,6 +109,18 @@ create table rectype
   comp_display char(200)  default '',
   rec_dd       bit default 0          not null
 )
+
+CREATE TABLE [dbo].[member]
+(
+	[house_ref]   char(10)          DEFAULT (space((1)))    NOT NULL,
+	[person_no]   numeric(2, 0)     DEFAULT ((0))           NOT NULL,
+	[title]       char(10)          DEFAULT (space((1)))    NULL,
+	[forename]    char(24)          DEFAULT (space((1)))    NULL,
+	[surname]     char(20)          DEFAULT (space((1)))    NULL,
+	[age]         numeric(3, 0)     DEFAULT ((0))           NULL,
+	[responsible] bit               DEFAULT ((0))           NOT NULL,
+) ON [PRIMARY]
+GO
 
 INSERT INTO debtype (deb_code, deb_desc)
 VALUES
@@ -132,6 +200,5 @@ VALUES
 ,('RWA','Rent waiver')
 ,('WOF','Write Off ')
 ,('WON','Write On')
-go
-GO
+
 

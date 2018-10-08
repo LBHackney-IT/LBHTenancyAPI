@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Gateways.Arrears;
 using LBHTenancyAPI.Gateways.Contacts;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using LBHTenancyAPI.UseCases.Contacts;
@@ -17,8 +16,8 @@ namespace LBHTenancyAPITest.Test.UseCases.Contacts
 
     public class GetContactsForTenancyUseCaseTests
     {
-        private IGetContactsForTenancyUseCase _classUnderTest;
-        private Mock<IContactsGateway> _fakeGateway;
+        private readonly IGetContactsForTenancyUseCase _classUnderTest;
+        private readonly Mock<IContactsGateway> _fakeGateway;
 
         public GetContactsForTenancyUseCaseTests()
         {
