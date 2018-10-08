@@ -79,7 +79,7 @@ namespace LBHTenancyAPI.Gateways.Search
                         OR property.short_address like '%'+ @searchTerm +'%'
                         OR property.post_code like  '%'+ @searchTerm +'%'
                     )
-                    t
+                    orderByWithSequenceSubQuery
                     WHERE Seq BETWEEN @Lower AND @Upper",
                     new { searchTerm = request.SearchTerm, page = request.Page, pageSize = request.PageSize }
                 ).ConfigureAwait(false);
