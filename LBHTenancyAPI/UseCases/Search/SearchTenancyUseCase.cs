@@ -7,6 +7,7 @@ using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 using LBHTenancyAPI.UseCases.Search.Models;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace LBHTenancyAPI.UseCases.Search
 {
@@ -43,7 +44,7 @@ namespace LBHTenancyAPI.UseCases.Search
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     Tenure = tenancy.Tenure,
-                    CurrentBalance = tenancy.CurrentBalance.ToString("C"),
+                    CurrentBalance = tenancy.CurrentBalance.ToString("C",new CultureInfo("en-gb")),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContact = new PrimaryContact
                     {
