@@ -1,9 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dapper;
 
-namespace LBHTenancyAPITest.EF.Entities
+namespace LBHTenancyAPITest.Helpers.Entities
 {
     [Table("arag")]
     public class ArrearsAgreement

@@ -4,7 +4,9 @@ using Bogus;
 using LBH.Data.Domain;
 using AgreementService;
 using Bogus.DataSets;
-using LBHTenancyAPITest.EF.Entities;
+using LBHTenancyAPITest.Helpers.Entities;
+using ArrearsAgreement = LBHTenancyAPITest.Helpers.Entities.ArrearsAgreement;
+using Contact = LBHTenancyAPITest.Helpers.Entities.Contact;
 
 namespace LBHTenancyAPITest.Helpers
 {
@@ -183,7 +185,7 @@ namespace LBHTenancyAPITest.Helpers
 
             public static TenancyAgreement GenerateFakeTenancy()
             {
-                var faker = new Faker<EF.Entities.TenancyAgreement>()
+                var faker = new Faker<TenancyAgreement>()
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.cur_bal, (fake, model) => fake.Finance.Amount())
@@ -200,7 +202,7 @@ namespace LBHTenancyAPITest.Helpers
 
             public static Property GenerateFakeProperty()
             {
-                var faker = new Faker<EF.Entities.Property>()
+                var faker = new Faker<Property>()
                         
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.address1, (fake, model) => fake.Address.FullAddress())
@@ -212,9 +214,9 @@ namespace LBHTenancyAPITest.Helpers
                 return faked;
             }
 
-            public static EF.Entities.ArrearsAgreement GenerateFakeArrearsAgreement()
+            public static ArrearsAgreement GenerateFakeArrearsAgreement()
             {
-                var faker = new Faker<EF.Entities.ArrearsAgreement>()
+                var faker = new Faker<ArrearsAgreement>()
 
                         .RuleFor(property => property.arag_ref, (fake, model) => fake.Random.AlphaNumeric(14))
                         .RuleFor(property => property.arag_status, (fake, model) => fake.Random.AlphaNumeric(10))
@@ -227,9 +229,9 @@ namespace LBHTenancyAPITest.Helpers
                 return faked;
             }
 
-            public static EF.Entities.ArrearsAgreementDet GenerateFakeArrearsAgreementDet()
+            public static ArrearsAgreementDet GenerateFakeArrearsAgreementDet()
             {
-                var faker = new Faker<EF.Entities.ArrearsAgreementDet>()
+                var faker = new Faker<ArrearsAgreementDet>()
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.arag_sid, (fake, model) => fake.IndexFaker)
                         .RuleFor(property => property.amount, (fake, model) => fake.Finance.Amount())
@@ -240,9 +242,9 @@ namespace LBHTenancyAPITest.Helpers
                 return faked;
             }
 
-            public static EF.Entities.Contact GenerateFakeContact()
+            public static Contact GenerateFakeContact()
             {
-                var faker = new Faker<EF.Entities.Contact>()
+                var faker = new Faker<Contact>()
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.con_name, (fake, model) => fake.Name.FullName())
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))

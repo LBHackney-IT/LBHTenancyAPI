@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using Bogus;
-using LBHTenancyAPITest.EF.Entities;
+using LBHTenancyAPITest.Helpers.Entities;
 
 namespace LBHTenancyAPITest.Helpers.Data
 {

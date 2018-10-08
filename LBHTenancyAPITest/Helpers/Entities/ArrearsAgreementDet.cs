@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LBHTenancyAPITest.EF.Entities
+namespace LBHTenancyAPITest.Helpers.Entities
 {
     public class ArrearsAgreementDet
     {
