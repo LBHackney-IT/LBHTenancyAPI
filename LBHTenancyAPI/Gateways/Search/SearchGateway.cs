@@ -73,11 +73,11 @@ namespace LBHTenancyAPI.Gateways.Search
                         ON property.prop_ref = tenagree.prop_ref
                         RIGHt JOIN  arag AS arag WITH(NOLOCK)
                         ON arag.tag_ref = tenagree.tag_ref
-                        WHERE tenagree.tag_ref = @searchTerm
-                        OR member.forename = @searchTerm
-                        OR member.surname = @searchTerm
-                        OR property.short_address like '%'+ @searchTerm +'%'
-                        OR property.post_code like  '%'+ @searchTerm +'%'
+                        WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
+                        OR LOWER(member.forename) = @lowerSearchTerm
+                        OR LOWER(member.surname) = @lowerSearchTerm
+                        OR LOWER(property.short_address) like '%'+ @lowerSearchTerm +'%'
+                        OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%'
                     )
                     orderByWithSequenceSubQuery
                     WHERE Seq BETWEEN @Lower AND @Upper",
