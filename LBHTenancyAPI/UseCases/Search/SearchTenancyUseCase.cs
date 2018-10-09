@@ -35,7 +35,7 @@ namespace LBHTenancyAPI.UseCases.Search
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response.Results.ConvertAll(tenancy => new SearchSummary
+                Tenancies = response.Results.ConvertAll(tenancy => new SearchTenancySummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
@@ -45,7 +45,11 @@ namespace LBHTenancyAPI.UseCases.Search
                         Value = tenancy.CurrentBalance,
                         CurrencyCode = "GBP",
                     },
-                    ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
+                    SearchArrearsAgreementSummary = string.IsNullOrEmpty(tenancy.ArrearsAgreementStatus) ? null : new SearchArrearsAgreementSummary
+                    {
+                        StartDate = tenancy.ArrearsAgreementStartDate,
+                        Status = tenancy.ArrearsAgreementStatus
+                    },
                     PrimaryContact = new PrimaryContact
                     {
                         Name = tenancy.PrimaryContactName,

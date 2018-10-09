@@ -71,7 +71,7 @@ namespace LBHTenancyAPI.Gateways.Search
                         ON member.house_ref = tenagree.house_ref
                         RIGHT JOIN property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
-                        RIGHt JOIN  arag AS arag WITH(NOLOCK)
+                        LEFT OUTER JOIN  arag AS arag WITH(NOLOCK)
                         ON arag.tag_ref = tenagree.tag_ref
                         WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
                         OR LOWER(member.forename) = @lowerSearchTerm
@@ -96,7 +96,7 @@ namespace LBHTenancyAPI.Gateways.Search
                     ON member.house_ref = tenagree.house_ref
                     RIGHT JOIN property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
-                    RIGHt JOIN  arag AS arag WITH(NOLOCK)
+                    LEFT OUTER JOIN  arag AS arag WITH(NOLOCK)
                     ON arag.tag_ref = tenagree.tag_ref
                     WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
                     OR LOWER(member.forename) = @lowerSearchTerm
