@@ -7,6 +7,7 @@ using Moq;
 using Xunit;
 using System.Threading;
 using System.Collections.Generic;
+using System.Globalization;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using FluentAssertions;
 using LBH.Data.Domain;
@@ -96,7 +97,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
                 TenancyRef = "tRef",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active",
-                CurrentBalance = 0,
+                CurrentBalance = (decimal)1000.12,
                 LastActionCode = "ACC",
                 LastActionDate = DateTime.Now.AddDays(-1),
                 PrimaryContactPostcode = "test",
@@ -110,7 +111,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
                 TenancyRef = "tRef2",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active2",
-                CurrentBalance = 1,
+                CurrentBalance = (decimal)2000.34,
                 LastActionCode = "ACC2",
                 LastActionDate = DateTime.Now.AddDays(-2),
                 PrimaryContactPostcode = "test2",
@@ -138,7 +139,11 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[0].PropertyRef.Should().BeEquivalentTo(tenancy1.PropertyRef);
             response.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancy1.TenancyRef);
             response.Tenancies[0].Tenure.Should().BeEquivalentTo(tenancy1.Tenure);
-            response.Tenancies[0].CurrentBalance.Should().BeEquivalentTo(tenancy1.CurrentBalance.ToString("C"));
+
+            response.Tenancies[0].CurrentBalance.Should().NotBeNull();
+            response.Tenancies[0].CurrentBalance.Value.Should().Be(tenancy1.CurrentBalance);
+            response.Tenancies[0].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
+
             response.Tenancies[0].PrimaryContact.Name.Should().BeEquivalentTo(tenancy1.PrimaryContactName);
             response.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy1.PrimaryContactPostcode);
             response.Tenancies[0].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy1.PrimaryContactShortAddress);
@@ -148,7 +153,11 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[1].PropertyRef.Should().BeEquivalentTo(tenancy2.PropertyRef);
             response.Tenancies[1].TenancyRef.Should().BeEquivalentTo(tenancy2.TenancyRef);
             response.Tenancies[1].Tenure.Should().BeEquivalentTo(tenancy2.Tenure);
-            response.Tenancies[1].CurrentBalance.Should().BeEquivalentTo(tenancy2.CurrentBalance.ToString("C"));
+
+            response.Tenancies[1].CurrentBalance.Should().NotBeNull();
+            response.Tenancies[1].CurrentBalance.Value.Should().Be(tenancy2.CurrentBalance);
+            response.Tenancies[1].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
+            
             response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
