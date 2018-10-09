@@ -1,13 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
-using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 using Moq;
 using Xunit;
 using System.Threading;
 using System.Collections.Generic;
-using System.Globalization;
 using LBHTenancyAPI.Infrastructure.Exceptions;
 using FluentAssertions;
 using LBH.Data.Domain;
@@ -17,8 +15,8 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
 {
     public class SearchTenancyUseCaseTests
     {
-        private ISearchTenancyUseCase _classUnderTest;
-        private Mock<ISearchGateway> _fakeGateway;
+        private readonly ISearchTenancyUseCase _classUnderTest;
+        private readonly Mock<ISearchGateway> _fakeGateway;
 
         public SearchTenancyUseCaseTests()
         {
@@ -33,17 +31,14 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             //arrange
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
-                .ReturnsAsync(new List<LBH.Data.Domain.TenancyListItem>
-                {
-
-                });
+                .ReturnsAsync(new PagedResults<TenancyListItem>());
 
             var request = new SearchTenancyRequest
             {
                 SearchTerm = tenancyAgreementRef
             };
             //act
-            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             _fakeGateway.Verify(v => v.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None));
         }
@@ -55,6 +50,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             SearchTenancyRequest request = null;
             //act
             //assert
+            // ReSharper disable once ExpressionIsAlwaysNull
             await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
         }
 
@@ -74,7 +70,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             //arrange
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
-                .ReturnsAsync(null as List<LBH.Data.Domain.TenancyListItem>);
+                .ReturnsAsync(null as PagedResults<TenancyListItem>);
 
             var request = new SearchTenancyRequest
             {
@@ -88,7 +84,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
         }
 
         [Fact]
-        public async Task GivenValidedInput__WhenExecuteAsync_ThenShouldReturnListOfContacts()
+        public async Task GivenValidedInput__WhenExecuteAsync_ThenShouldReturnListOfTenancySummaries()
         {
             //arrange
             var tenancy1 = new TenancyListItem
@@ -121,10 +117,13 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             };
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
-                .ReturnsAsync(new List<TenancyListItem>
+                .ReturnsAsync(new PagedResults<TenancyListItem>
                 {
-                    tenancy1,
-                    tenancy2
+                    Results = new List<TenancyListItem>
+                    { 
+                        tenancy1,
+                        tenancy2
+                    }
                 });
 
             var request = new SearchTenancyRequest
@@ -163,6 +162,33 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
             response.Tenancies[1].ArrearsAgreementStatus.Should().BeEquivalentTo(tenancy2.ArrearsAgreementStatus);
 
+        }
+
+        [Theory]
+        [InlineData(11,10,2)]
+        [InlineData(10, 10, 1)]
+        [InlineData(0, 10, 0)]
+        [InlineData(1, 10, 1)]
+        public async Task GivenValidedInput_WhenGatewayRespondsTotalCount_ThenPageCountShouldBe(int totalCount, int pageSize, int expectedPageCount)
+        {
+            //arrange
+            var tenancyAgreementRef = "Test";
+            _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
+                .ReturnsAsync(new PagedResults<TenancyListItem>
+                {
+                    TotalResultsCount = totalCount
+                });
+
+            var request = new SearchTenancyRequest
+            {
+                SearchTerm = tenancyAgreementRef,
+                PageSize = pageSize
+            };
+            //act
+            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.PageCount.Should().Be(expectedPageCount);
         }
     }
 }

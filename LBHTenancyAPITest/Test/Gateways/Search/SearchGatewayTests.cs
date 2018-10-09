@@ -59,8 +59,9 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 Page = 0
             }, CancellationToken.None);
             //assert
-            response.Should().NotBeNullOrEmpty();
-            response[0].PrimaryContactName.Should().Contain(lastName);
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results[0].PrimaryContactName.Should().Contain(lastName);
         }
 
         [Theory]
@@ -99,8 +100,9 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 Page = 0
             }, CancellationToken.None);
             //assert
-            response.Should().NotBeNullOrEmpty();
-            response[0].PrimaryContactName.Should().Contain(firstName);
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results[0].PrimaryContactName.Should().Contain(firstName);
         }
 
         [Theory]
@@ -140,8 +142,9 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 Page = 0
             }, CancellationToken.None);
             //assert
-            response.Should().NotBeNullOrEmpty();
-            response[0].PrimaryContactPostcode.Should().Contain(postCode);
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results[0].PrimaryContactPostcode.Should().Contain(postCode);
         }
 
         [Theory]
@@ -180,8 +183,9 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 Page = 0
             }, CancellationToken.None);
             //assert
-            response.Should().NotBeNullOrEmpty();
-            response[0].PrimaryContactShortAddress.Should().Contain(shortAddress);
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results[0].PrimaryContactShortAddress.Should().Contain(shortAddress);
         }
 
         [Theory]
@@ -220,8 +224,55 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
                 Page = 0
             }, CancellationToken.None);
             //assert
-            response.Should().NotBeNullOrEmpty();
-            response[0].TenancyRef.Should().Contain(tagRef);
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results[0].TenancyRef.Should().Contain(tagRef);
+        }
+
+        [Theory]
+        [InlineData("Smith")]
+        [InlineData("Shetty")]
+        public async Task can_get_total_count(string lastName)
+        {
+            //arrange
+            //property
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            TestDataHelper.InsertProperty(expectedProperty, db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.house_ref = expectedTenancy.house_ref;
+            expectedMember2.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, db);
+            //arrears agreement
+            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
+            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, db);
+            //arrears agreement det
+            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
+            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, db);
+
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 1,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(2);
         }
     }
 }
