@@ -44,7 +44,8 @@ namespace LBHTenancyAPI.UseCases.Search
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     Tenure = tenancy.Tenure,
-                    CurrentBalance = tenancy.CurrentBalance.ToString(new CultureInfo("en-gb")),
+                    CurrentBalance = tenancy.CurrentBalance,
+                    CurrencySymbol = new CultureInfo("en-gb",true).NumberFormat.CurrencySymbol,
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContact = new PrimaryContact
                     {

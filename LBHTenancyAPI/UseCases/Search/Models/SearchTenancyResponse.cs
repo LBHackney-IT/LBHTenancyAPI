@@ -18,7 +18,9 @@ namespace LBHTenancyAPI.UseCases.Search.Models
         [JsonProperty("tenure")]
         public string Tenure { get; set; }
         [JsonProperty("current_balance")]
-        public string CurrentBalance { get; set; }
+        public decimal CurrentBalance { get; set; }
+        [JsonProperty("currency_symbol")]
+        public string CurrencySymbol { get; set; }
         [JsonProperty("current_arrears_agreement_status")]
         public string ArrearsAgreementStatus { get; set; }
         [JsonProperty("primary_contact")]

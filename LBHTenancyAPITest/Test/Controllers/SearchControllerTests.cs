@@ -91,7 +91,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var postcode = "EC12 1DS";
             var arrearsAgreementStatus = "status";
             var tenancyRef = "tenRef";
-            var currentBalance = "100";
+            decimal currentBalance = (decimal)100.12;
             var propertyRef = "propRef";
             var tenure = "tenure";
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
@@ -132,7 +132,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             getContacts.Data.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(postcode);
             getContacts.Data.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
             getContacts.Data.Tenancies[0].ArrearsAgreementStatus.Should().BeEquivalentTo(arrearsAgreementStatus);
-            getContacts.Data.Tenancies[0].CurrentBalance.Should().BeEquivalentTo(currentBalance);
+            getContacts.Data.Tenancies[0].CurrentBalance.Should().Be(currentBalance);
             getContacts.Data.Tenancies[0].PropertyRef.Should().BeEquivalentTo(propertyRef);
             getContacts.Data.Tenancies[0].Tenure.Should().BeEquivalentTo(tenure);
         }
