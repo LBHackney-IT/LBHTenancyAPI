@@ -139,7 +139,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[0].PropertyRef.Should().BeEquivalentTo(tenancy1.PropertyRef);
             response.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancy1.TenancyRef);
             response.Tenancies[0].Tenure.Should().BeEquivalentTo(tenancy1.Tenure);
-            response.Tenancies[0].CurrentBalance.Should().BeEquivalentTo(tenancy1.CurrentBalance.ToString("C", new CultureInfo("en-gb")));
+            response.Tenancies[0].CurrentBalance.Should().BeEquivalentTo(tenancy1.CurrentBalance.ToString(new CultureInfo("en-gb")));
             response.Tenancies[0].PrimaryContact.Name.Should().BeEquivalentTo(tenancy1.PrimaryContactName);
             response.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy1.PrimaryContactPostcode);
             response.Tenancies[0].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy1.PrimaryContactShortAddress);
@@ -149,7 +149,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[1].PropertyRef.Should().BeEquivalentTo(tenancy2.PropertyRef);
             response.Tenancies[1].TenancyRef.Should().BeEquivalentTo(tenancy2.TenancyRef);
             response.Tenancies[1].Tenure.Should().BeEquivalentTo(tenancy2.Tenure);
-            response.Tenancies[1].CurrentBalance.Should().BeEquivalentTo(tenancy2.CurrentBalance.ToString("C", new CultureInfo("en-gb")));
+            response.Tenancies[1].CurrentBalance.Should().BeEquivalentTo(tenancy2.CurrentBalance.ToString(new CultureInfo("en-gb")));
             response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
