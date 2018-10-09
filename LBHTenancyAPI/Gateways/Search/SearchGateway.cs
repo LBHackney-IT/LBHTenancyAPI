@@ -17,9 +17,9 @@ namespace LBHTenancyAPI.Gateways.Search
             _connectionString = connectionString;
         }
 
-        public async Task<List<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
+        public async Task<PagedResults<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
-            List<TenancyListItem> results;
+            var results = new PagedResults<TenancyListItem>();
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -84,8 +84,32 @@ namespace LBHTenancyAPI.Gateways.Search
                     new { searchTerm = request.SearchTerm, page = request.Page, pageSize = request.PageSize }
                 ).ConfigureAwait(false);
 
-                results = all?.ToList();
+                results.Results = all?.ToList();
+
+                var totalCount = await conn.QueryAsync<int>(
+                    @"
+                    DECLARE @lowerSearchTerm nvarchar(256);
+                    SET @lowerSearchTerm = LOWER(@searchTerm) 
+                    SELECT count(tenagree.tag_ref)
+                    FROM tenagree
+                    Left JOIN dbo.member member WITH(NOLOCK)
+                    ON member.house_ref = tenagree.house_ref
+                    RIGHT JOIN property WITH(NOLOCK)
+                    ON property.prop_ref = tenagree.prop_ref
+                    RIGHt JOIN  arag AS arag WITH(NOLOCK)
+                    ON arag.tag_ref = tenagree.tag_ref
+                    WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
+                    OR LOWER(member.forename) = @lowerSearchTerm
+                    OR LOWER(member.surname) = @lowerSearchTerm
+                    OR LOWER(property.short_address) like '%'+ @lowerSearchTerm +'%'
+                    OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%'",
+                    new { searchTerm = request.SearchTerm}
+                ).ConfigureAwait(false);
+                results.TotalResultsCount = totalCount.Sum();
             }
+
+            
+
             return results;
         }
 

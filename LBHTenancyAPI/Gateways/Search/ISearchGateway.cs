@@ -8,6 +8,6 @@ namespace LBHTenancyAPI.Gateways.Search
 {
     public interface ISearchGateway
     {
-        Task<List<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken);
+        Task<PagedResults<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken);
     }
 }

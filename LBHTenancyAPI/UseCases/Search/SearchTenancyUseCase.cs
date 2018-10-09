@@ -1,13 +1,9 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure.Exceptions;
-using LBHTenancyAPI.UseCases.Contacts;
 using LBHTenancyAPI.UseCases.Contacts.Models;
 using LBHTenancyAPI.UseCases.Search.Models;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace LBHTenancyAPI.UseCases.Search
 {
@@ -39,7 +35,7 @@ namespace LBHTenancyAPI.UseCases.Search
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response.ConvertAll(tenancy => new SearchSummary
+                Tenancies = response.Results.ConvertAll(tenancy => new SearchSummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
@@ -56,7 +52,9 @@ namespace LBHTenancyAPI.UseCases.Search
                         ShortAddress = tenancy.PrimaryContactShortAddress,
                         Postcode = tenancy.PrimaryContactPostcode
                     }
-                })
+                }),
+                TotalCount = response.TotalResultsCount,
+                PageCount = response.CalculatePageCount(request.PageSize)
             };
 
             return useCaseResponse;
