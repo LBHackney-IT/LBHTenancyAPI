@@ -219,7 +219,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember2, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -322,7 +322,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember2, _db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -334,6 +334,93 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response.Should().NotBeNull();
             response.Results.Should().NotBeNullOrEmpty();
             response.TotalResultsCount.Should().Be(2);
+        }
+
+        [Theory]
+        [InlineData("Schrodinger", "Ally", "Bob")]
+        [InlineData("Cat", "Alison", "Bon")]
+        public async Task search_is_ordered_by_lastname_surname(string lastName, string firstName, string firstName2)
+        {
+            //arrange
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            expectedMember.forename = firstName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.house_ref = expectedTenancy.house_ref;
+            expectedMember2.surname = lastName;
+            expectedMember2.forename = firstName2;
+            TestDataHelper.InsertMember(expectedMember2, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 10,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(2);
+            response.Results[0].PrimaryContactName.Should().Contain(firstName);
+            response.Results[1].PrimaryContactName.Should().Contain(firstName2);
+        }
+
+        [Theory]
+        [InlineData("Rick", "Alternate", "Pickle")]
+        [InlineData("Morty", "Funny", "Robot")]
+        public async Task search_can_page_results(string lastName, string firstName, string firstName2)
+        {
+            //arrange
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            expectedMember.forename = firstName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.house_ref = expectedTenancy.house_ref;
+            expectedMember2.surname = lastName;
+            expectedMember2.forename = firstName2;
+            TestDataHelper.InsertMember(expectedMember2, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 1,
+                Page = 0
+            }, CancellationToken.None);
+
+            var response2 = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 1,
+                Page = 1
+            }, CancellationToken.None);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(2);
+            response.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName} {lastName}");
+
+            //assert second response
+            response2.Should().NotBeNull();
+            response2.Results.Should().NotBeNullOrEmpty();
+            response2.TotalResultsCount.Should().Be(2);
+            response2.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName2} {lastName}");
         }
     }
 }
