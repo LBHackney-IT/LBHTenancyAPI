@@ -44,8 +44,6 @@ namespace LBHTenancyAPI.Gateways.Search
 
                     SELECT
                     Seq,
-                    ArrearsAgreementStartDate,
-                    ArrearsAgreementStatus,
                     CurrentBalance,
                     TenancyRef,
                     PropertyRef,
@@ -56,8 +54,6 @@ namespace LBHTenancyAPI.Gateways.Search
                     FROM
                     (
                         SELECT
-                        arag.arag_startdate as ArrearsAgreementStartDate,
-                        arag.arag_status as ArrearsAgreementStatus,
                         tenagree.cur_bal as CurrentBalance,
                         tenagree.tag_ref as TenancyRef,
                         tenagree.prop_ref as PropertyRef,
@@ -65,14 +61,12 @@ namespace LBHTenancyAPI.Gateways.Search
                         property.post_code as PrimaryContactPostcode,
                         property.short_address as PrimaryContactShortAddress,
                         RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
-                        ROW_NUMBER() OVER (ORDER BY arag.arag_startdate DESC) AS Seq
+                        ROW_NUMBER() OVER (ORDER BY tenagree.cur_bal DESC) AS Seq
                         FROM tenagree
                         Left JOIN dbo.member member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref
                         RIGHT JOIN property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
-                        LEFT OUTER JOIN  arag AS arag WITH(NOLOCK)
-                        ON arag.tag_ref = tenagree.tag_ref
                         WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
                         OR LOWER(member.forename) = @lowerSearchTerm
                         OR LOWER(member.surname) = @lowerSearchTerm
@@ -96,8 +90,6 @@ namespace LBHTenancyAPI.Gateways.Search
                     ON member.house_ref = tenagree.house_ref
                     RIGHT JOIN property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
-                    LEFT OUTER JOIN  arag AS arag WITH(NOLOCK)
-                    ON arag.tag_ref = tenagree.tag_ref
                     WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
                     OR LOWER(member.forename) = @lowerSearchTerm
                     OR LOWER(member.surname) = @lowerSearchTerm
@@ -107,8 +99,6 @@ namespace LBHTenancyAPI.Gateways.Search
                 ).ConfigureAwait(false);
                 results.TotalResultsCount = totalCount.Sum();
             }
-
-            
 
             return results;
         }

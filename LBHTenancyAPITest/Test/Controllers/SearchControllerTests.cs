@@ -108,11 +108,6 @@ namespace LBHTenancyAPITest.Test.Controllers
                                 Name = primaryContactName,
                                 Postcode = postcode
                             },
-                            SearchArrearsAgreementSummary = new SearchArrearsAgreementSummary
-                            {
-                                Status = arrearsAgreementStatus,
-                                StartDate = arrearsStartDate
-                            },
                             TenancyRef = tenancyRef,
                             CurrentBalance = new Currency
                             {
@@ -141,9 +136,6 @@ namespace LBHTenancyAPITest.Test.Controllers
             getContacts.Data.Tenancies[0].PrimaryContact.Name.Should().BeEquivalentTo(primaryContactName);
             getContacts.Data.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(postcode);
             getContacts.Data.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
-            getContacts.Data.Tenancies[0].SearchArrearsAgreementSummary.Should().NotBeNull();
-            getContacts.Data.Tenancies[0].SearchArrearsAgreementSummary.Status.Should().BeEquivalentTo(arrearsAgreementStatus);
-            getContacts.Data.Tenancies[0].SearchArrearsAgreementSummary.StartDate.Should().Be(arrearsStartDate);
             getContacts.Data.Tenancies[0].CurrentBalance.Should().NotBeNull();
             getContacts.Data.Tenancies[0].CurrentBalance.Value.Should().Be(currentBalance);
             getContacts.Data.Tenancies[0].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");

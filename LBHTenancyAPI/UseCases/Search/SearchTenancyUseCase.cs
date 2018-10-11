@@ -45,11 +45,6 @@ namespace LBHTenancyAPI.UseCases.Search
                         Value = tenancy.CurrentBalance,
                         CurrencyCode = "GBP",
                     },
-                    SearchArrearsAgreementSummary = string.IsNullOrEmpty(tenancy.ArrearsAgreementStatus) ? null : new SearchArrearsAgreementSummary
-                    {
-                        StartDate = tenancy.ArrearsAgreementStartDate,
-                        Status = tenancy.ArrearsAgreementStatus
-                    },
                     PrimaryContact = new PrimaryContact
                     {
                         Name = tenancy.PrimaryContactName,

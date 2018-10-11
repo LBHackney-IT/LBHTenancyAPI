@@ -146,9 +146,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[0].PrimaryContact.Name.Should().BeEquivalentTo(tenancy1.PrimaryContactName);
             response.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy1.PrimaryContactPostcode);
             response.Tenancies[0].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy1.PrimaryContactShortAddress);
-            response.Tenancies[0].SearchArrearsAgreementSummary.Should().NotBeNull();
-            response.Tenancies[0].SearchArrearsAgreementSummary.Status.Should().BeEquivalentTo(tenancy1.ArrearsAgreementStatus);
-            response.Tenancies[0].SearchArrearsAgreementSummary.StartDate.Should().Be(tenancy1.ArrearsAgreementStartDate);
 
             response.Tenancies[1].PropertyRef.Should().BeEquivalentTo(tenancy2.PropertyRef);
             response.Tenancies[1].TenancyRef.Should().BeEquivalentTo(tenancy2.TenancyRef);
@@ -161,11 +158,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
-
-            response.Tenancies[1].SearchArrearsAgreementSummary.Should().NotBeNull();
-            response.Tenancies[1].SearchArrearsAgreementSummary.Status.Should().BeEquivalentTo(tenancy2.ArrearsAgreementStatus);
-            response.Tenancies[1].SearchArrearsAgreementSummary.StartDate.Should().Be(tenancy2.ArrearsAgreementStartDate);
-
         }
 
         [Theory]
@@ -225,7 +217,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
-            response.Tenancies[0].SearchArrearsAgreementSummary.Should().BeNull();
+            response.Tenancies[0].Should().NotBeNull();
         }
     }
 }
