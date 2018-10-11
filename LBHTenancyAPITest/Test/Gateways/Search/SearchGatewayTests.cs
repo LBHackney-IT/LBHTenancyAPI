@@ -41,14 +41,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             TestDataHelper.InsertMember(expectedMember, _db);
-            //arrears agreement
-            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
-            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
-            //arrears agreement det
-            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
-            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -82,14 +74,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.forename = firstName;
             TestDataHelper.InsertMember(expectedMember, _db);
-            //arrears agreement
-            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
-            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
-            //arrears agreement det
-            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
-            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -124,14 +108,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             expectedMember.house_ref = expectedTenancy.house_ref;
             
             TestDataHelper.InsertMember(expectedMember, _db);
-            //arrears agreement
-            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
-            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
-            //arrears agreement det
-            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
-            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -165,14 +141,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             TestDataHelper.InsertMember(expectedMember, _db);
-            //arrears agreement
-            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
-            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
-            //arrears agreement det
-            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
-            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -252,14 +220,6 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
             TestDataHelper.InsertMember(expectedMember, _db);
-            //arrears agreement
-            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
-            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
-            //arrears agreement det
-            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
-            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -275,8 +235,8 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         }
 
         [Theory]
-        [InlineData("Smith")]
-        [InlineData("Shetty")]
+        [InlineData("Brady")]
+        [InlineData("Donaldson")]
         public async Task can_search_even_with_no_arrears_agreement(string lastName)
         {
             //arrange
