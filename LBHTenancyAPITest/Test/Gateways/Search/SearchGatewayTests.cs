@@ -270,5 +270,70 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response.Results.Should().NotBeNullOrEmpty();
             response.TotalResultsCount.Should().Be(2);
         }
+
+        [Theory]
+        [InlineData("Glover")]
+        [InlineData("Roark")]
+        public async Task members_with_no_tenancy_agreements_are_not_returned(string lastName)
+        {
+            //arrange
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            
+            expectedMember.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember2, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 1,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().BeNullOrEmpty();
+        }
+
+        /// <summary>
+        /// This scenario came up when testing against staging database
+        /// </summary>
+        /// <param name="lastName"></param>
+        /// <returns></returns>
+        [Theory]
+        [InlineData("Piper")]
+        [InlineData("Tiper")]
+        public async Task can_search_even_with_no_property_assigned(string lastName)
+        {
+            //arrange
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.house_ref = expectedTenancy.house_ref;
+            expectedMember2.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = 1,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(2);
+        }
     }
 }
