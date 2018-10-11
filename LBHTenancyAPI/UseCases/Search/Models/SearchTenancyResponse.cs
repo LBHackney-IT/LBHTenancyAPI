@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LBHTenancyAPI.Infrastructure.API;
 using Newtonsoft.Json;
@@ -7,13 +8,14 @@ namespace LBHTenancyAPI.UseCases.Search.Models
     public class SearchTenancyResponse:IPagedResponse
     {
         [JsonProperty("tenancies")]
-        public List<SearchSummary> Tenancies { get; set; }
-
+        public List<SearchTenancySummary> Tenancies { get; set; }
+        [JsonProperty("page_count")]
         public int PageCount { get; set; }
+        [JsonProperty("total_count")]
         public int TotalCount { get; set; }
     }
 
-    public class SearchSummary
+    public class SearchTenancySummary
     {
         [JsonProperty("ref")]
         public string TenancyRef { get; set; }
@@ -21,9 +23,6 @@ namespace LBHTenancyAPI.UseCases.Search.Models
         public string PropertyRef { get; set; }
         [JsonProperty("tenure")]
         public string Tenure { get; set; }
-
-        [JsonProperty("current_arrears_agreement_status")]
-        public string ArrearsAgreementStatus { get; set; }
 
         [JsonProperty("current_balance")]
         public Currency CurrentBalance { get; set; }
@@ -66,5 +65,13 @@ namespace LBHTenancyAPI.UseCases.Search.Models
         public string LastActionCode { get; set; }
         [JsonProperty("date")]
         public string LastActionDate { get; set; }
+    }
+
+    public class SearchArrearsAgreementSummary
+    {
+        [JsonProperty("status")]
+        public string Status { get; set; }
+        [JsonProperty("start_date")]
+        public DateTime StartDate { get; set; }
     }
 }

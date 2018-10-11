@@ -35,7 +35,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<SearchSummary>
+                    Tenancies = new List<SearchTenancySummary>
                     {
 
                     }
@@ -61,7 +61,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<SearchSummary>
+                    Tenancies = new List<SearchTenancySummary>
                     {
 
                     }
@@ -91,6 +91,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             var primaryContactName = $"{firstName} {lastName}";
             var postcode = "EC12 1DS";
             var arrearsAgreementStatus = "status";
+            var arrearsStartDate = DateTime.Now;
             var tenancyRef = "tenRef";
             decimal currentBalance = (decimal)100.12;
             var propertyRef = "propRef";
@@ -98,16 +99,15 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchTenancyResponse
                 {
-                    Tenancies = new List<SearchSummary>
+                    Tenancies = new List<SearchTenancySummary>
                     {
-                        new SearchSummary
+                        new SearchTenancySummary
                         {
                             PrimaryContact = new PrimaryContact
                             {
                                 Name = primaryContactName,
                                 Postcode = postcode
                             },
-                            ArrearsAgreementStatus = arrearsAgreementStatus,
                             TenancyRef = tenancyRef,
                             CurrentBalance = new Currency
                             {
@@ -136,7 +136,6 @@ namespace LBHTenancyAPITest.Test.Controllers
             getContacts.Data.Tenancies[0].PrimaryContact.Name.Should().BeEquivalentTo(primaryContactName);
             getContacts.Data.Tenancies[0].PrimaryContact.Postcode.Should().BeEquivalentTo(postcode);
             getContacts.Data.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
-            getContacts.Data.Tenancies[0].ArrearsAgreementStatus.Should().BeEquivalentTo(arrearsAgreementStatus);
             getContacts.Data.Tenancies[0].CurrentBalance.Should().NotBeNull();
             getContacts.Data.Tenancies[0].CurrentBalance.Value.Should().Be(currentBalance);
             getContacts.Data.Tenancies[0].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
