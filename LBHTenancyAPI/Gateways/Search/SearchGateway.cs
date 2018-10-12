@@ -61,17 +61,18 @@ namespace LBHTenancyAPI.Gateways.Search
                         property.post_code as PrimaryContactPostcode,
                         property.short_address as PrimaryContactShortAddress,
                         RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
-                        ROW_NUMBER() OVER (ORDER BY tenagree.cur_bal DESC) AS Seq
+                        ROW_NUMBER() OVER (ORDER BY member.surname, member.forename ASC) AS Seq
                         FROM tenagree
                         Left JOIN dbo.member member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref
-                        RIGHT JOIN property WITH(NOLOCK)
+                        LEFT JOIN property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
-                        WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
+                        WHERE tenagree.tag_ref IS NOT NULL
+                        AND (LOWER(tenagree.tag_ref) = @lowerSearchTerm
                         OR LOWER(member.forename) = @lowerSearchTerm
                         OR LOWER(member.surname) = @lowerSearchTerm
                         OR LOWER(property.short_address) like '%'+ @lowerSearchTerm +'%'
-                        OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%'
+                        OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%')
                     )
                     orderByWithSequenceSubQuery
                     WHERE Seq BETWEEN @Lower AND @Upper",
@@ -88,13 +89,14 @@ namespace LBHTenancyAPI.Gateways.Search
                     FROM tenagree
                     Left JOIN dbo.member member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref
-                    RIGHT JOIN property WITH(NOLOCK)
+                    LEFT JOIN property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
-                    WHERE LOWER(tenagree.tag_ref) = @lowerSearchTerm
+                    WHERE tenagree.tag_ref IS NOT NULL
+                    AND (LOWER(tenagree.tag_ref) = @lowerSearchTerm
                     OR LOWER(member.forename) = @lowerSearchTerm
                     OR LOWER(member.surname) = @lowerSearchTerm
                     OR LOWER(property.short_address) like '%'+ @lowerSearchTerm +'%'
-                    OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%'",
+                    OR LOWER(property.post_code) like  '%'+ @lowerSearchTerm +'%')",
                     new { searchTerm = request.SearchTerm}
                 ).ConfigureAwait(false);
                 results.TotalResultsCount = totalCount.Sum();
