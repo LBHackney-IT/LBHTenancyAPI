@@ -10,6 +10,7 @@ using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
+using LBHTenancyAPI.Infrastructure.Health;
 using LBHTenancyAPI.Infrastructure.Logging;
 using LBHTenancyAPI.Interfaces;
 using LBHTenancyAPI.Middleware;
@@ -83,7 +84,7 @@ namespace LBHTenancyAPI
             services.AddTransient<ICreateArrearsAgreementUseCase, CreateArrearsAgreementUseCase>();
 
             services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
-
+            
             services.AddTransient<IArrearsAgreementServiceChannel>(s=>
             {
                 var clientFactory = s.GetService<IWCFClientFactory>();
@@ -92,10 +93,16 @@ namespace LBHTenancyAPI
                     client.Open();
                 return client;
             });
+
             services.AddTransient<ICredentialsService, CredentialsService>();
 
             services.AddTransient<ISearchTenancyUseCase, SearchTenancyUseCase>();
             services.AddTransient<ISearchGateway>(s=>new SearchGateway(connectionString));
+
+            var loggerFactory = new LoggerFactory();
+            var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
+            services.AddTransient<SqlConnectionHealthCheck>(s=> new SqlConnectionHealthCheck(connectionString, sqlHealthCheckLogger));
+            services.AddHealthChecks(healthCheck =>healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
 
             ConfigureContacts(services, settings);
 
