@@ -23,6 +23,84 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         }
 
         [Theory]
+        [InlineData("000089/04", "000089/05")]
+        [InlineData("000090/04", "000089/05")]
+        public async Task search_returns_null_when_null_is_passed_in(string tenancyRef, string tenancyRef2)
+        {
+            //arrange
+            //property
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            TestDataHelper.InsertProperty(expectedProperty, _db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.tag_ref = tenancyRef;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //tenancy
+            var expectedTenancy2 = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy2.house_ref = expectedTenancy.house_ref;
+            expectedTenancy2.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy2.tag_ref = tenancyRef2;
+            TestDataHelper.InsertTenancy(expectedTenancy2, _db);
+            //member
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertMember(expectedMember, _db);
+
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = null,
+                PageSize = 10,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().BeNullOrEmpty();
+        }
+
+        [Theory]
+        [InlineData("000089/02", "000089/03")]
+        [InlineData("000090/02", "000089/03")]
+        public async Task can_search_on_tenancy_ref(string tenancyRef, string tenancyRef2)
+        {
+            //arrange
+            //property
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            TestDataHelper.InsertProperty(expectedProperty, _db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.tag_ref = tenancyRef;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //tenancy
+            var expectedTenancy2 = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy2.house_ref = expectedTenancy.house_ref;
+            expectedTenancy2.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy2.tag_ref = tenancyRef2;
+            TestDataHelper.InsertTenancy(expectedTenancy2, _db);
+            //member
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertMember(expectedMember, _db);
+
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = tenancyRef,
+                PageSize = 10,
+                Page = 0
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results.Count.Should().Be(1);
+            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
+        }
+
+        [Theory]
         [InlineData("Smith")]
         [InlineData("Shetty")]
         public async Task can_search_on_last_name(string lastName)
