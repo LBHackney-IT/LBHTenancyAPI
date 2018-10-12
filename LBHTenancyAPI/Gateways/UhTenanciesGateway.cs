@@ -68,6 +68,7 @@ namespace LBHTenancyAPI.Gateways
                     "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
                     new { allRefs = tenancyRefs }
                 ).ToList();
+                conn.Close();
             }
 
             var results = new List<TenancyListItem>();
@@ -107,6 +108,7 @@ namespace LBHTenancyAPI.Gateways
                     "ORDER BY araction.action_date DESC",
                     new { tRef = tenancyRef.Replace("%2F", "/") }
                 ).ToList();
+                conn.Close();
             }
 
             return results;
@@ -141,6 +143,7 @@ namespace LBHTenancyAPI.Gateways
                     new { tRef = tenancyRef.Replace("%2F", "/") }
                 ).ConfigureAwait(false);
                 paymentTransactions = query.ToList();
+                conn.Close();
             }
 
             return paymentTransactions;
@@ -173,6 +176,7 @@ namespace LBHTenancyAPI.Gateways
                 ).FirstOrDefault();
                 result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
                 result.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
+                conn.Close();
             }
             return result;
         }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -100,6 +99,7 @@ namespace LBHTenancyAPI.Gateways.Search
                     new { searchTerm = request.SearchTerm}
                 ).ConfigureAwait(false);
                 results.TotalResultsCount = totalCount.Sum();
+                conn.Close();
             }
 
             return results;
