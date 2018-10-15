@@ -9,18 +9,16 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.Controllers
 {
-    public class HealthcheckTest
+    public class HealthcheckControllerTests
     {
         private Mock<IHealthCheckService> _mockHealthCheckService;
         private HealthcheckController _classUnderTest;
 
-        public HealthcheckTest()
+        public HealthcheckControllerTests()
         {
             _mockHealthCheckService = new Mock<IHealthCheckService>();
             _classUnderTest = new HealthcheckController(_mockHealthCheckService.Object);
         }
-
-        
 
         [Fact]
         public void WhenCalled_Healthcheck_ShouldIncludeSuccessContent()
@@ -39,7 +37,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenCalled_SophisticatedHealthcheck_ShouldIncludeHealthHealth()
+        public async Task WhenCalled_DetailedHealthcheck_ShouldIncludeHealthHealth()
         {
             var result = await _classUnderTest.DetailedHealthCheck().ConfigureAwait(false) as OkObjectResult;
             Assert.NotNull(result);
@@ -47,7 +45,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         }
 
         [Fact]
-        public async Task WhenCalled_SophisticatedHealthcheck_ShouldResponse()
+        public async Task WhenCalled_DetailedHealthcheck_ShouldRespond_WithHealth()
         {
             //arrange
             _mockHealthCheckService.Setup(s => s.CheckHealthAsync(It.IsAny<CancellationToken>()))
@@ -57,6 +55,19 @@ namespace LBHTenancyAPITest.Test.Controllers
             Assert.NotNull(result);
             var healthCheckResult = result.Value as CompositeHealthCheckResult;
             Assert.Equal(healthCheckResult.CheckStatus, new CompositeHealthCheckResult(CheckStatus.Healthy).CheckStatus);
+        }
+
+        [Fact]
+        public async Task WhenCalled_DetailedHealthcheck_IfCantConnect_ShouldResponseWithUnhealthy()
+        {
+            //arrange
+            _mockHealthCheckService.Setup(s => s.CheckHealthAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new CompositeHealthCheckResult(CheckStatus.Unhealthy));
+            //act
+            var result = await _classUnderTest.DetailedHealthCheck().ConfigureAwait(false) as OkObjectResult;
+            Assert.NotNull(result);
+            var healthCheckResult = result.Value as CompositeHealthCheckResult;
+            Assert.Equal(healthCheckResult.CheckStatus, new CompositeHealthCheckResult(CheckStatus.Unhealthy).CheckStatus);
         }
     }
 }
