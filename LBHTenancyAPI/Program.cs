@@ -1,4 +1,6 @@
-﻿namespace LBHTenancyAPI
+using System;
+
+namespace LBHTenancyAPI
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
@@ -13,6 +15,7 @@
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseKestrel()
                 .Build();
     }
 }
