@@ -29,9 +29,7 @@ namespace LBHTenancyAPI.Infrastructure.Health
 
             _logger.LogInformation($"SqlConnectionHealthCheck: CheckAsync Started - {stopwatch.ElapsedMilliseconds}ms");
             _logger.LogInformation($"SqlConnectionHealthCheck: Started Creating SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
-            var sqlConnectionBUilder = new SqlConnectionStringBuilder(_connectionString);
-            sqlConnectionBUilder.Pooling = false;
-            using (var sqlConnection = new SqlConnection(sqlConnectionBUilder.ConnectionString))
+            using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Creating SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
                 _logger.LogInformation($"SqlConnectionHealthCheck: Started Opening SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
@@ -39,7 +37,7 @@ namespace LBHTenancyAPI.Infrastructure.Health
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Opening SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
 
                 _logger.LogInformation($"SqlConnectionHealthCheck: Started Querying tenagree - {stopwatch.ElapsedMilliseconds}ms");
-                var result = await sqlConnection.QueryAsync<int>("SELECT TOP 1 tag_reg from tenagree WHERE tenagree.tag_ref IS NOT NULL").ConfigureAwait(false);
+                var result = await sqlConnection.QueryAsync<string>("SELECT TOP 1 tag_ref from tenagree WHERE tenagree.tag_ref IS NOT NULL").ConfigureAwait(false);
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Querying tenagree - {stopwatch.ElapsedMilliseconds}ms");
                 if (result == null)
                 {
@@ -55,7 +53,7 @@ namespace LBHTenancyAPI.Infrastructure.Health
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Closing SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
 
                 _logger.LogInformation($"SqlConnectionHealthCheck: CheckAsync Finished - {stopwatch.ElapsedMilliseconds}ms");
-                return list.Count == 0 ? HealthCheckResult.Unhealthy("Could not get a valid record from database") : HealthCheckResult.Healthy("Successfully retrieved 1 record from daabase");
+                return list.Count == 0 ? HealthCheckResult.Unhealthy($"Could not get a valid record from database - {stopwatch.ElapsedMilliseconds}ms") : HealthCheckResult.Healthy($"Successfully retrieved 1 record from database - {stopwatch.ElapsedMilliseconds}ms");
             }
 
         }
