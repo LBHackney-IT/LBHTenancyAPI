@@ -15,7 +15,7 @@ namespace LBHTenancyAPI
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseKestrel(server=> server.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30))
+                .UseKestrel()
                 .Build();
     }
 }
