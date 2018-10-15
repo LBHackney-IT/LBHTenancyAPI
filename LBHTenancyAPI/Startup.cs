@@ -101,7 +101,10 @@ namespace LBHTenancyAPI
 
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
-            services.AddTransient<SqlConnectionHealthCheck>(s=> new SqlConnectionHealthCheck(connectionString, sqlHealthCheckLogger));
+
+            services.AddSingleton<ISqlConnectionFactory>(s => new SqlConnectionFactory(connectionString, loggerFactory.CreateLogger<SqlConnectionFactory>()));
+
+            services.AddTransient<SqlConnectionHealthCheck>(s=> new SqlConnectionHealthCheck(s.GetService<ISqlConnectionFactory>(), sqlHealthCheckLogger));
             services.AddHealthChecks(healthCheck =>healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
 
             ConfigureContacts(services, settings);

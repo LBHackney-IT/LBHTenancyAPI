@@ -4,6 +4,12 @@
         <name>LBHTenancyAPI</name>
     </assembly>
     <members>
+        <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
+            <summary>
+            Creates sql connection
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LBHTenancyAPI.Gateways.Arrears.Impl.ArrearsActionDiaryGateway">
             <summary>
             ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
