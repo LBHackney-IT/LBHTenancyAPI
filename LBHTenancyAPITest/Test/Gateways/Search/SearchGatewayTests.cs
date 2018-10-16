@@ -53,7 +53,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = null,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -91,7 +91,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = tenancyRef,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -125,7 +125,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -158,7 +158,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = firstName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -192,7 +192,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = postCode,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -225,7 +225,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = shortAddress,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -266,7 +266,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = tagRef,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -304,7 +304,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -341,7 +341,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -369,7 +369,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -406,7 +406,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -441,7 +441,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -478,14 +478,14 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
 
             var response2 = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 1
+                Page = 2
             }, CancellationToken.None);
 
             //assert

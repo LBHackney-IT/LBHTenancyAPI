@@ -18,8 +18,8 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
             var validationResult = validator.Validate(castedRequest);
             if (castedRequest.Page == 0)
                 castedRequest.Page = 1;
-            if (PageSize == 0)
-                PageSize = 10;
+            if (castedRequest.PageSize == 0)
+                castedRequest.PageSize = 10;
             return new RequestValidationResponse(validationResult);
         }
 
