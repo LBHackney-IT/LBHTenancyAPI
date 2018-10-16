@@ -27,45 +27,45 @@ namespace LBHTenancyAPI.Gateways
             {
                 conn.Open();
                 all = conn.Query<TenancyListItem>(
-                    "SELECT " +
-                    "tenagree.tag_ref as TenancyRef, " +
-                    "tenagree.cur_bal as CurrentBalance, " +
-                    "tenagree.prop_ref as PropertyRef, " +
-                    "tenagree.tenure as Tenure, " +
-                    "tenagree.rent as Rent, " +
-                    "tenagree.service as Service, " +
-                    "tenagree.other_charge as OtherCharge, " +
-                    "contacts.con_name as PrimaryContactName, " +
-                    "property.short_address as PrimaryContactShortAddress, " +
-                    "property.post_code as PrimaryContactPostcode, " +
-                    "araction.tag_ref AS TenancyRef, " +
-                    "araction.action_code AS LastActionCode, " +
-                    "araction.action_date AS LastActionDate, " +
-                    "arag.arag_status as ArrearsAgreementStatus, " +
-                    "arag.arag_startdate as ArrearsAgreementStartDate " +
-                    "FROM tenagree " +
-                    "LEFT JOIN contacts " +
-                    "ON contacts.tag_ref = tenagree.tag_ref " +
-                    "LEFT JOIN property " +
-                    "ON property.prop_ref = tenagree.prop_ref " +
-                    "LEFT JOIN ( " +
-                    "SELECT " +
-                    "araction.tag_ref, " +
-                    "araction.action_code, " +
-                    "araction.action_date " +
-                    "FROM araction " +
-                    "WHERE araction.tag_ref IN @allRefs " +
-                    ") AS araction ON araction.tag_ref = tenagree.tag_ref " +
-                    "LEFT JOIN ( " +
-                    "SELECT " +
-                    "arag.tag_ref," +
-                    "arag.arag_status, " +
-                    "arag.arag_startdate " +
-                    "FROM arag " +
-                    "WHERE arag.tag_ref IN @allRefs " +
-                    ") AS arag ON arag.tag_ref = tenagree.tag_ref " +
-                    "WHERE tenagree.tag_ref IN @allRefs " +
-                    "ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
+                  @"SELECT 
+                    tenagree.tag_ref as TenancyRef, 
+                    tenagree.cur_bal as CurrentBalance, 
+                    tenagree.prop_ref as PropertyRef, 
+                    tenagree.tenure as Tenure, 
+                    tenagree.rent as Rent, 
+                    tenagree.service as Service, 
+                    tenagree.other_charge as OtherCharge, 
+                    RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
+                    property.short_address as PrimaryContactShortAddress, 
+                    property.post_code as PrimaryContactPostcode, 
+                    araction.tag_ref AS TenancyRef, 
+                    araction.action_code AS LastActionCode, 
+                    araction.action_date AS LastActionDate, 
+                    arag.arag_status as ArrearsAgreementStatus, 
+                    arag.arag_startdate as ArrearsAgreementStartDate 
+                    FROM tenagree 
+                    Left JOIN dbo.member member WITH(NOLOCK) 
+                    ON member.house_ref = tenagree.house_ref 
+                    LEFT JOIN property 
+                    ON property.prop_ref = tenagree.prop_ref 
+                    LEFT JOIN ( 
+                    SELECT 
+                    araction.tag_ref, 
+                    araction.action_code, 
+                    araction.action_date 
+                    FROM araction 
+                    WHERE araction.tag_ref IN @allRefs 
+                    ) AS araction ON araction.tag_ref = tenagree.tag_ref 
+                    LEFT JOIN ( 
+                    SELECT 
+                    arag.tag_ref,
+                    arag.arag_status, 
+                    arag.arag_startdate 
+                    FROM arag 
+                    WHERE arag.tag_ref IN @allRefs 
+                    ) AS arag ON arag.tag_ref = tenagree.tag_ref 
+                    WHERE tenagree.tag_ref IN @allRefs 
+                    ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
                     new { allRefs = tenancyRefs }
                 ).ToList();
                 conn.Close();
@@ -155,23 +155,24 @@ namespace LBHTenancyAPI.Gateways
             using (var conn = new SqlConnection(_connectionString))
             {
                 result = conn.Query<Tenancy>(
-                    "SELECT TOP 1" +
-                    "tenagree.tag_ref as TenancyRef, " +
-                    "tenagree.cur_bal as CurrentBalance, " +
-                    "tenagree.tenure as Tenure, " +
-                    "contacts.con_name as PrimaryContactName, " +
-                    "property.address1 as PrimaryContactLongAddress, " +
-                    "property.post_code as PrimaryContactPostcode, " +
-                    "contacts.con_phone1 as PrimaryContactPhone " +
-                    "FROM tenagree " +
-                    "LEFT JOIN arag " +
-                    "ON arag.tag_ref = tenagree.tag_ref " +
-                    "LEFT JOIN contacts " +
-                    "ON contacts.tag_ref = tenagree.tag_ref " +
-                    "LEFT JOIN property " +
-                    "ON property.prop_ref = tenagree.prop_ref " +
-                    "WHERE tenagree.tag_ref = @tRef " +
-                    "ORDER BY arag.arag_startdate DESC",
+                    @"
+                    SELECT TOP 1
+                    tenagree.tag_ref as TenancyRef, 
+                    tenagree.cur_bal as CurrentBalance, 
+                    tenagree.tenure as Tenure, 
+                    RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName, 
+                    property.address1 as PrimaryContactLongAddress, 
+                    property.post_code as PrimaryContactPostcode, 
+                    contacts.con_phone1 as PrimaryContactPhone 
+                    FROM tenagree 
+                    LEFT JOIN arag 
+                    ON arag.tag_ref = tenagree.tag_ref 
+                    Left JOIN dbo.member member WITH(NOLOCK)  
+                    ON member.house_ref = tenagree.house_ref 
+                    LEFT JOIN property 
+                    ON property.prop_ref = tenagree.prop_ref 
+                    WHERE tenagree.tag_ref = @tRef 
+                    ORDER BY arag.arag_startdate DESC",
                     new { tRef = tenancyRef.Replace("%2F", "/") }
                 ).FirstOrDefault();
                 result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
