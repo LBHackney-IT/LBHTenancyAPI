@@ -165,7 +165,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
         [InlineData(10, 10, 1)]
         [InlineData(0, 10, 1)]
         [InlineData(1, 10, 1)]
-        [InlineData(679, 10, 67)]
+        [InlineData(679, 10, 68)]
         public async Task GivenValidedInput_WhenGatewayRespondsTotalCount_ThenPageCountShouldBe(int totalCount, int pageSize, int expectedPageCount)
         {
             //arrange
@@ -174,7 +174,6 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
                 .ReturnsAsync(new PagedResults<TenancyListItem>
                 {
                     TotalResultsCount = totalCount,
-                    
                 });
 
             var request = new SearchTenancyRequest
