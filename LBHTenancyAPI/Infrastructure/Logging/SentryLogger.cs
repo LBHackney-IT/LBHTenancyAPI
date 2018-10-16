@@ -9,13 +9,15 @@ namespace LBHTenancyAPI.Infrastructure.Logging
     {
         private readonly string _name;
         private readonly string _url;
+        private readonly string _environment;
         private readonly RavenClient _ravenClient;
         
 
-        public SentryLogger(string name, string url)
+        public SentryLogger(string name, string url, string environment)
         {
             _name = name;
             _url = url;
+            _environment = environment;
             _ravenClient = new RavenClient(_url);
         }
 
@@ -32,7 +34,11 @@ namespace LBHTenancyAPI.Infrastructure.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if(exception != null)
-                _ravenClient.Capture(new SentryEvent(exception));
+            {
+                var ev = new SentryEvent(exception);
+                ev.Tags.Add("environment", _environment);
+                _ravenClient.Capture(ev);
+            }
         }
     }
 }
