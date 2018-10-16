@@ -163,8 +163,9 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
         [Theory]
         [InlineData(11,10,2)]
         [InlineData(10, 10, 1)]
-        [InlineData(0, 10, 0)]
+        [InlineData(0, 10, 1)]
         [InlineData(1, 10, 1)]
+        [InlineData(679, 10, 68)]
         public async Task GivenValidedInput_WhenGatewayRespondsTotalCount_ThenPageCountShouldBe(int totalCount, int pageSize, int expectedPageCount)
         {
             //arrange
@@ -172,7 +173,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Search
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.SearchTerm.Equals("Test")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<TenancyListItem>
                 {
-                    TotalResultsCount = totalCount
+                    TotalResultsCount = totalCount,
                 });
 
             var request = new SearchTenancyRequest

@@ -16,8 +16,10 @@ namespace LBHTenancyAPI.UseCases.Contacts.Models
             var validator = new SearchTenancyRequestValidator();
             var castedRequest = request as SearchTenancyRequest;
             var validationResult = validator.Validate(castedRequest);
-            if (PageSize == 0)
-                PageSize = 10;
+            if (castedRequest.Page == 0)
+                castedRequest.Page = 1;
+            if (castedRequest.PageSize == 0)
+                castedRequest.PageSize = 10;
             return new RequestValidationResponse(validationResult);
         }
 

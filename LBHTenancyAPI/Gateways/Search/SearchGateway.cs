@@ -75,7 +75,7 @@ namespace LBHTenancyAPI.Gateways.Search
                     )
                     orderByWithSequenceSubQuery
                     WHERE Seq BETWEEN @Lower AND @Upper",
-                    new { searchTerm = request.SearchTerm, page = request.Page, pageSize = request.PageSize }
+                    new { searchTerm = request.SearchTerm, page = request.Page > 0 ? request.Page - 1: 0, pageSize = request.PageSize }
                 ).ConfigureAwait(false);
 
                 results.Results = all?.ToList();

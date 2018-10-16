@@ -22,6 +22,7 @@ namespace LBHTenancyAPI.UseCases.Search
             if (request == null)
                 throw new BadRequestException();
 
+            
             var validationResponse = request.Validate(request);
             if (!validationResponse.IsValid)
                 throw new BadRequestException(validationResponse);
@@ -53,7 +54,7 @@ namespace LBHTenancyAPI.UseCases.Search
                     }
                 }),
                 TotalCount = response.TotalResultsCount,
-                PageCount = response.CalculatePageCount(request.PageSize)
+                PageCount = response.CalculatePageCount(request.PageSize, response.TotalResultsCount)
             };
 
             return useCaseResponse;
