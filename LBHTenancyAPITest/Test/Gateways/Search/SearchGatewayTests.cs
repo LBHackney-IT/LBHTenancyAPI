@@ -53,7 +53,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = null,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -91,7 +91,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = tenancyRef,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -125,7 +125,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -158,7 +158,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = firstName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -192,7 +192,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = postCode,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -225,7 +225,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = shortAddress,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -266,7 +266,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = tagRef,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -304,7 +304,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -341,7 +341,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -369,7 +369,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -406,7 +406,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -441,7 +441,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 10,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -478,14 +478,14 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 0
+                Page = 1
             }, CancellationToken.None);
 
             var response2 = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
                 SearchTerm = lastName,
                 PageSize = 1,
-                Page = 1
+                Page = 2
             }, CancellationToken.None);
 
             //assert
@@ -499,6 +499,48 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response2.Results.Should().NotBeNullOrEmpty();
             response2.TotalResultsCount.Should().Be(2);
             response2.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName2} {lastName}");
+        }
+
+        [Theory]
+        [InlineData("Jane", 11, 10, 2, 1)]
+        [InlineData("Doe", 10, 10, 1, 10)]
+        [InlineData("tell",0, 10, 1, 0)]
+        [InlineData("donathan",1, 10, 1, 1)]
+        [InlineData("portaine",21, 10, 3,1)]
+        public async Task search_can_page_results_based_on_1_being_starting_number(string lastName, int totalCount, int pageSize, int expectedPageCount, int expectedResultsCount)
+        {
+            //arrange
+            //tenancy
+            for (int i = 0; i < totalCount; i++)
+            {
+                InsertMemberIntoTenancy(lastName);
+            }
+
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = lastName,
+                PageSize = pageSize,
+                Page = expectedPageCount
+            }, CancellationToken.None);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Count.Should().Be(expectedResultsCount);
+            response.TotalResultsCount.Should().Be(totalCount);
+            response.CalculatePageCount(pageSize, totalCount).Should().Be(expectedPageCount);
+        }
+
+        private void InsertMemberIntoTenancy(string lastName)
+        {
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            TestDataHelper.InsertMember(expectedMember, _db);
         }
     }
 }
