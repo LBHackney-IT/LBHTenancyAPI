@@ -162,8 +162,7 @@ namespace LBHTenancyAPI.Gateways
                     tenagree.tenure as Tenure, 
                     RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName, 
                     property.address1 as PrimaryContactLongAddress, 
-                    property.post_code as PrimaryContactPostcode, 
-                    contacts.con_phone1 as PrimaryContactPhone 
+                    property.post_code as PrimaryContactPostcode 
                     FROM tenagree 
                     LEFT JOIN arag 
                     ON arag.tag_ref = tenagree.tag_ref 

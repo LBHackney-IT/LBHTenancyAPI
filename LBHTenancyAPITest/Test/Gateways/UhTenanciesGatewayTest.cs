@@ -42,7 +42,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTenancyObjectForThatRef()
         {
-            var expectedListItem = GenerateFullTenancy();
+            var expectedListItem = GenerateTenancyListItem();
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedListItem.TenancyRef});
 
@@ -51,7 +51,7 @@ namespace LBHTenancyAPITest.Test.Gateways
             Assert.Contains(expectedListItem, tenancies);
         }
 
-        private TenancyListItem GenerateFullTenancy()
+        private TenancyListItem GenerateTenancyListItem()
         {
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
@@ -91,29 +91,53 @@ namespace LBHTenancyAPITest.Test.Gateways
             };
         }
 
-        private static void ValidateListItem(
-            TenancyListItem tenancy, TenancyAgreement expectedTenancy,
-            Helpers.Entities.ArrearsAgreement expectedArrearsAgreement, List<ArrearsActionDiaryEntry> actionDiaryDetails,
-            Member expectedMember, Property expectedProperty)
+        private Tenancy GenerateTenancy()
         {
-            tenancy.ArrearsAgreementStartDate.Should().Be(expectedArrearsAgreement.arag_startdate);
-            tenancy.ArrearsAgreementStatus.Should().Be(expectedArrearsAgreement.arag_status);
-            tenancy.CurrentBalance.Should().Be(expectedTenancy.cur_bal);
-            tenancy.LastActionCode.Should().Be(actionDiaryDetails[0].Code);
-            tenancy.LastActionDate.Should().Be(actionDiaryDetails[0].Date);
-            tenancy.PrimaryContactName.Should().BeEquivalentTo(expectedMember.GetFullName());
-            tenancy.PrimaryContactPostcode.Should().BeEquivalentTo(expectedProperty.post_code);
-            tenancy.PrimaryContactShortAddress.Should().BeEquivalentTo(expectedProperty.short_address);
-            tenancy.PropertyRef.Should().BeEquivalentTo(expectedProperty.prop_ref);
-            tenancy.TenancyRef.Should().BeEquivalentTo(expectedTenancy.tag_ref);
-            tenancy.Tenure.Should().BeEquivalentTo(expectedTenancy.tenure);
+            //property
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            TestDataHelper.InsertProperty(expectedProperty, db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertMember(expectedMember, db);
+            //arrears agreement
+            var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
+            expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, db);
+            //arrears agreement det
+            var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
+            expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, db);
+
+            var actionDiaryDetails = InsertRandomActionDiaryDetails(expectedTenancy.tag_ref, 1);
+            return new Tenancy
+            {
+                AgreementStatus = expectedArrearsAgreement.arag_status,
+                CurrentBalance = expectedTenancy.cur_bal,
+                PrimaryContactName = expectedMember.GetFullName(),
+                PrimaryContactPostcode = expectedProperty.post_code,
+                PrimaryContactLongAddress = expectedProperty.address1,
+                PropertyRef = expectedProperty.prop_ref,
+                TenancyRef = expectedTenancy.tag_ref,
+                Tenure = expectedTenancy.tenure,
+                ArrearsActionDiary = actionDiaryDetails,
+                ArrearsAgreements = new List<ArrearsAgreement> { new ArrearsAgreement
+                {
+                    
+                } }
+            };
         }
 
         [Fact]
         public void WhenGivenSomeTenancyRefs_GetTenanciesByRefs_ShouldReturnTenancyObjectForEachValidRef()
         {
-            TenancyListItem expectedTenancy1 = GenerateFullTenancy();
-            TenancyListItem expectedTenancy2 = GenerateFullTenancy();
+            TenancyListItem expectedTenancy1 = GenerateTenancyListItem();
+            TenancyListItem expectedTenancy2 = GenerateTenancyListItem();
 
             var tenancies = GetTenanciesByRef(new List<string>
             {
@@ -131,7 +155,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTheLatestAgreement()
         {
-            TenancyListItem expectedTenancy = GenerateFullTenancy();
+            TenancyListItem expectedTenancy = GenerateTenancyListItem();
 
             DateTime latestAragDate = expectedTenancy.ArrearsAgreementStartDate.AddDays(1);
             InsertAgreement(expectedTenancy.TenancyRef, "Inactive",expectedTenancy.ArrearsAgreementStartDate.Subtract(DAY_IN_TIMESPAN));
@@ -144,7 +168,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetTenanciesByRefs_ShouldReturnTheLatestArrearsAction()
         {
-            TenancyListItem expectedTenancy = GenerateFullTenancy();
+            TenancyListItem expectedTenancy = GenerateTenancyListItem();
 
             DateTime latestActionDate = expectedTenancy.LastActionDate.AddDays(1);
             InsertArrearsActions(expectedTenancy.TenancyRef, "ABC",
@@ -158,8 +182,8 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldReturnAllUniqueTenancies()
         {
-            TenancyListItem firstTenancy = GenerateFullTenancy();
-            TenancyListItem secondTenancy = GenerateFullTenancy();
+            TenancyListItem firstTenancy = GenerateTenancyListItem();
+            TenancyListItem secondTenancy = GenerateTenancyListItem();
 
             DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.AddDays(1);
             InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
@@ -245,7 +269,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         {
             var random = new Randomizer();
 
-            TenancyListItem expectedTenancy = GenerateFullTenancy();
+            TenancyListItem expectedTenancy = GenerateTenancyListItem();
 
             string longAddress = $"{expectedTenancy.PrimaryContactShortAddress}\n" +
                                  $"{random.Words()}\n{random.Words()}\n{random.Words()}";
@@ -266,7 +290,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenATenancyRefWithNoAddress_GetTenanciesByRefs_ShouldReturnNull()
         {
-            TenancyListItem expectedTenancy = CreateRandomTenancyListItem();
+            TenancyListItem expectedTenancy = GenerateTenancyListItem();
             expectedTenancy.PrimaryContactShortAddress = null;
             InsertTenancyAttributes(expectedTenancy);
 
@@ -299,7 +323,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
         {
-            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
+            Tenancy expectedTenancy = GenerateTenancy();
             InsertSingleTenancyAttributes(expectedTenancy);
 
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
@@ -314,7 +338,7 @@ namespace LBHTenancyAPITest.Test.Gateways
         [Fact]
         public void WhenGivenTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithLatestTenArrearsActions()
         {
-            Tenancy expectedTenancy= CreateRandomSingleTenancyItem();
+            Tenancy expectedTenancy = CreateRandomSingleTenancyItem();
             InsertSingleTenancyAttributes(expectedTenancy);
 
             expectedTenancy.ArrearsActionDiary = InsertRandomActionDiaryDetails(expectedTenancy.TenancyRef, 11);
