@@ -526,14 +526,6 @@ namespace LBHTenancyAPITest.Test.Gateways
             };
         }
 
-        private TenancyListItem InsertRandomisedTenancyListItem()
-        {
-            TenancyListItem tenancy = CreateRandomTenancyListItem();
-            InsertTenancyAttributes(tenancy);
-
-            return tenancy;
-        }
-
         private string InsertQueries()
         {
             string commandText =
