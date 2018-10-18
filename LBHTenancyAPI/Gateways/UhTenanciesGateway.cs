@@ -38,7 +38,6 @@ namespace LBHTenancyAPI.Gateways
                     RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                     property.short_address as PrimaryContactShortAddress, 
                     property.post_code as PrimaryContactPostcode, 
-                    araction.tag_ref AS TenancyRef, 
                     araction.action_code AS LastActionCode, 
                     araction.action_date AS LastActionDate, 
                     arag.arag_status as ArrearsAgreementStatus, 
@@ -47,6 +46,7 @@ namespace LBHTenancyAPI.Gateways
                     Left JOIN dbo.member member WITH(NOLOCK) 
                     ON member.house_ref = tenagree.house_ref 
                     LEFT JOIN property 
+                    LEFT JOIN property WITH(NOLOCK) 
                     ON property.prop_ref = tenagree.prop_ref 
                     LEFT JOIN ( 
                     SELECT 
