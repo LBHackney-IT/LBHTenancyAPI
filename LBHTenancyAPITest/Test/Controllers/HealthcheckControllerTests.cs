@@ -39,7 +39,7 @@ namespace LBHTenancyAPITest.Test.Controllers
         [Fact]
         public async Task WhenCalled_DetailedHealthcheck_ShouldIncludeHealthHealth()
         {
-            var result = await _classUnderTest.DetailedHealthCheck().ConfigureAwait(false) as OkObjectResult;
+            var result = await _classUnderTest.StatusHealthCheck().ConfigureAwait(false) as OkObjectResult;
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
         }
@@ -51,7 +51,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mockHealthCheckService.Setup(s => s.CheckHealthAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new CompositeHealthCheckResult(CheckStatus.Healthy));
             //act
-            var result = await _classUnderTest.DetailedHealthCheck().ConfigureAwait(false) as OkObjectResult;
+            var result = await _classUnderTest.StatusHealthCheck().ConfigureAwait(false) as OkObjectResult;
             Assert.NotNull(result);
             var healthCheckResult = result.Value as CompositeHealthCheckResult;
             Assert.Equal(healthCheckResult.CheckStatus, new CompositeHealthCheckResult(CheckStatus.Healthy).CheckStatus);
@@ -64,7 +64,7 @@ namespace LBHTenancyAPITest.Test.Controllers
             _mockHealthCheckService.Setup(s => s.CheckHealthAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new CompositeHealthCheckResult(CheckStatus.Unhealthy));
             //act
-            var result = await _classUnderTest.DetailedHealthCheck().ConfigureAwait(false) as OkObjectResult;
+            var result = await _classUnderTest.StatusHealthCheck().ConfigureAwait(false) as OkObjectResult;
             Assert.NotNull(result);
             var healthCheckResult = result.Value as CompositeHealthCheckResult;
             Assert.Equal(healthCheckResult.CheckStatus, new CompositeHealthCheckResult(CheckStatus.Unhealthy).CheckStatus);
