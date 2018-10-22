@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBHTenancyAPI.Gateways.Search;
-using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.Search.Models;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
 using LBHTenancyAPITest.Helpers.Data;
@@ -51,7 +51,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = null,
+                
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -89,7 +89,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = tenancyRef,
+                TenancyRef = tenancyRef,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -123,7 +123,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -156,7 +156,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = firstName,
+                FirstName = firstName,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -190,7 +190,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = postCode,
+                PostCode = postCode,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -223,7 +223,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = shortAddress,
+                Address = shortAddress,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -264,7 +264,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = tagRef,
+                TenancyRef = tagRef,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -302,7 +302,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 1
             }, CancellationToken.None);
@@ -339,7 +339,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 1
             }, CancellationToken.None);
@@ -367,7 +367,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 1
             }, CancellationToken.None);
@@ -404,7 +404,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 1
             }, CancellationToken.None);
@@ -439,7 +439,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -476,14 +476,14 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 1
             }, CancellationToken.None);
 
             var response2 = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = 1,
                 Page = 2
             }, CancellationToken.None);
@@ -519,7 +519,7 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                SearchTerm = lastName,
+                LastName = lastName,
                 PageSize = pageSize,
                 Page = expectedPageCount
             }, CancellationToken.None);

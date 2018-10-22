@@ -43,7 +43,7 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var request = new SearchTenancyRequest
             {
-                SearchTerm = "test"
+                TenancyRef = "test"
             };
             //act
             var response = await _classUnderTest.Get(request).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var request = new SearchTenancyRequest
             {
-                SearchTerm = "test"
+                TenancyRef = "test"
             };
             //act
             var response = await _classUnderTest.Get(request).ConfigureAwait(false);
@@ -122,7 +122,8 @@ namespace LBHTenancyAPITest.Test.Controllers
 
             var request = new SearchTenancyRequest
             {
-                SearchTerm = "test"
+                FirstName = firstName,
+                LastName = lastName
             };
             //act
             var response = await _classUnderTest.Get(request).ConfigureAwait(false);

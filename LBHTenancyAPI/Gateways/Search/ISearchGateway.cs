@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
-using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.Search
 {
