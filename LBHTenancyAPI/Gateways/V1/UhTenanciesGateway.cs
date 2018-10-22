@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using LBH.Data.Domain;
 
-namespace LBHTenancyAPI.Gateways
+namespace LBHTenancyAPI.Gateways.V1
 {
     public class UhTenanciesGateway : ITenanciesGateway
     {

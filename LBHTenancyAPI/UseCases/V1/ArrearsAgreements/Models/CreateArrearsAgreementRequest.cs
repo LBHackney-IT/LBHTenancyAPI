@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentValidation;
 using AgreementService;
-using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.Infrastructure.V1.API;
+using LBHTenancyAPI.Infrastructure.V1.Validation;
 
 namespace LBHTenancyAPI.UseCases.V1.ArrearsAgreements.Models
 {

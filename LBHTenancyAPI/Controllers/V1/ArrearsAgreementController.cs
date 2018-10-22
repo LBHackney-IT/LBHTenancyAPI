@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Extensions.Controller;
-using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.V1.ArrearsAgreements;
 using LBHTenancyAPI.UseCases.V1.ArrearsAgreements.Models;
 using Microsoft.AspNetCore.Mvc;

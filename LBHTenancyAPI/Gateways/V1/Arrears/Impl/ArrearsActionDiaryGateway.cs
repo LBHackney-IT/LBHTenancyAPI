@@ -1,9 +1,9 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 
-namespace LBHTenancyAPI.Gateways.Arrears.Impl
+namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
 {
     /// <summary>
     /// ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes

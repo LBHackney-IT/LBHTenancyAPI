@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Infrastructure.V1.Exceptions;
+using LBHTenancyAPI.UseCases.V2.Search.Models;
 
 namespace LBHTenancyAPI.UseCases.V2.Search
 {

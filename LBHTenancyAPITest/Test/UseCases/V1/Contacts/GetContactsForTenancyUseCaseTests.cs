@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Gateways.Contacts;
+using LBHTenancyAPI.Gateways.V1.Contacts;
 using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 using LBHTenancyAPI.UseCases.V1.Contacts;
 using LBHTenancyAPI.UseCases.V1.Contacts.Models;

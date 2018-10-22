@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using LBHTenancyAPI.Extensions.Controller;
-using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.UseCases.V1.Search;
-using LBHTenancyAPI.UseCases.V1.Search.Models;
+using LBHTenancyAPI.Infrastructure.V1.API;
+using LBHTenancyAPI.UseCases.V2.Search;
+using LBHTenancyAPI.UseCases.V2.Search.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V2

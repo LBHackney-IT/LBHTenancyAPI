@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Infrastructure.V1.API;
 using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.UseCases.V1.Search.Models

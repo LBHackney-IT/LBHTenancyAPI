@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using SharpRaven;
 using SharpRaven.Data;
 
-namespace LBHTenancyAPI.Infrastructure.Logging
+namespace LBHTenancyAPI.Infrastructure.V1.Logging
 {
     public class SentryLogger : ILogger
     {

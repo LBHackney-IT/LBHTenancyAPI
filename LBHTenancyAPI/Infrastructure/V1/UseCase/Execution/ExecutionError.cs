@@ -1,9 +1,9 @@
 using System;
 using System.Net.Http;
-using FluentValidation.Results;
 using AgreementService;
+using FluentValidation.Results;
 
-namespace LBHTenancyAPI.Infrastructure.UseCase.Execution
+namespace LBHTenancyAPI.Infrastructure.V1.UseCase.Execution
 {
     public class ExecutionError
     {

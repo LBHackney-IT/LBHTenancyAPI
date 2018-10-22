@@ -1,6 +1,6 @@
-using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.Infrastructure.V1.Validation;
 
-namespace LBHTenancyAPI.Infrastructure.API
+namespace LBHTenancyAPI.Infrastructure.V1.API
 {
     /// <summary>
     /// Request Interface

@@ -1,10 +1,10 @@
 using System;
 using System.Net;
-using LBHTenancyAPI.Infrastructure.Exceptions;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
+using LBHTenancyAPI.Infrastructure.V1.Exceptions;
+using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
 using Newtonsoft.Json;
 
-namespace LBHTenancyAPI.Infrastructure.API
+namespace LBHTenancyAPI.Infrastructure.V1.API
 {
     /// <summary>
     /// API Response wrapper for all API responses

@@ -1,7 +1,7 @@
 using System.Net;
-using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.Infrastructure.V1.Validation;
 
-namespace LBHTenancyAPI.Infrastructure.Exceptions
+namespace LBHTenancyAPI.Infrastructure.V1.Exceptions
 {
     public class BadRequestException : APIException
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace LBHTenancyAPI.Infrastructure.Exceptions
+namespace LBHTenancyAPI.Infrastructure.V1.Exceptions
 {
     public class APIException: Exception
     {

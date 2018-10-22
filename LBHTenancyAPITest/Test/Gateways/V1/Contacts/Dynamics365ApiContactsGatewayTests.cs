@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Gateways.Contacts;
+using LBHTenancyAPI.Gateways.V1.Contacts;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Exceptions;

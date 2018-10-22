@@ -11,6 +11,7 @@ using FluentAssertions;
 using LBHTenancyAPI.Gateways;
 using Xunit;
 using LBH.Data.Domain;
+using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPITest.Helpers.Stub;
 
 namespace LBHTenancyAPITest.Test.Gateways

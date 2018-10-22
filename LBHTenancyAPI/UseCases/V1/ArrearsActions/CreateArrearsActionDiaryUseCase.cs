@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways.Arrears;
+using LBHTenancyAPI.Gateways.V1.Arrears;
 using LBHTenancyAPI.Services;
 
 namespace LBHTenancyAPI.UseCases.V1.ArrearsActions

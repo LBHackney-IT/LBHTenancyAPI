@@ -1,4 +1,4 @@
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 
 namespace LBHTenancyAPI.Services
 {

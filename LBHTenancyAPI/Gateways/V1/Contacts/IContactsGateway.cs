@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LBHTenancyAPI.UseCases.V1.Contacts.Models;
 using Contact = LBH.Data.Domain.Contact;
 
-namespace LBHTenancyAPI.Gateways.Contacts
+namespace LBHTenancyAPI.Gateways.V1.Contacts
 {
     public interface IContactsGateway
     {

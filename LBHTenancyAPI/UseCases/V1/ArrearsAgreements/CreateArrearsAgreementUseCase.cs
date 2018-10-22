@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways.Arrears;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
-using LBHTenancyAPI.Infrastructure.Validation;
+using LBHTenancyAPI.Gateways.V1.Arrears;
+using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
+using LBHTenancyAPI.Infrastructure.V1.Validation;
 using LBHTenancyAPI.UseCases.V1.ArrearsAgreements.Models;
 
 namespace LBHTenancyAPI.UseCases.V1.ArrearsAgreements

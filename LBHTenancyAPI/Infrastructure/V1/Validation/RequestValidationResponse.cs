@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
 
-namespace LBHTenancyAPI.Infrastructure.Validation
+namespace LBHTenancyAPI.Infrastructure.V1.Validation
 {
     /// <summary>
     /// Encapsulates a valid response using some sort of validation extensions

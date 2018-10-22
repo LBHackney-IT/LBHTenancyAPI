@@ -2,7 +2,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Gateways.Search;
+using LBHTenancyAPI.Gateways.V2.Search;
 using LBHTenancyAPI.UseCases.V1.Search.Models;
 using LBHTenancyAPITest.Helpers;
 using LBHTenancyAPITest.Helpers.Data;

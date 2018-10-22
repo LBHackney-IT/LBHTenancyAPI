@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;

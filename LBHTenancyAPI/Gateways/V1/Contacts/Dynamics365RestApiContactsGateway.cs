@@ -8,7 +8,7 @@ using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Exceptions;
 using LBHTenancyAPI.UseCases.V1.Contacts.Models;
 using Newtonsoft.Json;
 
-namespace LBHTenancyAPI.Gateways.Contacts
+namespace LBHTenancyAPI.Gateways.V1.Contacts
 {
     public class Dynamics365RestApiContactsGateway : IContactsGateway
     {

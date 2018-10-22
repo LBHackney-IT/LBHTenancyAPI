@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.Search;
-using LBHTenancyAPI.Infrastructure.Exceptions;
+using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 using LBHTenancyAPI.UseCases.V1.Search;
 using LBHTenancyAPI.UseCases.V1.Search.Models;
 using Moq;

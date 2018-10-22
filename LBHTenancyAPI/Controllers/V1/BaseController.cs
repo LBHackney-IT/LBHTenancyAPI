@@ -1,5 +1,5 @@
 using LBHTenancyAPI.Extensions.Controller;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
+using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers

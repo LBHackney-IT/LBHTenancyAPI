@@ -1,5 +1,5 @@
 using System;
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 using Microsoft.Extensions.Configuration;
 
 namespace LBHTenancyAPI.Services.Impl
