@@ -7,45 +7,28 @@ namespace LBHTenancyAPI.UseCases.Service
     public class GetServiceDetailsUseCase: IGetServiceDetailsUseCase
     {
         private readonly IGetVersionUseCase _getVersionUseCase;
-        public GetServiceDetailsUseCase(IGetVersionUseCase getVersionUseCase)
+        private readonly ServiceDetails _serviceDetails;
+
+        public GetServiceDetailsUseCase(IGetVersionUseCase getVersionUseCase, ServiceDetails serviceDetails)
         {
             _getVersionUseCase = getVersionUseCase;
+            _serviceDetails = serviceDetails;
         }
 
         public async Task<GetServiceDetailsResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
             var response = await _getVersionUseCase.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+
+            if (_serviceDetails.Version == null)
+                _serviceDetails.Version = new ServiceDetailVersion();
+
+            _serviceDetails.Version.Version = response.Version.ToString();
+
             var serviceDetailsResponse = new GetServiceDetailsResponse
             {
-                ServiceDetails = new ServiceDetails
-                {
-                    Version = new ServiceDetailVersion
-                    {
-                        Version = response.Version.ToString(),
-                    }
-                }
+                ServiceDetails = _serviceDetails
             };
             return serviceDetailsResponse;
         }
-    }
-
-    public class GetServiceDetailsResponse
-    {
-        public ServiceDetails ServiceDetails { get; set; }
-    }
-
-    public class ServiceDetails
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Organisation { get; set; }
-        public ServiceDetailVersion Version { get; set; }
-    }
-
-    public class ServiceDetailVersion
-    {
-        public string Version { get; set; }
-        public string GitCommitHash { get; set; }
-        public string ApiVersion { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace LBHTenancyAPI.Controllers
 
         [HttpGet]
         [Route("/")]
-        public async Task<IActionResult> Healthcheck()
+        public async Task<IActionResult> Get()
         {
             var response = await _serviceDetailsUseCase.ExecuteAsync(Request.GetCancellationToken()).ConfigureAwait(false);
             return HandleResponse(response);
