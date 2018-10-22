@@ -502,6 +502,103 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
         }
 
         [Theory]
+        [InlineData("Rick", "Alternate", "Pickle")]
+        [InlineData("Morty", "Funny", "Robot")]
+        public async Task search_can_search_on_first_name_and_last_name(string lastName, string firstName, string firstName2)
+        {
+            //arrange
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.house_ref = expectedTenancy.house_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            expectedMember.forename = firstName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //member 2
+            var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember2.house_ref = expectedTenancy.house_ref;
+            expectedMember2.surname = lastName;
+            expectedMember2.forename = firstName2;
+            TestDataHelper.InsertMember(expectedMember2, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                PageSize = 2,
+                Page = 1
+            }, CancellationToken.None);
+
+            var response2 = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                FirstName = firstName2,
+                LastName = lastName,
+                PageSize = 2,
+                Page = 1
+            }, CancellationToken.None);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(1);
+            response.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName} {lastName}");
+
+            //assert second response
+            response2.Should().NotBeNull();
+            response2.Results.Should().NotBeNullOrEmpty();
+            response2.TotalResultsCount.Should().Be(1);
+            response2.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName2} {lastName}");
+        }
+
+        [Theory]
+        [InlineData("000030/01", "Pickle", "Rick", "123 that place", "E1 2YP")]
+        [InlineData("000031/01", "Robot", "Morty", "23 not that place","E14 9JG" )]
+        [InlineData("000030/02", "Pickle", "Rick", "123 that place", "E1 2YP")]
+        [InlineData("000031/02", "Robot", "Morty", "23 not that place", "E14 9JG")]
+        public async Task search_can_search_on_multiple_fields(string tenancyRef,  string firstName, string lastName, string address, string postcode)
+        {
+            //arrange
+            //house
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            expectedProperty.post_code = postcode;
+            expectedProperty.short_address = address;
+            TestDataHelper.InsertProperty(expectedProperty, _db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.tag_ref = tenancyRef;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            expectedMember.forename = firstName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                TenancyRef = tenancyRef,
+                FirstName = firstName,
+                LastName = lastName,
+                Address = address,
+                PostCode = postcode,
+                PageSize = 2,
+                Page = 1
+            }, CancellationToken.None);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(1);
+            response.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName} {lastName}");
+        }
+
+
+
+        [Theory]
         [InlineData("Jane", 11, 10, 2, 1)]
         [InlineData("Doe", 10, 10, 1, 10)]
         [InlineData("tell",0, 10, 1, 0)]
