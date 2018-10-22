@@ -2,10 +2,9 @@ using System;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using AgreementService;
-using LBHTenancyAPI.Infrastructure.UseCase.Execution;
-using LBHTenancyAPI.Interfaces;
-using LBHTenancyAPI.UseCases.ArrearsAgreements;
+using LBHTenancyAPI.Connected_Services.AgreementService;
+using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
+using LBHTenancyAPI.Services;
 
 namespace LBHTenancyAPI.Gateways.Arrears.Impl
 {

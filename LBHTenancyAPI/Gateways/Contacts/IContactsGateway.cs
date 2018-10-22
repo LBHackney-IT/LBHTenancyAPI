@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.UseCases.V1.Contacts.Models;
 using Contact = LBH.Data.Domain.Contact;
 
 namespace LBHTenancyAPI.Gateways.Contacts

@@ -1,7 +1,7 @@
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
-using AgreementService;
+using LBHTenancyAPI.Connected_Services.AgreementService;
 
 namespace LBHTenancyAPI.Gateways.Arrears.Impl
 {

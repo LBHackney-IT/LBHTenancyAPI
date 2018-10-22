@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Extensions.String;
-using LBHTenancyAPI.UseCases.Search.Models;
+using LBHTenancyAPI.UseCases.V1.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.Search
 {

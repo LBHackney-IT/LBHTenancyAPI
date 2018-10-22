@@ -59,12 +59,12 @@
             We want this so we can swap out validation tools and still keep a standard response
             </summary>
         </member>
-        <member name="T:LBHTenancyAPI.UseCases.ArrearsActions.CreateArrearsActionDiaryUseCase">
+        <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
             Use Case for creating Arrears actions diary entry
             </summary>
         </member>
-        <member name="P:LBHTenancyAPI.UseCases.Contacts.Models.ContactsForTenancy.Responsible">
+        <member name="P:LBHTenancyAPI.UseCases.V1.Contacts.Models.ContactsForTenancy.Responsible">
             <summary>
             Denotes whether or not a contact is on the tenancy agreement as a tenant
             and can be contacted via 

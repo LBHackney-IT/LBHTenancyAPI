@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
 using LBHTenancyAPI.Settings.CRM;
 using Xunit;
 using FluentAssertions;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication.Exceptions;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication.Exceptions;
 
 namespace LBHTenancyAPITest.Test.Infrastructure
 {

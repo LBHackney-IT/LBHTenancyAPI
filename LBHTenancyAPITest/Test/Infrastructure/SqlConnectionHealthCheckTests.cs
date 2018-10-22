@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBHTenancyAPI.Factories;
-using LBHTenancyAPI.Infrastructure.Health;
+using LBHTenancyAPI.Infrastructure.V1.Health;
 using LBHTenancyAPITest.Helpers;
 using LBHTenancyAPITest.Helpers.Data;
 using Microsoft.Extensions.HealthChecks;

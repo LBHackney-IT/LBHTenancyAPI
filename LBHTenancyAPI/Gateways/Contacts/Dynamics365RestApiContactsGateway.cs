@@ -3,9 +3,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Exceptions;
-using LBHTenancyAPI.UseCases.Contacts.Models;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Exceptions;
+using LBHTenancyAPI.UseCases.V1.Contacts.Models;
 using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.Gateways.Contacts

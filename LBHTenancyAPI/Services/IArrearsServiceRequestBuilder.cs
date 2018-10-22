@@ -1,7 +1,7 @@
 
 using AgreementService;
 
-namespace LBHTenancyAPI.Interfaces
+namespace LBHTenancyAPI.Services
 {
     public interface IArrearsServiceRequestBuilder
     {

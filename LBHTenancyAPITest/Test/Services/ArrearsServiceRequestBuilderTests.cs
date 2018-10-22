@@ -2,7 +2,7 @@ using System;
 using LBHTenancyAPI.Services;
 using Xunit;
 using System.Collections.Specialized;
-using AgreementService;
+using LBHTenancyAPI.Connected_Services.AgreementService;
 using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings.Credentials;
 using Microsoft.Extensions.Configuration;

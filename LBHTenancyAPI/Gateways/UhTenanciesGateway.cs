@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using LBH.Data.Domain;
-using LBHTenancyAPI.UseCases.Contacts.Models;
 
 namespace LBHTenancyAPI.Gateways
 {
