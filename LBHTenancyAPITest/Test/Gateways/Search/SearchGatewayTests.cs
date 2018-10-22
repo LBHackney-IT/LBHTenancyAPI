@@ -594,9 +594,56 @@ namespace LBHTenancyAPITest.Test.Gateways.Search
             response.Results.Should().NotBeNullOrEmpty();
             response.TotalResultsCount.Should().Be(1);
             response.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName} {lastName}");
+            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
+            response.Results[0].PrimaryContactPostcode.Should().BeEquivalentTo(postcode);
+            response.Results[0].PrimaryContactShortAddress.Should().BeEquivalentTo(address);
         }
 
+        [Theory]
+        [InlineData("000030/03", "Tickle", "Rick", "456 that place", "E1 2YP")]
+        [InlineData("000031/03", "Pobot", "Lorty", "56 not that place", "E12 9JG")]
+        [InlineData("000030/04", "Tickle", "Rick", "456 that place", "E1 2YP")]
+        [InlineData("000031/05", "Pobot", "Lorty", "56 not that place", "E12 9JG")]
+        public async Task search_can_partial_search_on_multiple_fields(string tenancyRef, string firstName, string lastName, string address, string postcode)
+        {
+            //arrange
+            //house
+            var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
+            expectedProperty.post_code = postcode;
+            expectedProperty.short_address = address;
+            TestDataHelper.InsertProperty(expectedProperty, _db);
+            //tenancy
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.tag_ref = tenancyRef;
+            expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            //member 1
+            var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
+            expectedMember.house_ref = expectedTenancy.house_ref;
+            expectedMember.surname = lastName;
+            expectedMember.forename = firstName;
+            TestDataHelper.InsertMember(expectedMember, _db);
+            //act
+            var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                TenancyRef = tenancyRef,
+                FirstName = firstName,
+                LastName = lastName,
+                Address = address.Substring(3,6),
+                PostCode = postcode.Substring(2, 4),
+                PageSize = 2,
+                Page = 1
+            }, CancellationToken.None);
 
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.TotalResultsCount.Should().Be(1);
+            response.Results[0].PrimaryContactName.Should().BeEquivalentTo($"{firstName} {lastName}");
+            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);
+            response.Results[0].PrimaryContactPostcode.Should().BeEquivalentTo(postcode);
+            response.Results[0].PrimaryContactShortAddress.Should().BeEquivalentTo(address);
+        }
 
         [Theory]
         [InlineData("Jane", 11, 10, 2, 1)]
