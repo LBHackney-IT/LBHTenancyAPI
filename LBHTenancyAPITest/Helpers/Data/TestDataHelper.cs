@@ -1,7 +1,7 @@
-using System;
 using System.Data;
 using System.Data.SqlClient;
-using Bogus;
+using System.Text;
+using Castle.Core.Internal;
 using LBHTenancyAPITest.Helpers.Entities;
 
 namespace LBHTenancyAPITest.Helpers.Data
@@ -39,11 +39,23 @@ namespace LBHTenancyAPITest.Helpers.Data
 
         public static void InsertProperty(Property property, SqlConnection db)
         {
-            var commandText = "INSERT INTO property(short_address, address1, prop_ref, post_code) VALUES(@short_address, @address1, @prop_ref, @post_code);";
-            var command = new SqlCommand(commandText, db);
+            
+            var sb = new StringBuilder();
+            sb.Append("INSERT INTO property(");
+            if (!property.short_address.IsNullOrEmpty())
+                sb.Append("short_address,");
 
-            command.Parameters.Add("@short_address", SqlDbType.Char);
-            command.Parameters["@short_address"].Value = property.short_address;
+            sb.Append("address1, prop_ref, post_code) VALUES(");
+            if (!property.short_address.IsNullOrEmpty())
+                sb.Append("@short_address,");
+            sb.Append(" @address1, @prop_ref, @post_code);");
+            var commandText = sb.ToString();
+            var command = new SqlCommand(commandText, db);
+            if (!property.short_address.IsNullOrEmpty())
+            {
+                command.Parameters.Add("@short_address", SqlDbType.Char);
+                command.Parameters["@short_address"].Value = property.short_address;
+            }   
 
             command.Parameters.Add("@address1", SqlDbType.Char);
             command.Parameters["@address1"].Value = property.address1;
