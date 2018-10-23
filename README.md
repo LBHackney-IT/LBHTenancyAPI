@@ -57,7 +57,7 @@ Then we have an automated four step deployment process, which runs in CircleCI.
 - **Mark Rosel**, Lead Engineer at [Made Tech][made-tech] (mark.rosel@madetech.com)
 - **Steven Leighton**, Engineer at [Made Tech][made-tech] (steven@madetech.com)
 - **Cormac Brady**, Engineer at [Made Tech][made-tech] (cormac@madetech.com)
-- Elena Vilimaite, Engineer at [Made Tech][made-tech] (elena@madetech.com)
+- **Elena Vilimaite**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
 
 ### Other Contacts
 
