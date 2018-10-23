@@ -44,6 +44,11 @@ namespace LBHTenancyAPITest.Test.Infrastructure.V1
         public async Task cannot_connect_to_sql_database_and_return_record_returns_unhealthy_status()
         {
             //arrange
+            var connection = DotNetEnv.Env.GetString("test");
+            var loggerFactory = new LoggerFactory();
+            _sqlConnectionFactory = new SqlConnectionFactory(connection, loggerFactory.CreateLogger<SqlConnectionFactory>());
+            var logger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
+            _classUnderTest = new SqlConnectionHealthCheck(_sqlConnectionFactory, logger);
             //act
             var result = await _classUnderTest.CheckAsync(CancellationToken.None).ConfigureAwait(false);
             //assert

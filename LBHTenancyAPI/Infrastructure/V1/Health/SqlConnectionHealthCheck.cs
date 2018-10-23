@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -30,7 +31,14 @@ namespace LBHTenancyAPI.Infrastructure.V1.Health
             {
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Creating SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
                 _logger.LogInformation($"SqlConnectionHealthCheck: Started Opening SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
-                await sqlConnection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    await sqlConnection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    return HealthCheckResult.Unhealthy($"Could not connect to database - {ex.Message} - {stopwatch.ElapsedMilliseconds}ms");
+                }
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Opening SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
 
                 _logger.LogInformation($"SqlConnectionHealthCheck: Started Querying tenagree - {stopwatch.ElapsedMilliseconds}ms");
@@ -51,7 +59,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Health
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Closing SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
 
                 _logger.LogInformation($"SqlConnectionHealthCheck: CheckAsync Finished - {stopwatch.ElapsedMilliseconds}ms");
-                return list.Count == 0 ? HealthCheckResult.Unhealthy($"Could not get a valid record from database - {stopwatch.ElapsedMilliseconds}ms") : HealthCheckResult.Healthy($"Successfully retrieved 1 record from database - {stopwatch.ElapsedMilliseconds}ms");
+                return list.Count > 0 ?  HealthCheckResult.Healthy($"Successfully retrieved 1 record from database - {stopwatch.ElapsedMilliseconds}ms"): HealthCheckResult.Unhealthy($"Could not get a valid record from database - {stopwatch.ElapsedMilliseconds}ms");
             }
 
         }
