@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace LBHTenancyAPI.Controllers.V1
 {
     
-    [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/v{version:apiVersion}/tenancies/search/")]
+    [ApiVersion("1", Deprecated = true)]
+    [Route("api/v1/tenancies/search/")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
@@ -23,6 +23,7 @@ namespace LBHTenancyAPI.Controllers.V1
         }
         
         [HttpGet]
+        [MapToApiVersion("1")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
         public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)
         {

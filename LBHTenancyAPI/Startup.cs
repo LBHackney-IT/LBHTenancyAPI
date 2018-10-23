@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.ServiceModel;
 using AgreementService;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
@@ -25,10 +27,13 @@ using LBHTenancyAPI.UseCases.V1.Contacts;
 using LBHTenancyAPI.UseCases.V1.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LBHTenancyAPI
 {
@@ -113,10 +118,30 @@ namespace LBHTenancyAPI
 
             ConfigureContacts(services, settings);
 
+            services.AddApiVersioning(o=>
+            {
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
+                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the accept header)
+                o.Conventions.Controller<LBHTenancyAPI.Controllers.V1.SearchController>().HasDeprecatedApiVersion(new ApiVersion(1, 0));
+                o.Conventions.Controller<LBHTenancyAPI.Controllers.V2.SearchController>().HasApiVersion(new ApiVersion(2, 0));
+
+            }); // specify the default api version
+
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var versions = apiDesc.ControllerAttributes()
+                        .OfType<ApiVersionAttribute>()
+                        .SelectMany(attr => attr.Versions);
+
+                    return versions.Any(v => $"v{v.ToString()}" == docName);
+                });
                 c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
+                c.SwaggerDoc("v2", new Info { Title = "TenancyAPI", Version = "v2" });
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddLogging(configure =>
@@ -151,11 +176,13 @@ namespace LBHTenancyAPI
             }
 
             app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+            
 
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "TenancyAPI v2");
             });
             app.UseSwagger();
 
