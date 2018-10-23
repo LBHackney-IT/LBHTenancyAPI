@@ -131,6 +131,11 @@ namespace LBHTenancyAPI
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
+                c.SwaggerDoc("v1", new Info { Title = "Tenancy API", Version = "v1" });
+                c.AddSecurityDefinition("Token", new ApiKeyScheme { In = "header", Description = "Your Hackney API Key", Name = "X-Api-Key", Type = "apiKey" });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Token", Enumerable.Empty<string>() }
+                });
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
                     var versions = apiDesc.ControllerAttributes()
@@ -181,9 +186,11 @@ namespace LBHTenancyAPI
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
+                c.SwaggerEndpoint("v1/swagger.json", "Tenancy API");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI v1");
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "TenancyAPI v2");
             });
+
             app.UseSwagger();
 
             //required for swagger to work

@@ -49,4 +49,12 @@ namespace LBHTenancyAPITest.Helpers.Entities
         public bool responsible { get; set; }
 
     }
+
+    public static class MemberExtensions
+    {
+        public static string GetFullName(this Member member)
+        {
+            return member == null ? null : $"{member.forename} {member.surname}";
+        }
+    }
 }
