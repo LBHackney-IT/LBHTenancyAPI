@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;

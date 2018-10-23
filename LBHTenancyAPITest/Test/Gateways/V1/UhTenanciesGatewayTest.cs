@@ -10,8 +10,12 @@ using Dapper;
 using FluentAssertions;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
+using LBHTenancyAPITest.Helpers;
+using LBHTenancyAPITest.Helpers.Data;
+using LBHTenancyAPITest.Helpers.Entities;
 using LBHTenancyAPITest.Helpers.Stub;
 using Xunit;
+using ArrearsAgreement = LBH.Data.Domain.ArrearsAgreement;
 
 namespace LBHTenancyAPITest.Test.Gateways.V1
 {

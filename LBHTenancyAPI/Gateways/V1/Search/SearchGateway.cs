@@ -1,11 +1,9 @@
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using LBH.Data.Domain;
-using LBHTenancyAPI.Extensions.String;
 using LBHTenancyAPI.UseCases.V1.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.V1.Search

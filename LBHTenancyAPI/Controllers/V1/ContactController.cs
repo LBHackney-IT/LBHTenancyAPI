@@ -6,8 +6,9 @@ using LBHTenancyAPI.UseCases.V1.Contacts;
 using LBHTenancyAPI.UseCases.V1.Contacts.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LBHTenancyAPI.Controllers
+namespace LBHTenancyAPI.Controllers.V1
 {
+    [ApiVersion("1")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]

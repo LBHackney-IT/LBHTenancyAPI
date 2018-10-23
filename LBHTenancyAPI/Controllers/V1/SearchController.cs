@@ -21,7 +21,12 @@ namespace LBHTenancyAPI.Controllers.V1
         {
             _searchTenancyUseCase = searchTenancyUseCase;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpGet]
         [MapToApiVersion("1")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

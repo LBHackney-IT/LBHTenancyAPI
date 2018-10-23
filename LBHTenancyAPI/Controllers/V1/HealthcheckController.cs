@@ -4,8 +4,10 @@ using LBHTenancyAPI.Extensions.Controller;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.HealthChecks;
 
-namespace LBHTenancyAPI.Controllers
+namespace LBHTenancyAPI.Controllers.V1
 {
+    [ApiVersion("1")]
+    [Produces("application/json")]
     public class HealthcheckController : Controller
     {
         private readonly IHealthCheckService _healthCheckService;

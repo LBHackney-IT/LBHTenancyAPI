@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.V1.Contacts;
 using LBHTenancyAPI.UseCases.V1.Contacts.Models;

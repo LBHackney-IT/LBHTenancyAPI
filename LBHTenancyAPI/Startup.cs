@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using AgreementService;
@@ -131,11 +132,11 @@ namespace LBHTenancyAPI
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Tenancy API", Version = "v1" });
                 c.AddSecurityDefinition("Token", new ApiKeyScheme { In = "header", Description = "Your Hackney API Key", Name = "X-Api-Key", Type = "apiKey" });
                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
                     { "Token", Enumerable.Empty<string>() }
                 });
+
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
                     var versions = apiDesc.ControllerAttributes()
@@ -144,6 +145,7 @@ namespace LBHTenancyAPI
 
                     return versions.Any(v => $"v{v.ToString()}" == docName);
                 });
+
                 c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
                 c.SwaggerDoc("v2", new Info { Title = "TenancyAPI", Version = "v2" });
                 c.CustomSchemaIds(x => x.FullName);
@@ -166,9 +168,6 @@ namespace LBHTenancyAPI
             services.AddSingleton<IDynamics365ClientFactory>(s => new Dynamics365ClientFactory(settings.Dynamics365Settings, s.GetService<IDynamics365AuthenticationService>()));
             services.AddTransient<IContactsGateway, Dynamics365RestApiContactsGateway>();
             services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
-
-            
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -186,9 +185,9 @@ namespace LBHTenancyAPI
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("v1/swagger.json", "Tenancy API");
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI v1");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "TenancyAPI v2");
+                
+                c.SwaggerEndpoint("v1/swagger.json", "TenancyAPI v1");
+                c.SwaggerEndpoint("v2/swagger.json", "TenancyAPI v2");
             });
 
             app.UseSwagger();

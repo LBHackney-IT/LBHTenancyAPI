@@ -5,8 +5,9 @@ using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LBHTenancyAPI.Controllers
+namespace LBHTenancyAPI.Controllers.V1
 {
+    [ApiVersion("1")]
     [Produces("application/json")]
     [Route("api/v1/tenancies")]
     public class TenanciesController : Controller

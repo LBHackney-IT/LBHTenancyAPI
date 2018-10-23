@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Extensions.Controller;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.V2.Search;

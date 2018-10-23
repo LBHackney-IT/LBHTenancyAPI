@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

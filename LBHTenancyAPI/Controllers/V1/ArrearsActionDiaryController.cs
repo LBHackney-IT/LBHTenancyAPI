@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AgreementService;
-using Microsoft.AspNetCore.Mvc;
 using LBHTenancyAPI.Extensions.Validation;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
+using Microsoft.AspNetCore.Mvc;
 
-namespace LBHTenancyAPI.Controllers
+namespace LBHTenancyAPI.Controllers.V1
 {
+    [ApiVersion("1")]
     [Produces("application/json")]
     [Route("api/v1/tenancies/arrears-action-diary/")]
     public class ArrearsActionDiaryController : Controller

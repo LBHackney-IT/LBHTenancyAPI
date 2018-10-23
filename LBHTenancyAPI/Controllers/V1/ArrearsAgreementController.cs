@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    [ApiVersion("1")]
     [Produces("application/json")]
     [Route("api/v1/tenancies/arrears-agreement/")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
