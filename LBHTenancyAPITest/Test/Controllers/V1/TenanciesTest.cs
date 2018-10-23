@@ -1,17 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
 using LBHTenancyAPI.Controllers;
-using LBHTenancyAPI.UseCases;
+using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Xunit;
-using LBHTenancyAPI.Gateways;
-using LBHTenancyAPI.UseCases.V1;
-using Moq;
 
-namespace LBHTenancyAPITest.Test.Controllers
+namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class TenanciesTest
     {

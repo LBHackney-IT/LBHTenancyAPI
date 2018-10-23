@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -13,7 +10,7 @@ using Microsoft.Extensions.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.Infrastructure
+namespace LBHTenancyAPITest.Test.Infrastructure.V1
 {
     public class SqlConnectionHealthCheckTests : IClassFixture<DatabaseFixture>
     {

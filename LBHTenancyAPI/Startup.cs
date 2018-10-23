@@ -3,11 +3,11 @@ using System.ServiceModel;
 using AgreementService;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
-using LBHTenancyAPI.Gateways.Search;
 using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPI.Gateways.V1.Arrears;
 using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
 using LBHTenancyAPI.Gateways.V1.Contacts;
+using LBHTenancyAPI.Gateways.V2.Search;
 using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
@@ -97,8 +97,11 @@ namespace LBHTenancyAPI
 
             services.AddTransient<ICredentialsService, CredentialsService>();
 
-            services.AddTransient<ISearchTenancyUseCase, SearchTenancyUseCase>();
-            services.AddTransient<ISearchGateway>(s=>new SearchGateway(connectionString));
+            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<LBHTenancyAPI.Gateways.V1.Search.ISearchGateway>(s=>new LBHTenancyAPI.Gateways.V1.Search.SearchGateway(connectionString));
+
+            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<LBHTenancyAPI.Gateways.V2.Search.ISearchGateway>(s => new LBHTenancyAPI.Gateways.V2.Search.SearchGateway(connectionString));
 
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();

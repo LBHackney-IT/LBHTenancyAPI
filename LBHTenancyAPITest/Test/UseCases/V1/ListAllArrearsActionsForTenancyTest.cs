@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases
+namespace LBHTenancyAPITest.Test.UseCases.V1
 {
 
     public class ListAllArrearsActionsForTenancyTest

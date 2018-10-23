@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Settings.CRM;
-using Xunit;
 using FluentAssertions;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication.Exceptions;
+using LBHTenancyAPI.Settings.CRM;
+using Xunit;
 
-namespace LBHTenancyAPITest.Test.Infrastructure
+namespace LBHTenancyAPITest.Test.Infrastructure.V1
 {
     [Trait("Category","Configuration")]
     public class Dynamics365AuthenticationServiceTests

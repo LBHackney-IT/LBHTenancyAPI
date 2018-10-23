@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
-using LBHTenancyAPI.UseCases.V1.Search.Models;
+using LBHTenancyAPI.UseCases.V2.Search.Models;
 
-namespace LBHTenancyAPI.Gateways.Search
+namespace LBHTenancyAPI.Gateways.V2.Search
 {
     public interface ISearchGateway
     {

@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 using Bogus;
 using Dapper;
 using FluentAssertions;
-using LBHTenancyAPI.Gateways;
-using Xunit;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPITest.Helpers.Stub;
+using Xunit;
 
-namespace LBHTenancyAPITest.Test.Gateways
+namespace LBHTenancyAPITest.Test.Gateways.V1
 {
     public class UhTenanciesGatewayTest : IClassFixture<DatabaseFixture>
     {

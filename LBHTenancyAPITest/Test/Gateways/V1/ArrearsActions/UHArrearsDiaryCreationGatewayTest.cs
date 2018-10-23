@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 using LBHTenancyAPI.Gateways.V1.Arrears;
 using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
 using LBHTenancyAPITest.Helpers;

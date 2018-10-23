@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Gateways.Search;
+using LBHTenancyAPI.Gateways.V2.Search;
 using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 using LBHTenancyAPI.UseCases.V2.Search.Models;
 

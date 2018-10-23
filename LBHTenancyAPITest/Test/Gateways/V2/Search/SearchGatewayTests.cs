@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LBHTenancyAPI.Gateways.V2.Search;
-using LBHTenancyAPI.UseCases.V1.Search.Models;
+using LBHTenancyAPI.UseCases.V2.Search.Models;
 using LBHTenancyAPITest.Helpers;
 using LBHTenancyAPITest.Helpers.Data;
 using Xunit;

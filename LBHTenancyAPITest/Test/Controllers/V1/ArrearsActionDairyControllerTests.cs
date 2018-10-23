@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using LBHTenancyAPI.Connected_Services.AgreementService;
+using AgreementService;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
 using Microsoft.AspNetCore.Mvc;
