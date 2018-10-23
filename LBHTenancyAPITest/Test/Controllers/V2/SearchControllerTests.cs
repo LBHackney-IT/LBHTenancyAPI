@@ -26,7 +26,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
         }
 
         [Fact]
-        public async Task GivenValidSearchTenancyRequest_WhenCallingGet_THenShouldReturn200()
+        public async Task GivenValidSearchTenancyRequest_WhenCallingGet_ThenShouldReturn200()
         {
             //arrange
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchTenancyRequest>(), CancellationToken.None))
