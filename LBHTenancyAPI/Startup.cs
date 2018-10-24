@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using AgreementService;
 using LBHTenancyAPI.Factories;
@@ -117,7 +120,11 @@ namespace LBHTenancyAPI
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Tenancy API", Version = "v1" });
+                c.AddSecurityDefinition("Token", new ApiKeyScheme { In = "header", Description = "Your Hackney API Key", Name = "X-Api-Key", Type = "apiKey" });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Token", Enumerable.Empty<string>() }
+                });
             });
 
             services.AddLogging(configure =>
@@ -156,8 +163,9 @@ namespace LBHTenancyAPI
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenancyAPI");
+                c.SwaggerEndpoint("v1/swagger.json", "Tenancy API");
             });
+
             app.UseSwagger();
 
             //required for swagger to work

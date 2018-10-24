@@ -23,5 +23,16 @@ RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --versi
 
 FROM base AS final
 WORKDIR /app
+
+ENV CORECLR_ENABLE_PROFILING=1 \
+  CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
+  CORECLR_NEWRELIC_HOME=./newrelic \
+  CORECLR_PROFILER_PATH=./newrelic/libNewRelicProfiler.so \
+  NEW_RELIC_LICENSE_KEY="${NEW_RELIC_LICENSE_KEY}" \
+  NEW_RELIC_APP_NAME="${NEW_RELIC_APP_NAME}"
+
 COPY --from=publish /app .
+COPY newrelic ./newrelic
+
+EXPOSE ${PORT:-80}
 CMD ASPNETCORE_URLS=http://+:${PORT:-80} dotnet LBHTenancyAPI.dll
