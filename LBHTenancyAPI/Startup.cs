@@ -1,36 +1,40 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using AgreementService;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Factories;
 using LBHTenancyAPI.Gateways;
-using LBHTenancyAPI.Gateways.Arrears;
-using LBHTenancyAPI.Gateways.Arrears.Impl;
-using LBHTenancyAPI.Gateways.Contacts;
-using LBHTenancyAPI.Gateways.Search;
+using LBHTenancyAPI.Gateways.V1;
+using LBHTenancyAPI.Gateways.V1.Arrears;
+using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
+using LBHTenancyAPI.Gateways.V1.Contacts;
+using LBHTenancyAPI.Gateways.V2.Search;
 using LBHTenancyAPI.Infrastructure;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Authentication;
-using LBHTenancyAPI.Infrastructure.Dynamics365.Client.Factory;
-using LBHTenancyAPI.Infrastructure.Health;
-using LBHTenancyAPI.Infrastructure.Logging;
-using LBHTenancyAPI.Interfaces;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
+using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
+using LBHTenancyAPI.Infrastructure.V1.Health;
+using LBHTenancyAPI.Infrastructure.V1.Logging;
 using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases;
-using LBHTenancyAPI.UseCases.ArrearsActions;
-using LBHTenancyAPI.UseCases.ArrearsAgreements;
-using LBHTenancyAPI.UseCases.Contacts;
-using LBHTenancyAPI.UseCases.Search;
+using LBHTenancyAPI.UseCases.V1;
+using LBHTenancyAPI.UseCases.V1.ArrearsActions;
+using LBHTenancyAPI.UseCases.V1.ArrearsAgreements;
+using LBHTenancyAPI.UseCases.V1.Contacts;
+using LBHTenancyAPI.UseCases.V1.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LBHTenancyAPI
 {
@@ -99,8 +103,11 @@ namespace LBHTenancyAPI
 
             services.AddTransient<ICredentialsService, CredentialsService>();
 
-            services.AddTransient<ISearchTenancyUseCase, SearchTenancyUseCase>();
-            services.AddTransient<ISearchGateway>(s=>new SearchGateway(connectionString));
+            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<LBHTenancyAPI.Gateways.V1.Search.ISearchGateway>(s=>new LBHTenancyAPI.Gateways.V1.Search.SearchGateway(connectionString));
+
+            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<LBHTenancyAPI.Gateways.V2.Search.ISearchGateway>(s => new LBHTenancyAPI.Gateways.V2.Search.SearchGateway(connectionString));
 
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
@@ -112,14 +119,36 @@ namespace LBHTenancyAPI
 
             ConfigureContacts(services, settings);
 
+            services.AddApiVersioning(o=>
+            {
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
+                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the accept header)
+                o.Conventions.Controller<LBHTenancyAPI.Controllers.V1.SearchController>().HasDeprecatedApiVersion(new ApiVersion(1, 0));
+                o.Conventions.Controller<LBHTenancyAPI.Controllers.V2.SearchController>().HasApiVersion(new ApiVersion(2, 0));
+
+            }); // specify the default api version
+
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Tenancy API", Version = "v1" });
                 c.AddSecurityDefinition("Token", new ApiKeyScheme { In = "header", Description = "Your Hackney API Key", Name = "X-Api-Key", Type = "apiKey" });
                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
                     { "Token", Enumerable.Empty<string>() }
                 });
+
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    var versions = apiDesc.ControllerAttributes()
+                        .OfType<ApiVersionAttribute>()
+                        .SelectMany(attr => attr.Versions);
+
+                    return versions.Any(v => $"v{v.ToString()}" == docName);
+                });
+
+                c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
+                c.SwaggerDoc("v2", new Info { Title = "TenancyAPI", Version = "v2" });
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddLogging(configure =>
@@ -139,9 +168,6 @@ namespace LBHTenancyAPI
             services.AddSingleton<IDynamics365ClientFactory>(s => new Dynamics365ClientFactory(settings.Dynamics365Settings, s.GetService<IDynamics365AuthenticationService>()));
             services.AddTransient<IContactsGateway, Dynamics365RestApiContactsGateway>();
             services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
-
-            
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -154,11 +180,14 @@ namespace LBHTenancyAPI
             }
 
             app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+            
 
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("v1/swagger.json", "Tenancy API");
+                
+                c.SwaggerEndpoint("v1/swagger.json", "TenancyAPI v1");
+                c.SwaggerEndpoint("v2/swagger.json", "TenancyAPI v2");
             });
 
             app.UseSwagger();

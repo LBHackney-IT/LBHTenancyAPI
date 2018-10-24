@@ -1,10 +1,8 @@
 using System;
 using AgreementService;
-using LBHTenancyAPI.Settings;
-using LBHTenancyAPI.Settings.Credentials;
 using Microsoft.Extensions.Configuration;
 
-namespace LBHTenancyAPI.Services
+namespace LBHTenancyAPI.Services.Impl
 {
     public class CredentialsService : ICredentialsService
     {

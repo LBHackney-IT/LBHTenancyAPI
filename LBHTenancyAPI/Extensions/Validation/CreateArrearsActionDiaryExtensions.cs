@@ -1,5 +1,5 @@
-using AgreementService;
 using FluentValidation;
+using AgreementService;
 
 namespace LBHTenancyAPI.Extensions.Validation
 {

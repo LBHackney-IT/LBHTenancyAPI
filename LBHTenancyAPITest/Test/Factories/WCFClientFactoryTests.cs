@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AgreementService;
 using LBHTenancyAPI.Factories;
 using Xunit;
 using FluentAssertions;
+using AgreementService;
 
 namespace LBHTenancyAPITest.Test.Factories
 {

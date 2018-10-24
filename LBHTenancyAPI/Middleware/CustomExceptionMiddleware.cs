@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Infrastructure.API;
-using LBHTenancyAPI.Infrastructure.Exceptions;
+using LBHTenancyAPI.Infrastructure.V1.API;
+using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

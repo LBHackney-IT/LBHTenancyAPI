@@ -1,6 +1,5 @@
 using System;
 using AgreementService;
-using LBHTenancyAPI.Interfaces;
 
 namespace LBHTenancyAPI.Services.Impl
 {
