@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
-using LBHTenancyAPI.UseCases.V1;
 
-namespace LBHTenancyAPI.UseCases
+namespace LBHTenancyAPI.UseCases.V1
 {
     public class TenancyDetailsForRef : ITenancyDetailsForRef
     {

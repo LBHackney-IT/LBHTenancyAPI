@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using LBHTenancyAPI.UseCases.V1;
-
-namespace LBHTenancyAPI.UseCases
+﻿namespace LBHTenancyAPI.UseCases.V1
 {
     public interface IListAllArrearsActions
     {

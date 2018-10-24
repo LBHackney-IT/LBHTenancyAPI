@@ -1,6 +1,7 @@
 ﻿using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPI.UseCases;
+using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
 
