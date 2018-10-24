@@ -22,7 +22,7 @@ namespace LBHTenancyAPI.UseCases.Service
             if (_serviceDetails.Version == null)
                 _serviceDetails.Version = new ServiceDetailVersion();
 
-            _serviceDetails.Version.Version = response.Version.ToString();
+            _serviceDetails.Version.Version = response.Version.InformationalVersion;
 
             var serviceDetailsResponse = new GetServiceDetailsResponse
             {

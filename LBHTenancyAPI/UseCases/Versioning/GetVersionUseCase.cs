@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Controllers;
-using LBHTenancyAPI.Infrastructure.UseCase;
 
 namespace LBHTenancyAPI.UseCases.Versioning
 {
@@ -11,23 +10,21 @@ namespace LBHTenancyAPI.UseCases.Versioning
     {
         public async Task<GetVersionResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
-            var assembly = Assembly.GetAssembly(typeof(ServiceController));
+            var assembly = typeof(Startup)
+                .GetTypeInfo()
+                .Assembly;
+
 
             var response = new GetVersionResponse
             {
-                Version = assembly.GetName().Version
+                Version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             };
             return response;
         }
     }
 
-    public interface IGetVersionUseCase: IResponseUseCase<GetVersionResponse>
-    {
-
-    }
-
     public class GetVersionResponse
     {
-        public Version Version { get; set; }
+        public AssemblyInformationalVersionAttribute Version { get; set; }
     }
 }

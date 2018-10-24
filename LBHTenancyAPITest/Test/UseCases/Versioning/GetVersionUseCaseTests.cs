@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Infrastructure.UseCase;
 using LBHTenancyAPI.UseCases.Versioning;
 using Xunit;
 
@@ -27,7 +23,7 @@ namespace LBHTenancyAPITest.Test.UseCases.Versioning
             //assert
             response.Should().NotBeNull();
             response.Version.Should().NotBeNull();
-            response.Version.Should().BeEquivalentTo("1.0.0.0");
+            response.Version.InformationalVersion.Should().Contain("1.0.0.0");
         } 
     }
 }

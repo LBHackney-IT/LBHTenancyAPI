@@ -8,7 +8,7 @@ jobs:
           path: ~/repo
       - run:
           name: Build projects
-          command: docker-compose build --build_arg VERSION_SUFFIX=CIRCLE_BUILD_NUM+CIRCLE_SHA1
+          command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM lbhtenancyapi
       - run:
           name: Spin up docker instances
           command: docker-compose up -d ; sleep 20
