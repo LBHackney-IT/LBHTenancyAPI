@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.V1;
 using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.UseCases.V1

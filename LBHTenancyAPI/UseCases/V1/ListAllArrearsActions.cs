@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LBHTenancyAPI.Gateways;
+using LBHTenancyAPI.Gateways.V1;
 
 namespace LBHTenancyAPI.UseCases.V1
 {
