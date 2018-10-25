@@ -10,27 +10,27 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:LBHTenancyAPI.Gateways.Arrears.Impl.ArrearsActionDiaryGateway">
+        <member name="T:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsActionDiaryGateway">
             <summary>
             ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
             </summary>
         </member>
-        <member name="F:LBHTenancyAPI.Gateways.Arrears.Impl.ArrearsActionDiaryGateway._actionDiaryService">
+        <member name="F:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsActionDiaryGateway._actionDiaryService">
             <summary>
             WCF Service Interface which allows us to create action diary entries
             </summary>
         </member>
-        <member name="T:LBHTenancyAPI.Gateways.Arrears.Impl.ArrearsAgreementGateway">
+        <member name="T:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsAgreementGateway">
             <summary>
             ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
             </summary>
         </member>
-        <member name="F:LBHTenancyAPI.Gateways.Arrears.Impl.ArrearsAgreementGateway._actionDiaryService">
+        <member name="F:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsAgreementGateway._actionDiaryService">
             <summary>
             WCF Service Interface which allows us to create action diary entries
             </summary>
         </member>
-        <member name="T:LBHTenancyAPI.Infrastructure.API.APIResponse`1">
+        <member name="T:LBHTenancyAPI.Infrastructure.V1.API.APIResponse`1">
             <summary>
             API Response wrapper for all API responses
             If a request has been successful this will be denoted by the statusCode
@@ -40,12 +40,12 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="T:LBHTenancyAPI.Infrastructure.API.IRequest">
+        <member name="T:LBHTenancyAPI.Infrastructure.V1.API.IRequest">
             <summary>
             Request Interface
             </summary>
         </member>
-        <member name="M:LBHTenancyAPI.Infrastructure.API.IRequest.Validate``1(``0)">
+        <member name="M:LBHTenancyAPI.Infrastructure.V1.API.IRequest.Validate``1(``0)">
             <summary>
             Encapsulates the validation by making the request responsible for validating itself
             </summary>
@@ -53,18 +53,18 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="T:LBHTenancyAPI.Infrastructure.Validation.RequestValidationResponse">
+        <member name="T:LBHTenancyAPI.Infrastructure.V1.Validation.RequestValidationResponse">
             <summary>
             Encapsulates a valid response using some sort of validation extensions
             We want this so we can swap out validation tools and still keep a standard response
             </summary>
         </member>
-        <member name="T:LBHTenancyAPI.UseCases.ArrearsActions.CreateArrearsActionDiaryUseCase">
+        <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
             Use Case for creating Arrears actions diary entry
             </summary>
         </member>
-        <member name="P:LBHTenancyAPI.UseCases.Contacts.Models.ContactsForTenancy.Responsible">
+        <member name="P:LBHTenancyAPI.UseCases.V1.Contacts.Models.ContactsForTenancy.Responsible">
             <summary>
             Denotes whether or not a contact is on the tenancy agreement as a tenant
             and can be contacted via 

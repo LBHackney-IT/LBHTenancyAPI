@@ -33,6 +33,10 @@ The test suite depends on a local version of Universal Housing, to simulate the 
 ```sh
 $ docker-compose run --rm stubuniversalhousing
 ```
+To run on particular port,the command is as below.
+```sh
+$ docker run -p 3000:80 -it --rm lbhtenancyapi
+```
 
 ### Release
 

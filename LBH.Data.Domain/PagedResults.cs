@@ -12,6 +12,12 @@ namespace LBH.Data.Domain
             Results = new List<T>();
         }
 
+        /// <summary>
+        /// Based on 1 based paging not 0 based
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <param name="totalResultsCount"></param>
+        /// <returns></returns>
         public int CalculatePageCount(int pageSize, int totalResultsCount)
         {
             if (totalResultsCount == 0)

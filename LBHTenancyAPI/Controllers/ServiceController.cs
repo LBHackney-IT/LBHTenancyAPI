@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Extensions.Controller;
 using LBHTenancyAPI.UseCases.Service;
 using Microsoft.AspNetCore.Mvc;
