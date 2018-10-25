@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Controllers;
-using LBHTenancyAPI.Infrastructure.API;
+using LBHTenancyAPI.Controllers.V1;
+using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.Service;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.Controllers
+namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class ServiceControllerTests
     {
