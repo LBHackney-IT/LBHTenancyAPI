@@ -8,6 +8,10 @@ using LBHTenancyAPI.UseCases.V1.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.V1.Search
 {
+    /// <summary>
+    /// Search Gateway V1 Searches for tenants attached to tenancies
+    /// Currently connects to UH Database via SQL connection and SQL queries
+    /// </summary>
     public class SearchGateway : ISearchGateway
     {
         private readonly string _connectionString;
