@@ -20,7 +20,7 @@ namespace LBHTenancyAPI.UseCases.V1.Search
         }
 
         /// <summary>
-        /// Execute the 
+        /// Execute the Search Tenancy Use Case 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
