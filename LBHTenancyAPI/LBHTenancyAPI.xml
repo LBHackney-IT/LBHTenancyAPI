@@ -309,6 +309,13 @@
             Configures API
             </summary>
         </member>
+        <member name="M:LBHTenancyAPI.Startup.ConfigureSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
+            and assigns that 
+            </summary>
+            <param name="services"></param>
+        </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
             Use Case for creating Arrears actions diary entry

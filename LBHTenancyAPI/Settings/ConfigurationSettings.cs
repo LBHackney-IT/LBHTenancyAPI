@@ -1,5 +1,6 @@
 using LBHTenancyAPI.Settings.CRM;
 using LBHTenancyAPI.Settings.Logging;
+using LBHTenancyAPI.UseCases.Service;
 
 namespace LBHTenancyAPI.Settings
 {
@@ -25,5 +26,6 @@ namespace LBHTenancyAPI.Settings
         /// Dynamics 365 Settings
         /// </summary>
         public Dynamics365Settings Dynamics365Settings { get; set; }
+        public ServiceDetails ServiceDetailsSettings { get; set; }
     }
 }

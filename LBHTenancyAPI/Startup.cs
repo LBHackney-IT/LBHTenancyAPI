@@ -32,6 +32,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LBHTenancyAPI
@@ -180,7 +182,7 @@ namespace LBHTenancyAPI
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
 
-            services.AddSingleton<ISqlConnectionFactory>(s =>new SqlConnectionFactory(connectionString, loggerFactory.CreateLogger<SqlConnectionFactory>()));
+            services.AddSingleton<ISqlConnectionFactory>(s => new SqlConnectionFactory(connectionString, loggerFactory.CreateLogger<SqlConnectionFactory>()));
 
             services.AddTransient<SqlConnectionHealthCheck>(s =>new SqlConnectionHealthCheck(s.GetService<ISqlConnectionFactory>(), sqlHealthCheckLogger));
             services.AddHealthChecks(healthCheck =>healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
