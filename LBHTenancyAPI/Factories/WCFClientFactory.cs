@@ -8,7 +8,7 @@ namespace LBHTenancyAPI.Factories
     public class WCFClientFactory : IWCFClientFactory
     {
         /// <summary>
-        /// Creates WCF Clients however doesn't open connection
+        /// Creates WCF Clients without opening a connection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="endpoint"></param>
