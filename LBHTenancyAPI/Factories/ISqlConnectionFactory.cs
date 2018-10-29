@@ -8,7 +8,7 @@ namespace LBHTenancyAPI.Factories
     public interface ISqlConnectionFactory
     {
         /// <summary>
-        /// Creates a SQL connection however doesn't open it
+        /// Creates an instance of a SQL connection object without opening a connection
         /// </summary>
         /// <returns></returns>
         SqlConnection Create();
