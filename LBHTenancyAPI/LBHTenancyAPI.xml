@@ -4,6 +4,13 @@
         <name>LBHTenancyAPI</name>
     </assembly>
     <members>
+        <member name="M:LBHTenancyAPI.Controllers.V1.SearchController.Get(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest)">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
             <summary>
             Creates sql connection

@@ -34,6 +34,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LBHTenancyAPI
@@ -128,6 +130,11 @@ namespace LBHTenancyAPI
                 o.Conventions.Controller<LBHTenancyAPI.Controllers.V2.SearchController>().HasApiVersion(new ApiVersion(2, 0));
 
             }); // specify the default api version
+
+            services.AddSingleton<IGetServiceDetailsUseCase>(s=> new GetServiceDetailsUseCase(s.GetService<IGetVersionUseCase>(), settings.ServiceDetailsSettings));
+            services.AddSingleton<IGetVersionUseCase, GetVersionUseCase>();
+
+            ConfigureContacts(services, settings);
 
             //add swagger gen to generate the swagger.json file
             services.AddSwaggerGen(c =>
