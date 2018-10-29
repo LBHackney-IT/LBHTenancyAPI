@@ -4,17 +4,166 @@
         <name>LBHTenancyAPI</name>
     </assembly>
     <members>
+        <member name="T:LBHTenancyAPI.Controllers.V1.SearchController">
+            <summary>
+            Search Controller V1 to search for Tenants in a simple
+            </summary>
+        </member>
         <member name="M:LBHTenancyAPI.Controllers.V1.SearchController.Get(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest)">
             <summary>
-            
+            Searches for tenants attached to tenancies in a simple way - Deprecated use V2
+            Searches on 5 fields using one input SearchTerm:
+            FirstName - exact match
+            LastName - exact match
+            TenancyRef - exact match
+            Postcode - partial match (contains)
+            Address - partial match (contains)
+            Orders by LastName, FirstName Desc
+            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+            - Tenancy A - Tenant1
+            - Tenancy A - Tenant2
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="T:LBHTenancyAPI.Controllers.V2.SearchController">
+            <summary>
+            Search Controller V2 to search for Tenants in a multi faceted way
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Controllers.V2.SearchController.Get(LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest)">
+            <summary>
+            Searches for tenants attached to tenancies and filter in a multi faceted way.
+            Searches on 5 fields:
+            FirstName - exact match AND
+            LastName - exact match AND
+            TenancyRef - exact match AND
+            Postcode - partial match (contains) AND
+            Address - partial match (contains) AND
+            Orders by LastName, FirstName Desc
+            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+            - Tenancy A - Tenant1
+            - Tenancy A - Tenant2
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Extensions.Controller.CancellableAPIRequestExtensions">
+            <summary>
+            Extension Helper class to help get CancellationTokens from APIRequests
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.Controller.CancellableAPIRequestExtensions.GetCancellationToken(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            This allows us to get a CancellationToken from the HTTPContext so if the user
+            Cancels the request on the browser we can potentally cancel the request in the API
+            However if the HTTPContext is Null Return a default CancellationToken
+            </summary>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.Controller.CancellableAPIRequestExtensions.GetCancellationToken(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            This allows us to get a CancellationToken from the HTTPContext so if the user
+            Cancels the request on the browser we can potentally cancel the request in the API
+            However if the HTTPContext is Null Return a default CancellationToken
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Extensions.Controller.ControllerExtensions">
+            <summary>
+            Extension class to help format a positive response into an standardised API Response
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.Controller.ControllerExtensions.ExecuteStandardResponse``1(Microsoft.AspNetCore.Mvc.Controller,LBHTenancyAPI.Infrastructure.V1.UseCase.Execution.IExecuteWrapper{``0})">
+            <summary>
+            Formats ExecuteWrapper which can be positve or negative Responses into standardised APIResponses
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="controller"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.Controller.ControllerExtensions.StandardResponse``1(Microsoft.AspNetCore.Mvc.Controller,``0)">
+            <summary>
+            Formats postive responses from UseCases into APIResponses
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="controller"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Extensions.String.StringExtensions">
+            <summary>
+            Extension class to help with common string validation
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.String.StringExtensions.IsNullOrEmptyOrWhiteSpace(System.String)">
+            <summary>
+            Confirm string does not have any text
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Extensions.String.StringExtensions.IsNotNullOrEmptyOrWhiteSpace(System.String)">
+            <summary>
+            Confirm we have a string with some text
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Extensions.Validation.CreateArrearsActionDiaryExtensions">
+            <summary>
+            Extension class for validating ArrearsActionCreateRequest requests
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Factories.ISqlConnectionFactory">
+            <summary>
+            Factory for creating SQL connections 
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Factories.ISqlConnectionFactory.Create">
+            <summary>
+            Creates a SQL connection however doesn't open it
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Factories.IWCFClientFactory">
+            <summary>
+            Factory for creating WCF clients
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Factories.IWCFClientFactory.CreateClient``1(System.String)">
+            <summary>
+            Creates a Client however doesn't open a connection
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="endpoint"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Factories.SqlConnectionFactory">
+            <summary>
+            Simple Factory for creating SQL connections 
+            </summary>
+        </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
             <summary>
-            Creates sql connection
+            Creates sql connection however doesn't open it
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Factories.WCFClientFactory">
+            <summary>
+            Simple Factory for WCF clients
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Factories.WCFClientFactory.CreateClient``1(System.String)">
+            <summary>
+            Creates WCF Clients however doesn't open connection
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="endpoint"></param>
             <returns></returns>
         </member>
         <member name="T:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsActionDiaryGateway">
@@ -36,6 +185,54 @@
             <summary>
             WCF Service Interface which allows us to create action diary entries
             </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsAgreementGateway.CreateArrearsAgreementAsync(AgreementService.ArrearsAgreementRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates Arrears Agreement
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V1.Search.SearchGateway">
+            <summary>
+            Search Gateway V1 Searches for tenants attached to tenancies
+            Currently connects to UH Database via SQL connection and SQL queries
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V2.Search.SearchGateway">
+            <summary>
+            Search Gateway V2 Searches for tenants attached to tenancies
+            Currently connects to UH Database via SQL connection and SQL queries
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Search.SearchGateway.SearchTenanciesAsync(LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
+            <summary>
+            Search for Tenants attached to tenancies
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Search.SearchGateway.BuildCountQuery(LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest,System.String)">
+            <summary>
+            Builds the query to return the TotalCount of the resultset
+            A stored procedure would be much faster but we are unable to modify the UH Database
+            in any way or risk breaking the support agreement
+            </summary>
+            <param name="request"></param>
+            <param name="whiteSpace"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Search.SearchGateway.BuildQuery(LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest,System.String)">
+            <summary>
+            Builds a query to return the paged subset of the resultset
+            A stored procedure would be much faster but we are unable to modify the UH Database
+            in any way or risk breaking the support agreement
+            </summary>
+            <param name="request"></param>
+            <param name="whiteSpace"></param>
+            <returns></returns>
         </member>
         <member name="T:LBHTenancyAPI.Infrastructure.V1.API.APIResponse`1">
             <summary>
@@ -66,6 +263,59 @@
             We want this so we can swap out validation tools and still keep a standard response
             </summary>
         </member>
+        <member name="T:LBHTenancyAPI.Middleware.CustomExceptionHandlerMiddleware">
+            <summary>
+            Middleware to handle exceptions and return them as APIResponses with APIErrors and correct
+            HttpStatus Methods
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Middleware.CustomExceptionHandlerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Intercept the request and wrap it in a TryCatch
+            Allows us to throw exceptions and know they will be properly handled
+            Centralises exception handling and removes 80-90% of exception handling code from codebase
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Settings.ConfigurationSettings">
+            <summary>
+            Represents a POCO object of the values set as configuration in the appsettings.json
+            Allowing for configuration values to be easily used and mocked
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.Credentials">
+            <summary>
+            UH Service credentials
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.ServiceSettings">
+            <summary>
+            UH Agreement Service 
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.SentrySettings">
+            <summary>
+            Sentry error handling 
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.Dynamics365Settings">
+            <summary>
+            Dynamics 365 Settings
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Startup">
+            <summary>
+            Configures API
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Startup.ConfigureSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
+            and assigns that 
+            </summary>
+            <param name="services"></param>
+        </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
             Use Case for creating Arrears actions diary entry
@@ -75,6 +325,105 @@
             <summary>
             Denotes whether or not a contact is on the tenancy agreement as a tenant
             and can be contacted via 
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest">
+            <summary>
+            SearchTenancyRequest V1 uses 1 parameter to search 5 fields
+            One of the fields must be populated
+            Self Validating
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest.SearchTerm">
+            <summary>
+            Searches for tenants attached to tenancies
+            Searches on 5 fields:
+            FirstName - exact match OR
+            LastName - exact match OR
+            TenancyRef - exact match OR
+            Postcode - partial match (contains) OR
+            Address - partial match (contains) OR
+            Orders by LastName, FirstName Desc
+            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+            - Tenancy A - Tenant1
+            - Tenancy A - Tenant2
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest.Page">
+            <summary>
+            Page defaults to 1 as paging is 1 index based not 0 index based
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest.PageSize">
+            <summary>
+            PageSize defaults to 10 
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase">
+            <summary>
+            Clean architecture with UseCases
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase.ExecuteAsync(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
+            <summary>
+            Execute the 
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest">
+            <summary>
+            SearchTenancyRequest V2 uses 5 Fields to search on allowing for greater filtering
+            One of the fields must be populated
+            Validated by Validate Method
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.FirstName">
+            <summary>
+            Exact match
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.LastName">
+            <summary>
+            Exact match
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.Address">
+            <summary>
+            Partial match (contains)
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.PostCode">
+            <summary>
+            Partial match (contains)
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.TenancyRef">
+            <summary>
+            Exact match
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.Validate``1(``0)">
+            <summary>
+            Responsible for validating itself.
+            Uses SearchTenancyRequestValidator to do complex validation
+            Sets defaults for Page and PageSize
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns>RequestValidationResponse</returns>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.Page">
+            <summary>
+            Page defaults to 1 as paging is 1 index based not 0 index based
+            </summary>
+        </member>
+        <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.PageSize">
+            <summary>
+            PageSize defaults to 10 
             </summary>
         </member>
     </members>

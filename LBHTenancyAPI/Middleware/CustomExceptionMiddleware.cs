@@ -9,6 +9,10 @@ using Newtonsoft.Json;
 
 namespace LBHTenancyAPI.Middleware
 {
+    /// <summary>
+    /// Middleware to handle exceptions and return them as APIResponses with APIErrors and correct
+    /// HttpStatus Methods
+    /// </summary>
     public sealed class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
@@ -22,10 +26,19 @@ namespace LBHTenancyAPI.Middleware
             _logger = loggerFactory.CreateLogger<CustomExceptionHandlerMiddleware>();
         }
 
+        /// <summary>
+        /// Intercept the request and wrap it in a TryCatch
+        /// Allows us to throw exceptions and know they will be properly handled
+        /// Centralises exception handling and removes 80-90% of exception handling code from codebase
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
             try
             {
+                //Configure await is a performance optimisation that allows the
+                //asynchronous method call to resume on any available thread
                 await _next(context).ConfigureAwait(false);
             }
             catch (BadRequestException ex)

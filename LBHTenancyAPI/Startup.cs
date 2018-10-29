@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using AgreementService;
-using LBHTenancyAPI.Controllers.V1;
+using LBHTenancyAPI.Extensions.Versioning;
 using LBHTenancyAPI.Factories;
-using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPI.Gateways.V1.Arrears;
 using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
 using LBHTenancyAPI.Gateways.V1.Contacts;
-using LBHTenancyAPI.Gateways.V2.Search;
-using LBHTenancyAPI.Infrastructure;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
 using LBHTenancyAPI.Infrastructure.V1.Health;
@@ -20,15 +19,14 @@ using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
 using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
 using LBHTenancyAPI.UseCases.V1.ArrearsAgreements;
 using LBHTenancyAPI.UseCases.V1.Contacts;
-using LBHTenancyAPI.UseCases.V1.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +38,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LBHTenancyAPI
 {
+    /// <summary>
+    /// Configures API
+    /// </summary>
     public class Startup
     {
 
@@ -55,24 +56,11 @@ namespace LBHTenancyAPI
         }
 
         public IConfiguration Configuration { get; }
+        private List<ApiVersionDescription> _apiVersions { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            var environmentVariables = Environment.GetEnvironmentVariables();
-            
-            Console.WriteLine("Environment Variables");
-
-            var serviceUserName = Environment.GetEnvironmentVariable("Credentials__UHServiceSystemCredentials__UserName");
-            Console.WriteLine($"Credentials__UHServiceSystemCredentials__UserName isNullOrEmpty: {string.IsNullOrEmpty(serviceUserName)}");
-
-            var userName = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserName");
-            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserName isNullOrEmpty: {string.IsNullOrEmpty(userName)}");
-
-            var password = Environment.GetEnvironmentVariable("Credentials__UHServiceUserCredentials__UserPassword");
-            Console.WriteLine($"Credentials__UHServiceUserCredentials__UserPassword isNullOrEmpty: {string.IsNullOrEmpty(password)}");
-
-            Console.WriteLine(environmentVariables);
+        {   
             //get settings from appSettings.json and EnvironmentVariables
             services.Configure<ConfigurationSettings>(Configuration);
             var settings = Configuration.Get<ConfigurationSettings>();
@@ -80,11 +68,92 @@ namespace LBHTenancyAPI
             var connectionString = Environment.GetEnvironmentVariable("UH_URL");
 
             services.AddMvc();
+            
+            ConfigureTenancies(services, connectionString);
+
+            ConfigureUniversalHousingRelated(services);
+
+            ConfigureSearch(services, connectionString);
+
+            ConfigureFactoriesAndHealthChecks(services, connectionString);
+
+            ConfigureContacts(services, settings);
+            
+            ConfigureApiVersioning(services);
+
+            //Set [ApiVersion("x")] on Controllers to automatically add them to swagger docs
+            ConfigureSwaggerGen(services);
+
+            ConfigureLogging(services, settings);
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Although there are zero references do not delete
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            //Register exception handling middleware early so exceptions are handled and formatted
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
+            ConfigureSwaggerUI(app);
+
+            //required for swagger to work
+            app.UseMvc(routes =>
+            {
+                // SwaggerGen won't find controllers that are routed via this technique.
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
+
+        private void ConfigureLogging(IServiceCollection services, ConfigurationSettings settings)
+        {
+            services.AddLogging(configure =>
+            {
+                configure.AddConfiguration(Configuration.GetSection("Logging"));
+                configure.AddConsole();
+                configure.AddDebug();
+                //logs errors to sentry if configured
+                if (!string.IsNullOrEmpty(settings.SentrySettings?.Url))
+                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url,settings.SentrySettings?.Environment));
+            });
+        }
+
+        private static void ConfigureApiVersioning(IServiceCollection services)
+        {
+            services.AddApiVersioning(o =>
+            {
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.AssumeDefaultVersionWhenUnspecified =
+                    true; // assume that the caller wants the default version if they don't specify
+                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the accept header)
+            });
+        }
+
+        private static void ConfigureTenancies(IServiceCollection services, string connectionString)
+        {
             services.AddTransient<IListTenancies, ListTenancies>();
             services.AddTransient<IListAllArrearsActions, ListAllArrearsActions>();
             services.AddTransient<IListAllPayments, ListAllPayments>();
             services.AddTransient<ITenancyDetailsForRef, TenancyDetailsForRef>();
             services.AddTransient<ITenanciesGateway>(s => new UhTenanciesGateway(connectionString));
+        }
+
+        private static void ConfigureSearch(IServiceCollection services, string connectionString)
+        {
+            services.AddTransient<UseCases.V1.Search.ISearchTenancyUseCase,UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<Gateways.V1.Search.ISearchGateway>(s =>new Gateways.V1.Search.SearchGateway(connectionString));
+
+            services.AddTransient<UseCases.V1.Search.ISearchTenancyUseCase,UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<Gateways.V2.Search.ISearchGateway>(s =>new Gateways.V2.Search.SearchGateway(connectionString));
+        }
+
+        private static void ConfigureUniversalHousingRelated(IServiceCollection services)
+        {
             services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
             services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
             services.AddTransient<IArrearsServiceRequestBuilder, ArrearsServiceRequestBuilder>();
@@ -92,81 +161,84 @@ namespace LBHTenancyAPI
             services.AddTransient<IArrearsAgreementGateway, ArrearsAgreementGateway>();
             services.AddTransient<ICreateArrearsAgreementUseCase, CreateArrearsAgreementUseCase>();
 
+            services.AddTransient<ICredentialsService, CredentialsService>();
+        }
+
+        private static void ConfigureFactoriesAndHealthChecks(IServiceCollection services, string connectionString)
+        {
             services.AddSingleton<IWCFClientFactory, WCFClientFactory>();
-            
-            services.AddTransient<IArrearsAgreementServiceChannel>(s=>
+
+            services.AddTransient<IArrearsAgreementServiceChannel>(s =>
             {
                 var clientFactory = s.GetService<IWCFClientFactory>();
-                var client = clientFactory.CreateClient<IArrearsAgreementServiceChannel>(Environment.GetEnvironmentVariable("ServiceSettings__AgreementServiceEndpoint"));
-                if(client.State != CommunicationState.Opened)
+                var client =
+                    clientFactory.CreateClient<IArrearsAgreementServiceChannel>(
+                        Environment.GetEnvironmentVariable("ServiceSettings__AgreementServiceEndpoint"));
+                if (client.State != CommunicationState.Opened)
                     client.Open();
                 return client;
             });
-
-            services.AddTransient<ICredentialsService, CredentialsService>();
-
-            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
-            services.AddTransient<LBHTenancyAPI.Gateways.V1.Search.ISearchGateway>(s=>new LBHTenancyAPI.Gateways.V1.Search.SearchGateway(connectionString));
-
-            services.AddTransient<LBHTenancyAPI.UseCases.V1.Search.ISearchTenancyUseCase, LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase>();
-            services.AddTransient<LBHTenancyAPI.Gateways.V2.Search.ISearchGateway>(s => new LBHTenancyAPI.Gateways.V2.Search.SearchGateway(connectionString));
 
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
 
             services.AddSingleton<ISqlConnectionFactory>(s => new SqlConnectionFactory(connectionString, loggerFactory.CreateLogger<SqlConnectionFactory>()));
 
-            services.AddTransient<SqlConnectionHealthCheck>(s=> new SqlConnectionHealthCheck(s.GetService<ISqlConnectionFactory>(), sqlHealthCheckLogger));
+            services.AddTransient<SqlConnectionHealthCheck>(s =>new SqlConnectionHealthCheck(s.GetService<ISqlConnectionFactory>(), sqlHealthCheckLogger));
             services.AddHealthChecks(healthCheck =>healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
+        }
 
-            ConfigureContacts(services, settings);
-
-            services.AddApiVersioning(o=>
-            {
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
-                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the accept header)
-                o.Conventions.Controller<LBHTenancyAPI.Controllers.V1.SearchController>().HasDeprecatedApiVersion(new ApiVersion(1, 0));
-                o.Conventions.Controller<LBHTenancyAPI.Controllers.V2.SearchController>().HasApiVersion(new ApiVersion(2, 0));
-
-            }); // specify the default api version
-
-            services.AddSingleton<IGetServiceDetailsUseCase>(s=> new GetServiceDetailsUseCase(s.GetService<IGetVersionUseCase>(), settings.ServiceDetailsSettings));
-            services.AddSingleton<IGetVersionUseCase, GetVersionUseCase>();
-
-            ConfigureContacts(services, settings);
-
-            //add swagger gen to generate the swagger.json file
+        /// <summary>
+        /// Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
+        /// and assigns that 
+        /// </summary>
+        /// <param name="services"></param>
+        private void ConfigureSwaggerGen(IServiceCollection services)
+        {
+        //add swagger gen to generate the swagger.json file - delayed execution
             services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("Token", new ApiKeyScheme { In = "header", Description = "Your Hackney API Key", Name = "X-Api-Key", Type = "apiKey" });
-                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
-                    { "Token", Enumerable.Empty<string>() }
+                c.AddSecurityDefinition("Token",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Your Hackney API Key",
+                        Name = "X-Api-Key",
+                        Type = "apiKey"
+                    });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Token", Enumerable.Empty<string>()}
                 });
 
+                //Looks at the APIVersionAttribute [ApiVersion("x")] on controllers and decides whether or not
+                //to include it in that version of the swagger document
+                //Controllers must have this [ApiVersion("x")] to be included in swagger documentation!!
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
                     var versions = apiDesc.ControllerAttributes()
                         .OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions);
+                        .SelectMany(attr => attr.Versions).ToList();
 
-                    return versions.Any(v => $"v{v.ToString()}" == docName);
+                    var any = versions.Any(v => $"{v.GetFormattedApiVersion()}" == docName);
+                    return any;
                 });
 
-                c.SwaggerDoc("v1", new Info { Title = "TenancyAPI", Version = "v1" });
-                c.SwaggerDoc("v2", new Info { Title = "TenancyAPI", Version = "v2" });
+                //Get every ApiVersion attribute specified and create swagger docs for them
+                foreach (var apiVersion in _apiVersions)
+                {
+                    var version = $"v{apiVersion.ApiVersion.ToString()}";
+                    c.SwaggerDoc(version, new Info {Title = $"TenancyAPI {version}", Version = version});
+                }
+
                 c.CustomSchemaIds(x => x.FullName);
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddLogging(configure =>
-            {
-                configure.AddConfiguration(Configuration.GetSection("Logging"));
-                configure.AddConsole();
-                configure.AddDebug();
-                if(!string.IsNullOrEmpty(settings.SentrySettings?.Url))
-                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url, settings.SentrySettings?.Environment));
-            });
-
+            services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
         }
 
         private static void ConfigureContacts(IServiceCollection services, ConfigurationSettings settings)
@@ -177,36 +249,24 @@ namespace LBHTenancyAPI
             services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        private void ConfigureSwaggerUI(IApplicationBuilder app)
         {
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
-            
-
+            //Get ApiVersionDescriptionProvider from API Explorer
+            var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
+            //Get All ApiVersions, 
+            _apiVersions = api.ApiVersionDescriptions.Select(s => s).ToList();
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                
-                c.SwaggerEndpoint("v1/swagger.json", "TenancyAPI v1");
-                c.SwaggerEndpoint("v2/swagger.json", "TenancyAPI v2");
+                foreach (var apiVersionDescription in _apiVersions)
+                {
+                    //Create a swagger endpoint for each swagger version
+                    c.SwaggerEndpoint($"{apiVersionDescription.GetFormattedApiVersion()}/swagger.json",
+                        $"TenancyAPI {apiVersionDescription.GetFormattedApiVersion()}");
+                }
             });
 
             app.UseSwagger();
-
-            //required for swagger to work
-            app.UseMvc(routes =>
-            {
-                // SwaggerGen won't find controllers that are routed via this technique.
-                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            
         }
     }
 }

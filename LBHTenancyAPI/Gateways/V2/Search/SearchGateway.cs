@@ -10,6 +10,10 @@ using LBHTenancyAPI.UseCases.V2.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.V2.Search
 {
+    /// <summary>
+    /// Search Gateway V2 Searches for tenants attached to tenancies
+    /// Currently connects to UH Database via SQL connection and SQL queries
+    /// </summary>
     public class SearchGateway : ISearchGateway
     {
         private readonly string _connectionString;
@@ -18,6 +22,12 @@ namespace LBHTenancyAPI.Gateways.V2.Search
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Search for Tenants attached to tenancies
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<PagedResults<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
             var results = new PagedResults<TenancyListItem>();
@@ -27,12 +37,14 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                 return results;
 
             string whiteSpace = "                    ";
+            //Build actual query
             var queryStringBuilder = BuildQuery(request, whiteSpace);
-
+            //Build query to find out total results count
             var countStringBuilder = BuildCountQuery(request, whiteSpace);
 
             using (var conn = new SqlConnection(_connectionString))
             {
+                //open connection explicity
                 conn.Open();
                 //get paged results
                 var all = await conn.QueryAsync<TenancyListItem>(queryStringBuilder.ToString(),
@@ -48,12 +60,22 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                 ).ConfigureAwait(false);
                 //add to pages results
                 results.TotalResultsCount = totalCount.Sum();
+                //close connection explicitly - do not pool connections
+                //experienced sql connection issues with connection pooling due to UH database
                 conn.Close();
             }
 
             return results;
         }
 
+        /// <summary>
+        /// Builds the query to return the TotalCount of the resultset
+        /// A stored procedure would be much faster but we are unable to modify the UH Database
+        /// in any way or risk breaking the support agreement
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="whiteSpace"></param>
+        /// <returns></returns>
         private static StringBuilder BuildCountQuery(SearchTenancyRequest request, string whiteSpace)
         {
             var countStringBuilder = new StringBuilder();
@@ -97,10 +119,18 @@ namespace LBHTenancyAPI.Gateways.V2.Search
             return countStringBuilder;
         }
 
+        /// <summary>
+        /// Builds a query to return the paged subset of the resultset
+        /// A stored procedure would be much faster but we are unable to modify the UH Database
+        /// in any way or risk breaking the support agreement
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="whiteSpace"></param>
+        /// <returns></returns>
         private static StringBuilder BuildQuery(SearchTenancyRequest request, string whiteSpace)
         {
             var queryStringBuilder = new StringBuilder();
-            
+            //Add conditional Parameter declarations to query
             queryStringBuilder.AppendLine($"{whiteSpace}");
             if (request.TenancyRef.IsNotNullOrEmptyOrWhiteSpace())
                 queryStringBuilder.AppendLine(
@@ -161,7 +191,7 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                         ON property.prop_ref = tenagree.prop_ref
                         WHERE tenagree.tag_ref IS NOT NULL
 ");
-
+            //Add conditional AND clauses to query
             if (request.TenancyRef.IsNotNullOrEmptyOrWhiteSpace())
                 queryStringBuilder.AppendLine($"{whiteSpace}AND LOWER(tenagree.tag_ref) = @lowerTenancyRef");
             if (request.FirstName.IsNotNullOrEmptyOrWhiteSpace())

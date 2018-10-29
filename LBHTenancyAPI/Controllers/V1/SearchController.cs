@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
-    
+    /// <summary>
+    /// Search Controller V1 to search for Tenants in a simple
+    /// </summary>
     [ApiVersion("1", Deprecated = true)]
     [Route("api/v1/tenancies/search/")]
     [Produces("application/json")]
@@ -15,6 +17,7 @@ namespace LBHTenancyAPI.Controllers.V1
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
     public class SearchController : BaseController
     {
+        //Dependency Injected UseCase - see Startup.cs
         private readonly ISearchTenancyUseCase _searchTenancyUseCase;
 
         public SearchController(ISearchTenancyUseCase searchTenancyUseCase)
@@ -23,7 +26,17 @@ namespace LBHTenancyAPI.Controllers.V1
         }
 
         /// <summary>
-        /// 
+        /// Searches for tenants attached to tenancies in a simple way - Deprecated use V2
+        /// Searches on 5 fields using one input SearchTerm:
+        /// FirstName - exact match
+        /// LastName - exact match
+        /// TenancyRef - exact match
+        /// Postcode - partial match (contains)
+        /// Address - partial match (contains)
+        /// Orders by LastName, FirstName Desc
+        /// Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+        /// - Tenancy A - Tenant1
+        /// - Tenancy A - Tenant2
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -33,7 +46,7 @@ namespace LBHTenancyAPI.Controllers.V1
         public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)
         {
             var result = await _searchTenancyUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
-
+            //We convert the result to an APIResponse via extensions on BaseController
             return HandleResponse(result);
         }
     }

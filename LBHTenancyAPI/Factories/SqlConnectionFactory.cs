@@ -3,6 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace LBHTenancyAPI.Factories
 {
+    /// <summary>
+    /// Simple Factory for creating SQL connections 
+    /// </summary>
     public class SqlConnectionFactory: ISqlConnectionFactory
     {
         private readonly string _connectionString;
@@ -15,7 +18,7 @@ namespace LBHTenancyAPI.Factories
         }
 
         /// <summary>
-        /// Creates sql connection
+        /// Creates SQL connection object without opening a connection
         /// </summary>
         /// <returns></returns>
         public SqlConnection Create()

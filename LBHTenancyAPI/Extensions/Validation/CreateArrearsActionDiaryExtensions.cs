@@ -1,10 +1,16 @@
+using System;
 using FluentValidation;
 using AgreementService;
 
 namespace LBHTenancyAPI.Extensions.Validation
 {
+    /// <summary>
+    /// Extension class for validating ArrearsActionCreateRequest requests
+    /// </summary>
+    [Obsolete("Please use the IRequest Pattern for Validating your requests")]
     public static class CreateArrearsActionDiaryExtensions
     {
+        [Obsolete("Please use the IRequest Pattern for Validating your requests")]
         public static bool IsValid(this ArrearsActionCreateRequest request)
         {
             var validator = new ArrearsActionCreateRequestValidator();

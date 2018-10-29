@@ -25,6 +25,12 @@ namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
             _arrearsServiceRequestBuilder = arrearsServiceRequestBuilder;
         }
 
+        /// <summary>
+        /// Creates Arrears Agreement
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IExecuteWrapper<ArrearsAgreementResponse>> CreateArrearsAgreementAsync(ArrearsAgreementRequest request, CancellationToken cancellationToken)
         {
             if (request == null)
