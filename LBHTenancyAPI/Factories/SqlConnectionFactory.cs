@@ -18,7 +18,7 @@ namespace LBHTenancyAPI.Factories
         }
 
         /// <summary>
-        /// Creates sql connection however doesn't open it
+        /// Creates SQL connection object without opening a connection
         /// </summary>
         /// <returns></returns>
         public SqlConnection Create()
