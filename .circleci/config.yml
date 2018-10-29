@@ -3,7 +3,7 @@ jobs:
   check:
     machine: true
     steps:
-      - checkout:
+      - checkout
       - run:
           name: Build projects
           command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
