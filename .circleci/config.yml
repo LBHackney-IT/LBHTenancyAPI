@@ -8,7 +8,7 @@ jobs:
           path: ~/repo
       - run:
           name: Build projects
-          command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM lbhtenancyapi
+          command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
       - run:
           name: Run tests
           command: docker-compose run -e UH_CONNECTION_STRING="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm lbhtenancyapitest dotnet test
