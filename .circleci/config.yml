@@ -1,9 +1,13 @@
 version: 2
 jobs:
   check:
-    machine: true
+    machine: 
+      image: circleci/classic:201808-01 #used to push docker form 17 to 18 use 'machine: true' when this is no longer needed
+
     steps:
       - checkout
+      - setup_remote_docker: 
+         docker_layer_caching: true
       - run:
           name: Build projects
           command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
