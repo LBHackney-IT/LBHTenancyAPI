@@ -2,10 +2,8 @@ version: 2
 jobs:
   check:
     machine: true
-    working_directory: ~/repo/LBHTenancyAPI
     steps:
       - checkout:
-          path: ~/repo
       - run:
           name: Build projects
           command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
