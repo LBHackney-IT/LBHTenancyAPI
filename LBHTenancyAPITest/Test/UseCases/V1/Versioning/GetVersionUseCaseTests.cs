@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.UseCases.Versioning;
+using LBHTenancyAPI.UseCases.V1.Versioning;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.Versioning
+namespace LBHTenancyAPITest.Test.UseCases.V1.Versioning
 {
     public class GetVersionUseCaseTests
     {

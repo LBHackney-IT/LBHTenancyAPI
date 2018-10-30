@@ -17,7 +17,6 @@ using LBHTenancyAPI.Infrastructure.V1.Health;
 using LBHTenancyAPI.Infrastructure.V1.Logging;
 using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Services;
-using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
@@ -34,6 +33,8 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Configuration;
+using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
+using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
 
 namespace LBHTenancyAPI.Infrastructure.V1.Services
 {

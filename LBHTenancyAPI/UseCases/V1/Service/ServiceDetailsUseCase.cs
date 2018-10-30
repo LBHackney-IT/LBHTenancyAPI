@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LBHTenancyAPI.UseCases.Versioning;
+using LBHTenancyAPI.UseCases.V1.Versioning;
 
-namespace LBHTenancyAPI.UseCases.Service
+namespace LBHTenancyAPI.UseCases.V1.Service
 {
     public class GetServiceDetailsUseCase: IGetServiceDetailsUseCase
     {

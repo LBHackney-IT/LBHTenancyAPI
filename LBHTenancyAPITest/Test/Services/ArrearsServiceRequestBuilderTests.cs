@@ -2,7 +2,7 @@ using System;
 using LBHTenancyAPI.Services;
 using Xunit;
 using AgreementService;
-using LBHTenancyAPI.Services.Impl;
+using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
 using Moq;
 
 namespace LBHTenancyAPITest.Test.Services

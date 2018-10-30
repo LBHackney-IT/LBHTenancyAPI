@@ -1,4 +1,4 @@
-namespace LBHTenancyAPI.UseCases.Service
+namespace LBHTenancyAPI.UseCases.V1.Service
 {
     public class ServiceDetails
     {

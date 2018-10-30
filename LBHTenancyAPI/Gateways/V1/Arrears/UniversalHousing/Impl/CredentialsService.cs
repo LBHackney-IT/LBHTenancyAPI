@@ -1,8 +1,9 @@
 using System;
 using AgreementService;
+using LBHTenancyAPI.Services;
 using Microsoft.Extensions.Configuration;
 
-namespace LBHTenancyAPI.Services.Impl
+namespace LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl
 {
     public class CredentialsService : ICredentialsService
     {

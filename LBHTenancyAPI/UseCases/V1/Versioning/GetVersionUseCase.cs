@@ -1,10 +1,8 @@
-using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using LBHTenancyAPI.Controllers;
 
-namespace LBHTenancyAPI.UseCases.Versioning
+namespace LBHTenancyAPI.UseCases.V1.Versioning
 {
     public class GetVersionUseCase:IGetVersionUseCase
     {
