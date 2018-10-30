@@ -1,7 +1,7 @@
 
 using AgreementService;
 
-namespace LBHTenancyAPI.Services
+namespace LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing
 {
     public interface IArrearsServiceRequestBuilder
     {

@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
+using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
 using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
 using LBHTenancyAPI.Services;
 

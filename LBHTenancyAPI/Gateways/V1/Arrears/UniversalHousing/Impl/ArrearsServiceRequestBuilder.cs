@@ -1,7 +1,8 @@
 using System;
 using AgreementService;
+using LBHTenancyAPI.Services;
 
-namespace LBHTenancyAPI.Services.Impl
+namespace LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl
 {
     public class ArrearsServiceRequestBuilder : IArrearsServiceRequestBuilder
     {
