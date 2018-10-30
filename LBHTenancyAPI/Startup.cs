@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using LBHTenancyAPI.Infrastructure.V1.Middleware;
 using LBHTenancyAPI.Infrastructure.V1.Services;
-using LBHTenancyAPI.Middleware;
 using LBHTenancyAPI.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

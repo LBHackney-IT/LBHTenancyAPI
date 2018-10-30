@@ -125,7 +125,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.ISqlConnectionFactory.Create">
             <summary>
-            Creates a SQL connection however doesn't open it
+            Creates an instance of a SQL connection object without opening a connection
             </summary>
             <returns></returns>
         </member>
@@ -149,7 +149,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
             <summary>
-            Creates sql connection however doesn't open it
+            Creates SQL connection object without opening a connection
             </summary>
             <returns></returns>
         </member>
@@ -160,7 +160,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.WCFClientFactory.CreateClient``1(System.String)">
             <summary>
-            Creates WCF Clients however doesn't open connection
+            Creates WCF Clients without opening a connection
             </summary>
             <typeparam name="T"></typeparam>
             <param name="endpoint"></param>
@@ -193,12 +193,6 @@
             <param name="request"></param>
             <param name="cancellationToken"></param>
             <returns></returns>
-        </member>
-        <member name="T:LBHTenancyAPI.Gateways.V1.Search.SearchGateway">
-            <summary>
-            Search Gateway V1 Searches for tenants attached to tenancies
-            Currently connects to UH Database via SQL connection and SQL queries
-            </summary>
         </member>
         <member name="T:LBHTenancyAPI.Gateways.V2.Search.SearchGateway">
             <summary>
@@ -257,19 +251,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="T:LBHTenancyAPI.Infrastructure.V1.Validation.RequestValidationResponse">
-            <summary>
-            Encapsulates a valid response using some sort of validation extensions
-            We want this so we can swap out validation tools and still keep a standard response
-            </summary>
-        </member>
-        <member name="T:LBHTenancyAPI.Middleware.CustomExceptionHandlerMiddleware">
+        <member name="T:LBHTenancyAPI.Infrastructure.V1.Middleware.CustomExceptionHandlerMiddleware">
             <summary>
             Middleware to handle exceptions and return them as APIResponses with APIErrors and correct
             HttpStatus Methods
             </summary>
         </member>
-        <member name="M:LBHTenancyAPI.Middleware.CustomExceptionHandlerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+        <member name="M:LBHTenancyAPI.Infrastructure.V1.Middleware.CustomExceptionHandlerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
             Intercept the request and wrap it in a TryCatch
             Allows us to throw exceptions and know they will be properly handled
@@ -277,6 +265,19 @@
             </summary>
             <param name="context"></param>
             <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Infrastructure.V1.Services.ConfigureServices.ConfigureSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Collections.Generic.List{Microsoft.AspNetCore.Mvc.ApiExplorer.ApiVersionDescription})">
+            <summary>
+            Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
+            and assigns that 
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="T:LBHTenancyAPI.Infrastructure.V1.Validation.RequestValidationResponse">
+            <summary>
+            Encapsulates a valid response using some sort of validation extensions
+            We want this so we can swap out validation tools and still keep a standard response
+            </summary>
         </member>
         <member name="T:LBHTenancyAPI.Settings.ConfigurationSettings">
             <summary>
@@ -308,13 +309,6 @@
             <summary>
             Configures API
             </summary>
-        </member>
-        <member name="M:LBHTenancyAPI.Startup.ConfigureSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
-            and assigns that 
-            </summary>
-            <param name="services"></param>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
@@ -368,7 +362,7 @@
         </member>
         <member name="M:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase.ExecuteAsync(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
             <summary>
-            Execute the 
+            Execute the Search Tenancy Use Case 
             </summary>
             <param name="request"></param>
             <param name="cancellationToken"></param>

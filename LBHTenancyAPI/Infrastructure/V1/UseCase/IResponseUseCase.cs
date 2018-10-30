@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LBHTenancyAPI.Infrastructure.UseCase
+namespace LBHTenancyAPI.Infrastructure.V1.UseCase
 {
     public interface IResponseUseCase<TResponse>
     {

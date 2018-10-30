@@ -1,6 +1,6 @@
-﻿using LBHTenancyAPI.Infrastructure.UseCase;
+﻿using LBHTenancyAPI.Infrastructure.V1.UseCase;
 
-namespace LBHTenancyAPI.UseCases.Service
+namespace LBHTenancyAPI.UseCases.V1.Service
 {
     public interface IGetServiceDetailsUseCase:IResponseUseCase<GetServiceDetailsResponse>
     {

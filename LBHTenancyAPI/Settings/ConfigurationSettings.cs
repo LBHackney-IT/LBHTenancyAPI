@@ -1,6 +1,7 @@
 using LBHTenancyAPI.Settings.CRM;
 using LBHTenancyAPI.Settings.Logging;
 using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.V1.Service;
 
 namespace LBHTenancyAPI.Settings
 {

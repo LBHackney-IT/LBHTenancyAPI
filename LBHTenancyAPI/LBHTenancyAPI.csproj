@@ -43,7 +43,6 @@
     <Compile Remove="UseCases\IListAllArrearsAgreements.cs" />
     <Compile Remove="Service References\ArrearsAgreementService\ArrearsAgreementService.cs" />
     <Compile Remove="Service References\ArrearsAgreementService\Reference.cs" />
-    <Compile Remove="Services\FakeServices\FakeArrearsActionDiaryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,4 +66,10 @@
   <ItemGroup>
     <Folder Include="Infrastructure\V2\" />
   </ItemGroup>
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+      <ItemGroup>
+          <DocFile Include="bin\$(Configuration)\$(TargetFramework)\*.xml" />
+      </ItemGroup>
+      <Copy SourceFiles="@(DocFile)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />
+  </Target>
 </Project>

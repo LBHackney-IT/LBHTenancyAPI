@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Services;
+using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing;
 
 namespace LBHTenancyAPI.UseCases.V1.ArrearsActions
 {

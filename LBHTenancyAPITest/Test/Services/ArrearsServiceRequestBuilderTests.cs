@@ -1,8 +1,8 @@
 using System;
-using LBHTenancyAPI.Services;
 using Xunit;
 using AgreementService;
-using LBHTenancyAPI.Services.Impl;
+using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing.Impl;
 using Moq;
 
 namespace LBHTenancyAPITest.Test.Services

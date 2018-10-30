@@ -2,9 +2,10 @@ using System;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Services;
-using LBHTenancyAPI.Services.Impl;
+using LBHTenancyAPI.UseCases.Service;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing.Impl;
 using Moq;
 using Xunit;
 

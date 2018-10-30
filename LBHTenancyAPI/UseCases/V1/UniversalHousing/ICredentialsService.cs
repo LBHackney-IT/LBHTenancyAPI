@@ -1,6 +1,6 @@
 using AgreementService;
 
-namespace LBHTenancyAPI.Services
+namespace LBHTenancyAPI.UseCases.Service
 {
     public interface ICredentialsService
     {

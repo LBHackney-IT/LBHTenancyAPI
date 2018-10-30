@@ -15,9 +15,6 @@ using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Authentication;
 using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
 using LBHTenancyAPI.Infrastructure.V1.Health;
 using LBHTenancyAPI.Infrastructure.V1.Logging;
-using LBHTenancyAPI.Middleware;
-using LBHTenancyAPI.Services;
-using LBHTenancyAPI.Services.Impl;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;
@@ -33,9 +30,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using LBHTenancyAPI.UseCases.Service;
-using LBHTenancyAPI.UseCases.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Configuration;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing;
+using LBHTenancyAPI.UseCases.V1.UniversalHousing.Impl;
 
 namespace LBHTenancyAPI.Infrastructure.V1.Services
 {

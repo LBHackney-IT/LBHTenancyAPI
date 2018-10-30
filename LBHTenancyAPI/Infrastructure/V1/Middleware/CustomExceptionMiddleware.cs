@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace LBHTenancyAPI.Middleware
+namespace LBHTenancyAPI.Infrastructure.V1.Middleware
 {
     /// <summary>
     /// Middleware to handle exceptions and return them as APIResponses with APIErrors and correct

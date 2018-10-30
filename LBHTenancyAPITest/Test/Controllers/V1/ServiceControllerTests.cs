@@ -4,6 +4,7 @@ using FluentAssertions;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.V1.Service;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
