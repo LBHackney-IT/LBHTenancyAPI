@@ -59,9 +59,8 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.AssumeDefaultVersionWhenUnspecified =
-                    true; // assume that the caller wants the default version if they don't specify
-                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the accept header)
+                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
+                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
             });
         }
 
@@ -79,8 +78,17 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<UseCases.V1.Search.ISearchTenancyUseCase, UseCases.V1.Search.SearchTenancyUseCase>();
             services.AddTransient<Gateways.V1.Search.ISearchGateway>(s => new Gateways.V1.Search.SearchGateway(connectionString));
 
-            services.AddTransient<UseCases.V1.Search.ISearchTenancyUseCase, UseCases.V1.Search.SearchTenancyUseCase>();
+            services.AddTransient<UseCases.V2.Search.ISearchTenancyUseCase, UseCases.V2.Search.SearchTenancyUseCase>();
             services.AddTransient<Gateways.V2.Search.ISearchGateway>(s => new Gateways.V2.Search.SearchGateway(connectionString));
+        }
+
+        public static void ConfigureRootController(this IServiceCollection services)
+        {
+            //services.AddTransient<UseCases.V1., UseCases.V1.Search.SearchTenancyUseCase>();
+            //services.AddTransient<Gateways.V1.Search.ISearchGateway>(s => new Gateways.V1.Search.SearchGateway(connectionString));
+
+            //services.AddTransient<UseCases.V2.Search.ISearchTenancyUseCase, UseCases.V2.Search.SearchTenancyUseCase>();
+            //services.AddTransient<Gateways.V2.Search.ISearchGateway>(s => new Gateways.V2.Search.SearchGateway(connectionString));
         }
 
         public static void ConfigureUniversalHousingRelated(this IServiceCollection services)
@@ -119,59 +127,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddHealthChecks(healthCheck => healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
         }
 
-        /// <summary>
-        /// Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
-        /// and assigns that 
-        /// </summary>
-        /// <param name="services"></param>
-        public static void ConfigureSwaggerGen(this IServiceCollection services, List<ApiVersionDescription> apiVersions)
-        {
-            //add swagger gen to generate the swagger.json file - delayed execution
-            services.AddSwaggerGen(c =>
-            {
-                c.AddSecurityDefinition("Token",
-                    new ApiKeyScheme
-                    {
-                        In = "header",
-                        Description = "Your Hackney API Key",
-                        Name = "X-Api-Key",
-                        Type = "apiKey"
-                    });
-                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Token", Enumerable.Empty<string>()}
-                });
-
-                //Looks at the APIVersionAttribute [ApiVersion("x")] on controllers and decides whether or not
-                //to include it in that version of the swagger document
-                //Controllers must have this [ApiVersion("x")] to be included in swagger documentation!!
-                c.DocInclusionPredicate((docName, apiDesc) =>
-                {
-                    var versions = apiDesc.ControllerAttributes()
-                        .OfType<ApiVersionAttribute>()
-                        .SelectMany(attr => attr.Versions).ToList();
-
-                    var any = versions.Any(v => $"{v.GetFormattedApiVersion()}" == docName);
-                    return any;
-                });
-
-                //Get every ApiVersion attribute specified and create swagger docs for them
-                foreach (var apiVersion in apiVersions)
-                {
-                    var version = $"v{apiVersion.ApiVersion.ToString()}";
-                    c.SwaggerDoc(version, new Info { Title = $"TenancyAPI {version}", Version = version });
-                }
-
-                c.CustomSchemaIds(x => x.FullName);
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                if (File.Exists(xmlPath))
-                    c.IncludeXmlComments(xmlPath);
-            });
-
-            services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
-        }
+        
 
         public static void ConfigureContacts(this IServiceCollection services, LBHTenancyAPI.Settings.ConfigurationSettings settings)
         {
@@ -181,7 +137,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<IGetContactsForTenancyUseCase, GetContactsForTenancyUseCase>();
         }
 
-        public static void ConfigureSwaggerUI(this IApplicationBuilder app, List<ApiVersionDescription> apiVersions)
+        public static List<ApiVersionDescription> ConfigureSwaggerUI(this IApplicationBuilder app, List<ApiVersionDescription> apiVersions)
         {
             //Get ApiVersionDescriptionProvider from API Explorer
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
@@ -199,6 +155,8 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             });
 
             app.UseSwagger();
+
+            return apiVersions;
         }
     }
 }

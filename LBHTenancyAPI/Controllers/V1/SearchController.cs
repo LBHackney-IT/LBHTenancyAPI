@@ -11,7 +11,7 @@ namespace LBHTenancyAPI.Controllers.V1
     /// Search Controller V1 to search for Tenants in a simple
     /// </summary>
     [ApiVersion("1", Deprecated = true)]
-    [Route("api/v1/tenancies/search/")]
+    [Route("api/v{version:apiVersion}/tenancies/search/", Name = "SearchV1")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]

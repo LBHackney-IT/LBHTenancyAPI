@@ -125,7 +125,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.ISqlConnectionFactory.Create">
             <summary>
-            Creates a SQL connection however doesn't open it
+            Creates an instance of a SQL connection object without opening a connection
             </summary>
             <returns></returns>
         </member>
@@ -149,7 +149,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
             <summary>
-            Creates sql connection however doesn't open it
+            Creates SQL connection object without opening a connection
             </summary>
             <returns></returns>
         </member>
@@ -160,7 +160,7 @@
         </member>
         <member name="M:LBHTenancyAPI.Factories.WCFClientFactory.CreateClient``1(System.String)">
             <summary>
-            Creates WCF Clients however doesn't open connection
+            Creates WCF Clients without opening a connection
             </summary>
             <typeparam name="T"></typeparam>
             <param name="endpoint"></param>
@@ -193,12 +193,6 @@
             <param name="request"></param>
             <param name="cancellationToken"></param>
             <returns></returns>
-        </member>
-        <member name="T:LBHTenancyAPI.Gateways.V1.Search.SearchGateway">
-            <summary>
-            Search Gateway V1 Searches for tenants attached to tenancies
-            Currently connects to UH Database via SQL connection and SQL queries
-            </summary>
         </member>
         <member name="T:LBHTenancyAPI.Gateways.V2.Search.SearchGateway">
             <summary>
@@ -309,13 +303,6 @@
             Configures API
             </summary>
         </member>
-        <member name="M:LBHTenancyAPI.Startup.ConfigureSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
-            and assigns that 
-            </summary>
-            <param name="services"></param>
-        </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.ArrearsActions.CreateArrearsActionDiaryUseCase">
             <summary>
             Use Case for creating Arrears actions diary entry
@@ -368,7 +355,7 @@
         </member>
         <member name="M:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase.ExecuteAsync(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
             <summary>
-            Execute the 
+            Execute the Search Tenancy Use Case 
             </summary>
             <param name="request"></param>
             <param name="cancellationToken"></param>
