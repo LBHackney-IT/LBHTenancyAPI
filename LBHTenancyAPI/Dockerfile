@@ -7,7 +7,7 @@ WORKDIR /src
 COPY LBHTenancyAPI.sln ./
 COPY LBHTenancyAPI/LBHTenancyAPI.csproj LBHTenancyAPI/
 
-ARG VERSION_SUFFIX
+ARG VERSION_SUFFIX=0
 
 COPY . .
 RUN dotnet restore LBHTenancyAPI.sln -nowarn:msb3202,nu1503
