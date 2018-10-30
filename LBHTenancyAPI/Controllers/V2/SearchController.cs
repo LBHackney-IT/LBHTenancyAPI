@@ -11,8 +11,8 @@ namespace LBHTenancyAPI.Controllers.V2
     /// <summary>
     /// Search Controller V2 to search for Tenants in a multi faceted way
     /// </summary>
-    [ApiVersion("1.1")]
-    [Route("api/v{version:apiVersion}/tenancies/search/", Name = "SearchV2")]
+    [ApiVersion("2")]
+    [Route("api/v{apiVersion:apiVersion}/tenancies/search/", Name = "SearchV2")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
@@ -41,7 +41,7 @@ namespace LBHTenancyAPI.Controllers.V2
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet, MapToApiVersion("1.1")]
+        [HttpGet, MapToApiVersion("2")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
         public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)
         {
