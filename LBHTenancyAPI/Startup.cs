@@ -23,7 +23,6 @@ namespace LBHTenancyAPI
     /// </summary>
     public class Startup
     {
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -60,6 +59,8 @@ namespace LBHTenancyAPI
             services.ConfigureContacts(settings);
 
             services.ConfigureApiVersioning();
+
+            services.ConfigureServiceDetails();
 
             //Set [ApiVersion("x")] on Controllers to automatically add them to swagger docs
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();

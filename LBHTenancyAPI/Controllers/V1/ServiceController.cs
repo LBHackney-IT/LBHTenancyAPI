@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using LBHTenancyAPI.Extensions.Controller;
 using LBHTenancyAPI.Infrastructure.V1.API;
-using LBHTenancyAPI.UseCases.Service;
+using LBHTenancyAPI.UseCases.V1.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1

@@ -32,8 +32,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
-using LBHTenancyAPI.UseCases.Service;
-using LBHTenancyAPI.UseCases.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Configuration;
 
@@ -82,13 +80,10 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<Gateways.V2.Search.ISearchGateway>(s => new Gateways.V2.Search.SearchGateway(connectionString));
         }
 
-        public static void ConfigureRootController(this IServiceCollection services)
+        public static void ConfigureServiceDetails(this IServiceCollection services)
         {
-            //services.AddTransient<UseCases.V1., UseCases.V1.Search.SearchTenancyUseCase>();
-            //services.AddTransient<Gateways.V1.Search.ISearchGateway>(s => new Gateways.V1.Search.SearchGateway(connectionString));
-
-            //services.AddTransient<UseCases.V2.Search.ISearchTenancyUseCase, UseCases.V2.Search.SearchTenancyUseCase>();
-            //services.AddTransient<Gateways.V2.Search.ISearchGateway>(s => new Gateways.V2.Search.SearchGateway(connectionString));
+            services.AddTransient<UseCases.V1.Service.IGetServiceDetailsUseCase, UseCases.V1.Service.GetServiceDetailsUseCase>();
+            services.AddTransient<UseCases.V1.Versioning.IGetVersionUseCase, UseCases.V1.Versioning.GetVersionUseCase>();
         }
 
         public static void ConfigureUniversalHousingRelated(this IServiceCollection services)
