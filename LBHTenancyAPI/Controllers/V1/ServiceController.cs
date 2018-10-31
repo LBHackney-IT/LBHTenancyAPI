@@ -21,7 +21,7 @@ namespace LBHTenancyAPI.Controllers.V1
 
         [HttpGet]
         [ProducesResponseType(typeof(APIResponse<GetServiceDetailsResponse>), 200)]
-        [Route("/")]
+        [Route("/build")]
         public async Task<IActionResult> Get()
         {
             var response = await _serviceDetailsUseCase.ExecuteAsync(Request.GetCancellationToken()).ConfigureAwait(false);
