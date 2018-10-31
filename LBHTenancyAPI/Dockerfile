@@ -18,7 +18,7 @@ RUN dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
 RUN dotnet build LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $VERSION_SUFFIX
 
 FROM build AS publish
-RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app
+RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $VERSION_SUFFIX
 
 FROM base AS final
 WORKDIR /app
