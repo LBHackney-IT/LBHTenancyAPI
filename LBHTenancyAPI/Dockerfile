@@ -8,19 +8,21 @@ COPY LBHTenancyAPI.sln ./
 COPY LBHTenancyAPI/LBHTenancyAPI.csproj LBHTenancyAPI/
 
 ARG VERSION_SUFFIX=0
+ENV ENV_VERSION_SUFFIX=$VERSION_SUFFIX
 
 COPY . .
 RUN dotnet restore LBHTenancyAPI.sln -nowarn:msb3202,nu1503
 
-RUN dotnet build LBH.Data.Domain/LBH.Data.Domain.csproj -c Release
-RUN dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
+#RUN dotnet build LBH.Data.Domain/LBH.Data.Domain.csproj -c Release
+#RUN dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
+RUN echo "VERSION_SUFFIX"
+RUN echo ${VERSION_SUFFIX}
 
-RUN echo "Version Suffix ${VERSION_SUFFIX}"
-
-RUN dotnet build LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $VERSION_SUFFIX
+RUN dotnet build LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX
+RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX
 
 FROM build AS publish
-RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $VERSION_SUFFIX
+RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX
 
 FROM base AS final
 WORKDIR /app
