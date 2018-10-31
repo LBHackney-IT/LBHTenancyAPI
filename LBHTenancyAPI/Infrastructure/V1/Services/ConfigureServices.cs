@@ -35,6 +35,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Configuration;
 using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
+using LBHTenancyAPI.Infrastructure.V1.Versioning;
+using LBHTenancyAPI.UseCases.V1.Versioning;
 
 namespace LBHTenancyAPI.Infrastructure.V1.Services
 {
@@ -81,9 +83,9 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<Gateways.V2.Search.ISearchGateway>(s => new Gateways.V2.Search.SearchGateway(connectionString));
         }
 
-        public static void ConfigureServiceDetails(this IServiceCollection services)
+        public static void ConfigureServiceDetails(this IServiceCollection services, UseCases.V1.Service.ServiceDetails serviceDetails)
         {
-            services.AddTransient<UseCases.V1.Service.IGetServiceDetailsUseCase, UseCases.V1.Service.GetServiceDetailsUseCase>();
+            services.AddTransient<UseCases.V1.Service.IGetServiceDetailsUseCase>(s=> new UseCases.V1.Service.GetServiceDetailsUseCase(s.GetService<IGetVersionUseCase>(), serviceDetails));
             services.AddTransient<UseCases.V1.Versioning.IGetVersionUseCase, UseCases.V1.Versioning.GetVersionUseCase>();
         }
 
