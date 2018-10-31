@@ -60,7 +60,7 @@ namespace LBHTenancyAPI
 
             services.ConfigureApiVersioning();
 
-            services.ConfigureServiceDetails();
+            services.ConfigureServiceDetails(settings.ServiceDetailsSettings);
 
             //Set [ApiVersion("x")] on Controllers to automatically add them to swagger docs
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
