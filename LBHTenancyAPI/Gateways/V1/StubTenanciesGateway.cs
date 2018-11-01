@@ -4,6 +4,9 @@ using LBH.Data.Domain;
 
 namespace LBHTenancyAPI.Gateways.V1
 {
+    /// <summary>
+    /// For the purposes of testing
+    /// </summary>
     public class StubTenanciesGateway : ITenanciesGateway
     {
         private Dictionary<string, TenancyListItem> StoredTenancyListItems;

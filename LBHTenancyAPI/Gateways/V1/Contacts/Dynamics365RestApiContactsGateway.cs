@@ -22,6 +22,8 @@ namespace LBHTenancyAPI.Gateways.V1.Contacts
 
         public async Task<IList<Contact>> GetContactsByTenancyReferenceAsync(GetContactsForTenancyRequest request, CancellationToken cancellationToken)
         {
+            //todo: return GetContactsResults instead of IList<Contact>
+
             var query = GetContactQuery(request?.TenancyAgreementReference);
             var httpClient = await _dynamics365ClientFactory.CreateClientAsync().ConfigureAwait(false);
 

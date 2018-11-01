@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    //Do not copy this pattern please refer to SearchV2 Controller
     [ApiVersion("1")]
     [Produces("application/json")]
     [Route("api/v1/tenancies/arrears-action-diary/")]
@@ -22,6 +23,7 @@ namespace LBHTenancyAPI.Controllers.V1
         [HttpPost]
         public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
         {
+            
             if (!request.IsValid())
                 return BadRequest();
 

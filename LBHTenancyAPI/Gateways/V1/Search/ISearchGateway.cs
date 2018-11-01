@@ -5,6 +5,9 @@ using LBHTenancyAPI.UseCases.V1.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.V1.Search
 {
+    /// <summary>
+    /// Search Gateway interace V1
+    /// </summary>
     public interface ISearchGateway
     {
         Task<PagedResults<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken);

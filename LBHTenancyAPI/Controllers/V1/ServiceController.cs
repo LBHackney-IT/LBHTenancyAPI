@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    /// <summary>
+    /// Service Controller to return details about the API
+    /// </summary>
     [ApiVersion("1")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
@@ -19,6 +22,10 @@ namespace LBHTenancyAPI.Controllers.V1
             _serviceDetailsUseCase = serviceDetailsUseCase;
         }
 
+        /// <summary>
+        /// Returns service details as well as Build information
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(APIResponse<GetServiceDetailsResponse>), 200)]
         [Route("/build")]

@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    /// <summary>
+    /// Base Controller to assist with handling successful responses from UseCases
+    /// </summary>
     public class BaseController : Controller
     {
         public IActionResult HandleResponse<T>( IExecuteWrapper<T> result) where T: class

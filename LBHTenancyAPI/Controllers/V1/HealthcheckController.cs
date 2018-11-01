@@ -6,6 +6,9 @@ using Microsoft.Extensions.HealthChecks;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    /// <summary>
+    /// Health Check controller to assist with checking API is alive and potentially connect to dependencies
+    /// </summary>
     [ApiVersion("1")]
     [Produces("application/json")]
     public class HealthcheckController : Controller
@@ -16,7 +19,11 @@ namespace LBHTenancyAPI.Controllers.V1
         {
             _healthCheckService = healthCheckService;
         }
-        
+
+        /// <summary>
+        /// Simple Health Check
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("/healthcheck")]
         public IActionResult Healthcheck()
@@ -24,6 +31,10 @@ namespace LBHTenancyAPI.Controllers.V1
             return Ok(new Dictionary<string, object> {{"success", true}});
         }
 
+        /// <summary>
+        /// Sophisticated Health Check - Can check things like can connect to dependencies
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("/healthcheck/status")]
         public async Task<IActionResult> StatusHealthCheck()

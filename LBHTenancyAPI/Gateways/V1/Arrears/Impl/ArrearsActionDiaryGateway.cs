@@ -19,6 +19,11 @@ namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
             _actionDiaryService = actionDiaryService;
         }
 
+        /// <summary>
+        /// Create Action Diary Event by calling Universal Housing WCF endpoint
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<ArrearsActionResponse> CreateActionDiaryEntryAsync(ArrearsActionCreateRequest request)
         {
             if (request == null)

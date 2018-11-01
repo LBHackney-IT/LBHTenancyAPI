@@ -27,13 +27,16 @@ namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
         }
 
         /// <summary>
-        /// Creates Arrears Agreement
+        /// Creates Arrears Agreement by calling Universal Housing WCF Endpoint
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public async Task<IExecuteWrapper<ArrearsAgreementResponse>> CreateArrearsAgreementAsync(ArrearsAgreementRequest request, CancellationToken cancellationToken)
         {
+            //todo: remove executeWrapper Pattern 
+            //todo: refactor to V2.SearchController Gateway pattern
+
             if (request == null)
                 throw new ArgumentNullException("request is null");
 

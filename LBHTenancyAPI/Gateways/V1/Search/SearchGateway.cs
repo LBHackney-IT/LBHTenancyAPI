@@ -8,6 +8,9 @@ using LBHTenancyAPI.UseCases.V1.Search.Models;
 
 namespace LBHTenancyAPI.Gateways.V1.Search
 {
+    /// <summary>
+    /// SearchGateway V1 SQL implementation
+    /// </summary>
     public class SearchGateway : ISearchGateway
     {
         private readonly string _connectionString;
@@ -16,11 +19,29 @@ namespace LBHTenancyAPI.Gateways.V1.Search
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Searches for tenants attached to tenancies
+        /// Searches on 5 fields:
+        /// FirstName - exact match OR
+        /// LastName - exact match OR
+        /// TenancyRef - exact match OR
+        /// Postcode - partial match (contains) OR
+        /// Address - partial match (contains) OR
+        /// Orders by LastName, FirstName Desc
+        /// Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+        /// - Tenancy A - Tenant1
+        /// - Tenancy A - Tenant2
+        /// Makes 2 calls to the database one for query and one for total results count
+        /// </summary> 
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<PagedResults<TenancyListItem>> SearchTenanciesAsync(SearchTenancyRequest request, CancellationToken cancellationToken)
         {
             var results = new PagedResults<TenancyListItem>();
             using (var conn = new SqlConnection(_connectionString))
             {
+                //explicitly open the connection
                 conn.Open();
                 var all = await conn.QueryAsync<TenancyListItem>(
                     @"
@@ -96,6 +117,8 @@ namespace LBHTenancyAPI.Gateways.V1.Search
                     new { searchTerm = request.SearchTerm }
                 ).ConfigureAwait(false);
                 results.TotalResultsCount = totalCount.Sum();
+                //explictly close the connection
+                //don't pool the connection
                 conn.Close();
             }
 

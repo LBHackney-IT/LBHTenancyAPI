@@ -29,6 +29,7 @@ namespace LBHTenancyAPI.Controllers.V1
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery(Name = "tenancy_refs")] List<string> tenancyRefs)
         {
+            //todo: create a V2 and refactor to V2.SearchController pattern
             var response = listTenancies.Execute(tenancyRefs);
             var tenancies = response.Tenancies.ConvertAll(tenancy => new Dictionary<string, object>
             {
@@ -66,6 +67,7 @@ namespace LBHTenancyAPI.Controllers.V1
         [Route("{tenancyRef}/payments")]
         public async Task<IActionResult> PaymentTransactionDetails(string tenancyRef)
         {
+            //todo: create a V2 and refactor to V2.SearchController pattern
             var response = await listAllPayments.ExecuteAsync(tenancyRef).ConfigureAwait(false);
 
             return Ok(response);
@@ -75,6 +77,7 @@ namespace LBHTenancyAPI.Controllers.V1
         [Route("{tenancyRef}/actions")]
         public async Task<IActionResult> GetActionDiaryDetails(string tenancyRef)
         {
+            //todo: create a V2 and refactor to V2.SearchController pattern
             var response = listAllArrearsActions.Execute(tenancyRef);
             var arrearActionDiary = response.ActionDiaryEntries.ConvertAll(actionDiary => new Dictionary<string, object>
             {
@@ -98,6 +101,7 @@ namespace LBHTenancyAPI.Controllers.V1
         [Route("{tenancyRef}")]
         public async Task<IActionResult> GetTenancyDetails(string tenancyRef)
         {
+            //todo: create a V2 and refactor to V2.SearchController pattern
             Dictionary<string, object> result;
             var tenancyDetails = new Dictionary<string, object>();
 

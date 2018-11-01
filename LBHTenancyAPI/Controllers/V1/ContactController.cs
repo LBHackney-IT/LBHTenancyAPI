@@ -20,7 +20,7 @@ namespace LBHTenancyAPI.Controllers.V1
         {
             _getContactsForTenancyUseCase = getContactsForTenancyUseCase;
         }
-
+        
         [HttpGet]
         [Route("api/v1/tenancies/{TenancyAgreementReference}/contacts/")]
         [ProducesResponseType(typeof(APIResponse<GetContactsForTenancyResponse>), 200)]
