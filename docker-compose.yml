@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: LBHTenancyAPI/Dockerfile
+      args:
+        - VERSION_SUFFIX 
     ports:
       - 3000:80
     links:
