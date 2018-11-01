@@ -1,7 +1,7 @@
 using System;
-using LBHTenancyAPI.Services;
 using Xunit;
 using AgreementService;
+using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
 using Moq;
 

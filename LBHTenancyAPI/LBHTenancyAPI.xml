@@ -4,6 +4,28 @@
         <name>LBHTenancyAPI</name>
     </assembly>
     <members>
+        <member name="T:LBHTenancyAPI.Controllers.V1.BaseController">
+            <summary>
+            Base Controller to assist with handling successful responses from UseCases
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Controllers.V1.HealthcheckController">
+            <summary>
+            Health Check controller to assist with checking API is alive and potentially connect to dependencies
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Controllers.V1.HealthcheckController.Healthcheck">
+            <summary>
+            Simple Health Check
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Controllers.V1.HealthcheckController.StatusHealthCheck">
+            <summary>
+            Sophisticated Health Check - Can check things like can connect to dependencies
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:LBHTenancyAPI.Controllers.V1.SearchController">
             <summary>
             Search Controller V1 to search for Tenants in a simple
@@ -22,6 +44,24 @@
             Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
             - Tenancy A - Tenant1
             - Tenancy A - Tenant2
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Controllers.V1.ServiceController">
+            <summary>
+            Service Controller to return details about the API
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Controllers.V1.ServiceController.Get">
+            <summary>
+            Returns service details as well as Build information
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LBHTenancyAPI.Controllers.V2.ArrearsActionDiaryController.Post(AgreementService.ArrearsActionCreateRequest)">
+            <summary>
+            
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -176,6 +216,13 @@
             WCF Service Interface which allows us to create action diary entries
             </summary>
         </member>
+        <member name="M:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsActionDiaryGateway.CreateActionDiaryEntryAsync(AgreementService.ArrearsActionCreateRequest)">
+            <summary>
+            Create Action Diary Event by calling Universal Housing WCF endpoint
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsAgreementGateway">
             <summary>
             ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
@@ -188,7 +235,76 @@
         </member>
         <member name="M:LBHTenancyAPI.Gateways.V1.Arrears.Impl.ArrearsAgreementGateway.CreateArrearsAgreementAsync(AgreementService.ArrearsAgreementRequest,System.Threading.CancellationToken)">
             <summary>
-            Creates Arrears Agreement
+            Creates Arrears Agreement by calling Universal Housing WCF Endpoint
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V1.Search.ISearchGateway">
+            <summary>
+            Search Gateway interace V1
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V1.Search.SearchGateway">
+            <summary>
+            SearchGateway V1 SQL implementation
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V1.Search.SearchGateway.SearchTenanciesAsync(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
+            <summary>
+            Searches for tenants attached to tenancies
+            Searches on 5 fields:
+            FirstName - exact match OR
+            LastName - exact match OR
+            TenancyRef - exact match OR
+            Postcode - partial match (contains) OR
+            Address - partial match (contains) OR
+            Orders by LastName, FirstName Desc
+            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+            - Tenancy A - Tenant1
+            - Tenancy A - Tenant2
+            Makes 2 calls to the database one for query and one for total results count
+            </summary> 
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V1.StubTenanciesGateway">
+            <summary>
+            For the purposes of testing
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway">
+            <summary>
+            ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
+            </summary>
+        </member>
+        <member name="F:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway._actionDiaryService">
+            <summary>
+            WCF Service Interface which allows us to create action diary entries
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway.CreateActionDiaryEntryAsync(AgreementService.ArrearsActionCreateRequest)">
+            <summary>
+            Create Action Diary Event by calling Universal Housing WCF endpoint
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway">
+            <summary>
+            ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
+            </summary>
+        </member>
+        <member name="F:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway._actionDiaryService">
+            <summary>
+            WCF Service Interface which allows us to create action diary entries
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway.CreateArrearsAgreementAsync(AgreementService.ArrearsAgreementRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates Arrears Agreement by calling Universal Housing WCF Endpoint
             </summary>
             <param name="request"></param>
             <param name="cancellationToken"></param>
@@ -360,6 +476,11 @@
             <param name="request"></param>
             <param name="cancellationToken"></param>
             <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.UseCases.V2.ArrearsActions.CreateArrearsActionDiaryUseCase">
+            <summary>
+            Use Case for creating Arrears actions diary entry
+            </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest">
             <summary>

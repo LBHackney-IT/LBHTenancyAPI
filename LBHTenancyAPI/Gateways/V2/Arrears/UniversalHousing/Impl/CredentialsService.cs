@@ -2,7 +2,7 @@ using System;
 using AgreementService;
 using Microsoft.Extensions.Configuration;
 
-namespace LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl
+namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
 {
     public class CredentialsService : ICredentialsService
     {

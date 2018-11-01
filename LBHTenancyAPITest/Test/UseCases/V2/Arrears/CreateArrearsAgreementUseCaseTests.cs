@@ -4,17 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using AgreementService;
-using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
-using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
-using LBHTenancyAPI.UseCases.V1.ArrearsAgreements;
-using LBHTenancyAPI.UseCases.V1.ArrearsAgreements.Models;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
+using LBHTenancyAPI.Gateways.V2.Arrears;
+using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
+using LBHTenancyAPI.Infrastructure.V1.Exceptions;
+using LBHTenancyAPI.UseCases.V2.ArrearsAgreements;
+using LBHTenancyAPI.UseCases.V2.ArrearsAgreements.Models;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
+namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
 {
     public class CreateArrearsAgreementUseCaseTests
     {
@@ -32,10 +33,10 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
         {
             //arrange
             _fakeGateway.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>(), CancellationToken.None))
-                .ReturnsAsync(new ExecuteWrapper<ArrearsAgreementResponse>(new ArrearsAgreementResponse
+                .ReturnsAsync(new ArrearsAgreementResponse
                 {
                     Success = true
-                }));
+                });
 
             var request = new CreateArrearsAgreementRequest
             {
@@ -48,7 +49,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
             //act
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            response?.Result?.Agreement.Reference.Should().Be("ref");
+            response?.Agreement.Reference.Should().Be("ref");
         }
 
         [Fact]
@@ -60,13 +61,9 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
                 
             };
             //act
-            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            response.IsSuccess.Should().BeFalse();
-            response.Result.Should().BeNull();
-            response.Error.Should().NotBeNull();
-            response.Error.IsValid.Should().BeFalse();
-            response.Error.ValidationErrors.Should().NotBeNullOrEmpty();
+            await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
+
         }
 
         [Fact]
@@ -74,13 +71,8 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
         {
             //arrange            
             //act
-            var response = await _classUnderTest.ExecuteAsync(null, CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.IsSuccess.Should().BeFalse();
-            response.Error.Should().NotBeNull();
-            response.Error.IsValid.Should().BeFalse();
-            response.Error.ValidationErrors.Should().NotBeNull();
-            response.Error.ValidationErrors.Should().NotBeNullOrEmpty();
+            await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(null, CancellationToken.None));
         }
 
 
@@ -195,37 +187,38 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
 
-            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
-                .ReturnsAsync(new ArrearsAgreementResponse
+            var arrearsAgreementResponse = new ArrearsAgreementResponse
+            {
+                Success = true,
+                Agreement = new ArrearsAgreementDto
                 {
-                    Success = true,
-                    Agreement = new ArrearsAgreementDto
-                    {
-                        TenancyAgreementRef = tenancyRef,
-                        Comment = comment,
-                        ArrearsAgreementStatusCode = agreementStatusCode,
-                        FcaDate = DateTime.Parse(fcaDate),
-                        FirstCheck = firstCheck,
-                        FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
-                        IsBreached = isBreached,
-                        MonitorBalanceCode = monitorBalanceCode,
-                        NextCheck = nextCheck,
-                        NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
-                        StartBalance = startBalance,
-                        StartDate = DateTime.Parse(startDate),
+                    TenancyAgreementRef = tenancyRef,
+                    Comment = comment,
+                    ArrearsAgreementStatusCode = agreementStatusCode,
+                    FcaDate = DateTime.Parse(fcaDate),
+                    FirstCheck = firstCheck,
+                    FirstCheckFrequencyTypeCode = firstCheckFrequencyTypeCode,
+                    IsBreached = isBreached,
+                    MonitorBalanceCode = monitorBalanceCode,
+                    NextCheck = nextCheck,
+                    NextCheckFrequencyTypeCode = nextCheckFrequencyTypeCode,
+                    StartBalance = startBalance,
+                    StartDate = DateTime.Parse(startDate),
 
-                        PaymentSchedule = new List<ArrearsScheduledPaymentDto>
+                    PaymentSchedule = new List<ArrearsScheduledPaymentDto>
+                    {
+                        new ArrearsScheduledPaymentDto
                         {
-                            new ArrearsScheduledPaymentDto
-                            {
-                                Amount = amount,
-                                ArrearsFrequencyCode = arrearsFrequencyCode,
-                                Comments = payemntInfoComments,
-                                StartDate = DateTime.Parse(payementInfoStartDate)
-                            }
-                        }.ToArray()
-                    },
-                });
+                            Amount = amount,
+                            ArrearsFrequencyCode = arrearsFrequencyCode,
+                            Comments = payemntInfoComments,
+                            StartDate = DateTime.Parse(payementInfoStartDate)
+                        }
+                    }.ToArray()
+                },
+            };
+            fakeArrearsAgreementService.Setup(s => s.CreateArrearsAgreementAsync(It.IsAny<ArrearsAgreementRequest>()))
+                .ReturnsAsync(arrearsAgreementResponse);
 
             var fakeCredentialsService = new Mock<ICredentialsService>();
             fakeCredentialsService.Setup(s => s.GetUhSourceSystem()).Returns("testSourceSystem");
@@ -274,8 +267,8 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
             //act
             var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            response.IsSuccess.Should().BeTrue();
-            response.Result.Should().NotBeNull();
+            response.Should().NotBeNull();
+            response.Agreement.Should().BeEquivalentTo(response);
         }
 
         [Theory]
@@ -352,11 +345,13 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
             //act
             var response = await classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
-            response.IsSuccess.Should().BeFalse();
-            response.Result.Should().BeNull();
-            response.Error.Errors.Should().NotBeNullOrEmpty();
-            response.Error.Errors[0].Code.Should().Be("UH_1");
-            response.Error.Errors[0].Message.Should().Be("Not enough field");
+            //todo : fix this test
+            Assert.False(true);
+            //response.Should().BeFalse();
+            //response.Result.Should().BeNull();
+            //response.Error.Errors.Should().NotBeNullOrEmpty();
+            //response.Error.Errors[0].Code.Should().Be("UH_1");
+            //response.Error.Errors[0].Message.Should().Be("Not enough field");
         }
     }
 }

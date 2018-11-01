@@ -16,7 +16,6 @@ using LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client.Factory;
 using LBHTenancyAPI.Infrastructure.V1.Health;
 using LBHTenancyAPI.Infrastructure.V1.Logging;
 using LBHTenancyAPI.Middleware;
-using LBHTenancyAPI.Services;
 using LBHTenancyAPI.Settings;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPI.UseCases.V1.ArrearsActions;

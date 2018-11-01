@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Extensions.Validation;
-using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
+using LBHTenancyAPI.Gateways.V2.Arrears;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
 using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 
-namespace LBHTenancyAPI.UseCases.V1.ArrearsActions
+namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 {
     /// <summary>
     /// Use Case for creating Arrears actions diary entry
@@ -22,7 +22,8 @@ namespace LBHTenancyAPI.UseCases.V1.ArrearsActions
 
         public async Task<ArrearsActionResponse> ExecuteAsync(ArrearsActionCreateRequest request)
         {
-
+            if(request == null || !request.IsValid())
+                throw new BadRequestException();
 
             request = _requestBuilder.BuildArrearsRequest(request);
 

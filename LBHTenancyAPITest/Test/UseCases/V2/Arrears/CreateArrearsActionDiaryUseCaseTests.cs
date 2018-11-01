@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
-using LBHTenancyAPI.UseCases.V1.ArrearsActions;
+using LBHTenancyAPI.Gateways.V2.Arrears;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
+namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
 {
     public class CreateArrearsActionDiaryUseCaseTests
     {
@@ -18,7 +18,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1.Arrears
         public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
-            var credentialsService = new Mock<ICredentialsService>();
+            var credentialsService = new Mock<LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.ICredentialsService>();
             credentialsService.Setup(s => s.GetUhSourceSystem()).Returns("TestSystem");
             credentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
             {

@@ -4,14 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using AgreementService;
-using LBHTenancyAPI.Gateways.V1.Arrears;
-using LBHTenancyAPI.Gateways.V1.Arrears.Impl;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing.Impl;
+using LBHTenancyAPI.Gateways.V2.Arrears;
+using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
 using Moq;
 using Xunit;
 
-namespace LBHTenancyAPITest.Test.Gateways.V1.ArrearsActions
+namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
 {
     public class UHArrearsAgreementGatewayTest
     {
@@ -132,21 +132,21 @@ namespace LBHTenancyAPITest.Test.Gateways.V1.ArrearsActions
             //act
             var response = await classUnderTest.CreateArrearsAgreementAsync(request, CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.Result.Agreement.TenancyAgreementRef.Should().Be(tenancyRef);
-            response.Result.Agreement.Comment.Should().Be(comment);
-            response.Result.Agreement.ArrearsAgreementStatusCode.Should().Be(agreementStatusCode);
-            response.Result.Agreement.FcaDate.Should().Be(DateTime.Parse(fcaDate));
-            response.Result.Agreement.FirstCheck.Should().Be(firstCheck);
-            response.Result.Agreement.FirstCheckFrequencyTypeCode.Should().Be(firstCheckFrequencyTypeCode);
-            response.Result.Agreement.IsBreached.Should().Be(isBreached);
-            response.Result.Agreement.MonitorBalanceCode.Should().Be(monitorBalanceCode);
-            response.Result.Agreement.NextCheck.Should().Be(nextCheck);
-            response.Result.Agreement.NextCheckFrequencyTypeCode.Should().Be(nextCheckFrequencyTypeCode);
-            response.Result.Agreement.StartBalance.Should().Be(startBalance);
-            response.Result.Agreement.StartDate.Should().Be(DateTime.Parse(startDate));
+            response.Agreement.TenancyAgreementRef.Should().Be(tenancyRef);
+            response.Agreement.Comment.Should().Be(comment);
+            response.Agreement.ArrearsAgreementStatusCode.Should().Be(agreementStatusCode);
+            response.Agreement.FcaDate.Should().Be(DateTime.Parse(fcaDate));
+            response.Agreement.FirstCheck.Should().Be(firstCheck);
+            response.Agreement.FirstCheckFrequencyTypeCode.Should().Be(firstCheckFrequencyTypeCode);
+            response.Agreement.IsBreached.Should().Be(isBreached);
+            response.Agreement.MonitorBalanceCode.Should().Be(monitorBalanceCode);
+            response.Agreement.NextCheck.Should().Be(nextCheck);
+            response.Agreement.NextCheckFrequencyTypeCode.Should().Be(nextCheckFrequencyTypeCode);
+            response.Agreement.StartBalance.Should().Be(startBalance);
+            response.Agreement.StartDate.Should().Be(DateTime.Parse(startDate));
 
-            response.Result.Agreement.PaymentSchedule.Should().NotBeNull();
-            var paymentSchedule = response.Result.Agreement.PaymentSchedule[0];
+            response.Agreement.PaymentSchedule.Should().NotBeNull();
+            var paymentSchedule = response.Agreement.PaymentSchedule[0];
             paymentSchedule.Amount.Should().Be(amount);
             paymentSchedule.ArrearsFrequencyCode.Should().Be(arrearsFrequencyCode);
             paymentSchedule.Comments.Should().Be(payemntInfoComments);

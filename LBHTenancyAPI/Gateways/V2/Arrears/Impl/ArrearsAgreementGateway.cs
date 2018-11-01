@@ -1,12 +1,11 @@
-using System;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AgreementService;
-using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
-using LBHTenancyAPI.Infrastructure.V1.UseCase.Execution;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
+using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 
-namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
+namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
 {
     /// <summary>
     /// ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
@@ -31,19 +30,18 @@ namespace LBHTenancyAPI.Gateways.V1.Arrears.Impl
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IExecuteWrapper<ArrearsAgreementResponse>> CreateArrearsAgreementAsync(ArrearsAgreementRequest request, CancellationToken cancellationToken)
+        public async Task<ArrearsAgreementResponse> CreateArrearsAgreementAsync(ArrearsAgreementRequest request, CancellationToken cancellationToken)
         {
             //todo: remove executeWrapper Pattern 
             //todo: refactor to V2.SearchController Gateway pattern
-
             if (request == null)
-                throw new ArgumentNullException("request is null");
+                throw new BadRequestException();
 
             request = _arrearsServiceRequestBuilder.BuildArrearsRequest<ArrearsAgreementRequest>(request);
             var response = await _actionDiaryService.CreateArrearsAgreementAsync(request).ConfigureAwait(false);
             if(_actionDiaryService.State != CommunicationState.Closed)
                 _actionDiaryService.Close();
-            var executeResponse = new ExecuteWrapper<ArrearsAgreementResponse>(response);
+            var executeResponse = response;
             return executeResponse;
         }
     }
