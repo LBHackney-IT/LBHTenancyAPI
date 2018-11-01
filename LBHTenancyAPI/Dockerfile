@@ -18,7 +18,7 @@ RUN dotnet restore LBHTenancyAPI.sln -nowarn:msb3202,nu1503
 RUN echo "VERSION_SUFFIX"
 RUN echo ${VERSION_SUFFIX}
 
-RUN dotnet build LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX
+#RUN dotnet build LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX
 
 FROM build AS publish
 RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix $ENV_VERSION_SUFFIX

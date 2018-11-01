@@ -9,7 +9,7 @@ docker-down:
 	docker-compose down
 
 .PHONY: setup
-setup: docker-build
+setup: docker-build --build-arg VERSION_SUFFIX=MAKESETUP
 
 .PHONY: serve
 serve:
