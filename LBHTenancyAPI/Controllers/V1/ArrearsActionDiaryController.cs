@@ -23,7 +23,6 @@ namespace LBHTenancyAPI.Controllers.V1
         [HttpPost]
         public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
         {
-            
             if (!request.IsValid())
                 return BadRequest();
 
