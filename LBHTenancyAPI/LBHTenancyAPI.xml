@@ -194,6 +194,34 @@
             <param name="cancellationToken"></param>
             <returns></returns>
         </member>
+        <member name="T:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway">
+            <summary>
+            ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
+            </summary>
+        </member>
+        <member name="F:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway._actionDiaryService">
+            <summary>
+            WCF Service Interface which allows us to create action diary entries
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway">
+            <summary>
+            ArrearsActionDiaryGateway marshalls calls to the Database for reads and Web Service for writes
+            </summary>
+        </member>
+        <member name="F:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway._actionDiaryService">
+            <summary>
+            WCF Service Interface which allows us to create action diary entries
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Gateways.V2.Arrears.Impl.ArrearsAgreementGateway.CreateArrearsAgreementAsync(AgreementService.ArrearsAgreementRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates Arrears Agreement
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
         <member name="T:LBHTenancyAPI.Gateways.V2.Search.SearchGateway">
             <summary>
             Search Gateway V2 Searches for tenants attached to tenancies
@@ -252,6 +280,35 @@
             <returns></returns>
         </member>
         <member name="T:LBHTenancyAPI.Infrastructure.V1.Validation.RequestValidationResponse">
+            <summary>
+            Encapsulates a valid response using some sort of validation extensions
+            We want this so we can swap out validation tools and still keep a standard response
+            </summary>
+        </member>
+        <member name="T:LBHTenancyAPI.Infrastructure.V2.API.APIResponse`1">
+            <summary>
+            API Response wrapper for all API responses
+            If a request has been successful this will be denoted by the statusCode
+                Then the 'data' property will be populated
+            If a request has not been successful denoted
+                Then the Error property will be populated
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:LBHTenancyAPI.Infrastructure.V2.API.IRequest">
+            <summary>
+            Request Interface
+            </summary>
+        </member>
+        <member name="M:LBHTenancyAPI.Infrastructure.V2.API.IRequest.Validate``1(``0)">
+            <summary>
+            Encapsulates the validation by making the request responsible for validating itself
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.Infrastructure.V2.Validation.RequestValidationResponse">
             <summary>
             Encapsulates a valid response using some sort of validation extensions
             We want this so we can swap out validation tools and still keep a standard response
@@ -360,6 +417,11 @@
             <param name="request"></param>
             <param name="cancellationToken"></param>
             <returns></returns>
+        </member>
+        <member name="T:LBHTenancyAPI.UseCases.V2.ArrearsActions.CreateArrearsActionDiaryUseCase">
+            <summary>
+            Use Case for creating Arrears actions diary entry
+            </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest">
             <summary>
