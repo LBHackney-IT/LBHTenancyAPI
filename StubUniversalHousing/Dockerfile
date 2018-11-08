@@ -8,6 +8,10 @@ WORKDIR /usr/src/app
 ENV SA_PASSWORD "Rooty-Tooty"
 ENV ACCEPT_EULA "Y"
 
-# Run SQL Server process and create tables.
-RUN /opt/mssql/bin/sqlservr & sleep 10 \
-  && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master -i /usr/src/app/StubUniversalHousing/setup.sql
+RUN /opt/mssql/bin/sqlservr &\
+echo 'waiting for sever to start before running migrations\n' &&\
+while ! /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master  -Q "SELECT 1;"; do \
+    echo 'Waiting for db'; sleep 3; \
+done &&\
+echo '--- running migrationns ---\n' &&\ 
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master -i /usr/src/app/StubUniversalHousing/setup.sql

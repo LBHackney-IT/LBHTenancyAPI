@@ -2,7 +2,7 @@ TEST_UH_CONNECTION_STRING="Data Source=tcp:stubuniversalhousing;Initial Catalog=
 
 .PHONY: docker-build
 docker-build:
-	docker-compose build
+	docker-compose build --build-arg VERSION_SUFFIX='local-build'
 
 .PHONY: docker-down
 docker-down:
