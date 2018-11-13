@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Extensions.Validation;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V2
@@ -20,8 +21,9 @@ namespace LBHTenancyAPI.Controllers.V2
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody][Required] ArrearsActionCreateRequest request)
+        public async Task<IActionResult> Post([FromBody][Required] ActionDiaryRequest request)
         {
+
             if (!request.IsValid())
                 return BadRequest();
 

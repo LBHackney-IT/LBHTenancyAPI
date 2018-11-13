@@ -17,12 +17,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
+            var connectionString = "test";
 
             fakeArrearsAgreementService.Setup(s => s.CreateArrearsActionAsync(It.IsAny<ArrearsActionCreateRequest>()))
                 .ReturnsAsync(new ArrearsActionResponse());
 
 
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, connectionString);
 
             var request = new ArrearsActionCreateRequest
             {
@@ -57,8 +58,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
+            var connectionString = "test";
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, connectionString);
 
             var request = new ArrearsActionCreateRequest
             {
@@ -96,8 +97,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object);
+            var connectionString = "test";
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object,connectionString);
 
             //act
             //assert

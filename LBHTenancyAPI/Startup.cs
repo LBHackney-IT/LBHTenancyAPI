@@ -50,7 +50,7 @@ namespace LBHTenancyAPI
             
             services.ConfigureTenancies(connectionString);
 
-            services.ConfigureUniversalHousingRelated();
+            services.ConfigureUniversalHousingRelated(connectionString);
 
             services.ConfigureSearch(connectionString);
 

@@ -1,8 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
-using LBHTenancyAPI.Services.V2;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 
 namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 {
@@ -21,11 +22,17 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
             _requestBuilder = arrearsRequestBuilder;
         }
 
-        public async Task<ArrearsActionResponse> ExecuteAsync(ArrearsActionCreateRequest request)
+        public async Task<ArrearsActionResponse> ExecuteAsync(ActionDiaryRequest request)
         {
-            request = _requestBuilder.BuildArrearsRequest(request);
+            var thisRequest = _requestBuilder.BuildNewActionDiaryRequest(request);
 
-            var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(request);
+            var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(thisRequest);
+
+            if (response.Success)
+            {
+                await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.AppUser, response.ArrearsAction.Id);
+
+            }
 
             return response;
         }

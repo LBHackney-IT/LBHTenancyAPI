@@ -3,6 +3,7 @@ using AgreementService;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Controllers.V2;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -18,21 +19,19 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
             var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
-            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
+            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ActionDiaryRequest>())).ReturnsAsync(new ArrearsActionResponse
             {
                 Success = true
             });
 
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest
+            ActionDiaryRequest request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
                     TenancyAgreementRef = "s",
                     ActionBalance = 1,
                     Comment = "test",
+                    AppUser = "testUser",
                     ActionCode = "t1"
-                }
             };
 
             var response = await classUnderTest.Post(request);
@@ -47,21 +46,19 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
             //Arrange
             var fakeUseCase = new Mock<ICreateArrearsActionDiaryUseCase>();
             var classUnderTest = new ArrearsActionDiaryController(fakeUseCase.Object);
-            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ArrearsActionCreateRequest>())).ReturnsAsync(new ArrearsActionResponse
+            fakeUseCase.Setup(a => a.ExecuteAsync(It.IsAny<ActionDiaryRequest>())).ReturnsAsync(new ArrearsActionResponse
             {
                 Success = false
             });
 
             //Act
-            ArrearsActionCreateRequest request = new ArrearsActionCreateRequest
+            ActionDiaryRequest request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
                     TenancyAgreementRef = "s",
                     ActionBalance = 1,
                     Comment = "test",
+                    AppUser = "testUser",
                     ActionCode = "t1"
-                }
             };
 
             var response = await classUnderTest.Post(request);

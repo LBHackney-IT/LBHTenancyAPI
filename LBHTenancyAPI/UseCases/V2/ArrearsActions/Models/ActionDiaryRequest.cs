@@ -12,10 +12,6 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions.Models
         public string ActionCategory { get; set; }
         public string ActionCode { get; set; }
         public string Comment { get; set; }
-        public bool Confirmation { get; set; }
-        public DateTime DeferredTo { get; set; }
-        public bool IsCommentOnly { get; set; }
-        public bool NewSetRequired { get; set; }
         public string TenancyAgreementRef { get; set; }
         //For rest of request object
         public string CompanyCode { get; set; }

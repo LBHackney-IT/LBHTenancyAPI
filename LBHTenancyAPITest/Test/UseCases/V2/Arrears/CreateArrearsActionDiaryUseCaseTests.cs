@@ -1,12 +1,13 @@
-using System;
-using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
 using LBHTenancyAPI.Services.V2;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
@@ -41,16 +42,15 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
+                        Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
                     
                 });
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    TenancyAgreementRef = tenancyAgreementRef
-                }
+                AppUser = "Test User",
+                TenancyAgreementRef = tenancyAgreementRef
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
@@ -69,15 +69,14 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
+                        Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
                 });
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    TenancyAgreementRef = tenancyAgreementRef
-                }
+                AppUser = "Test User",
+                TenancyAgreementRef = tenancyAgreementRef
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
@@ -101,12 +100,9 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     }
 
                 });
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
                     TenancyAgreementRef = string.Empty
-                }
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
@@ -136,16 +132,15 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
+                        Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
 
                 });
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    TenancyAgreementRef = tenancyAgreementRef
-                }
+                AppUser = "Test User",
+                TenancyAgreementRef = tenancyAgreementRef
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
