@@ -30,10 +30,13 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 
             if (response.Success)
             {
-                await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.AppUser, response.ArrearsAction.Id);
+                if (request.Username != null || request.Username != "")
+                {
+                    await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.Username,
+                        response.ArrearsAction.Id);
+                }
 
             }
-
             return response;
         }
     }
