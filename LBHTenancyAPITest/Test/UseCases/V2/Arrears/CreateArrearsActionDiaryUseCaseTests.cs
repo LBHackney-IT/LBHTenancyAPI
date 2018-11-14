@@ -49,7 +49,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                 });
             var request = new ActionDiaryRequest
             {
-                AppUser = "Test User",
+                Username = "Test User",
                 TenancyAgreementRef = tenancyAgreementRef
             };
             //act
@@ -75,7 +75,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                 });
             var request = new ActionDiaryRequest
             {
-                AppUser = "Test User",
+                Username = "Test User",
                 TenancyAgreementRef = tenancyAgreementRef
             };
             //act
@@ -139,7 +139,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                 });
             var request = new ActionDiaryRequest
             {
-                AppUser = "Test User",
+                Username= "Test User",
                 TenancyAgreementRef = tenancyAgreementRef
             };
             //act

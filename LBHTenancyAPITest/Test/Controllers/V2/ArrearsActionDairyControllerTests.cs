@@ -30,7 +30,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
                     TenancyAgreementRef = "s",
                     ActionBalance = 1,
                     Comment = "test",
-                    AppUser = "testUser",
+                    Username = "testUser",
                     ActionCode = "t1"
             };
 
@@ -57,7 +57,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
                     TenancyAgreementRef = "s",
                     ActionBalance = 1,
                     Comment = "test",
-                    AppUser = "testUser",
+                    Username = "testUser",
                     ActionCode = "t1"
             };
 
