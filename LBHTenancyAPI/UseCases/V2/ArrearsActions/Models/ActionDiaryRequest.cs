@@ -15,7 +15,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions.Models
         public string TenancyAgreementRef { get; set; }
         //For rest of request object
         public string CompanyCode { get; set; }
-        public string  AppUser { get; set; }
+        public string  Username { get; set; }
         public string SessionToken { get; set; }
     }
 }
