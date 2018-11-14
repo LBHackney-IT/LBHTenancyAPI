@@ -52,7 +52,6 @@ namespace LBHTenancyAPI.Extensions.Validation
             RuleFor(x => x).NotNull();
             RuleFor(x => x.TenancyAgreementRef).NotEmpty().WithMessage("Please specify a tenancy reference");
             RuleFor(x => x.ActionCode).NotEmpty().NotNull().WithMessage("Please specify an action code");
-            RuleFor(x => x.AppUser).NotEmpty().NotNull().WithMessage("Please specify the name of the user");
             RuleFor(x => x.Comment).NotEmpty().NotNull().WithMessage("Please specify a comment");
         }
     }
