@@ -13,7 +13,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
     public class CreateArrearsActionDiaryUseCase: ICreateArrearsActionDiaryUseCase
     {
         private readonly IArrearsActionDiaryGateway _arrearsActionDiaryGateway;
-        public readonly IArrearsServiceRequestBuilder _requestBuilder;
+        private readonly IArrearsServiceRequestBuilder _requestBuilder;
         public CreateArrearsActionDiaryUseCase(
             IArrearsActionDiaryGateway arrearsActionDiaryGateway,
             IArrearsServiceRequestBuilder arrearsRequestBuilder)
