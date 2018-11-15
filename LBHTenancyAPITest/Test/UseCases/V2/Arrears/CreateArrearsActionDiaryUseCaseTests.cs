@@ -42,6 +42,11 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
+                        ActionBalance = 10,
+                        ActionCategory = "Test",
+                        ActionCode = "HAC",
+                        IsCommentOnly = true,
+                        UserName = "Test User",
                         Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
@@ -49,6 +54,9 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                 });
             var request = new ActionDiaryRequest
             {
+                ActionBalance = 10,
+                ActionCategory = "Test",
+                ActionCode = "HAC",
                 Username = "Test User",
                 TenancyAgreementRef = tenancyAgreementRef
             };
@@ -59,7 +67,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         }
 
         [Fact]
-        public async Task GivenValidedInput_GatewayResponseWith_Success()
+        public async Task GivenValidInput_GatewayResponseWith_Success()
         {
             //arrange
             var tenancyAgreementRef = "Test";
@@ -69,12 +77,20 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
+                        ActionBalance = 10,
+                        ActionCategory = "Test",
+                        ActionCode = "HAC",
+                        IsCommentOnly = true,
+                        UserName = "Test User",
                         Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
                 });
             var request = new ActionDiaryRequest
             {
+                ActionBalance = 10,
+                ActionCategory = "Test",
+                ActionCode = "HAC",
                 Username = "Test User",
                 TenancyAgreementRef = tenancyAgreementRef
             };
