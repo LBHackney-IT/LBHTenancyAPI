@@ -25,11 +25,6 @@ namespace LBHTenancyAPI.Infrastructure.V2.UseCase.Execution
                 }
                     
             }
-            else
-            {
-                IsSuccess = true;
-                Result = response;
-            }
         }
 
         public ExecuteWrapper(RequestValidationResponse validationResponse)
