@@ -1,6 +1,7 @@
 using System;
 using FluentValidation;
 using AgreementService;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 
 namespace LBHTenancyAPI.Extensions.Validation
 {
@@ -19,6 +20,17 @@ namespace LBHTenancyAPI.Extensions.Validation
             var result = validator.Validate(request);
             return result.IsValid;
         }
+
+        [Obsolete("Please use the IRequest Pattern for Validating your requests")]
+        public static bool IsValid(this ActionDiaryRequest request)
+        {
+            var validator = new ActionDiaryRequestValidator();
+            if (request?.TenancyAgreementRef == null)
+                return false;
+            var result = validator.Validate(request);
+            return result.IsValid;
+        }
+
     }
 
     public class ArrearsActionCreateRequestValidator : AbstractValidator<ArrearsActionCreateRequest>
@@ -30,6 +42,17 @@ namespace LBHTenancyAPI.Extensions.Validation
             RuleFor(x => x.ArrearsAction.TenancyAgreementRef).NotEmpty().WithMessage("Please specify a tenancy reference");
             RuleFor(x => x.ArrearsAction.ActionCode).NotEmpty().NotNull().WithMessage("Please specify an action code");
             RuleFor(x => x.ArrearsAction.Comment).NotEmpty().NotNull().WithMessage("Please specify a comment");
+        }
+    }
+
+    public class ActionDiaryRequestValidator : AbstractValidator<ActionDiaryRequest>
+    {
+        public ActionDiaryRequestValidator()
+        {
+            RuleFor(x => x).NotNull();
+            RuleFor(x => x.TenancyAgreementRef).NotEmpty().WithMessage("Please specify a tenancy reference");
+            RuleFor(x => x.ActionCode).NotEmpty().NotNull().WithMessage("Please specify an action code");
+            RuleFor(x => x.Comment).NotEmpty().NotNull().WithMessage("Please specify a comment");
         }
     }
 }

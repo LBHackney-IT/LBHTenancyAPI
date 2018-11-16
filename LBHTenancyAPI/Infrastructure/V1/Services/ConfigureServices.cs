@@ -89,7 +89,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<UseCases.V1.Versioning.IGetVersionUseCase, UseCases.V1.Versioning.GetVersionUseCase>();
         }
 
-        public static void ConfigureUniversalHousingRelated(this IServiceCollection services)
+        public static void ConfigureUniversalHousingRelated(this IServiceCollection services, string connectionString)
         {
             services.AddTransient<IArrearsActionDiaryGateway, ArrearsActionDiaryGateway>();
             services.AddTransient<ICreateArrearsActionDiaryUseCase, CreateArrearsActionDiaryUseCase>();
@@ -99,6 +99,8 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<ICreateArrearsAgreementUseCase, CreateArrearsAgreementUseCase>();
 
             services.AddTransient<ICredentialsService, CredentialsService>();
+            services.AddTransient<Gateways.V2.Arrears.IArrearsActionDiaryGateway, Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway>();
+
         }
 
         public static void ConfigureFactoriesAndHealthChecks(this IServiceCollection services, string connectionString)
