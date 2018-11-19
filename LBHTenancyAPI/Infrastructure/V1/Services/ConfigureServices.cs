@@ -99,8 +99,11 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddTransient<ICreateArrearsAgreementUseCase, CreateArrearsAgreementUseCase>();
 
             services.AddTransient<ICredentialsService, CredentialsService>();
-            services.AddTransient<Gateways.V2.Arrears.IArrearsActionDiaryGateway, Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway>();
 
+            services.AddTransient<UseCases.V2.ArrearsActions.ICreateArrearsActionDiaryUseCase, UseCases.V2.ArrearsActions.CreateArrearsActionDiaryUseCase>();
+            services.AddTransient<Gateways.V2.Arrears.IArrearsActionDiaryGateway>(s => new Gateways.V2.Arrears.Impl.ArrearsActionDiaryGateway(s.GetService<IArrearsAgreementServiceChannel>(), connectionString));
+            services.AddTransient<Gateways.V2.Arrears.UniversalHousing.IArrearsServiceRequestBuilder, Gateways.V2.Arrears.UniversalHousing.Impl.ArrearsServiceRequestBuilder>();
+            services.AddTransient<Gateways.V2.Arrears.UniversalHousing.ICredentialsService, Gateways.V2.Arrears.UniversalHousing.Impl.CredentialsService>();
         }
 
         public static void ConfigureFactoriesAndHealthChecks(this IServiceCollection services, string connectionString)

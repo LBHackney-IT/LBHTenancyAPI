@@ -37,6 +37,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
                 }
 
             }
+            response.ArrearsAction.UserName = request.Username;
             return response;
         }
     }
