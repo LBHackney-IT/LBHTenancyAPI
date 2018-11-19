@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
 using LBHTenancyAPI.Infrastructure.V2.UseCase.Execution;
-using LBHTenancyAPI.Services.V2;
 
 namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
 {

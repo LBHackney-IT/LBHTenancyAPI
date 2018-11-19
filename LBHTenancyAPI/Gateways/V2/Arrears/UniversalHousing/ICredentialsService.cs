@@ -1,6 +1,6 @@
 using AgreementService;
 
-namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
+namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing
 {
     public interface ICredentialsService
     {

@@ -6,8 +6,8 @@ using FluentAssertions;
 using AgreementService;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
+using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
-using LBHTenancyAPI.Services.V2;
 using Moq;
 using Xunit;
 

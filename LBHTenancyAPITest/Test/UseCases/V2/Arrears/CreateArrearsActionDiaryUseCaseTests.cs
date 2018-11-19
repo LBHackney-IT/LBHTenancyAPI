@@ -2,7 +2,6 @@ using AgreementService;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl;
-using LBHTenancyAPI.Services.V2;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Moq;

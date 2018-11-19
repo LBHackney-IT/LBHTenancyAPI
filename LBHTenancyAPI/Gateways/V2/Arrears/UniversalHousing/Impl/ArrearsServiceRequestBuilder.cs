@@ -1,6 +1,5 @@
 using System;
 using AgreementService;
-using LBHTenancyAPI.Services.V2;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 
 namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
