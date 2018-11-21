@@ -35,9 +35,8 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
                     await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.Username,
                         response.ArrearsAction.Id);
                 }
-
+                response.ArrearsAction.UserName = request.Username;
             }
-            response.ArrearsAction.UserName = request.Username;
             return response;
         }
     }
