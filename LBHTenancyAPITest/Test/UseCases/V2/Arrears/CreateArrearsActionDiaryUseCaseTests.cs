@@ -6,7 +6,12 @@ using LBHTenancyAPI.UseCases.V2.ArrearsActions;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using LBH.Data.Domain;
+using LBHTenancyAPI.Gateways.V1;
+using LBHTenancyAPI.UseCases.V1;
+using LBHTenancyAPITest.Helpers;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
@@ -14,11 +19,13 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
     public class CreateArrearsActionDiaryUseCaseTests
     {
         private ICreateArrearsActionDiaryUseCase _classUnderTest;
+        private StubTenanciesGateway _stubTenanciesGateway;
         private Mock<IArrearsActionDiaryGateway> _fakeGateway;
 
         public CreateArrearsActionDiaryUseCaseTests()
         {
             _fakeGateway = new Mock<IArrearsActionDiaryGateway>();
+            _stubTenanciesGateway = new StubTenanciesGateway();
             var credentialsService = new Mock<ICredentialsService>();
             credentialsService.Setup(s => s.GetUhSourceSystem()).Returns("TestSystem");
             credentialsService.Setup(s => s.GetUhUserCredentials()).Returns(new UserCredential
@@ -27,7 +34,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                 UserPassword = "TestUserPassword",
             });
             IArrearsServiceRequestBuilder requestBuilder = new ArrearsServiceRequestBuilder(credentialsService.Object);
-            _classUnderTest = new CreateArrearsActionDiaryUseCase(_fakeGateway.Object, requestBuilder);
+            _classUnderTest = new CreateArrearsActionDiaryUseCase(_fakeGateway.Object, _stubTenanciesGateway, requestBuilder);
         }
 
         [Fact]
@@ -41,7 +48,6 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
-                        ActionBalance = 10,
                         ActionCategory = "Test",
                         ActionCode = "HAC",
                         IsCommentOnly = true,
@@ -49,11 +55,10 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                         Id = 1,
                         TenancyAgreementRef = tenancyAgreementRef
                     }
-                    
+
                 });
             var request = new ActionDiaryRequest
             {
-                ActionBalance = 10,
                 ActionCategory = "Test",
                 ActionCode = "HAC",
                 Username = "Test User",
@@ -69,35 +74,39 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         public async Task GivenValidInput_GatewayResponseWith_Success()
         {
             //arrange
-            var tenancyAgreementRef = "Test";
-            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
+            Tenancy tenancy = Fake.GenerateTenancyDetails();
+            _stubTenanciesGateway.SetTenancyDetails(tenancy.TenancyRef, tenancy);
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i =>
+                    i.ArrearsAction.TenancyAgreementRef.Equals(tenancy.TenancyRef) &&
+                    i.ArrearsAction.ActionBalance.Equals(tenancy.CurrentBalance)
+                    )))
                 .ReturnsAsync(new ArrearsActionResponse
                 {
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
-                        ActionBalance = 10,
+                        ActionBalance = tenancy.CurrentBalance,
                         ActionCategory = "Test",
                         ActionCode = "HAC",
                         IsCommentOnly = true,
                         UserName = "Test User",
                         Id = 1,
-                        TenancyAgreementRef = tenancyAgreementRef
+                        TenancyAgreementRef = tenancy.TenancyRef
                     }
                 });
             var request = new ActionDiaryRequest
             {
-                ActionBalance = 10,
                 ActionCategory = "Test",
                 ActionCode = "HAC",
                 Username = "Test User",
-                TenancyAgreementRef = tenancyAgreementRef
+                TenancyAgreementRef = tenancy.TenancyRef
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             Assert.Equal(true, response.Success);
-            Assert.Equal("Test", response.ArrearsAction.TenancyAgreementRef);
+            Assert.Equal(tenancy.TenancyRef, response.ArrearsAction.TenancyAgreementRef);
+            Assert.Equal(tenancy.CurrentBalance, response.ArrearsAction.ActionBalance);
         }
 
         [Fact]
@@ -128,7 +137,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         [Fact]
         public void GivenNull_GatewayResponseWith_Failure()
         {
-            //arrange            
+            //arrange
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i == null)))
                 .Throws<AggregateException>();
             //act

@@ -28,7 +28,6 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
             ActionDiaryRequest request = new ActionDiaryRequest
             {
                     TenancyAgreementRef = "s",
-                    ActionBalance = 1,
                     Comment = "test",
                     Username = "testUser",
                     ActionCode = "t1"
@@ -55,7 +54,6 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
             ActionDiaryRequest request = new ActionDiaryRequest
             {
                     TenancyAgreementRef = "s",
-                    ActionBalance = 1,
                     Comment = "test",
                     Username = "testUser",
                     ActionCode = "t1"
