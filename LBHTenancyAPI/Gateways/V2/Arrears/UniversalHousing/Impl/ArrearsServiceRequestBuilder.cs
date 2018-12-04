@@ -21,7 +21,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
             return arrears;
         }
 
-        public ArrearsActionCreateRequest BuildNewActionDiaryRequest(ActionDiaryRequest request)
+        public ArrearsActionCreateRequest BuildNewActionDiaryRequest(ActionDiaryRequest request, decimal actionBalance = 0)
         {
             if (request == null)
                 throw new ArgumentNullException("ArrearsServiceRequestBuilder-BuildActionDiaryRequest:request is null");
@@ -29,7 +29,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
             {
                 ArrearsAction = new ArrearsActionInfo
                 {
-                    ActionBalance = request.ActionBalance,
+                    ActionBalance = actionBalance,
                     ActionCategory = request.ActionCategory,
                     ActionCode = request.ActionCode,
                     Comment = request.Comment,
