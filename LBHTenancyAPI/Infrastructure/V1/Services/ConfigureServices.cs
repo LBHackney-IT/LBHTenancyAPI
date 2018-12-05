@@ -130,7 +130,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
             services.AddHealthChecks(healthCheck => healthCheck.AddCheck<SqlConnectionHealthCheck>("SqlConnectionHealthCheck", TimeSpan.FromSeconds(1)));
         }
 
-        
+
 
         public static void ConfigureContacts(this IServiceCollection services, LBHTenancyAPI.Settings.ConfigurationSettings settings)
         {
@@ -144,7 +144,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
         {
             //Get ApiVersionDescriptionProvider from API Explorer
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
-            //Get All ApiVersions, 
+            //Get All ApiVersions,
             apiVersions = api.ApiVersionDescriptions.Select(s => s).ToList();
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>

@@ -27,18 +27,22 @@ namespace LBHTenancyAPI.Controllers.V2
         }
 
         /// <summary>
-        /// Searches for tenants attached to tenancies and filter in a multi faceted way.
+        /// Search Controller V2 to search for Tenants in a multi faceted way
+        /// </summary>
+        /// <remarks>
         /// Searches on 5 fields:
         /// FirstName - exact match AND
         /// LastName - exact match AND
         /// TenancyRef - exact match AND
         /// Postcode - partial match (contains) AND
         /// Address - partial match (contains) AND
-        /// Orders by LastName, FirstName Desc
-        /// Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
+        /// **Orders by** LastName, FirstName Desc
+        ///
+        /// # Warning:
+        /// This matches individual Tenants attached to a tenancy therefore can return duplicate tenancies
         /// - Tenancy A - Tenant1
         /// - Tenancy A - Tenant2
-        /// </summary>
+        /// </remarks>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet, MapToApiVersion("2")]

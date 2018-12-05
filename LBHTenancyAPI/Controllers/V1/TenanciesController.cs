@@ -26,6 +26,19 @@ namespace LBHTenancyAPI.Controllers.V1
             this.tenancyDetailsForRef = tenancyDetailsForRef;
         }
 
+        /// <summary>
+        /// Get inforation on one or more tenancies
+        /// </summary>
+        /// Sample response:
+        ///
+        ///     {
+        ///        "id": 1,
+        ///        "name": "Item1",
+        ///        "isComplete": true
+        ///     }
+        ///
+        /// <param name="tenancyRefs"></param>
+        /// <returns>IActionResult</returns>
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery(Name = "tenancy_refs")] List<string> tenancyRefs)
         {
