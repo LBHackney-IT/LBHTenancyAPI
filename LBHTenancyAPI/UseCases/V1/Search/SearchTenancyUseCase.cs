@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1.Search;
 using LBHTenancyAPI.Infrastructure.V1.Exceptions;
 using LBHTenancyAPI.UseCases.V1.Search.Models;
@@ -20,7 +21,7 @@ namespace LBHTenancyAPI.UseCases.V1.Search
         }
 
         /// <summary>
-        /// Execute the Search Tenancy Use Case 
+        /// Execute the Search Tenancy Use Case
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -31,7 +32,7 @@ namespace LBHTenancyAPI.UseCases.V1.Search
             if (request == null)
                 //
                 throw new BadRequestException();
-            //validate 
+            //validate
             var validationResponse = request.Validate(request);
             if (!validationResponse.IsValid)
                 throw new BadRequestException(validationResponse);
@@ -51,11 +52,7 @@ namespace LBHTenancyAPI.UseCases.V1.Search
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     Tenure = tenancy.Tenure,
-                    CurrentBalance = new Currency
-                    {
-                        Value = tenancy.CurrentBalance,
-                        CurrencyCode = "GBP",
-                    },
+                    CurrentBalance = new Currency(tenancy.CurrentBalance),
                     PrimaryContact = new PrimaryContact
                     {
                         Name = tenancy.PrimaryContactName,

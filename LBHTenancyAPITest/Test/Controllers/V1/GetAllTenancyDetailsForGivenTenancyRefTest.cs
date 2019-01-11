@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases;
@@ -72,7 +73,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Service = "12.0",
                 OtherCharge = "2.0",
                 ArrearsAgreementStatus = "Breached",
-                CurrentBalance = "23.01",
+                CurrentBalance = new Currency(-23.01m),
                 PrimaryContactName = "Rashmi",
                 PrimaryContactLongAddress = "AquaLand",
                 PrimaryContactPostcode = "e8 1hh",
@@ -143,7 +144,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Service = "13.0",
                 OtherCharge = "3.0",
                 ArrearsAgreementStatus = "Active",
-                CurrentBalance = "21.01",
+                CurrentBalance = new Currency(21.01m),
                 PrimaryContactName = "Vlad",
                 PrimaryContactLongAddress = "AquaLand123",
                 PrimaryContactPostcode = "e8 2ii",
@@ -211,7 +212,13 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 {"service", "12.0"},
                 {"other_charge", "2.0"},
                 {"current_arrears_agreement_status", "Breached"},
-                {"current_balance", "23.01"},
+                {
+                    "current_balance", new Dictionary<string, object>
+                    {
+                        {"value", -23.01},
+                        {"currency_code", "GBP"}
+                    }
+                },
                 {"primary_contact_name", "Rashmi"},
                 {"primary_contact_long_address", "AquaLand"},
                 {"primary_contact_postcode", "e8 1hh"},
@@ -285,7 +292,13 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 {"service", "13.0"},
                 {"other_charge", "3.0"},
                 {"current_arrears_agreement_status", "Active"},
-                {"current_balance", "21.01"},
+                {
+                    "current_balance", new Dictionary<string, object>
+                    {
+                        {"value", 21.01},
+                        {"currency_code", "GBP"}
+                    }
+                },
                 {"primary_contact_name", "Vlad"},
                 {"primary_contact_long_address", "AquaLand123"},
                 {"primary_contact_postcode", "e8 2ii"},

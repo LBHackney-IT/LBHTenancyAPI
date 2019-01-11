@@ -7,6 +7,7 @@ using AgreementService;
 using LBHTenancyAPITest.Helpers.Entities;
 using ArrearsAgreement = LBHTenancyAPITest.Helpers.Entities.ArrearsAgreement;
 using Contact = LBHTenancyAPITest.Helpers.Entities.Contact;
+using Currency = LBH.Data.Domain.Currency;
 
 namespace LBHTenancyAPITest.Helpers
 {
@@ -203,7 +204,6 @@ namespace LBHTenancyAPITest.Helpers
             public static Property GenerateFakeProperty()
             {
                 var faker = new Faker<Property>()
-                        
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.address1, (fake, model) => fake.Address.FullAddress())
                         .RuleFor(property => property.post_code, (fake, model) => fake.Address.ZipCode())

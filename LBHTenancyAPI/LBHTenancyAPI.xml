@@ -431,7 +431,7 @@
         </member>
         <member name="M:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase.ExecuteAsync(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest,System.Threading.CancellationToken)">
             <summary>
-            Execute the Search Tenancy Use Case 
+            Execute the Search Tenancy Use Case
             </summary>
             <param name="request"></param>
             <param name="cancellationToken"></param>

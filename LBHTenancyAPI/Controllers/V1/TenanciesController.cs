@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +34,14 @@ namespace LBHTenancyAPI.Controllers.V1
                 {"ref", tenancy.TenancyRef},
                 {"prop_ref", tenancy.PropertyRef},
                 {"tenure", tenancy.Tenure},
-                {"current_balance", tenancy.CurrentBalance},
+                {
+                    "current_balance", new Dictionary<string, object>
+                    {
+                        {"value", tenancy.CurrentBalance.Value},
+                        {"currency_code", tenancy.CurrentBalance.CurrencyCode}
+                    }
+
+                },
                 {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
                 {
                     "latest_action", new Dictionary<string, string>
