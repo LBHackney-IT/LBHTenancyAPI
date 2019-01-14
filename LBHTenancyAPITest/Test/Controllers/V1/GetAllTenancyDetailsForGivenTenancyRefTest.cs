@@ -73,7 +73,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Service = "12.0",
                 OtherCharge = "2.0",
                 ArrearsAgreementStatus = "Breached",
-                CurrentBalance = new Currency(-23.01m),
+                CurrentBalance = new Currency(-23000.01m),
                 PrimaryContactName = "Rashmi",
                 PrimaryContactLongAddress = "AquaLand",
                 PrimaryContactPostcode = "e8 1hh",
@@ -215,7 +215,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 {
                     "current_balance", new Dictionary<string, object>
                     {
-                        {"value", -23.01},
+                        {"value", -23000.01},
                         {"currency_code", "GBP"}
                     }
                 },
