@@ -74,7 +74,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     ArrearsAgreements = tenancy.ArrearsAgreements.ConvertAll(tenancyAgreement => new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = tenancyAgreement.Amount.ToString("C"),
-                        Breached = tenancyAgreement.Breached.ToString(),
+                        Breached = tenancyAgreement.Breached,
                         ClearBy = string.Format("{0:u}", tenancyAgreement.ClearBy),
                         Frequency = tenancyAgreement.Frequency,
                         StartBalance = tenancyAgreement.StartBalance.ToString("C"),

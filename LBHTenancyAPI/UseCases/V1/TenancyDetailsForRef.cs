@@ -64,7 +64,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     ArrearsAgreements = tenancyResponse.ArrearsAgreements.ConvertAll(agreement => new ArrearsAgreement
                     {
                         Amount = agreement.Amount.ToString("C"),
-                        Breached = agreement.Breached.ToString(),
+                        Breached = agreement.Breached,
                         ClearBy = string.Format("{0:u}", agreement.ClearBy),
                         Frequency = agreement.Frequency,
                         StartBalance = agreement.StartBalance.ToString("C"),
@@ -101,7 +101,7 @@ namespace LBHTenancyAPI.UseCases.V1
         public struct ArrearsAgreement
         {
             public string Amount{ get; set; }
-            public string Breached { get; set; }
+            public bool Breached { get; set; }
             public string ClearBy { get; set; }
             public string Frequency { get; set; }
             public string StartBalance { get; set; }

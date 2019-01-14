@@ -82,7 +82,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "23.01",
-                        Breached = "True",
+                        Breached = true,
                         ClearBy = "2018-12-03 00:00:00Z",
                         Frequency = "Weekly",
                         StartBalance = "10.00",
@@ -92,7 +92,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "24.01",
-                        Breached = "False",
+                        Breached = false,
                         ClearBy = "2018-12-04 00:00:00Z",
                         Frequency = "Monthly",
                         StartBalance = "11.00",
@@ -153,7 +153,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "21.00",
-                        Breached = "False",
+                        Breached = true,
                         ClearBy = "2017-12-03 00:00:00Z",
                         Frequency = "Weekly",
                         StartBalance = "101.00",
@@ -163,7 +163,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "21.33",
-                        Breached = "True",
+                        Breached = false,
                         ClearBy = "2017-12-09 00:00:00Z",
                         Frequency = "Monthly",
                         StartBalance = "112.00",
@@ -258,7 +258,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "23.01"},
-                            {"breached", "True"},
+                            {"breached", true},
                             {"clear_by", "2018-12-03 00:00:00Z"},
                             {"frequency", "Weekly"},
                             {"start_balance", "10.00"},
@@ -268,7 +268,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "24.01"},
-                            {"breached", "False"},
+                            {"breached", false},
                             {"clear_by", "2018-12-04 00:00:00Z"},
                             {"frequency", "Monthly"},
                             {"start_balance", "11.00"},
@@ -338,7 +338,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "21.00"},
-                            {"breached", "False"},
+                            {"breached", true},
                             {"clear_by", "2017-12-03 00:00:00Z"},
                             {"frequency", "Weekly"},
                             {"start_balance", "101.00"},
@@ -348,7 +348,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "21.33"},
-                            {"breached", "True"},
+                            {"breached", false},
                             {"clear_by", "2017-12-09 00:00:00Z"},
                             {"frequency", "Monthly"},
                             {"start_balance", "112.00"},
