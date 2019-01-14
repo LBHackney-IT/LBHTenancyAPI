@@ -118,7 +118,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             return new Tenancy
             {
                 AgreementStatus = expectedArrearsAgreement.arag_status,
-                CurrentBalance = expectedTenancy.cur_bal,
+                CurrentBalance =  expectedTenancy.cur_bal,
                 PrimaryContactName = expectedMember.GetFullName(),
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
@@ -128,7 +128,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 ArrearsActionDiary = actionDiaryDetails,
                 ArrearsAgreements = new List<ArrearsAgreement> { new ArrearsAgreement
                 {
-                    
+
                 } }
             };
         }

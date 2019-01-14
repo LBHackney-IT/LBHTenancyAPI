@@ -108,11 +108,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                                 Postcode = postcode
                             },
                             TenancyRef = tenancyRef,
-                            CurrentBalance = new Currency
-                            {
-                                Value = currentBalance,
-                                CurrencyCode = "GBP"
-                            },
+                            CurrentBalance = new Currency(currentBalance),
                             PropertyRef = propertyRef,
                             Tenure = tenure
                         }

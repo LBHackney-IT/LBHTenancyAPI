@@ -93,7 +93,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                 TenancyRef = "tRef",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active",
-                CurrentBalance = (decimal)1000.12,
+                CurrentBalance = 1000.12m,
                 LastActionCode = "ACC",
                 LastActionDate = DateTime.Now.AddDays(-1),
                 PrimaryContactPostcode = "test",
@@ -107,7 +107,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                 TenancyRef = "tRef2",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active2",
-                CurrentBalance = (decimal)2000.34,
+                CurrentBalance = 2000.34m,
                 LastActionCode = "ACC2",
                 LastActionDate = DateTime.Now.AddDays(-2),
                 PrimaryContactPostcode = "test2",
@@ -120,7 +120,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                 .ReturnsAsync(new PagedResults<TenancyListItem>
                 {
                     Results = new List<TenancyListItem>
-                    { 
+                    {
                         tenancy1,
                         tenancy2
                     }
@@ -130,7 +130,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             {
                 TenancyRef = tenancyAgreementRef
             };
-            //act
+            //act T
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             //assert
             response.Should().NotBeNull();
@@ -154,7 +154,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             response.Tenancies[1].CurrentBalance.Should().NotBeNull();
             response.Tenancies[1].CurrentBalance.Value.Should().Be(tenancy2.CurrentBalance);
             response.Tenancies[1].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
-            
+
             response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);

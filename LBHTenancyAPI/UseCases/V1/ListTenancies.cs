@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
 
@@ -25,7 +26,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     Tenure = tenancy.Tenure,
                     LastActionCode = tenancy.LastActionCode,
                     LastActionDate = string.Format("{0:u}", tenancy.LastActionDate),
-                    CurrentBalance = tenancy.CurrentBalance.ToString("C"),
+                    CurrentBalance = new Currency(tenancy.CurrentBalance),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContactName = tenancy.PrimaryContactName,
                     PrimaryContactShortAddress = tenancy.PrimaryContactShortAddress,
@@ -48,7 +49,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string Tenure { get; set; }
             public string LastActionCode { get; set; }
             public string LastActionDate { get; set; }
-            public string CurrentBalance { get; set; }
+            public Currency CurrentBalance { get; set; }
             public string ArrearsAgreementStatus { get; set; }
             public string PrimaryContactName { get; set; }
             public string PrimaryContactShortAddress { get; set; }

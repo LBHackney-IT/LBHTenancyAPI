@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
-using LBHTenancyAPI.Controllers;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +49,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Tenure = "SEC",
                 LastActionCode = "CALLED",
                 LastActionDate = "2018-01-01 00:00:00Z",
-                CurrentBalance = "10.66",
+                CurrentBalance = new Currency(10.66m),
                 ArrearsAgreementStatus = "ACTIVE",
                 PrimaryContactName = "Steven Leighton",
                 PrimaryContactShortAddress = "123 Test Street",
@@ -69,7 +69,13 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                                 {"ref", "000001/01"},
                                 {"prop_ref", "prop/01"},
                                 {"tenure", "SEC"},
-                                {"current_balance", "10.66"},
+                                {
+                                    "current_balance", new Dictionary<string, object>
+                                    {
+                                        {"value", 10.66m},
+                                        {"currency_code", "GBP"}
+                                    }
+                                },
                                 {"current_arrears_agreement_status", "ACTIVE"},
                                 {
                                     "latest_action", new Dictionary<string, string>
@@ -106,7 +112,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Tenure = faker.Random.Word(),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
-                CurrentBalance = faker.Finance.Amount().ToString("C"),
+                CurrentBalance = new Currency(faker.Finance.Amount()),
                 ArrearsAgreementStatus = faker.Random.Word(),
                 PrimaryContactName = faker.Person.FullName,
                 PrimaryContactShortAddress = faker.Address.StreetAddress(),
