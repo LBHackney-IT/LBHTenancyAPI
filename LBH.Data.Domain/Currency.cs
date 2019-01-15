@@ -13,7 +13,7 @@ namespace LBH.Data.Domain
 
         public Currency(decimal value)
         {
-            Value = value;
+            Value = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
             CurrencyCode = "GBP";
         }
 

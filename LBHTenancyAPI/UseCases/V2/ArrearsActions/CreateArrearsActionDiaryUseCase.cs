@@ -32,7 +32,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
         {
             Tenancy tenancy = _tenanciesGateway.GetTenancyForRef(request.TenancyAgreementRef);
 
-            var thisRequest = _requestBuilder.BuildNewActionDiaryRequest(request, tenancy.CurrentBalance);
+            var thisRequest = _requestBuilder.BuildNewActionDiaryRequest(request, tenancy.CurrentBalance.Value);
 
             var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(thisRequest);
 

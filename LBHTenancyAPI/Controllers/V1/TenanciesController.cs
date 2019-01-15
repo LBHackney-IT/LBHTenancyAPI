@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LBH.Data.Domain;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -109,66 +110,74 @@ namespace LBHTenancyAPI.Controllers.V1
 
             var response = tenancyDetailsForRef.Execute(tenancyRef);
 
-            var tenancy = response.TenancyDetails;
 
-            tenancyDetails = new Dictionary<string, object>
+            if (!response.TenancyDetails.HasValue)
             {
-                {"ref", tenancy.TenancyRef},
-                {"prop_ref", tenancy.PropertyRef},
-                {"tenure", tenancy.Tenure},
-                {"rent", tenancy.Rent},
-                {"service", tenancy.Service},
-                {"other_charge", tenancy.OtherCharge},
-                {"current_arrears_agreement_status", tenancy.ArrearsAgreementStatus},
-                {"current_balance", tenancy.CurrentBalance},
-                {"primary_contact_name", tenancy.PrimaryContactName},
-                {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
-                {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
-            };
-
-            List<Dictionary<string, object>> latestActionDiary = new List<Dictionary<string, object>>();
-            List<Dictionary<string, object>> latestAgreement = new List<Dictionary<string, object>>();
-
-            try
+                return NotFound();
+            }
+            else
             {
-                latestActionDiary = tenancy.ArrearsActionDiary.ConvertAll(
-                    actionDiary =>
+                Tenancy tenancy = response.TenancyDetails.Value;
+
+                tenancyDetails = new Dictionary<string, object>
+                {
+                    {"ref", tenancy.TenancyRef},
+                    {"prop_ref", tenancy.PropertyRef},
+                    {"tenure", tenancy.Tenure},
+                    {"rent", tenancy.Rent},
+                    {"service", tenancy.Service},
+                    {"other_charge", tenancy.OtherCharge},
+                    {"current_arrears_agreement_status", tenancy.AgreementStatus},
+                    {"current_balance", tenancy.CurrentBalance},
+                    {"primary_contact_name", tenancy.PrimaryContactName},
+                    {"primary_contact_long_address", tenancy.PrimaryContactLongAddress},
+                    {"primary_contact_postcode", tenancy.PrimaryContactPostcode}
+                };
+
+                List<Dictionary<string, object>> latestActionDiary = new List<Dictionary<string, object>>();
+                List<Dictionary<string, object>> latestAgreement = new List<Dictionary<string, object>>();
+
+                try
+                {
+                    latestActionDiary = tenancy.ArrearsActionDiary.ConvertAll(
+                        actionDiary =>
+                            new Dictionary<string, object>
+                            {
+                                {"balance", actionDiary.Balance},
+                                {"code", actionDiary.Code},
+                                {"type", actionDiary.Type},
+                                {"date", actionDiary.Date.ToString()},
+                                {"comment", actionDiary.Comment},
+                                {"universal_housing_username", actionDiary.UniversalHousingUsername}
+                            });
+
+                    latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement =>
                         new Dictionary<string, object>
                         {
-                            {"balance", actionDiary.Balance},
-                            {"code", actionDiary.Code},
-                            {"type", actionDiary.Type},
-                            {"date", actionDiary.Date.ToString()},
-                            {"comment", actionDiary.Comment},
-                            {"universal_housing_username", actionDiary.UniversalHousingUsername}
+                            {"amount", agreement.Amount},
+                            {"breached", agreement.Breached},
+                            {"clear_by", agreement.ClearBy},
+                            {"frequency", agreement.Frequency},
+                            {"start_balance", agreement.StartBalance},
+                            {"start_date", agreement.Startdate},
+                            {"status", agreement.Status}
                         });
+                }
+                catch (NullReferenceException)
+                {
+                    // happens when nothing is found when trying to convert contents of internal lists
 
-                latestAgreement = tenancy.ArrearsAgreements.ConvertAll(agreement =>
-                    new Dictionary<string, object>
-                    {
-                        {"amount", agreement.Amount},
-                        {"breached", agreement.Breached},
-                        {"clear_by", agreement.ClearBy},
-                        {"frequency", agreement.Frequency},
-                        {"start_balance", agreement.StartBalance},
-                        {"start_date", agreement.Startdate},
-                        {"status", agreement.Status}
-                    });
+                }
+
+                result = new Dictionary<string, object>
+                {
+                    {"tenancy_details", tenancyDetails},
+                    {"latest_action_diary_events", latestActionDiary},
+                    {"latest_arrears_agreements", latestAgreement}
+                };
+
+                return Ok(result);
             }
-            catch (NullReferenceException)
-            {
-                // happens when nothing is found when trying to convert contents of internal lists
-
-            }
-
-            result = new Dictionary<string, object>
-            {
-                {"tenancy_details", tenancyDetails},
-                {"latest_action_diary_events", latestActionDiary},
-                {"latest_arrears_agreements", latestAgreement}
-            };
-
-            return Ok(result);
         }
     }
 }

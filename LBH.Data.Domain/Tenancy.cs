@@ -8,13 +8,7 @@ namespace LBH.Data.Domain
         public List<ArrearsAgreement> ArrearsAgreements { get; set; }
         public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
 
-        private decimal currentBalance;
-        public Decimal CurrentBalance
-        {
-            get => currentBalance;
-
-            set => currentBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
-        }
+        public Currency CurrentBalance { get; set; }
 
         private decimal rent;
         public Decimal Rent

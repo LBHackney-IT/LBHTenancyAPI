@@ -1,48 +1,49 @@
 using System;
+using Newtonsoft.Json;
 
 namespace LBH.Data.Domain
 {
     public struct ArrearsAgreement
     {
-        private decimal amount;
+        private decimal _amount;
         public Decimal Amount
         {
-            get => amount;
-            set => amount = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+            get => _amount;
+            set => _amount = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
         public bool Breached { get; set; }
 
         public DateTime ClearBy { get; set; }
 
-        private string frequency;
+        private string _frequency;
         public string Frequency
         {
-            get => frequency;
-            set => frequency = value.Trim();
+            get => _frequency;
+            set => _frequency = value.Trim();
         }
 
-        private decimal startBalance;
+        private decimal _startBalance;
         public Decimal StartBalance
         {
-            get => startBalance;
-            set => startBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
+            get => _startBalance;
+            set => _startBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
         public DateTime Startdate { get; set; }
 
-        private string status;
+        private string _status;
         public string Status
         {
-            get => status;
-            set => status = value.Trim();
+            get => _status;
+            set => _status = value.Trim();
         }
 
-        private string tenancyRef;
+        private string _tenancyRef;
         public string TenancyRef
         {
-            get => tenancyRef;
-            set => tenancyRef = value.Trim();
+            get => _tenancyRef;
+            set => _tenancyRef = value.Trim();
         }
     }
 

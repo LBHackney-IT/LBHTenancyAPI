@@ -85,7 +85,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     Success = true,
                     ArrearsAction = new ArrearsActionLogDto
                     {
-                        ActionBalance = tenancy.CurrentBalance,
+                        ActionBalance = tenancy.CurrentBalance.Value,
                         ActionCategory = "Test",
                         ActionCode = "HAC",
                         IsCommentOnly = true,
@@ -106,7 +106,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             //assert
             Assert.Equal(true, response.Success);
             Assert.Equal(tenancy.TenancyRef, response.ArrearsAction.TenancyAgreementRef);
-            Assert.Equal(tenancy.CurrentBalance, response.ArrearsAction.ActionBalance);
+            Assert.Equal(tenancy.CurrentBalance.Value, response.ArrearsAction.ActionBalance);
         }
 
         [Fact]

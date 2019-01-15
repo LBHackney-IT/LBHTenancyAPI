@@ -118,7 +118,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             return new Tenancy
             {
                 AgreementStatus = expectedArrearsAgreement.arag_status,
-                CurrentBalance =  expectedTenancy.cur_bal,
+                CurrentBalance =  new Currency(expectedTenancy.cur_bal),
                 PrimaryContactName = expectedMember.GetFullName(),
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
@@ -496,7 +496,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 Rent = random.Finance.Amount(),
                 Service = random.Finance.Amount(),
                 OtherCharge = random.Finance.Amount(),
-                CurrentBalance = random.Finance.Amount(),
+                CurrentBalance = new Currency(random.Finance.Amount()),
                 PrimaryContactName = random.Name.FullName(),
                 PrimaryContactLongAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
                 PrimaryContactPostcode = random.Random.Hash(10),
