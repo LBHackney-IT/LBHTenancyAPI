@@ -132,7 +132,7 @@
         </member>
         <member name="T:LBHTenancyAPI.Factories.ISqlConnectionFactory">
             <summary>
-            Factory for creating SQL connections 
+            Factory for creating SQL connections
             </summary>
         </member>
         <member name="M:LBHTenancyAPI.Factories.ISqlConnectionFactory.Create">
@@ -156,7 +156,7 @@
         </member>
         <member name="T:LBHTenancyAPI.Factories.SqlConnectionFactory">
             <summary>
-            Simple Factory for creating SQL connections 
+            Simple Factory for creating SQL connections
             </summary>
         </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
@@ -354,12 +354,12 @@
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.ServiceSettings">
             <summary>
-            UH Agreement Service 
+            UH Agreement Service
             </summary>
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.SentrySettings">
             <summary>
-            Sentry error handling 
+            Sentry error handling
             </summary>
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.Dynamics365Settings">
@@ -380,7 +380,7 @@
         <member name="P:LBHTenancyAPI.UseCases.V1.Contacts.Models.ContactsForTenancy.Responsible">
             <summary>
             Denotes whether or not a contact is on the tenancy agreement as a tenant
-            and can be contacted via 
+            and can be contacted via
             </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest">
@@ -414,7 +414,7 @@
         </member>
         <member name="P:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest.PageSize">
             <summary>
-            PageSize defaults to 10 
+            PageSize defaults to 10
             </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase">
@@ -484,7 +484,7 @@
         </member>
         <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.PageSize">
             <summary>
-            PageSize defaults to 10 
+            PageSize defaults to 10
             </summary>
         </member>
     </members>

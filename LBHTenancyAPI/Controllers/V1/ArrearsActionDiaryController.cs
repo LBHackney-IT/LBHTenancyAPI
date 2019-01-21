@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AgreementService;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
+    [Obsolete("Please use v2 instead", false)]
     [ApiVersion("1")]
     [Produces("application/json")]
     [Route("api/v1/tenancies/arrears-action-diary/")]

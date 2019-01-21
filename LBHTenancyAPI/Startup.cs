@@ -30,7 +30,7 @@ namespace LBHTenancyAPI
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-                
+
             Configuration = builder.Build();
         }
 
@@ -39,7 +39,7 @@ namespace LBHTenancyAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {   
+        {
             //get settings from appSettings.json and EnvironmentVariables
             services.Configure<ConfigurationSettings>(Configuration);
             var settings = Configuration.Get<ConfigurationSettings>();
@@ -47,7 +47,7 @@ namespace LBHTenancyAPI
             var connectionString = Environment.GetEnvironmentVariable("UH_URL");
 
             services.AddMvc();
-            
+
             services.ConfigureTenancies(connectionString);
 
             services.ConfigureUniversalHousingRelated(connectionString);
@@ -67,7 +67,7 @@ namespace LBHTenancyAPI
 
             //add swagger gen to generate the swagger.json file - delayed execution
             // Automatically Generates Swagger docs with XML comments based on the [ApiVersion("x")] on a controller
-            // and assigns that 
+            // and assigns that
             services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Token",
@@ -100,7 +100,14 @@ namespace LBHTenancyAPI
                 foreach (var apiVersion in _apiVersions)
                 {
                     var version = $"v{apiVersion.ApiVersion.ToString()}";
-                    c.SwaggerDoc(version, new Info { Title = $"TenancyAPI {version}", Version = version });
+                    c.SwaggerDoc(version, new Info
+                    {
+                        Title = $"TenancyAPI {version}",
+                        Version = version,
+                        Description = "Only superseded methods are included in newer api versions. " +
+                                      "Please check older versions for more paths and newer versions " +
+                                      "is a method has been marked deprecated",
+                    });
                 }
 
                 c.CustomSchemaIds(x => x.FullName);

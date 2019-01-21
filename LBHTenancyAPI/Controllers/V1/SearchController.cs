@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using LBHTenancyAPI.Extensions.Controller;
 using LBHTenancyAPI.Infrastructure.V1.API;
@@ -10,6 +11,7 @@ namespace LBHTenancyAPI.Controllers.V1
     /// <summary>
     /// Search Controller V1 to search for Tenants in a simple
     /// </summary>
+    [Obsolete("Please use v2 instead", false)]
     [ApiVersion("1", Deprecated = true)]
     [Route("api/v1/tenancies/search/", Name = "SearchV1")]
     [Produces("application/json")]
@@ -26,7 +28,8 @@ namespace LBHTenancyAPI.Controllers.V1
         }
 
         /// <summary>
-        /// Searches for tenants attached to tenancies in a simple way - Deprecated use V2
+        /// Searches for tenants attached to tenancies in a simple way
+        /// <remarks>
         /// Searches on 5 fields using one input SearchTerm:
         /// FirstName - exact match
         /// LastName - exact match
@@ -37,9 +40,8 @@ namespace LBHTenancyAPI.Controllers.V1
         /// Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
         /// - Tenancy A - Tenant1
         /// - Tenancy A - Tenant2
-        /// </summary>
+        /// </remarks>
         /// <param name="request"></param>
-        /// <returns></returns>
         [HttpGet, MapToApiVersion("1")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
         public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)
