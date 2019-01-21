@@ -1,17 +1,27 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using AgreementService;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
 using LBHTenancyAPITest.Helpers;
+using LBHTenancyAPITest.Helpers.Data;
 using Moq;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
 {
-    public class UHArrearsDiaryCreationGatewayTest
+    public class UHArrearsDiaryCreationGatewayTest: IClassFixture<DatabaseFixture>
     {
+        private readonly DatabaseFixture _databaseFixture;
+
+        public UHArrearsDiaryCreationGatewayTest(DatabaseFixture fixture)
+        {
+            _databaseFixture = fixture;
+        }
+
         [Fact]
         public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldNotBeNull()
         {
@@ -70,7 +80,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
                     ActionCategory = actionCategory,
                     ActionCode = actionCode,
                     Comment = comment
-                    
+
                 },
                 DirectUser = new UserCredential
                 {
@@ -90,6 +100,51 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             response.ArrearsAction.ActionBalance.Should().Be(actionBalance);
             response.ArrearsAction.ActionCategory.Should().Be(actionCategory);
             response.ArrearsAction.ActionCode.Should().Be(actionCode);
+        }
+
+        [Fact]
+        public async Task UpdateRecordingUserName_WhenUsernameSupplyed_ShouldChangeUsername()
+        {
+            //Arrange
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
+
+            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
+            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
+
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
+
+            string username = "A Real username";
+
+            //act
+            await classUnderTest.UpdateRecordingUserName(username, diaryEntry.Id);
+            //assert
+            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
+
+            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
+            action.UniversalHousingUsername.Should().Be(username);
+        }
+
+        [Theory]
+        [InlineData("8", "GEN", "Webservice action", "")]
+        [InlineData("8", "GEN", "Webservice action", null)]
+        public async Task UpdateRecordingUserNameWhenNoUsernameSupplyed_ShouldNoOp(
+            string actionCategory, string actionCode, string comment, string username)
+        {
+            //Arrange
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
+
+            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
+            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
+
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
+
+            //act
+            await classUnderTest.UpdateRecordingUserName(username, diaryEntry.Id);
+            //assert
+            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
+
+            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
+            action.UniversalHousingUsername.Should().Be(null);
         }
 
         [Fact]

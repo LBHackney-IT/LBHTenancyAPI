@@ -11,6 +11,9 @@ namespace LBHTenancyAPITest.Test
 
     public class DatabaseFixture : IDisposable
     {
+        public SqlConnection Db { get; }
+        public string ConnectionString { get; }
+
         public DatabaseFixture()
         {
             try
@@ -20,15 +23,14 @@ namespace LBHTenancyAPITest.Test
             }
             catch (Exception)
             {
-                // do nothing
+                Console.Write("Failed to load .env file for test");
             }
 
-            Db = new SqlConnection(DotNetEnv.Env.GetString("UH_CONNECTION_STRING"));
+            ConnectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            Db = new SqlConnection(ConnectionString);
 
             Db.Open();
         }
-
-       public SqlConnection Db { get; }
 
         public void Dispose()
         {

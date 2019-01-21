@@ -35,6 +35,13 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
 
         public async Task UpdateRecordingUserName(string requestAppUser, int actionDiaryId)
         {
+            if (string.IsNullOrEmpty(requestAppUser))
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                Console.Write("UpdateRecordingUserName was called with a null or empty string");
+                return;
+            }
+
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();

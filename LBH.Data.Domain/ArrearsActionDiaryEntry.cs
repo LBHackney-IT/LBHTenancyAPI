@@ -4,6 +4,7 @@ namespace LBH.Data.Domain
 {
     public struct ArrearsActionDiaryEntry
     {
+        public int Id { get; set; }
         public decimal Balance { get; set; }
         public string Type { get; set; }
         public string Code { get; set; }

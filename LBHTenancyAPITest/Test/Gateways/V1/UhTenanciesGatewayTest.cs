@@ -394,7 +394,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
             InsertRandomActionDiaryDetails(expectedTenancyRef, numberOfExpectedActions);
 
-            var actions = GetArrearsActionsByRef(expectedTenancyRef);
+            var actions = TestDataHelper.GetArrearsActionsByRef(expectedTenancyRef);
 
             Assert.Equal(numberOfExpectedActions, actions.Count);
         }
@@ -405,7 +405,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         public void WhenGivenTenancyRef_GetActionDiaryDetailsbyTenancyRef_ShouldReturnCompleteArrearsActions(string strTenancyRef,int num)
         {
             var insertedAction = InsertRandomActionDiaryDetails(strTenancyRef, num)[0];
-            var returnedAction = GetArrearsActionsByRef(strTenancyRef)[0];
+            var returnedAction = TestDataHelper.GetArrearsActionsByRef(strTenancyRef)[0];
 
             Assert.Equal(insertedAction.TenancyRef, returnedAction.TenancyRef);
             Assert.Equal(insertedAction.Balance, returnedAction.Balance);
@@ -469,13 +469,6 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
             var gateway = new UhTenanciesGateway(connectionString);
             return gateway.GetTenanciesByRefs(refs);
-        }
-
-        private List<ArrearsActionDiaryEntry> GetArrearsActionsByRef(string tenancyRef)
-        {
-            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
-            var gateway = new UhTenanciesGateway(connectionString);
-            return gateway.GetActionDiaryEntriesbyTenancyRef(tenancyRef);
         }
 
         private List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
