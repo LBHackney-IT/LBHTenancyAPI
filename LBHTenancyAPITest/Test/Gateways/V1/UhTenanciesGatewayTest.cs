@@ -21,14 +21,14 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 {
     public class UhTenanciesGatewayTest : IClassFixture<DatabaseFixture>
     {
-        private readonly SqlConnection db;
+        private readonly DatabaseFixture _databaseFixture;
         private static readonly TimeSpan DAY_IN_TIMESPAN = new TimeSpan(1, 0, 0, 0);
         private IRepository<PaymentTransaction> _paymentTransactionsGateway;
 
         public UhTenanciesGatewayTest(DatabaseFixture fixture)
         {
-            db = fixture.Db;
-            _paymentTransactionsGateway = new UHStubPaymentTransactionGateway(db);
+            _databaseFixture = fixture;
+            _paymentTransactionsGateway = new UHStubPaymentTransactionGateway(_databaseFixture.Db);
         }
 
         [Fact]
@@ -55,24 +55,24 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         {
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //arrears agreement
             var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, db);
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _databaseFixture.Db);
             //arrears agreement det
             var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
             expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, db);
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _databaseFixture.Db);
 
             var actionDiaryDetails = InsertRandomActionDiaryDetails(expectedTenancy.tag_ref, 1);
             return new TenancyListItem
@@ -95,24 +95,24 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         {
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //arrears agreement
             var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, db);
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _databaseFixture.Db);
             //arrears agreement det
             var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
             expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, db);
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _databaseFixture.Db);
 
             var actionDiaryDetails = InsertRandomActionDiaryDetails(expectedTenancy.tag_ref, 1);
             return new Tenancy
@@ -212,7 +212,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 "INSERT INTO contacts (tag_ref, con_phone1) VALUES (@tenancyRef, @phone)" +
                 "INSERT INTO property (prop_ref, short_address, post_code) VALUES (@propRef, @shortAddress, @postcode)";
 
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = "not11chars";
             command.Parameters.Add("@actionCode", SqlDbType.Char);
@@ -230,21 +230,21 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
             command.ExecuteNonQuery();
 
-            string retrieved_value = db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
+            string retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("not11chars ", retrieved_value);
 
-            retrieved_value = db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
+            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("ee ", retrieved_value);
 
-            retrieved_value = db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
+            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("status    ", retrieved_value);
 
-            List<dynamic> retrieved_values = db.Query("SELECT tag_ref, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
+            List<dynamic> retrieved_values = _databaseFixture.Db.Query("SELECT tag_ref, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
 
             Assert.Contains("phone                ", row.Values);
 
-            retrieved_values = db.Query("SELECT prop_ref, short_address, address1, post_code FROM property WHERE property.prop_ref = 'pref        '").ToList();
+            retrieved_values = _databaseFixture.Db.Query("SELECT prop_ref, short_address, address1, post_code FROM property WHERE property.prop_ref = 'pref        '").ToList();
             row = retrieved_values[0];
 
             Assert.Contains("pref        ", row.Values);
@@ -277,7 +277,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             // make sure there's a long string in the db
             string commandText =
                 $"UPDATE contacts SET con_address = '{longAddress}' WHERE contacts.tag_ref = '{expectedTenancy.TenancyRef}'";
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.ExecuteNonQuery();
 
             string actualShortAddressExpected = longAddress.Split("\n")[0];
@@ -294,20 +294,20 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             expectedProperty.short_address = null;
-            TestDataHelper.InsertProperty(expectedProperty, db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //act
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.tag_ref});
             //assert
-            Assert.Equal(null, tenancies[0].PrimaryContactShortAddress);
+            Assert.Null(tenancies[0].PrimaryContactShortAddress);
         }
 
         [Fact]
@@ -532,7 +532,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         private void InsertTenancyAttributes(TenancyListItem tenancyAttributes)
         {
             string commandText = InsertQueries();
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyAttributes.TenancyRef;
             command.Parameters.Add("@propRef", SqlDbType.Char);
@@ -567,7 +567,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         private void InsertSingleTenancyAttributes(Tenancy tenancyValues)
         {
             string commandText = InsertQueries();
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyValues.TenancyRef;
             command.Parameters.Add("@currentBalance", SqlDbType.Decimal);
@@ -603,7 +603,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @frequency, @aragSid)";
 
 
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
             command.Parameters.Add("@amount", SqlDbType.Decimal);
@@ -644,7 +644,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                     TenancyRef = tenancyRef
                 };
 
-                SqlCommand command = new SqlCommand(commandText, db);
+                SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
                 command.Parameters.Add("@tenancyRef", SqlDbType.Char);
                 command.Parameters["@tenancyRef"].Value = arrearsAgreement.TenancyRef;
                 command.Parameters.Add("@agreementStatus", SqlDbType.Char);
@@ -699,7 +699,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                         UniversalHousingUsername = random.Random.Hash(40)
                     };
 
-                    command = new SqlCommand(commandText, db);
+                    command = new SqlCommand(commandText, _databaseFixture.Db);
                     command.Parameters.Add("@tenancyRef", SqlDbType.Char);
                     command.Parameters["@tenancyRef"].Value = arrearsActionDiaryEntry.TenancyRef;
 
@@ -762,7 +762,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                         Date = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0)
                     };
 
-                    command = new SqlCommand(commandText, db);
+                    command = new SqlCommand(commandText, _databaseFixture.Db);
                     command.Parameters.Add("@tenancyRef", SqlDbType.Char);
                     command.Parameters["@tenancyRef"].Value = payment.TenancyRef;
 
@@ -808,7 +808,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             string commandText =
                 "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
 
-            SqlCommand command = new SqlCommand(commandText, db);
+            SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = tenancyRef;
             command.Parameters.Add("@actionCode", SqlDbType.Char);

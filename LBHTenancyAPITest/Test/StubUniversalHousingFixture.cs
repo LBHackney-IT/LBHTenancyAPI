@@ -23,7 +23,7 @@ namespace LBHTenancyAPITest.Test
             }
             catch (Exception)
             {
-                Console.Write("Failed to load .env file for test");
+                Console.WriteLine("Failed to load .env file for test");
             }
 
             ConnectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");

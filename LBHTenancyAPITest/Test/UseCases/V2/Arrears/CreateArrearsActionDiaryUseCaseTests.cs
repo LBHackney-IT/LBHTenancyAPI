@@ -140,7 +140,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
-            Assert.Equal(true, response.Success);
+            Assert.True(response.Success);
             Assert.Equal(tenancy.TenancyRef, response.ArrearsAction.TenancyAgreementRef);
             Assert.Equal(tenancy.CurrentBalance, response.ArrearsAction.ActionBalance);
         }
@@ -149,7 +149,6 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         public async Task GivenInvalidInput_GatewayResponseWith_Failure()
         {
             //arrange
-            var tenancyAgreementRef = "InvalidTest";
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals(string.Empty))))
                 .ReturnsAsync(new ArrearsActionResponse
                 {

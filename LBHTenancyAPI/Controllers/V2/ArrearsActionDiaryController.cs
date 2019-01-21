@@ -27,14 +27,7 @@ namespace LBHTenancyAPI.Controllers.V2
         /// <summary>
         /// Arrears Action Diary Controller V2 to create an action diary record with the specified user recorded
         /// </summary>
-        /// <param name="actionBalance"></param>
-        /// <param name="actionCategory"></param>
-        /// <param name="actionCode"></param>
-        /// <param name="comment"></param>
-        /// <param name="tenancyAgreementRef"></param>
-        /// <param name="companyCode"></param>
-        /// <param name="appUser"></param>
-        /// <param name="sessionToken"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost, MapToApiVersion("2")]
         [ProducesResponseType(typeof(APIResponse<ArrearsActionResponse>), 200)]
@@ -46,9 +39,7 @@ namespace LBHTenancyAPI.Controllers.V2
 
             var response = await _createArrearsActionDiaryUseCase.ExecuteAsync(request);
 
-            if (!response.Success)
-                return StatusCode(500, response);
-            return Ok(response);
+            return response.Success ? Ok(response) : StatusCode(500, response);
         }
     }
 }

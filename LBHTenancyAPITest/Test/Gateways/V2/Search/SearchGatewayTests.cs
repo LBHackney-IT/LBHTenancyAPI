@@ -1,3 +1,4 @@
+using System;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,14 +13,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
 {
     public class SearchGatewayTests : IClassFixture<DatabaseFixture>
     {
-        readonly SqlConnection _db;
+        readonly DatabaseFixture _databaseFixture;
         private readonly ISearchGateway _classUnderTest;
 
         public SearchGatewayTests(DatabaseFixture fixture)
         {
-            _db = fixture.Db;
-            var connection = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
-            _classUnderTest = new SearchGateway(connection);
+            _databaseFixture = fixture;
+            _classUnderTest = new SearchGateway(_databaseFixture.ConnectionString);
         }
 
         [Theory]
@@ -30,28 +30,28 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             expectedTenancy.tag_ref = tenancyRef;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //tenancy
             var expectedTenancy2 = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy2.house_ref = expectedTenancy.house_ref;
             expectedTenancy2.prop_ref = expectedProperty.prop_ref;
             expectedTenancy2.tag_ref = tenancyRef2;
-            TestDataHelper.InsertTenancy(expectedTenancy2, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy2, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
-                
+
                 PageSize = 10,
                 Page = 1
             }, CancellationToken.None);
@@ -68,23 +68,23 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             expectedTenancy.tag_ref = tenancyRef;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //tenancy
             var expectedTenancy2 = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy2.house_ref = expectedTenancy.house_ref;
             expectedTenancy2.prop_ref = expectedProperty.prop_ref;
             expectedTenancy2.tag_ref = tenancyRef2;
-            TestDataHelper.InsertTenancy(expectedTenancy2, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy2, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -108,17 +108,17 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -141,17 +141,17 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -175,17 +175,17 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             expectedProperty.post_code = postCode;
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            
-            TestDataHelper.InsertMember(expectedMember, _db);
+
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -209,16 +209,16 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             expectedProperty.short_address = shortAddress;
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -241,25 +241,25 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.tag_ref = tagRef;
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //arrears agreement
             var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _db);
+            TestDataHelper.InsertAgreement(expectedArrearsAgreement, _databaseFixture.Db);
             //arrears agreement det
             var expectedArrearsAgreementDet = Fake.UniversalHousing.GenerateFakeArrearsAgreementDet();
             expectedArrearsAgreementDet.tag_ref = expectedTenancy.tag_ref;
-            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _db);
+            TestDataHelper.InsertAgreementDet(expectedArrearsAgreementDet, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -282,22 +282,22 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
 
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
@@ -320,22 +320,22 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -357,13 +357,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //arrange
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
-            
+
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -390,17 +390,17 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -423,19 +423,19 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
             expectedMember2.forename = firstName2;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -460,19 +460,19 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
             expectedMember2.forename = firstName2;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -510,19 +510,19 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //member 2
             var expectedMember2 = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember2.house_ref = expectedTenancy.house_ref;
             expectedMember2.surname = lastName;
             expectedMember2.forename = firstName2;
-            TestDataHelper.InsertMember(expectedMember2, _db);
+            TestDataHelper.InsertMember(expectedMember2, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -565,18 +565,18 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             expectedProperty.post_code = postcode;
             expectedProperty.short_address = address;
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.tag_ref = tenancyRef;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -611,18 +611,18 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             expectedProperty.post_code = postcode;
             expectedProperty.short_address = address;
-            TestDataHelper.InsertProperty(expectedProperty, _db);
+            TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.tag_ref = tenancyRef;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
             expectedMember.forename = firstName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
             //act
             var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
             {
@@ -679,12 +679,12 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.Search
         {
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertTenancy(expectedTenancy, _db);
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
             expectedMember.house_ref = expectedTenancy.house_ref;
             expectedMember.surname = lastName;
-            TestDataHelper.InsertMember(expectedMember, _db);
+            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
         }
     }
 }
