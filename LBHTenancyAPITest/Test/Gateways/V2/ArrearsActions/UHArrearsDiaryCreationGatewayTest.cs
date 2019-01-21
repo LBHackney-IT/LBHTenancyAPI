@@ -125,10 +125,10 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         }
 
         [Theory]
-        [InlineData("8", "GEN", "Webservice action", "")]
-        [InlineData("8", "GEN", "Webservice action", null)]
-        public async Task UpdateRecordingUserNameWhenNoUsernameSupplyed_ShouldNoOp(
-            string actionCategory, string actionCode, string comment, string username)
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task UpdateRecordingUserNameWhenNoUsernameSupplyed_ShouldNoOp(string username)
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
