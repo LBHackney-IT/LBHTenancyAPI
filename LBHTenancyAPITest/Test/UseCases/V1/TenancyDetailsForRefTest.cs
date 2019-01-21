@@ -17,7 +17,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             var response = tenancyDetailsForRef.Execute(" ");
 
             Assert.IsType(typeof(TenancyDetailsForRef.TenancyResponse), response);
-            Assert.Equal(null,response.TenancyDetails.TenancyRef);
+            Assert.Null(response.TenancyDetails.TenancyRef);
         }
 
         [Fact]

@@ -119,6 +119,7 @@ namespace LBHTenancyAPITest.Helpers
 
             return new ArrearsActionDiaryEntry
             {
+                Id = random.Random.Int(),
                 TenancyRef = random.Random.Hash(11),
                 Balance = random.Finance.Amount(),
                 Code = random.Random.Hash(3),

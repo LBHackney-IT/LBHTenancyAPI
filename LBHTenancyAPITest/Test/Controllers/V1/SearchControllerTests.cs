@@ -89,8 +89,6 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             //arrange
             var primaryContactName = $"{firstName} {lastName}";
             var postcode = "EC12 1DS";
-            var arrearsAgreementStatus = "status";
-            var arrearsStartDate = DateTime.Now;
             var tenancyRef = "tenRef";
             decimal currentBalance = (decimal)100.12;
             var propertyRef = "propRef";
