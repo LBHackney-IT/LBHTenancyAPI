@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using Newtonsoft.Json;
 
@@ -39,24 +40,6 @@ namespace LBHTenancyAPI.UseCases.V2.Search.Models
         public string ShortAddress { get; set; }
         [JsonProperty("postcode")]
         public string Postcode { get; set; }
-    }
-
-    public class Currency
-    {
-        [JsonProperty("value")]
-        public decimal Value { get; set; }
-        [JsonProperty("currency_code")]
-        public string CurrencyCode { get; set; }
-
-        public Currency(decimal value)
-        {
-            Value = value;
-            CurrencyCode = "GBP";
-        }
-        public Currency()
-        {
-            CurrencyCode = "GBP";
-        }
     }
 
     public class LatestTenancyAction

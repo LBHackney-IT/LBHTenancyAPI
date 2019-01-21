@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LBHTenancyAPI.Controllers;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers.V2;
 using LBHTenancyAPI.Infrastructure.V1.API;
 using LBHTenancyAPI.UseCases.V2.Search;
@@ -87,8 +87,6 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
             //arrange
             var primaryContactName = $"{firstName} {lastName}";
             var postcode = "EC12 1DS";
-            var arrearsAgreementStatus = "status";
-            var arrearsStartDate = DateTime.Now;
             var tenancyRef = "tenRef";
             decimal currentBalance = (decimal)100.12;
             var propertyRef = "propRef";
@@ -106,11 +104,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V2
                                 Postcode = postcode
                             },
                             TenancyRef = tenancyRef,
-                            CurrentBalance = new Currency
-                            {
-                                Value = currentBalance,
-                                CurrencyCode = "GBP"
-                            },
+                            CurrentBalance = new Currency(currentBalance),
                             PropertyRef = propertyRef,
                             Tenure = tenure
                         }

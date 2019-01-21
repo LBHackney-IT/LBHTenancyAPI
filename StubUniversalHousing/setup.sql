@@ -14,10 +14,11 @@ CREATE TABLE [dbo].[tenagree]
   [rent]          numeric(9, 2)   DEFAULT ((0))             NULL,
   [service]       numeric(9, 2)   DEFAULT ((0))             NULL,
   [other_charge]  numeric(9, 2)   DEFAULT ((0))             NULL
-) ON [PRIMARY] 
+) ON [PRIMARY]
 
 CREATE TABLE araction
 (
+  araction_sid INT DEFAULT (0),
   tag_ref CHAR(11),
   action_code CHAR(3),
   action_type CHAR(3),
@@ -170,8 +171,8 @@ VALUES
 
 INSERT INTO rectype (rec_code, rec_desc)
 VALUES
-('','')   
-,('RBA','Bailiff Payment')     
+('','')
+,('RBA','Bailiff Payment')
 ,('RBP','Bank Payment')
 ,('RBR','Post Office Payment')
 ,('RCI','Rep. Cash Incentive')

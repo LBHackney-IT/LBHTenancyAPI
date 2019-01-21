@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases;
@@ -72,7 +73,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Service = "12.0",
                 OtherCharge = "2.0",
                 ArrearsAgreementStatus = "Breached",
-                CurrentBalance = "23.01",
+                CurrentBalance = new Currency(-23000.01m),
                 PrimaryContactName = "Rashmi",
                 PrimaryContactLongAddress = "AquaLand",
                 PrimaryContactPostcode = "e8 1hh",
@@ -81,7 +82,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "23.01",
-                        Breached = "True",
+                        Breached = true,
                         ClearBy = "2018-12-03 00:00:00Z",
                         Frequency = "Weekly",
                         StartBalance = "10.00",
@@ -91,7 +92,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "24.01",
-                        Breached = "False",
+                        Breached = false,
                         ClearBy = "2018-12-04 00:00:00Z",
                         Frequency = "Monthly",
                         StartBalance = "11.00",
@@ -143,7 +144,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 Service = "13.0",
                 OtherCharge = "3.0",
                 ArrearsAgreementStatus = "Active",
-                CurrentBalance = "21.01",
+                CurrentBalance = new Currency(21.01m),
                 PrimaryContactName = "Vlad",
                 PrimaryContactLongAddress = "AquaLand123",
                 PrimaryContactPostcode = "e8 2ii",
@@ -152,7 +153,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "21.00",
-                        Breached = "False",
+                        Breached = true,
                         ClearBy = "2017-12-03 00:00:00Z",
                         Frequency = "Weekly",
                         StartBalance = "101.00",
@@ -162,7 +163,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = "21.33",
-                        Breached = "True",
+                        Breached = false,
                         ClearBy = "2017-12-09 00:00:00Z",
                         Frequency = "Monthly",
                         StartBalance = "112.00",
@@ -211,7 +212,13 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 {"service", "12.0"},
                 {"other_charge", "2.0"},
                 {"current_arrears_agreement_status", "Breached"},
-                {"current_balance", "23.01"},
+                {
+                    "current_balance", new Dictionary<string, object>
+                    {
+                        {"value", -23000.01},
+                        {"currency_code", "GBP"}
+                    }
+                },
                 {"primary_contact_name", "Rashmi"},
                 {"primary_contact_long_address", "AquaLand"},
                 {"primary_contact_postcode", "e8 1hh"},
@@ -251,7 +258,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "23.01"},
-                            {"breached", "True"},
+                            {"breached", true},
                             {"clear_by", "2018-12-03 00:00:00Z"},
                             {"frequency", "Weekly"},
                             {"start_balance", "10.00"},
@@ -261,7 +268,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "24.01"},
-                            {"breached", "False"},
+                            {"breached", false},
                             {"clear_by", "2018-12-04 00:00:00Z"},
                             {"frequency", "Monthly"},
                             {"start_balance", "11.00"},
@@ -285,7 +292,13 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 {"service", "13.0"},
                 {"other_charge", "3.0"},
                 {"current_arrears_agreement_status", "Active"},
-                {"current_balance", "21.01"},
+                {
+                    "current_balance", new Dictionary<string, object>
+                    {
+                        {"value", 21.01},
+                        {"currency_code", "GBP"}
+                    }
+                },
                 {"primary_contact_name", "Vlad"},
                 {"primary_contact_long_address", "AquaLand123"},
                 {"primary_contact_postcode", "e8 2ii"},
@@ -325,7 +338,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "21.00"},
-                            {"breached", "False"},
+                            {"breached", true},
                             {"clear_by", "2017-12-03 00:00:00Z"},
                             {"frequency", "Weekly"},
                             {"start_balance", "101.00"},
@@ -335,7 +348,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                         new Dictionary<string, object>
                         {
                             {"amount", "21.33"},
-                            {"breached", "True"},
+                            {"breached", false},
                             {"clear_by", "2017-12-09 00:00:00Z"},
                             {"frequency", "Monthly"},
                             {"start_balance", "112.00"},

@@ -38,7 +38,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 
             if (response.Success)
             {
-                if (request.Username != null || request.Username != "")
+                if (!string.IsNullOrWhiteSpace(request.Username))
                 {
                     await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.Username,
                         response.ArrearsAction.Id);

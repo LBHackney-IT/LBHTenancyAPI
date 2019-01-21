@@ -7,10 +7,9 @@ namespace LBH.Data.Domain
 {
     public struct TenancyListItem
     {
-        
+
         public DateTime ArrearsAgreementStartDate { get; set; }
 
-        
         private string arrearsAgreementStatus;
         public string ArrearsAgreementStatus
         {
@@ -28,7 +27,6 @@ namespace LBH.Data.Domain
             set => currentBalance = decimal.Round(value, 2, MidpointRounding.AwayFromZero);
         }
 
-        
         private string tenancyRef;
         [JsonProperty("ref")]
         public string TenancyRef
@@ -49,7 +47,6 @@ namespace LBH.Data.Domain
             set => propertyRef = value.Trim();
         }
 
-        
         private string tenure;
         [JsonProperty("tenure")]
         public string Tenure

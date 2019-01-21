@@ -1,8 +1,12 @@
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Castle.Core.Internal;
+using LBH.Data.Domain;
+using LBHTenancyAPI.Gateways.V1;
 using LBHTenancyAPITest.Helpers.Entities;
+using ArrearsAgreement = LBHTenancyAPITest.Helpers.Entities.ArrearsAgreement;
 
 namespace LBHTenancyAPITest.Helpers.Data
 {
@@ -39,7 +43,7 @@ namespace LBHTenancyAPITest.Helpers.Data
 
         public static void InsertProperty(Property property, SqlConnection db)
         {
-            
+
             var sb = new StringBuilder();
             sb.Append("INSERT INTO property(");
             if (!property.short_address.IsNullOrEmpty())
@@ -55,7 +59,7 @@ namespace LBHTenancyAPITest.Helpers.Data
             {
                 command.Parameters.Add("@short_address", SqlDbType.Char);
                 command.Parameters["@short_address"].Value = property.short_address;
-            }   
+            }
 
             command.Parameters.Add("@address1", SqlDbType.Char);
             command.Parameters["@address1"].Value = property.address1;
@@ -71,7 +75,7 @@ namespace LBHTenancyAPITest.Helpers.Data
         public static void InsertTenancy(TenancyAgreement tenancyAgreement, SqlConnection db)
         {
             var commandText = @"INSERT INTO [dbo].[tenagree]
-                                ([tag_ref],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge]) 
+                                ([tag_ref],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge])
                                 VALUES
                                 (@tag_ref,@prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge)";
 
@@ -119,7 +123,7 @@ namespace LBHTenancyAPITest.Helpers.Data
             command.ExecuteNonQuery();
         }
 
-        public static void InsertAgreementDet(ArrearsAgreementDet arrearsAgreementDet,  SqlConnection db)
+        public static void InsertAgreementDet(ArrearsAgreementDet arrearsAgreementDet, SqlConnection db)
         {
             var commandText = "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @aragdet_frequency, @aragSid)";
             var command = new SqlCommand(commandText, db);
@@ -131,6 +135,30 @@ namespace LBHTenancyAPITest.Helpers.Data
             command.Parameters["@aragdet_frequency"].Value = arrearsAgreementDet.aragdet_frequency;
             command.Parameters.Add("@aragSid", SqlDbType.Int);
             command.Parameters["@aragSid"].Value = arrearsAgreementDet.arag_sid;
+            command.ExecuteNonQuery();
+        }
+
+        public static List<ArrearsActionDiaryEntry> GetArrearsActionsByRef(string tenancyRef)
+        {
+            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var gateway = new UhTenanciesGateway(connectionString);
+            return gateway.GetActionDiaryEntriesbyTenancyRef(tenancyRef);
+        }
+
+        public static void InsertArrearsActions(ArrearsActionDiaryEntry actionDiaryEntry, SqlConnection db)
+        {
+            string commandText =
+                "INSERT INTO araction (araction_sid, tag_ref, action_code, action_date) VALUES (@aractionSid, @tenancyRef, @actionCode, @actionDate)";
+
+            SqlCommand command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@tenancyRef", SqlDbType.Char);
+            command.Parameters["@tenancyRef"].Value = actionDiaryEntry.TenancyRef;
+            command.Parameters.Add("@actionCode", SqlDbType.Char);
+            command.Parameters["@actionCode"].Value = actionDiaryEntry.Code;
+            command.Parameters.Add("@actionDate", SqlDbType.SmallDateTime);
+            command.Parameters["@actionDate"].Value = actionDiaryEntry.Date;
+            command.Parameters.Add("@aractionSid", SqlDbType.Int);
+            command.Parameters["@aractionSid"].Value = actionDiaryEntry.Id;
             command.ExecuteNonQuery();
         }
     }

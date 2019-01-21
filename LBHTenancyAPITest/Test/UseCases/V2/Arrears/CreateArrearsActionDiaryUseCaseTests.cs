@@ -68,6 +68,42 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
+            _fakeGateway.Verify(v => v.UpdateRecordingUserName(request.Username, response.ArrearsAction.Id));
+            _fakeGateway.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task GivenNoUsername_GatewayResponseWith_Success()
+        {
+            //arrange
+            var tenancyAgreementRef = "Test";
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i=> i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
+                .ReturnsAsync(new ArrearsActionResponse
+                {
+                    Success = true,
+                    ArrearsAction = new ArrearsActionLogDto
+                    {
+                        ActionCategory = "Test",
+                        ActionCode = "HAC",
+                        IsCommentOnly = true,
+                        UserName = "Default User",
+                        Id = 1,
+                        TenancyAgreementRef = tenancyAgreementRef
+                    }
+
+                });
+            var request = new ActionDiaryRequest
+            {
+                ActionCategory = "Test",
+                ActionCode = "HAC",
+                Username = null,
+                TenancyAgreementRef = tenancyAgreementRef
+            };
+            //act
+            var response = await _classUnderTest.ExecuteAsync(request);
+            //assert
+            _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
+            _fakeGateway.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -104,7 +140,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             //act
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
-            Assert.Equal(true, response.Success);
+            Assert.True(response.Success);
             Assert.Equal(tenancy.TenancyRef, response.ArrearsAction.TenancyAgreementRef);
             Assert.Equal(tenancy.CurrentBalance, response.ArrearsAction.ActionBalance);
         }
@@ -113,7 +149,6 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         public async Task GivenInvalidInput_GatewayResponseWith_Failure()
         {
             //arrange
-            var tenancyAgreementRef = "InvalidTest";
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals(string.Empty))))
                 .ReturnsAsync(new ArrearsActionResponse
                 {

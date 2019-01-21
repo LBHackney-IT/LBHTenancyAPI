@@ -1,6 +1,5 @@
-﻿using LBHTenancyAPI.Gateways;
+﻿using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
@@ -18,7 +17,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             var response = tenancyDetailsForRef.Execute(" ");
 
             Assert.IsType(typeof(TenancyDetailsForRef.TenancyResponse), response);
-            Assert.Equal(null,response.TenancyDetails.TenancyRef);
+            Assert.Null(response.TenancyDetails.TenancyRef);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     Rent = tenancy.Rent.ToString("C"),
                     Service = tenancy.Service.ToString("C"),
                     OtherCharge = tenancy.OtherCharge.ToString("C"),
-                    CurrentBalance = tenancy.CurrentBalance.ToString("C"),
+                    CurrentBalance = new Currency(tenancy.CurrentBalance),
                     PrimaryContactName = tenancy.PrimaryContactName,
                     PrimaryContactLongAddress = tenancy.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancy.PrimaryContactPostcode,
@@ -75,7 +74,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     ArrearsAgreements = tenancy.ArrearsAgreements.ConvertAll(tenancyAgreement => new TenancyDetailsForRef.ArrearsAgreement
                     {
                         Amount = tenancyAgreement.Amount.ToString("C"),
-                        Breached = tenancyAgreement.Breached.ToString(),
+                        Breached = tenancyAgreement.Breached,
                         ClearBy = string.Format("{0:u}", tenancyAgreement.ClearBy),
                         Frequency = tenancyAgreement.Frequency,
                         StartBalance = tenancyAgreement.StartBalance.ToString("C"),
@@ -86,7 +85,8 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             };
 
             Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreementStatus, response.TenancyDetails.ArrearsAgreementStatus);
-            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance, response.TenancyDetails.CurrentBalance);
+            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.Value, response.TenancyDetails.CurrentBalance.Value);
+            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.CurrencyCode, response.TenancyDetails.CurrentBalance.CurrencyCode);
             Assert.Equal(expectedResponse.TenancyDetails.PropertyRef, response.TenancyDetails.PropertyRef);
             Assert.Equal(expectedResponse.TenancyDetails.Tenure, response.TenancyDetails.Tenure);
             Assert.Equal(expectedResponse.TenancyDetails.Rent, response.TenancyDetails.Rent);

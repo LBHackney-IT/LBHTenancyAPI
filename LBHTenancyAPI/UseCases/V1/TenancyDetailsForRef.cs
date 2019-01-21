@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
 
 namespace LBHTenancyAPI.UseCases.V1
@@ -24,7 +25,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
                     Tenure = tenancyResponse.PropertyRef,
-                    CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
+                    CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
                     Service = tenancyResponse.Service.ToString("C"),
                     OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
@@ -42,7 +43,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
                     Tenure = tenancyResponse.Tenure,
-                    CurrentBalance = tenancyResponse.CurrentBalance.ToString("C"),
+                    CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
                     Service = tenancyResponse.Service.ToString("C"),
                     OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
@@ -63,7 +64,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     ArrearsAgreements = tenancyResponse.ArrearsAgreements.ConvertAll(agreement => new ArrearsAgreement
                     {
                         Amount = agreement.Amount.ToString("C"),
-                        Breached = agreement.Breached.ToString(),
+                        Breached = agreement.Breached,
                         ClearBy = string.Format("{0:u}", agreement.ClearBy),
                         Frequency = agreement.Frequency,
                         StartBalance = agreement.StartBalance.ToString("C"),
@@ -88,7 +89,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string Rent { get; set; }
             public string Service { get; set; }
             public string OtherCharge { get; set; }
-            public string CurrentBalance { get; set; }
+            public Currency CurrentBalance { get; set; }
             public string ArrearsAgreementStatus { get; set; }
             public string PrimaryContactName { get; set; }
             public string PrimaryContactLongAddress { get; set; }
@@ -100,7 +101,7 @@ namespace LBHTenancyAPI.UseCases.V1
         public struct ArrearsAgreement
         {
             public string Amount{ get; set; }
-            public string Breached { get; set; }
+            public bool Breached { get; set; }
             public string ClearBy { get; set; }
             public string Frequency { get; set; }
             public string StartBalance { get; set; }
