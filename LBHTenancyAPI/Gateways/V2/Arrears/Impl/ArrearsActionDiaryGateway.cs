@@ -46,11 +46,12 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             {
                 conn.Open();
                 using (SqlCommand cmd =
-                    new SqlCommand("UPDATE araction SET username=@username" +
+                    new SqlCommand("UPDATE araction SET username=@username, action_date=@action_date" +
                                    " WHERE araction_sid=@Id", conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", actionDiaryId);
                     cmd.Parameters.AddWithValue("@username", requestAppUser);
+                    cmd.Parameters.AddWithValue("@action_date", DateTime.Now);
                     int rows = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
                 }
             }
