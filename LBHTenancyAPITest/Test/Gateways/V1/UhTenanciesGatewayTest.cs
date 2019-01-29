@@ -60,6 +60,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
@@ -77,6 +78,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             var actionDiaryDetails = InsertRandomActionDiaryDetails(expectedTenancy.tag_ref, 1);
             return new TenancyListItem
             {
+                PaymentRef = expectedTenancy.payment_ref,
                 ArrearsAgreementStartDate = expectedArrearsAgreement.arag_startdate,
                 ArrearsAgreementStatus = expectedArrearsAgreement.arag_status,
                 CurrentBalance = expectedTenancy.cur_bal,
@@ -99,6 +101,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
@@ -119,6 +122,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             {
                 AgreementStatus = expectedArrearsAgreement.arag_status,
                 CurrentBalance =  expectedTenancy.cur_bal,
+                PaymentRef = expectedTenancy.payment_ref,
                 PrimaryContactName = expectedMember.GetFullName(),
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
@@ -126,10 +130,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 TenancyRef = expectedTenancy.tag_ref,
                 Tenure = expectedTenancy.tenure,
                 ArrearsActionDiary = actionDiaryDetails,
-                ArrearsAgreements = new List<ArrearsAgreement> { new ArrearsAgreement
-                {
-
-                } }
+                ArrearsAgreements = new List<ArrearsAgreement> { new ArrearsAgreement() }
             };
         }
 
@@ -206,7 +207,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldTrimCharacterFields()
         {
             string commandText =
-                "INSERT INTO tenagree (tag_ref, prop_ref) VALUES (@tenancyRef, @propRef);" +
+                "INSERT INTO tenagree (tag_ref, prop_ref, u_saff_rentacc) VALUES (@tenancyRef, @propRef, @paymentRef);" +
                 "INSERT INTO araction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
                 "INSERT INTO arag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
                 "INSERT INTO contacts (tag_ref, con_phone1) VALUES (@tenancyRef, @phone)" +
@@ -215,6 +216,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = "not11chars";
+            command.Parameters.Add("@PaymentRef", SqlDbType.Char);
+            command.Parameters["@PaymentRef"].Value = "1234567890";
             command.Parameters.Add("@actionCode", SqlDbType.Char);
             command.Parameters["@actionCode"].Value = "ee";
             command.Parameters.Add("@aragStatus", SqlDbType.Char);
@@ -232,6 +235,9 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
             string retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("not11chars ", retrieved_value);
+
+            string untrimmed_payment_ref = _databaseFixture.Db.Query<string>("SELECT TOP 1 u_saff_rentacc FROM tenagree").First();
+            Assert.Equal("1234567890          ".Length, untrimmed_payment_ref.Length);
 
             retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("ee ", retrieved_value);
@@ -256,6 +262,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             TenancyListItem trimmedTenancy = GetTenanciesByRef(new List<string> {"not11chars"}).First();
 
             Assert.Equal("not11chars", trimmedTenancy.TenancyRef);
+            Assert.Equal("1234567890", trimmedTenancy.PaymentRef);
             Assert.Equal("pref", trimmedTenancy.PropertyRef);
             Assert.Equal("ee", trimmedTenancy.LastActionCode);
             Assert.Equal("status", trimmedTenancy.ArrearsAgreementStatus);
@@ -298,6 +305,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             //tenancy
             var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
             expectedTenancy.house_ref = expectedTenancy.house_ref;
+            expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
@@ -339,6 +347,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
+            Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);

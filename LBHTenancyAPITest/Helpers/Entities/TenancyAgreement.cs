@@ -7,6 +7,13 @@ namespace LBHTenancyAPITest.Helpers.Entities
     public class TenancyAgreement
     {
         /// <summary>
+        /// TenancyPaymentReference
+        /// </summary>
+        [Column("u_saff_rentacc")]
+        [MaxLength(20)]
+        public string payment_ref { get; set; }
+
+        /// <summary>
         /// TenancyAgreementReference
         /// </summary>
         [Key]

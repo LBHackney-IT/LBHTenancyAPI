@@ -32,6 +32,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     {
                         {"ref", null},
                         {"prop_ref", null},
+                        {"payment_ref", null},
                         {"tenure", null},
                         {"rent", null},
                         {"service", null},
@@ -68,6 +69,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = "0test/01",
                 PropertyRef = "prop/01",
+                PaymentRef = "1234567890",
                 Tenure = "SEC",
                 Rent = "91.1",
                 Service = "12.0",
@@ -139,6 +141,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = "0test/02",
                 PropertyRef = "prop/02",
+                PaymentRef = "1234567890",
                 Tenure = "TEM",
                 Rent = "92.1",
                 Service = "13.0",
@@ -207,6 +210,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 {"ref", "0test/01"},
                 {"prop_ref", "prop/01"},
+                {"payment_ref", "1234567890"},
                 {"tenure", "SEC"},
                 {"rent", "91.1"},
                 {"service", "12.0"},
@@ -287,6 +291,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 {"ref", "0test/02"},
                 {"prop_ref", "prop/02"},
+                {"payment_ref", "1234567890"},
                 {"tenure", "TEM"},
                 {"rent", "92.1"},
                 {"service", "13.0"},

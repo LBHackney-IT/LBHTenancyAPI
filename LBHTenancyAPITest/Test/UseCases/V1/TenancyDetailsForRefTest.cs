@@ -45,12 +45,13 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             var tenancyDetails = new TenancyDetailsForRef(gateway);
             var response = tenancyDetails.Execute(tenancy.TenancyRef);
 
-            var expectedResponse = new TenancyDetailsForRef.TenancyResponse()
+            var expectedResponse = new TenancyDetailsForRef.TenancyResponse
             {
-                TenancyDetails = new TenancyDetailsForRef.Tenancy()
+                TenancyDetails = new TenancyDetailsForRef.Tenancy
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
+                    PaymentRef = tenancy.PaymentRef,
                     Tenure = tenancy.Tenure,
                     Rent = tenancy.Rent.ToString("C"),
                     Service = tenancy.Service.ToString("C"),
@@ -88,6 +89,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.Value, response.TenancyDetails.CurrentBalance.Value);
             Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.CurrencyCode, response.TenancyDetails.CurrentBalance.CurrencyCode);
             Assert.Equal(expectedResponse.TenancyDetails.PropertyRef, response.TenancyDetails.PropertyRef);
+            Assert.Equal(expectedResponse.TenancyDetails.PaymentRef, response.TenancyDetails.PaymentRef);
             Assert.Equal(expectedResponse.TenancyDetails.Tenure, response.TenancyDetails.Tenure);
             Assert.Equal(expectedResponse.TenancyDetails.Rent, response.TenancyDetails.Rent);
             Assert.Equal(expectedResponse.TenancyDetails.Service, response.TenancyDetails.Service);

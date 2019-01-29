@@ -10,7 +10,7 @@ using Xunit;
 
 namespace LBHTenancyAPITest.Test.Controllers.V1
 {
-    public class TenanciesTest
+    public class TenanciesControllerIndexTest
     {
         [Fact]
         public async Task WhenGivenNoTenancyRefs_Index_ShouldRespondWithNoResults()
@@ -46,6 +46,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = "000001/01",
                 PropertyRef = "prop/01",
+                PaymentRef = "123456789",
                 Tenure = "SEC",
                 LastActionCode = "CALLED",
                 LastActionDate = "2018-01-01 00:00:00Z",
@@ -68,6 +69,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                             {
                                 {"ref", "000001/01"},
                                 {"prop_ref", "prop/01"},
+                                {"payment_ref", "123456789"},
                                 {"tenure", "SEC"},
                                 {
                                     "current_balance", new Dictionary<string, object>
@@ -109,6 +111,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = faker.Random.Hash(),
                 PropertyRef = faker.Random.Hash(),
+                PaymentRef = faker.Random.Hash(20),
                 Tenure = faker.Random.Word(),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
@@ -134,6 +137,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                             {
                                 {"ref", expectedTenancyResponse.TenancyRef},
                                 {"prop_ref", expectedTenancyResponse.PropertyRef},
+                                {"payment_ref", expectedTenancyResponse.PaymentRef},
                                 {"tenure", expectedTenancyResponse.Tenure},
                                 {"current_balance", expectedTenancyResponse.CurrentBalance},
                                 {"current_arrears_agreement_status", expectedTenancyResponse.ArrearsAgreementStatus},

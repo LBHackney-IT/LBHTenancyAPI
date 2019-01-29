@@ -21,6 +21,7 @@ namespace LBHTenancyAPITest.Helpers
           {
               TenancyRef = random.Random.Hash(11),
               PropertyRef = random.Random.Hash(12),
+              PaymentRef = random.Random.Hash(20),
               Tenure = random.Random.Hash(3),
               CurrentBalance = random.Finance.Amount(),
               LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
@@ -58,6 +59,7 @@ namespace LBHTenancyAPITest.Helpers
             {
                 TenancyRef = random.Random.Hash(11),
                 PropertyRef = random.Random.Hash(12),
+                PaymentRef = random.Random.Hash(12),
                 Tenure = random.Random.Hash(3),
                 CurrentBalance = random.Finance.Amount(),
                 Rent = random.Finance.Amount(),
@@ -190,6 +192,7 @@ namespace LBHTenancyAPITest.Helpers
                 var faker = new Faker<TenancyAgreement>()
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
+                        .RuleFor(property => property.payment_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.cur_bal, (fake, model) => fake.Finance.Amount())
                         .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
                         .RuleFor(property => property.tenure, (fake, model) => fake.Random.AlphaNumeric(3))

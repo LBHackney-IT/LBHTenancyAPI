@@ -9,22 +9,21 @@
             Search Controller V1 to search for Tenants in a simple
             </summary>
         </member>
-        <member name="M:LBHTenancyAPI.Controllers.V1.SearchController.Get(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest)">
-            <summary>
-            Searches for tenants attached to tenancies in a simple way - Deprecated use V2
-            Searches on 5 fields using one input SearchTerm:
-            FirstName - exact match
-            LastName - exact match
-            TenancyRef - exact match
-            Postcode - partial match (contains)
-            Address - partial match (contains)
-            Orders by LastName, FirstName Desc
-            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
-            - Tenancy A - Tenant1
-            - Tenancy A - Tenant2
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
+        <!-- Badly formed XML comment ignored for member "M:LBHTenancyAPI.Controllers.V1.SearchController.Get(LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest)" -->
+        <member name="M:LBHTenancyAPI.Controllers.V1.TenanciesController.Get(System.Collections.Generic.List{System.String})">
+             <summary>
+             Get inforation on one or more tenancies
+             </summary>
+             Sample response:
+            
+                 {
+                    "id": 1,
+                    "name": "Item1",
+                    "isComplete": true
+                 }
+            
+             <param name="tenancyRefs"></param>
+             <returns>IActionResult</returns>
         </member>
         <member name="T:LBHTenancyAPI.Controllers.V2.ArrearsActionDiaryController">
             <summary>
@@ -44,21 +43,25 @@
             </summary>
         </member>
         <member name="M:LBHTenancyAPI.Controllers.V2.SearchController.Get(LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest)">
-            <summary>
-            Searches for tenants attached to tenancies and filter in a multi faceted way.
-            Searches on 5 fields:
-            FirstName - exact match AND
-            LastName - exact match AND
-            TenancyRef - exact match AND
-            Postcode - partial match (contains) AND
-            Address - partial match (contains) AND
-            Orders by LastName, FirstName Desc
-            Returns Individual Tenants attached to a tenancy so can return duplicate tenancies
-            - Tenancy A - Tenant1
-            - Tenancy A - Tenant2
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
+             <summary>
+             Search Controller V2 to search for Tenants in a multi faceted way
+             </summary>
+             <remarks>
+             Searches on 5 fields:
+             FirstName - exact match AND
+             LastName - exact match AND
+             TenancyRef - exact match AND
+             Postcode - partial match (contains) AND
+             Address - partial match (contains) AND
+             **Orders by** LastName, FirstName Desc
+            
+             # Warning:
+             This matches individual Tenants attached to a tenancy therefore can return duplicate tenancies
+             - Tenancy A - Tenant1
+             - Tenancy A - Tenant2
+             </remarks>
+             <param name="request"></param>
+             <returns></returns>
         </member>
         <member name="T:LBHTenancyAPI.Extensions.Controller.CancellableAPIRequestExtensions">
             <summary>
@@ -132,7 +135,7 @@
         </member>
         <member name="T:LBHTenancyAPI.Factories.ISqlConnectionFactory">
             <summary>
-            Factory for creating SQL connections
+            Factory for creating SQL connections 
             </summary>
         </member>
         <member name="M:LBHTenancyAPI.Factories.ISqlConnectionFactory.Create">
@@ -156,7 +159,7 @@
         </member>
         <member name="T:LBHTenancyAPI.Factories.SqlConnectionFactory">
             <summary>
-            Simple Factory for creating SQL connections
+            Simple Factory for creating SQL connections 
             </summary>
         </member>
         <member name="M:LBHTenancyAPI.Factories.SqlConnectionFactory.Create">
@@ -354,12 +357,12 @@
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.ServiceSettings">
             <summary>
-            UH Agreement Service
+            UH Agreement Service 
             </summary>
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.SentrySettings">
             <summary>
-            Sentry error handling
+            Sentry error handling 
             </summary>
         </member>
         <member name="P:LBHTenancyAPI.Settings.ConfigurationSettings.Dynamics365Settings">
@@ -380,7 +383,7 @@
         <member name="P:LBHTenancyAPI.UseCases.V1.Contacts.Models.ContactsForTenancy.Responsible">
             <summary>
             Denotes whether or not a contact is on the tenancy agreement as a tenant
-            and can be contacted via
+            and can be contacted via 
             </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest">
@@ -414,7 +417,7 @@
         </member>
         <member name="P:LBHTenancyAPI.UseCases.V1.Search.Models.SearchTenancyRequest.PageSize">
             <summary>
-            PageSize defaults to 10
+            PageSize defaults to 10 
             </summary>
         </member>
         <member name="T:LBHTenancyAPI.UseCases.V1.Search.SearchTenancyUseCase">
@@ -484,7 +487,7 @@
         </member>
         <member name="P:LBHTenancyAPI.UseCases.V2.Search.Models.SearchTenancyRequest.PageSize">
             <summary>
-            PageSize defaults to 10
+            PageSize defaults to 10 
             </summary>
         </member>
     </members>

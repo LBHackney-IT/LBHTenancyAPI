@@ -46,6 +46,7 @@ namespace LBHTenancyAPI.Controllers.V1
             {
                 {"ref", tenancy.TenancyRef},
                 {"prop_ref", tenancy.PropertyRef},
+                {"payment_ref", tenancy.PaymentRef},
                 {"tenure", tenancy.Tenure},
                 {
                     "current_balance", new Dictionary<string, object>
@@ -128,6 +129,7 @@ namespace LBHTenancyAPI.Controllers.V1
             {
                 {"ref", tenancy.TenancyRef},
                 {"prop_ref", tenancy.PropertyRef},
+                {"payment_ref", tenancy.PaymentRef},
                 {"tenure", tenancy.Tenure},
                 {"rent", tenancy.Rent},
                 {"service", tenancy.Service},

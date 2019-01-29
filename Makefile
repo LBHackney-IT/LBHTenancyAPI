@@ -13,7 +13,7 @@ setup: docker-build
 
 .PHONY: serve
 serve:
-	docker run -p 3000:80 -it --rm lbhtenancyapi
+	docker-compose run -p 3000:80 -e UH_URL=$(TEST_UH_CONNECTION_STRING) --rm lbhtenancyapi
 
 .PHONY: test
 test:

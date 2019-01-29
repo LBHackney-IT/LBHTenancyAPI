@@ -75,14 +75,17 @@ namespace LBHTenancyAPITest.Helpers.Data
         public static void InsertTenancy(TenancyAgreement tenancyAgreement, SqlConnection db)
         {
             var commandText = @"INSERT INTO [dbo].[tenagree]
-                                ([tag_ref],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge])
+                                ([tag_ref],[u_saff_rentacc],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge])
                                 VALUES
-                                (@tag_ref,@prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge)";
+                                (@tag_ref, @paymentRef, @prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge)";
 
             var command = new SqlCommand(commandText, db);
 
             command.Parameters.Add("@tag_ref", SqlDbType.Char);
             command.Parameters["@tag_ref"].Value = tenancyAgreement.tag_ref;
+
+            command.Parameters.Add("@paymentRef", SqlDbType.Char);
+            command.Parameters["@paymentRef"].Value = tenancyAgreement.payment_ref;
 
             command.Parameters.Add("@prop_ref", SqlDbType.Char);
             command.Parameters["@prop_ref"].Value = tenancyAgreement.prop_ref;

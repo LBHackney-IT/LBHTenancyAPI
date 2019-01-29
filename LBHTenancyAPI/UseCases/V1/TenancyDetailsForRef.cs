@@ -24,6 +24,7 @@ namespace LBHTenancyAPI.UseCases.V1
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
+                    PaymentRef = tenancyResponse.PaymentRef,
                     Tenure = tenancyResponse.PropertyRef,
                     CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
@@ -42,6 +43,7 @@ namespace LBHTenancyAPI.UseCases.V1
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
+                    PaymentRef = tenancyResponse.PaymentRef,
                     Tenure = tenancyResponse.Tenure,
                     CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
@@ -85,6 +87,7 @@ namespace LBHTenancyAPI.UseCases.V1
         {
             public string TenancyRef { get; set; }
             public string PropertyRef { get; set; }
+            public string PaymentRef { get; set; }
             public string Tenure { get; set; }
             public string Rent { get; set; }
             public string Service { get; set; }

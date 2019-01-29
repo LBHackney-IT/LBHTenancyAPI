@@ -97,5 +97,13 @@ namespace LBH.Data.Domain
 
             set => primaryContactLongAddress = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
         }
+
+        private string paymentRef;
+        public string PaymentRef
+        {
+            get => paymentRef;
+
+            set => paymentRef = value.Trim();
+        }
     }
 }

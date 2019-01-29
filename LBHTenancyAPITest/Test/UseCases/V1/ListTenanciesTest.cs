@@ -62,6 +62,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     {
                         TenancyRef = tenancy1.TenancyRef,
                         PropertyRef = tenancy1.PropertyRef,
+                        PaymentRef = tenancy1.PaymentRef,
                         Tenure = tenancy1.Tenure,
                         LastActionCode = tenancy1.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
@@ -75,6 +76,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     {
                         TenancyRef = tenancy2.TenancyRef,
                         PropertyRef = tenancy2.PropertyRef,
+                        PaymentRef = tenancy2.PaymentRef,
                         Tenure = tenancy2.Tenure,
                         LastActionCode = tenancy2.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
@@ -108,6 +110,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     {
                         TenancyRef = tenancy.TenancyRef,
                         PropertyRef = tenancy.PropertyRef,
+                        PaymentRef = tenancy.PaymentRef,
                         Tenure = tenancy.Tenure,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
@@ -119,9 +122,14 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     }
                 }
             };
+            ListTenancies.ResponseTenancy responseTenancy = expectedResponse.Tenancies.First();
+
             Assert.Equal(expectedResponse.Tenancies.Count, actualResponse.Tenancies.Count);
-            Assert.Equal(expectedResponse.Tenancies.First().CurrentBalance.Value, actualResponse.Tenancies.First().CurrentBalance.Value);
-            Assert.Equal(expectedResponse.Tenancies.First().CurrentBalance, actualResponse.Tenancies.First().CurrentBalance);
+            Assert.Equal(responseTenancy.CurrentBalance.Value, actualResponse.Tenancies.First().CurrentBalance.Value);
+            Assert.Equal(responseTenancy.CurrentBalance, actualResponse.Tenancies.First().CurrentBalance);
+            Assert.Equal(responseTenancy.PaymentRef, actualResponse.Tenancies.First().PaymentRef);
+            Assert.Equal(responseTenancy.PropertyRef, actualResponse.Tenancies.First().PropertyRef);
+
             Assert.Equal(expectedResponse.Tenancies, actualResponse.Tenancies);
         }
     }

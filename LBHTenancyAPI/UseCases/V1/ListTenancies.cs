@@ -23,6 +23,7 @@ namespace LBHTenancyAPI.UseCases.V1
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
+                    PaymentRef = tenancy.PaymentRef,
                     Tenure = tenancy.Tenure,
                     LastActionCode = tenancy.LastActionCode,
                     LastActionDate = string.Format("{0:u}", tenancy.LastActionDate),
@@ -54,6 +55,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string PrimaryContactName { get; set; }
             public string PrimaryContactShortAddress { get; set; }
             public string PrimaryContactPostcode { get; set; }
+            public string PaymentRef { get; set; }
         }
     }
 }
