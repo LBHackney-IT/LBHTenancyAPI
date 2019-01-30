@@ -63,6 +63,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy1.TenancyRef,
                         PropertyRef = tenancy1.PropertyRef,
                         PaymentRef = tenancy1.PaymentRef,
+                        StartDate = tenancy1.StartDate,
                         Tenure = tenancy1.Tenure,
                         LastActionCode = tenancy1.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
@@ -77,6 +78,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy2.TenancyRef,
                         PropertyRef = tenancy2.PropertyRef,
                         PaymentRef = tenancy2.PaymentRef,
+                        StartDate = tenancy2.StartDate,
                         Tenure = tenancy2.Tenure,
                         LastActionCode = tenancy2.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
@@ -111,6 +113,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy.TenancyRef,
                         PropertyRef = tenancy.PropertyRef,
                         PaymentRef = tenancy.PaymentRef,
+                        StartDate = tenancy.StartDate,
                         Tenure = tenancy.Tenure,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
@@ -129,7 +132,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             Assert.Equal(responseTenancy.CurrentBalance, actualResponse.Tenancies.First().CurrentBalance);
             Assert.Equal(responseTenancy.PaymentRef, actualResponse.Tenancies.First().PaymentRef);
             Assert.Equal(responseTenancy.PropertyRef, actualResponse.Tenancies.First().PropertyRef);
-
+            Assert.Equal(responseTenancy.StartDate, actualResponse.Tenancies.First().StartDate);
             Assert.Equal(expectedResponse.Tenancies, actualResponse.Tenancies);
         }
     }

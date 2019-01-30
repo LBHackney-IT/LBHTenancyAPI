@@ -14,7 +14,8 @@ CREATE TABLE [dbo].[tenagree]
   [rent]            numeric(9, 2)   DEFAULT ((0))             NULL,
   [service]         numeric(9, 2)   DEFAULT ((0))             NULL,
   [other_charge]    numeric(9, 2)   DEFAULT ((0))             NULL,
-  [u_saff_rentacc]  char(20)        DEFAULT (space((0)))      NULL
+  [u_saff_rentacc]  char(20)        DEFAULT (space((0)))      NULL, -- Payment Reference
+  [cot]             smalldatetime   DEFAULT (NULL)            NULL, -- Creation Date
 ) ON [PRIMARY]
 
 CREATE TABLE araction

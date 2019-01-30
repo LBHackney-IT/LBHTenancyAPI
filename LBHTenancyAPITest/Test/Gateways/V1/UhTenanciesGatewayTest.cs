@@ -61,6 +61,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
             expectedTenancy.payment_ref = expectedTenancy.payment_ref;
+            expectedTenancy.start_date = expectedTenancy.start_date;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
@@ -79,6 +80,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             return new TenancyListItem
             {
                 PaymentRef = expectedTenancy.payment_ref,
+                StartDate = expectedTenancy.start_date,
                 ArrearsAgreementStartDate = expectedArrearsAgreement.arag_startdate,
                 ArrearsAgreementStatus = expectedArrearsAgreement.arag_status,
                 CurrentBalance = expectedTenancy.cur_bal,

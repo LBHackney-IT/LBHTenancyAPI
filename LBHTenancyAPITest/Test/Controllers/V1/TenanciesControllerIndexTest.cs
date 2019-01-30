@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
@@ -42,11 +43,14 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
         public async Task WhenGivenATenancyRef_Index_ShouldRespondWithFormattedJson()
         {
             var listTenancies = new ListTenanciesStub();
+            var startDate = new Faker().Date.Past();
+
             listTenancies.AddTenancyResponse("000001/01", new ListTenancies.ResponseTenancy
             {
                 TenancyRef = "000001/01",
                 PropertyRef = "prop/01",
                 PaymentRef = "123456789",
+                StartDate = startDate,
                 Tenure = "SEC",
                 LastActionCode = "CALLED",
                 LastActionDate = "2018-01-01 00:00:00Z",
@@ -70,6 +74,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                                 {"ref", "000001/01"},
                                 {"prop_ref", "prop/01"},
                                 {"payment_ref", "123456789"},
+                                {"start_date", string.Format("{0:u}", startDate)},
                                 {"tenure", "SEC"},
                                 {
                                     "current_balance", new Dictionary<string, object>

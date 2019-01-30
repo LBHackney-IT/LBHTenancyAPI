@@ -75,9 +75,9 @@ namespace LBHTenancyAPITest.Helpers.Data
         public static void InsertTenancy(TenancyAgreement tenancyAgreement, SqlConnection db)
         {
             var commandText = @"INSERT INTO [dbo].[tenagree]
-                                ([tag_ref],[u_saff_rentacc],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge])
+                                ([tag_ref],[u_saff_rentacc],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge], [cot])
                                 VALUES
-                                (@tag_ref, @paymentRef, @prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge)";
+                                (@tag_ref, @paymentRef, @prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge, @start_date)";
 
             var command = new SqlCommand(commandText, db);
 
@@ -107,6 +107,9 @@ namespace LBHTenancyAPITest.Helpers.Data
 
             command.Parameters.Add("@other_charge", SqlDbType.Decimal);
             command.Parameters["@other_charge"].Value = tenancyAgreement.other_charge;
+
+            command.Parameters.Add("@start_date", SqlDbType.SmallDateTime);
+            command.Parameters["@start_date"].Value = tenancyAgreement.start_date;
 
             command.ExecuteNonQuery();
         }

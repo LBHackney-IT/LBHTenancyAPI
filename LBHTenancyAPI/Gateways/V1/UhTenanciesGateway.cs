@@ -28,6 +28,7 @@ namespace LBHTenancyAPI.Gateways.V1
                   @"SELECT
                     tenagree.tag_ref as TenancyRef,
                     tenagree.u_saff_rentacc as PaymentRef,
+                    tenagree.cot as StartDate,
                     tenagree.cur_bal as CurrentBalance,
                     tenagree.prop_ref as PropertyRef,
                     tenagree.tenure as Tenure,

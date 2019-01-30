@@ -92,5 +92,7 @@ namespace LBH.Data.Domain
 
             set => paymentRef = value.Trim();
         }
+
+        public DateTime StartDate { get; set; }
     }
 }

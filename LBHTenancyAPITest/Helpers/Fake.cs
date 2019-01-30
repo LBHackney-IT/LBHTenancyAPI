@@ -22,6 +22,7 @@ namespace LBHTenancyAPITest.Helpers
               TenancyRef = random.Random.Hash(11),
               PropertyRef = random.Random.Hash(12),
               PaymentRef = random.Random.Hash(20),
+              StartDate = random.Date.Past(),
               Tenure = random.Random.Hash(3),
               CurrentBalance = random.Finance.Amount(),
               LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
@@ -193,6 +194,7 @@ namespace LBHTenancyAPITest.Helpers
                         .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.payment_ref, (fake, model) => fake.Random.AlphaNumeric(12))
+                        .RuleFor(property => property.start_date, (fake, model) => GenerateSmallDateTime(fake))
                         .RuleFor(property => property.cur_bal, (fake, model) => fake.Finance.Amount())
                         .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
                         .RuleFor(property => property.tenure, (fake, model) => fake.Random.AlphaNumeric(3))
@@ -203,6 +205,14 @@ namespace LBHTenancyAPITest.Helpers
 
                 var faked = faker.Generate();
                 return faked;
+            }
+
+            private static DateTime GenerateSmallDateTime(Faker fake)
+            {
+                DateTime date = fake.Date.Past();
+
+                //db smallDateTime type does not store seconds
+                return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0);
             }
 
             public static Property GenerateFakeProperty()
