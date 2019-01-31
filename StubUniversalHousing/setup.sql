@@ -6,14 +6,16 @@ GO
 
 CREATE TABLE [dbo].[tenagree]
 (
-  [tag_ref]       char(11)        DEFAULT (space((1)))      NOT NULL,
-  [prop_ref]      char(12)        DEFAULT (space((1)))      NULL,
-  [house_ref]     char(10)        DEFAULT (space((1)))      NULL,
-  [cur_bal]       numeric(9, 2)   DEFAULT ((0))             NULL,
-  [tenure]        char(3)         DEFAULT (space((1)))      NULL,
-  [rent]          numeric(9, 2)   DEFAULT ((0))             NULL,
-  [service]       numeric(9, 2)   DEFAULT ((0))             NULL,
-  [other_charge]  numeric(9, 2)   DEFAULT ((0))             NULL
+  [tag_ref]         char(11)        DEFAULT (space((1)))      NOT NULL,
+  [prop_ref]        char(12)        DEFAULT (space((1)))      NULL,
+  [house_ref]       char(10)        DEFAULT (space((1)))      NULL,
+  [cur_bal]         numeric(9, 2)   DEFAULT ((0))             NULL,
+  [tenure]          char(3)         DEFAULT (space((1)))      NULL,
+  [rent]            numeric(9, 2)   DEFAULT ((0))             NULL,
+  [service]         numeric(9, 2)   DEFAULT ((0))             NULL,
+  [other_charge]    numeric(9, 2)   DEFAULT ((0))             NULL,
+  [u_saff_rentacc]  char(20)        DEFAULT (space((0)))      NULL, -- Payment Reference
+  [cot]             smalldatetime   DEFAULT (NULL)            NULL, -- Creation Date
 ) ON [PRIMARY]
 
 CREATE TABLE araction

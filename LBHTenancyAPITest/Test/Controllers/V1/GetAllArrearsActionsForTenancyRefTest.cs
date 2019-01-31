@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Controllers.V1;
-using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -12,6 +12,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class GetAllArrearsActionsForTenancyRefTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
+
         [Fact]
         public async Task WhenGivenTenancyRefThatDoesntExist_ActionDiary_ShouldRespondWithNoResults()
         {
@@ -173,7 +175,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
         private static async Task<ObjectResult> GetArrearsActionsDetails(IListAllArrearsActions listActionDiaryUseCase,
             string tenancyRef)
         {
-            var controller = new TenanciesController(null, listActionDiaryUseCase, null, null);
+            var controller = new TenanciesController(null, listActionDiaryUseCase, null, null, _nullLogger);
             var result = await controller.GetActionDiaryDetails(tenancyRef);
             return result as OkObjectResult;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
@@ -20,21 +21,7 @@ namespace LBHTenancyAPI.UseCases.V1
 
             if (string.IsNullOrWhiteSpace(tenancyRef))
             {
-                response.TenancyDetails = new Tenancy
-                {
-                    TenancyRef = tenancyResponse.TenancyRef,
-                    PropertyRef = tenancyResponse.PropertyRef,
-                    Tenure = tenancyResponse.PropertyRef,
-                    CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
-                    Rent = tenancyResponse.Rent.ToString("C"),
-                    Service = tenancyResponse.Service.ToString("C"),
-                    OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
-                    PrimaryContactName = tenancyResponse.PrimaryContactName,
-                    PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
-                    PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
-                    ArrearsActionDiary = new List<ArrearsActionDiaryEntry>(),
-                    ArrearsAgreements = new List<ArrearsAgreement>()
-                };
+                response.TenancyDetails = new Tenancy();
             }
             else
             {
@@ -42,6 +29,8 @@ namespace LBHTenancyAPI.UseCases.V1
                 {
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
+                    PaymentRef = tenancyResponse.PaymentRef,
+                    StartDate = TenancyDateFormatter.UniversalSortable(tenancyResponse.StartDate),
                     Tenure = tenancyResponse.Tenure,
                     CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
@@ -57,7 +46,7 @@ namespace LBHTenancyAPI.UseCases.V1
                         Type = actionDiary.Type,
                         Balance = actionDiary.Balance.ToString("C"),
                         Comment = actionDiary.Comment,
-                        Date = string.Format("{0:u}", actionDiary.Date),
+                        Date = TenancyDateFormatter.UniversalSortable(actionDiary.Date),
                         UniversalHousingUsername = actionDiary.UniversalHousingUsername
                     }),
 
@@ -65,10 +54,10 @@ namespace LBHTenancyAPI.UseCases.V1
                     {
                         Amount = agreement.Amount.ToString("C"),
                         Breached = agreement.Breached,
-                        ClearBy = string.Format("{0:u}", agreement.ClearBy),
+                        ClearBy = TenancyDateFormatter.UniversalSortable(agreement.ClearBy),
                         Frequency = agreement.Frequency,
                         StartBalance = agreement.StartBalance.ToString("C"),
-                        Startdate = string.Format("{0:u}", agreement.Startdate),
+                        Startdate = TenancyDateFormatter.UniversalSortable(agreement.Startdate),
                         Status = agreement.Status
                     })
                 };
@@ -85,6 +74,7 @@ namespace LBHTenancyAPI.UseCases.V1
         {
             public string TenancyRef { get; set; }
             public string PropertyRef { get; set; }
+            public string PaymentRef { get; set; }
             public string Tenure { get; set; }
             public string Rent { get; set; }
             public string Service { get; set; }
@@ -96,6 +86,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string PrimaryContactPostcode { get; set; }
             public List<ArrearsAgreement> ArrearsAgreements { get; set; }
             public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
+            public string StartDate { get; set; }
         }
 
         public struct ArrearsAgreement

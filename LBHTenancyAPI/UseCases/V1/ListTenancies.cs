@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways;
 using LBHTenancyAPI.Gateways.V1;
 
 namespace LBHTenancyAPI.UseCases.V1
 {
-    public class ListTenancies : IListTenancies
+    public partial class ListTenancies : IListTenancies
     {
         private readonly ITenanciesGateway tenanciesGateway;
 
@@ -23,9 +24,11 @@ namespace LBHTenancyAPI.UseCases.V1
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
+                    PaymentRef = tenancy.PaymentRef,
+                    StartDate = TenancyDateFormatter.UniversalSortable(tenancy.StartDate),
                     Tenure = tenancy.Tenure,
                     LastActionCode = tenancy.LastActionCode,
-                    LastActionDate = string.Format("{0:u}", tenancy.LastActionDate),
+                    LastActionDate = TenancyDateFormatter.UniversalSortable(tenancy.LastActionDate),
                     CurrentBalance = new Currency(tenancy.CurrentBalance),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContactName = tenancy.PrimaryContactName,
@@ -54,6 +57,8 @@ namespace LBHTenancyAPI.UseCases.V1
             public string PrimaryContactName { get; set; }
             public string PrimaryContactShortAddress { get; set; }
             public string PrimaryContactPostcode { get; set; }
+            public string PaymentRef { get; set; }
+            public string StartDate { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers;
@@ -7,6 +8,7 @@ using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -14,6 +16,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class GetAllTenancyDetailsForGivenTenancyRefTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
         [Fact]
         public async Task WhenGivenTenancyRefThatDoesntExist_Tenancy_ShouldRespondWithNoResults()
         {
@@ -32,6 +35,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                     {
                         {"ref", null},
                         {"prop_ref", null},
+                        {"payment_ref", null},
+                        {"start_date", null},
                         {"tenure", null},
                         {"rent", null},
                         {"service", null},
@@ -68,6 +73,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = "0test/01",
                 PropertyRef = "prop/01",
+                PaymentRef = "1234567890",
+                StartDate = "2019-01-30 15:51:00Z",
                 Tenure = "SEC",
                 Rent = "91.1",
                 Service = "12.0",
@@ -139,6 +146,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = "0test/02",
                 PropertyRef = "prop/02",
+                PaymentRef = "1234567890",
+                StartDate = "2019-06-30 15:51:00Z",
                 Tenure = "TEM",
                 Rent = "92.1",
                 Service = "13.0",
@@ -207,6 +216,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 {"ref", "0test/01"},
                 {"prop_ref", "prop/01"},
+                {"payment_ref", "1234567890"},
+                {"start_date", "2019-01-30 15:51:00Z"},
                 {"tenure", "SEC"},
                 {"rent", "91.1"},
                 {"service", "12.0"},
@@ -287,6 +298,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 {"ref", "0test/02"},
                 {"prop_ref", "prop/02"},
+                {"payment_ref", "1234567890"},
+                {"start_date", "2019-06-30 15:51:00Z"},
                 {"tenure", "TEM"},
                 {"rent", "92.1"},
                 {"service", "13.0"},
@@ -421,7 +434,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
         private static async Task<ObjectResult> GetAllTenancyDetailsForTenancyRef(ITenancyDetailsForRef tenancyDetailsForRefUseCase,
             string tenancyRef)
         {
-            var controller = new TenanciesController(null, null, null, tenancyDetailsForRefUseCase);
+            var controller = new TenanciesController(null, null, null, tenancyDetailsForRefUseCase, _nullLogger);
             var result = await controller.GetTenancyDetails(tenancyRef);
             return result as OkObjectResult;
         }

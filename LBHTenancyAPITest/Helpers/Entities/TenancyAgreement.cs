@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,15 @@ namespace LBHTenancyAPITest.Helpers.Entities
     [Table("tenagree")]
     public class TenancyAgreement
     {
+        public DateTime? start_date;
+
+        /// <summary>
+        /// TenancyPaymentReference
+        /// </summary>
+        [Column("u_saff_rentacc")]
+        [MaxLength(20)]
+        public string payment_ref { get; set; }
+
         /// <summary>
         /// TenancyAgreementReference
         /// </summary>

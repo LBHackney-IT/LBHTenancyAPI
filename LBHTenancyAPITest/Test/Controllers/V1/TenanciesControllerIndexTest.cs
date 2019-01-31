@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bogus;
@@ -5,13 +6,16 @@ using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace LBHTenancyAPITest.Test.Controllers.V1
 {
-    public class TenanciesTest
+    public class TenanciesControllerIndexTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
+
         [Fact]
         public async Task WhenGivenNoTenancyRefs_Index_ShouldRespondWithNoResults()
         {
@@ -42,10 +46,14 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
         public async Task WhenGivenATenancyRef_Index_ShouldRespondWithFormattedJson()
         {
             var listTenancies = new ListTenanciesStub();
+            var startDate = new Faker().Date.Past();
+
             listTenancies.AddTenancyResponse("000001/01", new ListTenancies.ResponseTenancy
             {
                 TenancyRef = "000001/01",
                 PropertyRef = "prop/01",
+                PaymentRef = "123456789",
+                StartDate = string.Format("{0:u}", startDate),
                 Tenure = "SEC",
                 LastActionCode = "CALLED",
                 LastActionDate = "2018-01-01 00:00:00Z",
@@ -68,6 +76,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                             {
                                 {"ref", "000001/01"},
                                 {"prop_ref", "prop/01"},
+                                {"payment_ref", "123456789"},
+                                {"start_date", string.Format("{0:u}", startDate)},
                                 {"tenure", "SEC"},
                                 {
                                     "current_balance", new Dictionary<string, object>
@@ -109,6 +119,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
             {
                 TenancyRef = faker.Random.Hash(),
                 PropertyRef = faker.Random.Hash(),
+                PaymentRef = faker.Random.Hash(20),
+                StartDate = string.Format("{0:u}", faker.Date.Past()),
                 Tenure = faker.Random.Word(),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
@@ -134,6 +146,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                             {
                                 {"ref", expectedTenancyResponse.TenancyRef},
                                 {"prop_ref", expectedTenancyResponse.PropertyRef},
+                                {"payment_ref", expectedTenancyResponse.PaymentRef},
+                                {"start_date", string.Format("{0:u}", expectedTenancyResponse.StartDate)},
                                 {"tenure", expectedTenancyResponse.Tenure},
                                 {"current_balance", expectedTenancyResponse.CurrentBalance},
                                 {"current_arrears_agreement_status", expectedTenancyResponse.ArrearsAgreementStatus},
@@ -163,7 +177,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
-            var controller = new TenanciesController(listTenanciesUseCase, null, null, null);
+            var controller = new TenanciesController(listTenanciesUseCase, null, null, null, _nullLogger);
             var result = await controller.Get(tenancyRefs);
             return result as OkObjectResult;
         }
