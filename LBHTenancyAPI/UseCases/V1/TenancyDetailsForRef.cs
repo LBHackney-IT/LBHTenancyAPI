@@ -20,22 +20,7 @@ namespace LBHTenancyAPI.UseCases.V1
 
             if (string.IsNullOrWhiteSpace(tenancyRef))
             {
-                response.TenancyDetails = new Tenancy
-                {
-                    TenancyRef = tenancyResponse.TenancyRef,
-                    PropertyRef = tenancyResponse.PropertyRef,
-                    PaymentRef = tenancyResponse.PaymentRef,
-                    Tenure = tenancyResponse.PropertyRef,
-                    CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
-                    Rent = tenancyResponse.Rent.ToString("C"),
-                    Service = tenancyResponse.Service.ToString("C"),
-                    OtherCharge = tenancyResponse.OtherCharge.ToString("C"),
-                    PrimaryContactName = tenancyResponse.PrimaryContactName,
-                    PrimaryContactLongAddress = tenancyResponse.PrimaryContactLongAddress,
-                    PrimaryContactPostcode = tenancyResponse.PrimaryContactPostcode,
-                    ArrearsActionDiary = new List<ArrearsActionDiaryEntry>(),
-                    ArrearsAgreements = new List<ArrearsAgreement>()
-                };
+                response.TenancyDetails = new Tenancy();
             }
             else
             {
@@ -44,6 +29,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
                     PaymentRef = tenancyResponse.PaymentRef,
+                    StartDate = tenancyResponse.StartDate == null ? null : string.Format("{0:u}", tenancyResponse.StartDate.Value),
                     Tenure = tenancyResponse.Tenure,
                     CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
                     Rent = tenancyResponse.Rent.ToString("C"),
@@ -99,6 +85,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string PrimaryContactPostcode { get; set; }
             public List<ArrearsAgreement> ArrearsAgreements { get; set; }
             public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
+            public string StartDate { get; set; }
         }
 
         public struct ArrearsAgreement

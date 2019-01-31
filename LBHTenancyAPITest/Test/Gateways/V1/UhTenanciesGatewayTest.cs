@@ -51,6 +51,21 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Contains(expectedListItem, tenancies);
         }
 
+        [Fact]
+        public void WhenStartDateIsNull__GetTenanciesByRefs_ShouldReturnNullDateObject()
+        {
+
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            expectedTenancy.start_date = null;
+            TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
+
+            var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.tag_ref});
+
+            Assert.Single(tenancies);
+            Assert.Null(tenancies.First().StartDate);
+            Assert.Null(tenancies.First().LastActionDate);
+        }
+
         private TenancyListItem GenerateTenancyListItem()
         {
             //property
@@ -105,6 +120,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.start_date = expectedTenancy.start_date;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
@@ -125,6 +141,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 AgreementStatus = expectedArrearsAgreement.arag_status,
                 CurrentBalance =  expectedTenancy.cur_bal,
                 PaymentRef = expectedTenancy.payment_ref,
+                StartDate = expectedTenancy.start_date,
                 PrimaryContactName = expectedMember.GetFullName(),
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
@@ -173,9 +190,9 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         {
             TenancyListItem expectedTenancy = GenerateTenancyListItem();
 
-            DateTime latestActionDate = expectedTenancy.LastActionDate.AddDays(1);
+            DateTime latestActionDate = expectedTenancy.LastActionDate.Value.AddDays(1);
             InsertArrearsActions(expectedTenancy.TenancyRef, "ABC",
-                expectedTenancy.LastActionDate.Subtract(DAY_IN_TIMESPAN));
+                expectedTenancy.LastActionDate.Value.Subtract(DAY_IN_TIMESPAN));
             InsertArrearsActions(expectedTenancy.TenancyRef, "XYZ", latestActionDate);
 
             var tenancies = GetTenanciesByRef(new List<string> {expectedTenancy.TenancyRef});
@@ -188,7 +205,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             TenancyListItem firstTenancy = GenerateTenancyListItem();
             TenancyListItem secondTenancy = GenerateTenancyListItem();
 
-            DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.AddDays(1);
+            DateTime firstTenancyLatestActionDate = firstTenancy.LastActionDate.Value.AddDays(1);
             InsertArrearsActions(firstTenancy.TenancyRef, "ABC", firstTenancyLatestActionDate);
 
             DateTime secondTenancyLatestAgreementStartDate = secondTenancy.ArrearsAgreementStartDate.AddDays(1);
@@ -325,6 +342,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         {
             var tenancy = GetSingleTenacyForRef("i_do_not_exist");
 
+            Assert.Null(tenancy.StartDate);
             Assert.Null(tenancy.TenancyRef);
         }
 
@@ -351,6 +369,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
             Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
+            Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
@@ -573,7 +592,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             command.ExecuteNonQuery();
 
             InsertAgreement(tenancyAttributes.TenancyRef, tenancyAttributes.ArrearsAgreementStatus,tenancyAttributes.ArrearsAgreementStartDate);
-            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode,tenancyAttributes.LastActionDate);
+            InsertArrearsActions(tenancyAttributes.TenancyRef, tenancyAttributes.LastActionCode, tenancyAttributes.LastActionDate.Value);
         }
 
         private void InsertSingleTenancyAttributes(Tenancy tenancyValues)

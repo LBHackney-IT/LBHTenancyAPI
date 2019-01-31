@@ -7,7 +7,7 @@ namespace LBHTenancyAPITest.Helpers.Entities
     [Table("tenagree")]
     public class TenancyAgreement
     {
-        public DateTime start_date;
+        public DateTime? start_date;
 
         /// <summary>
         /// TenancyPaymentReference

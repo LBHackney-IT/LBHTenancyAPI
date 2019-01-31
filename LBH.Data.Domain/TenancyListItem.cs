@@ -65,7 +65,7 @@ namespace LBH.Data.Domain
             set => lastActionCode = value.Trim();
         }
 
-        public DateTime LastActionDate { get; set; }
+        public DateTime? LastActionDate { get; set; }
 
         public string PrimaryContactName { get; set; }
 
@@ -93,6 +93,6 @@ namespace LBH.Data.Domain
             set => paymentRef = value.Trim();
         }
 
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
     }
 }

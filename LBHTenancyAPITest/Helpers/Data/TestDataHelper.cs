@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -109,7 +110,7 @@ namespace LBHTenancyAPITest.Helpers.Data
             command.Parameters["@other_charge"].Value = tenancyAgreement.other_charge;
 
             command.Parameters.Add("@start_date", SqlDbType.SmallDateTime);
-            command.Parameters["@start_date"].Value = tenancyAgreement.start_date;
+            command.Parameters["@start_date"].Value = (object)tenancyAgreement.start_date ?? DBNull.Value;
 
             command.ExecuteNonQuery();
         }

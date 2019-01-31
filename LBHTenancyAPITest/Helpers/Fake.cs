@@ -61,6 +61,7 @@ namespace LBHTenancyAPITest.Helpers
                 TenancyRef = random.Random.Hash(11),
                 PropertyRef = random.Random.Hash(12),
                 PaymentRef = random.Random.Hash(12),
+                StartDate = random.Date.Past(),
                 Tenure = random.Random.Hash(3),
                 CurrentBalance = random.Finance.Amount(),
                 Rent = random.Finance.Amount(),

@@ -161,6 +161,7 @@ namespace LBHTenancyAPI.Gateways.V1
                     tenagree.tenure as Tenure,
                     tenagree.prop_ref as PropertyRef,
                     tenagree.u_saff_rentacc as PaymentRef,
+                    tenagree.cot as StartDate,
                     RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                     property.address1 as PrimaryContactLongAddress,
                     property.post_code as PrimaryContactPostcode

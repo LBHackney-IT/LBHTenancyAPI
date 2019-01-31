@@ -43,6 +43,21 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
         }
 
         [Fact]
+        public void WhenDatesAreNull_ShouldReturnNull()
+        {
+            var gateway = new StubTenanciesGateway();
+            var tenancy = new TenancyListItem();
+            gateway.SetTenancyListItem("test_ref", tenancy);
+
+            var listTenancies = new ListTenancies(gateway);
+
+            var response = listTenancies.Execute(new List<string>() {"test_ref"});
+
+            Assert.Null(response.Tenancies.First().StartDate);
+            Assert.Null(response.Tenancies.First().LastActionDate);
+        }
+
+        [Fact]
         public void WhenGivenSomeTenanciesAndSomeVoid_ShouldReturnMatchedTenancies()
         {
             var gateway = new StubTenanciesGateway();
@@ -63,7 +78,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy1.TenancyRef,
                         PropertyRef = tenancy1.PropertyRef,
                         PaymentRef = tenancy1.PaymentRef,
-                        StartDate = tenancy1.StartDate,
+                        StartDate = String.Format("{0:u}", tenancy1.StartDate),
                         Tenure = tenancy1.Tenure,
                         LastActionCode = tenancy1.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy1.LastActionDate),
@@ -78,7 +93,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy2.TenancyRef,
                         PropertyRef = tenancy2.PropertyRef,
                         PaymentRef = tenancy2.PaymentRef,
-                        StartDate = tenancy2.StartDate,
+                        StartDate = String.Format("{0:u}", tenancy2.StartDate),
                         Tenure = tenancy2.Tenure,
                         LastActionCode = tenancy2.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy2.LastActionDate),
@@ -113,7 +128,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                         TenancyRef = tenancy.TenancyRef,
                         PropertyRef = tenancy.PropertyRef,
                         PaymentRef = tenancy.PaymentRef,
-                        StartDate = tenancy.StartDate,
+                        StartDate = String.Format("{0:u}", tenancy.StartDate),
                         Tenure = tenancy.Tenure,
                         LastActionCode = tenancy.LastActionCode,
                         LastActionDate = String.Format("{0:u}", tenancy.LastActionDate),
