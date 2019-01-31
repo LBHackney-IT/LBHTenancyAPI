@@ -136,7 +136,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
             string username = "A Real username";
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"),"dd/MM/yyyy HH:mm",null);
 
             //act
             await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, date);
