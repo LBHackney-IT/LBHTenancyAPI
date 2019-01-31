@@ -6,7 +6,7 @@ using LBHTenancyAPI.Gateways.V1;
 
 namespace LBHTenancyAPI.UseCases.V1
 {
-    public class ListTenancies : IListTenancies
+    public partial class ListTenancies : IListTenancies
     {
         private readonly ITenanciesGateway tenanciesGateway;
 
@@ -25,10 +25,10 @@ namespace LBHTenancyAPI.UseCases.V1
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     PaymentRef = tenancy.PaymentRef,
-                    StartDate = FormatDate(tenancy.StartDate),
+                    StartDate = TenancyDateFormatter.UniversalSortable(tenancy.StartDate),
                     Tenure = tenancy.Tenure,
                     LastActionCode = tenancy.LastActionCode,
-                    LastActionDate = FormatDate(tenancy.LastActionDate),
+                    LastActionDate = TenancyDateFormatter.UniversalSortable(tenancy.LastActionDate),
                     CurrentBalance = new Currency(tenancy.CurrentBalance),
                     ArrearsAgreementStatus = tenancy.ArrearsAgreementStatus,
                     PrimaryContactName = tenancy.PrimaryContactName,
@@ -38,11 +38,6 @@ namespace LBHTenancyAPI.UseCases.V1
             );
 
             return response;
-        }
-
-        private static string FormatDate(DateTime? date)
-        {
-            return date.HasValue ? string.Format("{0:u}", date) : null;
         }
 
         public struct Response
