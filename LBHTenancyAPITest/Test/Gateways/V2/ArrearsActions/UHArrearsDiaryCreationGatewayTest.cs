@@ -116,12 +116,36 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             string username = "A Real username";
 
             //act
-            await classUnderTest.UpdateRecordingUserName(username, diaryEntry.Id);
+            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, DateTime.Now);
             //assert
             ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
 
             action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
             action.UniversalHousingUsername.Should().Be(username);
+        }
+
+        [Fact]
+        public async Task UpdateRecordingDateShouldChangeDate()
+        {
+            //Arrange
+            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
+
+            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
+            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
+
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
+
+            string username = "A Real username";
+            DateTime date = DateTime.Now;
+
+            //act
+            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, date);
+            //assert
+            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
+
+            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
+            action.UniversalHousingUsername.Should().Be(username);
+            action.Date.Should().Be(date);
         }
 
         [Theory]
@@ -139,7 +163,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
             //act
-            await classUnderTest.UpdateRecordingUserName(username, diaryEntry.Id);
+            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, DateTime.Now);
             //assert
             ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
 
