@@ -35,22 +35,27 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
 
         public async Task UpdateRecordingDetails(string requestAppUser, int actionDiaryId, DateTime updateDate)
         {
-            if (string.IsNullOrWhiteSpace(requestAppUser))
-            {
-                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
-                Console.WriteLine("UpdateRecordingUserName was called with a null or empty string");
-                return;
-            }
-
             using (var conn = new SqlConnection(_connectionString))
             {
+                SqlCommand cmd = null;
+                if (string.IsNullOrWhiteSpace(requestAppUser))
+                {
+                    cmd = new SqlCommand("UPDATE araction SET action_date=@action_date" +
+                                                    " WHERE araction_sid=@Id", conn);
+                }
+                else
+                {
+                    cmd = new SqlCommand("UPDATE araction SET username=@username, action_date=@action_date" +
+                                                    " WHERE araction_sid=@Id", conn);
+                }
                 conn.Open();
-                using (SqlCommand cmd =
-                    new SqlCommand("UPDATE araction SET username=@username, action_date=@action_date" +
-                                   " WHERE araction_sid=@Id", conn))
+                using (cmd)
                 {
                     cmd.Parameters.AddWithValue("@Id", actionDiaryId);
-                    cmd.Parameters.AddWithValue("@username", requestAppUser);
+                    if(!string.IsNullOrWhiteSpace(requestAppUser))
+                    {
+                        cmd.Parameters.AddWithValue("@username", requestAppUser);
+                    }
                     cmd.Parameters.AddWithValue("@action_date", updateDate);
                     int rows = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
                 }
