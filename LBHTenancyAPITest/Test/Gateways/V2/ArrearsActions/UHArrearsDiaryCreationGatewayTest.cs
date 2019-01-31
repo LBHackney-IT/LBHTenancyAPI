@@ -156,17 +156,17 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-
+            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", null);
             ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
             TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
             //act
-            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, DateTime.Now);
+            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, date);
             //assert
             ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
-
+            action.Date.Should().Be(date);
             action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
             action.UniversalHousingUsername.Should().Be(null);
         }
