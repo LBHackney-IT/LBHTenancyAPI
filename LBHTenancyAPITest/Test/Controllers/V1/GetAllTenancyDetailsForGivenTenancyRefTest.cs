@@ -8,6 +8,7 @@ using LBHTenancyAPI.UseCases;
 using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -15,6 +16,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class GetAllTenancyDetailsForGivenTenancyRefTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
         [Fact]
         public async Task WhenGivenTenancyRefThatDoesntExist_Tenancy_ShouldRespondWithNoResults()
         {
@@ -432,7 +434,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
         private static async Task<ObjectResult> GetAllTenancyDetailsForTenancyRef(ITenancyDetailsForRef tenancyDetailsForRefUseCase,
             string tenancyRef)
         {
-            var controller = new TenanciesController(null, null, null, tenancyDetailsForRefUseCase);
+            var controller = new TenanciesController(null, null, null, tenancyDetailsForRefUseCase, _nullLogger);
             var result = await controller.GetTenancyDetails(tenancyRef);
             return result as OkObjectResult;
         }

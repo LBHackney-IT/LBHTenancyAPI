@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -23,8 +24,11 @@ namespace LBHTenancyAPI
     /// </summary>
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
         {
+            _logger = logger;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -106,7 +110,7 @@ namespace LBHTenancyAPI
                         Version = version,
                         Description = "Only superseded methods are included in newer api versions. " +
                                       "Please check older versions for more paths and newer versions " +
-                                      "is a method has been marked deprecated",
+                                      "if a method has been marked deprecated",
                     });
                 }
 
@@ -119,7 +123,8 @@ namespace LBHTenancyAPI
             });
 
 
-            services.ConfigureLogging(Configuration, settings);
+            services.ConfigureLogging(Configuration, settings, _logger);
+            _logger.LogInformation("Logging configured");
 
         }
 

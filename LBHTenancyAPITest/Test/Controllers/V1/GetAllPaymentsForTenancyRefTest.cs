@@ -4,6 +4,7 @@ using LBHTenancyAPI.Controllers;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -11,6 +12,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class GetAllPaymentsForTenancyRefTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
+
         [Fact]
         public async Task WhenGivenTenancyRefThatDoesntExist_Payments_ShouldRespondWithNoResults()
         {
@@ -172,7 +175,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 
         private static async Task<ObjectResult> GetPaymentTransactionDetails(IListAllPayments listPaymentsUseCase, string tenancyRef)
         {
-            var controller = new TenanciesController(null, null, listPaymentsUseCase, null);
+            var controller = new TenanciesController(null, null, listPaymentsUseCase, null, _nullLogger);
             var result = await controller.PaymentTransactionDetails(tenancyRef);
             return result as OkObjectResult;
         }

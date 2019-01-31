@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace LBHTenancyAPI.Controllers.V1
 {
@@ -15,14 +16,16 @@ namespace LBHTenancyAPI.Controllers.V1
         private readonly IListAllPayments listAllPayments;
         private readonly IListTenancies listTenancies;
         private readonly ITenancyDetailsForRef tenancyDetailsForRef;
+        private readonly ILogger<TenanciesController> _logger;
 
         public TenanciesController(IListTenancies listTenancies, IListAllArrearsActions listAllArrearsActions,
-            IListAllPayments listAllPayments, ITenancyDetailsForRef tenancyDetailsForRef)
+            IListAllPayments listAllPayments, ITenancyDetailsForRef tenancyDetailsForRef, ILogger<TenanciesController> logger)
         {
             this.listTenancies = listTenancies;
             this.listAllArrearsActions = listAllArrearsActions;
             this.listAllPayments = listAllPayments;
             this.tenancyDetailsForRef = tenancyDetailsForRef;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -38,9 +41,11 @@ namespace LBHTenancyAPI.Controllers.V1
         ///
         /// <param name="tenancyRefs"></param>
         /// <returns>IActionResult</returns>
+        [Obsolete("Multi get tenancies has been deprecated in favor of individual requests")]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery(Name = "tenancy_refs")] List<string> tenancyRefs)
         {
+            _logger.LogWarning("Deprecated route 'get multiple tenancies' was used!");
             var response = listTenancies.Execute(tenancyRefs);
             var tenancies = response.Tenancies.ConvertAll(tenancy => new Dictionary<string, object>
             {

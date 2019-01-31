@@ -42,7 +42,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
 {
     public static class ConfigureServices
     {
-        public static void ConfigureLogging(this IServiceCollection services, IConfiguration configuration, LBHTenancyAPI.Settings.ConfigurationSettings settings)
+        public static void ConfigureLogging(this IServiceCollection services, IConfiguration configuration, LBHTenancyAPI.Settings.ConfigurationSettings settings, ILogger _logger)
         {
             services.AddLogging(configure =>
             {
@@ -51,7 +51,13 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
                 configure.AddDebug();
                 //logs errors to sentry if configured
                 if (!string.IsNullOrEmpty(settings.SentrySettings?.Url))
-                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url, settings.SentrySettings?.Environment));
+                {
+                    configure.AddProvider(new SentryLoggerProvider(settings.SentrySettings?.Url,
+                        settings.SentrySettings?.Environment));
+                    _logger.LogInformation("SentryLoggerProvider enabled");
+                } else {
+                    _logger.LogInformation("SentryLoggerProvider disabled");
+                }
             });
         }
 

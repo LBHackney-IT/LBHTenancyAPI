@@ -6,6 +6,7 @@ using LBH.Data.Domain;
 using LBHTenancyAPI.Controllers.V1;
 using LBHTenancyAPI.UseCases.V1;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -13,6 +14,8 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 {
     public class TenanciesControllerIndexTest
     {
+        private static readonly NullLogger<TenanciesController> _nullLogger = new NullLogger<TenanciesController>();
+
         [Fact]
         public async Task WhenGivenNoTenancyRefs_Index_ShouldRespondWithNoResults()
         {
@@ -174,7 +177,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
 
         private static async Task<ObjectResult> GetIndex(IListTenancies listTenanciesUseCase, List<string> tenancyRefs)
         {
-            var controller = new TenanciesController(listTenanciesUseCase, null, null, null);
+            var controller = new TenanciesController(listTenanciesUseCase, null, null, null, _nullLogger);
             var result = await controller.Get(tenancyRefs);
             return result as OkObjectResult;
         }
