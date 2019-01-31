@@ -40,8 +40,8 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
             {
                 if (!string.IsNullOrWhiteSpace(request.Username))
                 {
-                    await _arrearsActionDiaryGateway.UpdateRecordingUserName(request.Username,
-                        response.ArrearsAction.Id);
+                    await _arrearsActionDiaryGateway.UpdateRecordingDetails(request.Username,
+                        response.ArrearsAction.Id, DateTime.Now);
                 }
                 response.ArrearsAction.UserName = request.Username;
             }

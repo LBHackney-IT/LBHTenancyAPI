@@ -33,7 +33,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             return response;
         }
 
-        public async Task UpdateRecordingUserName(string requestAppUser, int actionDiaryId)
+        public async Task UpdateRecordingDetails(string requestAppUser, int actionDiaryId, DateTime updateDate)
         {
             if (string.IsNullOrWhiteSpace(requestAppUser))
             {
@@ -46,11 +46,12 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             {
                 conn.Open();
                 using (SqlCommand cmd =
-                    new SqlCommand("UPDATE araction SET username=@username" +
+                    new SqlCommand("UPDATE araction SET username=@username, action_date=@action_date" +
                                    " WHERE araction_sid=@Id", conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", actionDiaryId);
                     cmd.Parameters.AddWithValue("@username", requestAppUser);
+                    cmd.Parameters.AddWithValue("@action_date", updateDate);
                     int rows = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
                 }
             }

@@ -68,7 +68,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
-            _fakeGateway.Verify(v => v.UpdateRecordingUserName(request.Username, response.ArrearsAction.Id));
+            _fakeGateway.Verify(v => v.UpdateRecordingDetails(request.Username, response.ArrearsAction.Id, DateTime.Now));
             _fakeGateway.VerifyNoOtherCalls();
         }
 
