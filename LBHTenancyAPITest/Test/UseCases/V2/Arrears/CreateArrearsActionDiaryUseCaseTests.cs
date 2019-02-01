@@ -42,6 +42,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         {
             //arrange
             var tenancyAgreementRef = "Test";
+            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", null);
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i=> i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
                 .ReturnsAsync(new ArrearsActionResponse
                 {
@@ -57,6 +58,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     }
 
                 });
+            _fakeGateway.Setup(s => s.UpdateRecordingDetails("Test User", 1, date));
             var request = new ActionDiaryRequest
             {
                 ActionCategory = "Test",
@@ -68,7 +70,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
-            _fakeGateway.Verify(v => v.UpdateRecordingUserName(request.Username, response.ArrearsAction.Id));
+            _fakeGateway.Verify(v => v.UpdateRecordingDetails(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()));
             _fakeGateway.VerifyNoOtherCalls();
         }
 
@@ -77,6 +79,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
         {
             //arrange
             var tenancyAgreementRef = "Test";
+            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", null);
             _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i=> i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
                 .ReturnsAsync(new ArrearsActionResponse
                 {
@@ -92,6 +95,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
                     }
 
                 });
+            _fakeGateway.Setup(s => s.UpdateRecordingDetails(null, 1, date));
             var request = new ActionDiaryRequest
             {
                 ActionCategory = "Test",
@@ -103,6 +107,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             var response = await _classUnderTest.ExecuteAsync(request);
             //assert
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
+            _fakeGateway.Verify(v => v.UpdateRecordingDetails(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()));
             _fakeGateway.VerifyNoOtherCalls();
         }
 
