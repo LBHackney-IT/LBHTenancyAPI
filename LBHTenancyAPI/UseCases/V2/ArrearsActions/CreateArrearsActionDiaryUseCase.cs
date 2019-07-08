@@ -38,7 +38,8 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 
             if (response.Success)
             {
-                DateTime requestDateTime = DateTime.Now;
+                var requestDateTime = request.CreatedDate.GetValueOrDefault(DateTime.Now);
+
                 await _arrearsActionDiaryGateway.UpdateRecordingDetails(request.Username,
                     response.ArrearsAction.Id, requestDateTime);
                 response.ArrearsAction.UserName = request.Username;
