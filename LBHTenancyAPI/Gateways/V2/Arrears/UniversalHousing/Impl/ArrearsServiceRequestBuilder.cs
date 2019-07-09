@@ -33,6 +33,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.UniversalHousing.Impl
                     ActionCategory = request.ActionCategory,
                     ActionCode = request.ActionCode,
                     Comment = request.Comment,
+                    IsCommentOnly = true,
                     TenancyAgreementRef = request.TenancyAgreementRef
                 },
                 CompanyCode = request.CompanyCode,
