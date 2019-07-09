@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using AgreementService;
+using Bogus;
 using LBHTenancyAPI.Gateways.V1.Arrears.UniversalHousing;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
@@ -60,7 +61,12 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions.UniversalHousing
                 SessionToken = sessionToken,
                 TenancyAgreementRef = tenancyAgreementRef
             };
-            var request = serviceRequestBuilder.BuildNewActionDiaryRequest(serviceRequest);
+            var random = new Faker();
+            decimal actionBalance = random.Finance.Amount();
+            var request = serviceRequestBuilder.BuildNewActionDiaryRequest(serviceRequest, actionBalance);
+
+            Assert.True(request.ArrearsAction.IsCommentOnly);
+            Assert.Equal(actionBalance, request.ArrearsAction.ActionBalance);
             Assert.Equal(actionCategory, request.ArrearsAction.ActionCategory);
             Assert.Equal(actionCode, request.ArrearsAction.ActionCode);
             Assert.Equal(comment, request.ArrearsAction.Comment);
