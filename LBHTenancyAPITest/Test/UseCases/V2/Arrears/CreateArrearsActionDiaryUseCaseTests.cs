@@ -6,11 +6,9 @@ using LBHTenancyAPI.UseCases.V2.ArrearsActions;
 using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V1;
-using LBHTenancyAPI.UseCases.V1;
 using LBHTenancyAPITest.Helpers;
 using Xunit;
 
@@ -109,6 +107,48 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Arrears
             _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
             _fakeGateway.Verify(v => v.UpdateRecordingDetails(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()));
             _fakeGateway.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task GivenACreatedDate_ProvidedDateTimeUsed()
+        {
+            //arrange
+            var tenancyAgreementRef = "Test";
+            DateTime expectedDateTime = DateTime.Today;
+
+            _fakeGateway.Setup(s => s.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i=> i.ArrearsAction.TenancyAgreementRef.Equals("Test"))))
+                .ReturnsAsync(new ArrearsActionResponse
+                {
+                    Success = true,
+                    ArrearsAction = new ArrearsActionLogDto
+                    {
+                        UserName = "Default User",
+                        Id = 1,
+                        TenancyAgreementRef = tenancyAgreementRef
+                    }
+
+                });
+            _fakeGateway.Setup(s => s.UpdateRecordingDetails(null, 1, expectedDateTime));
+            var request = new ActionDiaryRequest
+            {
+                ActionCategory = "Test",
+                ActionCode = "HAC",
+                Username = "TEST USER",
+                TenancyAgreementRef = tenancyAgreementRef,
+                CreatedDate = expectedDateTime
+            };
+            //act
+            var response = await _classUnderTest.ExecuteAsync(request);
+            //assert
+            _fakeGateway.Verify(v=> v.CreateActionDiaryEntryAsync(It.Is<ArrearsActionCreateRequest>(i => i.ArrearsAction.TenancyAgreementRef.Equals("Test"))));
+            _fakeGateway.Verify(v => v.UpdateRecordingDetails(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.Is<DateTime>(i => i.Equals(expectedDateTime)
+            )));
+            _fakeGateway.VerifyNoOtherCalls();
+
+            Assert.Equal(expectedDateTime, response.ArrearsAction.ActionDate);
         }
 
         [Fact]
