@@ -10,16 +10,19 @@ using LBHTenancyAPI.UseCases.V2.Search;
 using LBHTenancyAPI.UseCases.V2.Search.Models;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace LBHTenancyAPITest.Test.UseCases.V2.Search
 {
     public class SearchTenancyUseCaseTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly ISearchTenancyUseCase _classUnderTest;
         private readonly Mock<ISearchGateway> _fakeGateway;
 
-        public SearchTenancyUseCaseTests()
+        public SearchTenancyUseCaseTests(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             _fakeGateway = new Mock<ISearchGateway>();
 
             _classUnderTest = new SearchTenancyUseCase(_fakeGateway.Object);
@@ -115,6 +118,20 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                 PropertyRef = "22",
                 Tenure = "LongLease2"
             };
+            var tenancy3 = new TenancyListItem
+            {
+                PrimaryContactName = "test3",
+                TenancyRef = "tRef2",
+                ArrearsAgreementStartDate = DateTime.Now,
+                ArrearsAgreementStatus = "Active2",
+                CurrentBalance = 2000.34m,
+                LastActionCode = "ACC2",
+                LastActionDate = DateTime.Now.AddDays(-2),
+                PrimaryContactPostcode = "test2",
+                PrimaryContactShortAddress = "123DreryLane2",
+                PropertyRef = "22",
+                Tenure = "LongLease2"
+            };
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.TenancyRef.Equals("Test")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<TenancyListItem>
@@ -122,7 +139,8 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                     Results = new List<TenancyListItem>
                     {
                         tenancy1,
-                        tenancy2
+                        tenancy2,
+                        tenancy3
                     }
                 });
 
@@ -155,7 +173,9 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             response.Tenancies[1].CurrentBalance.Value.Should().Be(tenancy2.CurrentBalance);
             response.Tenancies[1].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
 
-            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName);
+            Console.WriteLine("rebecaaaaaaaaaaa!");
+
+            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName + "&" + tenancy3.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
         }

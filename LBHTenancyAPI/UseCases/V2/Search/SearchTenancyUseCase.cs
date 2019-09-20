@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
@@ -33,10 +36,37 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             if (response == null)
                 return new SearchTenancyResponse();
 
+            var unsorted = response.Results;
+
+            var duplicates = unsorted.GroupBy(x => x.TenancyRef) // or x.Property if you are grouping by some property.
+                .Where(g => g.Count() > 1)
+                .SelectMany(g => g).ToList();
+
+            var uniques = unsorted.GroupBy(x => x.TenancyRef) // or x.Property if you are grouping by some property.
+                .Where(g => g.Count() == 1)
+                .SelectMany(g => g).ToList();;
+
+            if (duplicates.Count > 0)
+            {
+                var newUniq = duplicates[0];
+
+                duplicates.ForEach(delegate(TenancyListItem dup)
+                {
+                    if (newUniq.PrimaryContactName != dup.PrimaryContactName)
+                    {
+                        newUniq.PrimaryContactName += dup.PrimaryContactName;
+                    }
+
+                });
+
+                uniques.Add(newUniq);
+            }
+
+
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response.Results.ConvertAll(tenancy => new SearchTenancySummary
+                Tenancies = uniques.ConvertAll(tenancy => new SearchTenancySummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
