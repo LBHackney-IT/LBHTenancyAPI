@@ -92,7 +92,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             //arrange
             var tenancy1 = new TenancyListItem
             {
-                PrimaryContactName = "test",
+                PrimaryContactName = "Mr Billy Bob",
                 TenancyRef = "tRef",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active",
@@ -106,31 +106,59 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             };
             var tenancy2 = new TenancyListItem
             {
-                PrimaryContactName = "test2",
+                PrimaryContactName = "Mr Stan Smith",
                 TenancyRef = "tRef2",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active2",
                 CurrentBalance = 2000.34m,
                 LastActionCode = "ACC2",
                 LastActionDate = DateTime.Now.AddDays(-2),
-                PrimaryContactPostcode = "test2",
-                PrimaryContactShortAddress = "123DreryLane2",
+                PrimaryContactPostcode = "E5 0AA",
+                PrimaryContactShortAddress = "416 Cherry Street",
                 PropertyRef = "22",
                 Tenure = "LongLease2"
             };
             var tenancy3 = new TenancyListItem
             {
-                PrimaryContactName = "test3",
+                PrimaryContactName = "Mrs Francine Smith",
                 TenancyRef = "tRef2",
                 ArrearsAgreementStartDate = DateTime.Now,
                 ArrearsAgreementStatus = "Active2",
                 CurrentBalance = 2000.34m,
                 LastActionCode = "ACC2",
                 LastActionDate = DateTime.Now.AddDays(-2),
-                PrimaryContactPostcode = "test2",
-                PrimaryContactShortAddress = "123DreryLane2",
+                PrimaryContactPostcode = "E5 0AA",
+                PrimaryContactShortAddress = "416 Cherry Street",
                 PropertyRef = "22",
                 Tenure = "LongLease2"
+            };
+            var tenancy4 = new TenancyListItem
+            {
+                PrimaryContactName = "Mr Peter Griffin",
+                TenancyRef = "tRef3",
+                ArrearsAgreementStartDate = DateTime.Now,
+                ArrearsAgreementStatus = "Active3",
+                CurrentBalance = 223000.34m,
+                LastActionCode = "ACC2",
+                LastActionDate = DateTime.Now.AddDays(-2),
+                PrimaryContactPostcode = "E8 4LE",
+                PrimaryContactShortAddress = "31 Spooner Street",
+                PropertyRef = "123",
+                Tenure = "LongLease23"
+            };
+            var tenancy5 = new TenancyListItem
+            {
+                PrimaryContactName = "Mrs Louis Griffin",
+                TenancyRef = "tRef3",
+                ArrearsAgreementStartDate = DateTime.Now,
+                ArrearsAgreementStatus = "Active3",
+                CurrentBalance = 223000.34m,
+                LastActionCode = "ACC2",
+                LastActionDate = DateTime.Now.AddDays(-2),
+                PrimaryContactPostcode = "E8 4LE",
+                PrimaryContactShortAddress = "31 Spooner Street",
+                PropertyRef = "123",
+                Tenure = "LongLease23"
             };
             var tenancyAgreementRef = "Test";
             _fakeGateway.Setup(s => s.SearchTenanciesAsync(It.Is<SearchTenancyRequest>(i => i.TenancyRef.Equals("Test")), CancellationToken.None))
@@ -140,7 +168,9 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
                     {
                         tenancy1,
                         tenancy2,
-                        tenancy3
+                        tenancy3,
+                        tenancy4,
+                        tenancy5
                     }
                 });
 
@@ -153,6 +183,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             //assert
             response.Should().NotBeNull();
             response.Tenancies.Should().NotBeNullOrEmpty();
+            response.Tenancies.Should().HaveCount(3);
             response.Tenancies[0].PropertyRef.Should().BeEquivalentTo(tenancy1.PropertyRef);
             response.Tenancies[0].TenancyRef.Should().BeEquivalentTo(tenancy1.TenancyRef);
             response.Tenancies[0].Tenure.Should().BeEquivalentTo(tenancy1.Tenure);
@@ -173,11 +204,21 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             response.Tenancies[1].CurrentBalance.Value.Should().Be(tenancy2.CurrentBalance);
             response.Tenancies[1].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
 
-            Console.WriteLine("rebecaaaaaaaaaaa!");
-
-            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName + "&" + tenancy3.PrimaryContactName);
+            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName + " & " + tenancy3.PrimaryContactName);
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
+
+            response.Tenancies[2].PropertyRef.Should().BeEquivalentTo(tenancy4.PropertyRef);
+            response.Tenancies[2].TenancyRef.Should().BeEquivalentTo(tenancy4.TenancyRef);
+            response.Tenancies[2].Tenure.Should().BeEquivalentTo(tenancy4.Tenure);
+
+            response.Tenancies[2].CurrentBalance.Should().NotBeNull();
+            response.Tenancies[2].CurrentBalance.Value.Should().Be(tenancy4.CurrentBalance);
+            response.Tenancies[2].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
+
+            response.Tenancies[2].PrimaryContact.Name.Should().BeEquivalentTo(tenancy4.PrimaryContactName + " & " + tenancy5.PrimaryContactName);
+            response.Tenancies[2].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy4.PrimaryContactPostcode);
+            response.Tenancies[2].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy4.PrimaryContactShortAddress);
         }
 
         [Theory]
