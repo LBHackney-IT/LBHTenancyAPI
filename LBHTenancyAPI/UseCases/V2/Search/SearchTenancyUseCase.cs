@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LBH.Data.Domain;
@@ -33,10 +36,23 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             if (response == null)
                 return new SearchTenancyResponse();
 
+            var allTenancyListItems = response.Results;
+
+            var uniqueTenancyListItems = allTenancyListItems.GroupBy(t => t.TenancyRef)
+                .Where(g => g.Count() == 1)
+                .SelectMany(g => g).ToList();
+
+            var groupsOfDuplicatesTenancyListItems =
+                allTenancyListItems.GroupBy(t => t.TenancyRef)
+                .Where(g => g.Count() > 1);
+
+
+            updateUniqueListItems(uniqueTenancyListItems,groupsOfDuplicatesTenancyListItems);
+
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = response.Results.ConvertAll(tenancy => new SearchTenancySummary
+                Tenancies = uniqueTenancyListItems.ConvertAll(tenancy => new SearchTenancySummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
@@ -54,6 +70,24 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             };
 
             return useCaseResponse;
+        }
+
+        private void updateUniqueListItems(List<TenancyListItem> uniqueTenancyListItems,
+            IEnumerable<IGrouping<string, TenancyListItem>> groupsOfDuplicatesTenancyListItems)
+        {
+            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
+            {
+                var jointTenancies = grouping.ToList();
+                var jointTenancy = jointTenancies[0];
+                jointTenancies.ForEach(delegate(TenancyListItem dup)
+                {
+                    if (jointTenancy.PrimaryContactName != dup.PrimaryContactName)
+                    {
+                        jointTenancy.PrimaryContactName += $" & {dup.PrimaryContactName}";
+                    }
+                });
+                uniqueTenancyListItems.Add(jointTenancy);
+            }
         }
     }
 }
