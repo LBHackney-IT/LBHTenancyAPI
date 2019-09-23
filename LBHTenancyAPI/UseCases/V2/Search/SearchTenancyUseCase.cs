@@ -42,7 +42,7 @@ namespace LBHTenancyAPI.UseCases.V2.Search
                 .Where(g => g.Count() == 1)
                 .SelectMany(g => g).ToList();;
 
-            var groupsOfDuplicatesTenancyListItems =
+            var groupsOfDuplicateTenancyListItems =
                 allTenancyListItems.GroupBy(t => t.TenancyRef)
                 .Where(g => g.Count() > 1);
 
