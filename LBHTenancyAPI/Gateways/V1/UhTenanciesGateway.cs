@@ -150,12 +150,11 @@ namespace LBHTenancyAPI.Gateways.V1
 
         public Tenancy GetTenancyForRef(string tenancyRef)
         {
-            Tenancy result;
+            Tenancy newResult;
             using (var conn = new SqlConnection(_connectionString))
             {
-                result = conn.Query<Tenancy>(
-                    @"
-                    SELECT TOP 1
+                var result = conn.Query<Tenancy>(@"
+                    SELECT
                     tenagree.tag_ref as TenancyRef,
                     tenagree.cur_bal as CurrentBalance,
                     tenagree.tenure as Tenure,
@@ -174,14 +173,29 @@ namespace LBHTenancyAPI.Gateways.V1
                     Left JOIN dbo.member member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref
                     WHERE tenagree.tag_ref = @tRef
-                    ORDER BY arag.arag_startdate DESC",
-                    new { tRef = tenancyRef.Replace("%2F", "/") }
-                ).FirstOrDefault();
-                result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
-                result.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
+                    ORDER BY arag.arag_startdate DESC", new {tRef = tenancyRef.Replace("%2F", "/")});
+
+                if (result.Any())
+                {
+                    newResult = result.First();
+                    foreach (var tenancy in result)
+                    {
+                        if (!newResult.PrimaryContactName.Contains(tenancy.PrimaryContactName))
+                        {
+                            newResult.PrimaryContactName += $" & {tenancy.PrimaryContactName}";
+                        }
+                    }
+                    newResult.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
+                    newResult.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
+                }
+                else
+                {
+                    newResult = new Tenancy();
+                }
+
                 conn.Close();
             }
-            return result;
+            return newResult;
         }
 
         private List<ArrearsAgreement> GetLastFiveAgreementsForTenancy(SqlConnection conn, string tenancyRef)

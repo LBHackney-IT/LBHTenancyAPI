@@ -110,13 +110,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             };
         }
 
-        private Tenancy GenerateTenancy()
+        private Tenancy GenerateTenancy(string tenency_ref = "")
         {
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
             TestDataHelper.InsertProperty(expectedProperty, _databaseFixture.Db);
             //tenancy
-            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            var expectedTenancy = Fake.UniversalHousing.GenerateFakeTenancy(tenency_ref);
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
@@ -367,6 +367,23 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
 
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
+            Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
+            Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
+            Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);
+            Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
+            Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
+            Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
+            Assert.Equal(expectedTenancy.CurrentBalance, tenancy.CurrentBalance);
+        }
+
+        [Fact]
+        public void WhenGivenJointTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
+        {
+            Tenancy expectedTenancy = GenerateTenancy();
+            Tenancy alsoExpectedTenancy = GenerateTenancy(expectedTenancy.TenancyRef);
+
+            var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
+            Assert.Equal($"{expectedTenancy.PrimaryContactName} & {alsoExpectedTenancy.PrimaryContactName}", tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
             Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
             Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);

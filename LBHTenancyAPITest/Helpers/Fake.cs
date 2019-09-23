@@ -189,10 +189,10 @@ namespace LBHTenancyAPITest.Helpers
                 return member;
             }
 
-            public static TenancyAgreement GenerateFakeTenancy()
+            public static TenancyAgreement GenerateFakeTenancy(string tenency_ref = "")
             {
                 var faker = new Faker<TenancyAgreement>()
-                        .RuleFor(property => property.tag_ref, (fake, model) => fake.Random.AlphaNumeric(11))
+                        .RuleFor(property => property.tag_ref, (fake, model) => tenency_ref.Equals("") ? fake.Random.AlphaNumeric(11) : tenency_ref)
                         .RuleFor(property => property.prop_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.payment_ref, (fake, model) => fake.Random.AlphaNumeric(12))
                         .RuleFor(property => property.start_date, (fake, model) => GenerateSmallDateTime(fake))
