@@ -150,12 +150,11 @@ namespace LBHTenancyAPI.Gateways.V1
 
         public Tenancy GetTenancyForRef(string tenancyRef)
         {
-            Tenancy result;
+            Tenancy tenancy;
             using (var conn = new SqlConnection(_connectionString))
             {
-                result = conn.Query<Tenancy>(
-                    @"
-                    SELECT TOP 1
+                var result = conn.Query<Tenancy>(@"
+                    SELECT
                     tenagree.tag_ref as TenancyRef,
                     tenagree.cur_bal as CurrentBalance,
                     tenagree.tenure as Tenure,
@@ -175,13 +174,37 @@ namespace LBHTenancyAPI.Gateways.V1
                     ON member.house_ref = tenagree.house_ref
                     WHERE tenagree.tag_ref = @tRef
                     ORDER BY arag.arag_startdate DESC",
-                    new { tRef = tenancyRef.Replace("%2F", "/") }
-                ).FirstOrDefault();
-                result.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
-                result.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
+                    new {tRef = tenancyRef.Replace("%2F", "/")}
+                ).ToList();
+
+                if (result.Any())
+                {
+                    tenancy = ConcatJointTenancy(result);
+                    tenancy.ArrearsAgreements = GetLastFiveAgreementsForTenancy(conn, tenancyRef);
+                    tenancy.ArrearsActionDiary = GetLatestTenArrearsActionForRef(conn, tenancyRef);
+                }
+                else
+                {
+                    tenancy = new Tenancy();
+                }
+
                 conn.Close();
             }
-            return result;
+            return tenancy;
+        }
+
+        private static Tenancy ConcatJointTenancy(List<Tenancy> result)
+        {
+            var jointTenancy = result.First();
+            foreach (var tenancy in result.Where(
+                tenancy => jointTenancy.PrimaryContactName != null &&
+                           !jointTenancy.PrimaryContactName.Contains(tenancy.PrimaryContactName)
+                           ))
+            {
+                jointTenancy.PrimaryContactName += $" & {tenancy.PrimaryContactName}";
+            }
+
+            return jointTenancy;
         }
 
         private List<ArrearsAgreement> GetLastFiveAgreementsForTenancy(SqlConnection conn, string tenancyRef)
