@@ -46,19 +46,8 @@ namespace LBHTenancyAPI.UseCases.V2.Search
                 allTenancyListItems.GroupBy(t => t.TenancyRef)
                 .Where(g => g.Count() > 1);
 
-            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
-            {
-                var jointTenancies = grouping.ToList();
-                var jointTenancy = jointTenancies[0];
-                jointTenancies.ForEach(delegate(TenancyListItem dup)
-                {
-                    if (jointTenancy.PrimaryContactName != dup.PrimaryContactName)
-                    {
-                        jointTenancy.PrimaryContactName += $" & {dup.PrimaryContactName}";
-                    }
-                });
-                uniqueTenancyListItems.Add(jointTenancy);
-            }
+
+            updateUniqueListItems(uniqueTenancyListItems,groupsOfDuplicatesTenancyListItems);
 
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
@@ -81,6 +70,24 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             };
 
             return useCaseResponse;
+        }
+
+        private void updateUniqueListItems(List<TenancyListItem> uniqueTenancyListItems,
+            IEnumerable<IGrouping<string, TenancyListItem>> groupsOfDuplicatesTenancyListItems)
+        {
+            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
+            {
+                var jointTenancies = grouping.ToList();
+                var jointTenancy = jointTenancies[0];
+                jointTenancies.ForEach(delegate(TenancyListItem dup)
+                {
+                    if (jointTenancy.PrimaryContactName != dup.PrimaryContactName)
+                    {
+                        jointTenancy.PrimaryContactName += $" & {dup.PrimaryContactName}";
+                    }
+                });
+                uniqueTenancyListItems.Add(jointTenancy);
+            }
         }
     }
 }
