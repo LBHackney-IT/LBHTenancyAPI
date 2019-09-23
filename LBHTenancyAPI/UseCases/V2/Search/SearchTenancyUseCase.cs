@@ -40,13 +40,13 @@ namespace LBHTenancyAPI.UseCases.V2.Search
 
             var uniqueTenancyListItems = allTenancyListItems.GroupBy(t => t.TenancyRef)
                 .Where(g => g.Count() == 1)
-                .SelectMany(g => g).ToList();;
+                .SelectMany(g => g).ToList();
 
-            var groupsOfDuplicateTenancyListItems =
+            var groupsOfDuplicatesTenancyListItems =
                 allTenancyListItems.GroupBy(t => t.TenancyRef)
                 .Where(g => g.Count() > 1);
 
-            foreach (var grouping in groupsOfDuplicateTenancyListItems)
+            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
             {
                 var jointTenancies = grouping.ToList();
                 var jointTenancy = jointTenancies[0];
@@ -54,7 +54,7 @@ namespace LBHTenancyAPI.UseCases.V2.Search
                 {
                     if (jointTenancy.PrimaryContactName != dup.PrimaryContactName)
                     {
-                        jointTenancy.PrimaryContactName += " & " + dup.PrimaryContactName;
+                        jointTenancy.PrimaryContactName += $" & {dup.PrimaryContactName}";
                     }
                 });
                 uniqueTenancyListItems.Add(jointTenancy);

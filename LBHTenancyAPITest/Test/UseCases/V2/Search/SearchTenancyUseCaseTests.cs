@@ -204,7 +204,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             response.Tenancies[1].CurrentBalance.Value.Should().Be(tenancy2.CurrentBalance);
             response.Tenancies[1].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
 
-            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo(tenancy2.PrimaryContactName + " & " + tenancy3.PrimaryContactName);
+            response.Tenancies[1].PrimaryContact.Name.Should().BeEquivalentTo($"{tenancy2.PrimaryContactName} & {tenancy3.PrimaryContactName}");
             response.Tenancies[1].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy2.PrimaryContactPostcode);
             response.Tenancies[1].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy2.PrimaryContactShortAddress);
 
@@ -216,7 +216,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V2.Search
             response.Tenancies[2].CurrentBalance.Value.Should().Be(tenancy4.CurrentBalance);
             response.Tenancies[2].CurrentBalance.CurrencyCode.Should().BeEquivalentTo("GBP");
 
-            response.Tenancies[2].PrimaryContact.Name.Should().BeEquivalentTo(tenancy4.PrimaryContactName + " & " + tenancy5.PrimaryContactName);
+            response.Tenancies[2].PrimaryContact.Name.Should().BeEquivalentTo($"{tenancy4.PrimaryContactName} & {tenancy5.PrimaryContactName}");
             response.Tenancies[2].PrimaryContact.Postcode.Should().BeEquivalentTo(tenancy4.PrimaryContactPostcode);
             response.Tenancies[2].PrimaryContact.ShortAddress.Should().BeEquivalentTo(tenancy4.PrimaryContactShortAddress);
         }
