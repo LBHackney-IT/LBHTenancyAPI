@@ -46,7 +46,7 @@ namespace LBHTenancyAPI.UseCases.V2.Search
                 allTenancyListItems.GroupBy(t => t.TenancyRef)
                 .Where(g => g.Count() > 1);
 
-            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
+            foreach (var grouping in groupsOfDuplicateTenancyListItems)
             {
                 var jointTenancies = grouping.ToList();
                 var jointTenancy = jointTenancies[0];
