@@ -36,23 +36,17 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             if (response == null)
                 return new SearchTenancyResponse();
 
-            var allTenancyListItems = response.Results;
+            var allTenancyListItems = response.Results.ToList();
 
-            var uniqueTenancyListItems = allTenancyListItems.GroupBy(t => t.TenancyRef)
-                .Where(g => g.Count() == 1)
-                .SelectMany(g => g).ToList();
-
-            var groupsOfDuplicatesTenancyListItems =
-                allTenancyListItems.GroupBy(t => t.TenancyRef)
-                .Where(g => g.Count() > 1);
-
-
-            updateUniqueListItems(uniqueTenancyListItems,groupsOfDuplicatesTenancyListItems);
+            if (allTenancyListItems.Count > 1)
+            {
+                allTenancyListItems = MergeJointTenancies(allTenancyListItems);
+            }
 
             //Create real response
             var useCaseResponse = new SearchTenancyResponse
             {
-                Tenancies = uniqueTenancyListItems.ConvertAll(tenancy => new SearchTenancySummary
+                Tenancies = allTenancyListItems.ConvertAll(tenancy => new SearchTenancySummary
                 {
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
@@ -72,22 +66,49 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             return useCaseResponse;
         }
 
-        private void updateUniqueListItems(List<TenancyListItem> uniqueTenancyListItems,
-            IEnumerable<IGrouping<string, TenancyListItem>> groupsOfDuplicatesTenancyListItems)
+        private static List<TenancyListItem> MergeJointTenancies(List<TenancyListItem> allTenancyListItems)
         {
-            foreach (var grouping in groupsOfDuplicatesTenancyListItems)
+            var duplicateTenancies = new List<List<TenancyListItem>>();
+            var newResult = new List<TenancyListItem>();
+            foreach (var tenancy in allTenancyListItems)
             {
-                var jointTenancies = grouping.ToList();
-                var jointTenancy = jointTenancies[0];
-                jointTenancies.ForEach(delegate(TenancyListItem dup)
+                var duplicateTenancy = allTenancyListItems.Find(
+                    x => x.TenancyRef == tenancy.TenancyRef &&
+                         x.PrimaryContactName != tenancy.PrimaryContactName
+                );
+                if (duplicateTenancy.TenancyRef != null)
                 {
-                    if (jointTenancy.PrimaryContactName != dup.PrimaryContactName)
-                    {
-                        jointTenancy.PrimaryContactName += $" & {dup.PrimaryContactName}";
-                    }
-                });
-                uniqueTenancyListItems.Add(jointTenancy);
+                    duplicateTenancies.Add(new List<TenancyListItem> {tenancy, duplicateTenancy});
+                    newResult.Remove(duplicateTenancy);
+                }
+                else
+                {
+                    newResult.Add(tenancy);
+                }
             }
+
+            if (duplicateTenancies.Count <= 0) return newResult;
+            {
+                foreach (var duplicateTenancy in duplicateTenancies)
+                {
+                    var jointTenancy = duplicateTenancy[0];
+                    foreach (var tenancy in duplicateTenancy.Where(thing =>
+                        jointTenancy.PrimaryContactName != thing.PrimaryContactName))
+                    {
+                        jointTenancy.PrimaryContactName += $" & {tenancy.PrimaryContactName}";
+                    }
+
+                    var alreadyPresent = newResult.Find(
+                        x => x.TenancyRef == jointTenancy.TenancyRef
+                    );
+                    if (alreadyPresent.TenancyRef == null)
+                    {
+                        newResult.Add(jointTenancy);
+                    }
+                }
+            }
+
+            return newResult;
         }
     }
 }
