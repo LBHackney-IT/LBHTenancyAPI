@@ -87,7 +87,7 @@ namespace LBHTenancyAPI.UseCases.V2.Search
                 }
             }
 
-            if (duplicateTenancies.Count <= 0) return newResult;
+            if (!duplicateTenancies.Any()) return newResult;
             {
                 foreach (var duplicateTenancy in duplicateTenancies)
                 {
