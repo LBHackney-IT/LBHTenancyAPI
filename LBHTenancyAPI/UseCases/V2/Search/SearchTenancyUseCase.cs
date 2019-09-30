@@ -91,7 +91,7 @@ namespace LBHTenancyAPI.UseCases.V2.Search
             {
                 foreach (var duplicateTenancy in duplicateTenancies)
                 {
-                    var jointTenancy = duplicateTenancy[0];
+                    var jointTenancy = duplicateTenancy.FirstOrDefault();
                     foreach (var tenancy in duplicateTenancy.Where(thing =>
                         jointTenancy.PrimaryContactName != thing.PrimaryContactName))
                     {
