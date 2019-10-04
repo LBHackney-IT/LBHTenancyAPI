@@ -1,4 +1,5 @@
-﻿﻿using System.ComponentModel.DataAnnotations;
+﻿﻿using System;
+ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
@@ -32,7 +33,6 @@ namespace LBHTenancyAPITest.Helpers.Entities
 
         [Column("num_bedrooms")]
         [MaxLength(255)]
-        [Required]
-        public int num_bedrooms { get; set; }
+        public Nullable<int> num_bedrooms { get; set; }
     }
 }

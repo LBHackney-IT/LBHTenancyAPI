@@ -30,7 +30,7 @@ namespace LBHTenancyAPI.UseCases.V1
                     TenancyRef = tenancyResponse.TenancyRef,
                     PropertyRef = tenancyResponse.PropertyRef,
                     PaymentRef = tenancyResponse.PaymentRef,
-                    NumberOfBedrooms = tenancyResponse.NumberOfBedrooms,
+                    NumberOfBedrooms = (int)tenancyResponse.NumberOfBedrooms,
                     StartDate = TenancyDateFormatter.UniversalSortable(tenancyResponse.StartDate),
                     Tenure = tenancyResponse.Tenure,
                     CurrentBalance = new Currency(tenancyResponse.CurrentBalance),
@@ -88,7 +88,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public List<ArrearsAgreement> ArrearsAgreements { get; set; }
             public List<ArrearsActionDiaryEntry> ArrearsActionDiary { get; set; }
             public string StartDate { get; set; }
-            public int NumberOfBedrooms { get; set; }
+            public Nullable<int> NumberOfBedrooms { get; set; }
         }
 
         public struct ArrearsAgreement

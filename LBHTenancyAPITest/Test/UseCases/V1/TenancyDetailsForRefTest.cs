@@ -53,7 +53,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     PaymentRef = tenancy.PaymentRef,
-                    NumberOfBedrooms = tenancy.NumberOfBedrooms,
+                    NumberOfBedrooms = (int)tenancy.NumberOfBedrooms,
                     StartDate = string.Format("{0:u}", tenancy.StartDate),
                     Tenure = tenancy.Tenure,
                     Rent = tenancy.Rent.ToString("C"),
@@ -104,6 +104,22 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactPostcode, response.TenancyDetails.PrimaryContactPostcode);
             Assert.Equal(expectedResponse.TenancyDetails.ArrearsActionDiary, response.TenancyDetails.ArrearsActionDiary);
             Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreements, response.TenancyDetails.ArrearsAgreements);
+        }
+
+        [Fact]
+        public void WhenATenancyRefIsGiven_AndTheNumberOfBedroomsIsNull()
+        {
+            var gateway = new StubTenanciesGateway();
+            var tenancy = Fake.GenerateTenancyDetails();
+
+            tenancy.NumberOfBedrooms = null;
+
+            gateway.SetTenancyDetails(tenancy.TenancyRef, tenancy);
+
+            var tenancyDetails = new TenancyDetailsForRef(gateway);
+            var response = tenancyDetails.Execute(tenancy.TenancyRef);
+
+            Assert.Null(response.TenancyDetails.NumberOfBedrooms);
         }
     }
 
