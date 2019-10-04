@@ -53,6 +53,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     PaymentRef = tenancy.PaymentRef,
+                    NumberOfBedrooms = tenancy.NumberOfBedrooms,
                     StartDate = string.Format("{0:u}", tenancy.StartDate),
                     Tenure = tenancy.Tenure,
                     Rent = tenancy.Rent.ToString("C"),
@@ -92,6 +93,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.CurrencyCode, response.TenancyDetails.CurrentBalance.CurrencyCode);
             Assert.Equal(expectedResponse.TenancyDetails.PropertyRef, response.TenancyDetails.PropertyRef);
             Assert.Equal(expectedResponse.TenancyDetails.PaymentRef, response.TenancyDetails.PaymentRef);
+            Assert.Equal(expectedResponse.TenancyDetails.NumberOfBedrooms, response.TenancyDetails.NumberOfBedrooms);
             Assert.Equal(expectedResponse.TenancyDetails.StartDate, response.TenancyDetails.StartDate);
             Assert.Equal(expectedResponse.TenancyDetails.Tenure, response.TenancyDetails.Tenure);
             Assert.Equal(expectedResponse.TenancyDetails.Rent, response.TenancyDetails.Rent);

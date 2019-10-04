@@ -120,6 +120,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.num_bedrooms = expectedProperty.num_bedrooms;
             expectedTenancy.start_date = expectedTenancy.start_date;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
             //member 1
@@ -146,6 +147,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
                 PropertyRef = expectedProperty.prop_ref,
+                NumberOfBedrooms = expectedProperty.num_bedrooms,
                 TenancyRef = expectedTenancy.tag_ref,
                 Tenure = expectedTenancy.tenure,
                 ArrearsActionDiary = actionDiaryDetails,
@@ -369,6 +371,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
             Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
+            Assert.Equal(expectedTenancy.NumberOfBedrooms, tenancy.NumberOfBedrooms);
             Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
@@ -391,6 +394,11 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
             Assert.Equal(expectedTenancy.CurrentBalance, tenancy.CurrentBalance);
+
+//            "INSERT INTO property (prop_ref, num_bedrooms, short_address, post_code) VALUES (@propRef, @numBedrooms, @shortAddress, @postcode)";
+//
+//            command.Parameters.Add("@numBedrooms", SqlDbType.Int);
+//            command.Parameters["@numBedrooms"].Value = '2';
         }
 
         [Fact]

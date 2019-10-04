@@ -163,7 +163,8 @@ namespace LBHTenancyAPI.Gateways.V1
                     tenagree.cot as StartDate,
                     RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                     property.address1 as PrimaryContactLongAddress,
-                    property.post_code as PrimaryContactPostcode
+                    property.post_code as PrimaryContactPostcode,
+                    property.num_bedrooms as NumberOfBedrooms
                     FROM tenagree WITH(NOLOCK)
                     LEFT JOIN arag WITH(NOLOCK)
                     ON arag.tag_ref = tenagree.tag_ref

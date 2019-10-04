@@ -9,6 +9,10 @@ namespace LBHTenancyAPITest.Helpers.Entities
     {
         public DateTime? start_date;
 
+        [Column("num_bedrooms")]
+        [MaxLength(255)]
+        [Required]
+        public int num_bedrooms { get; set; }
         /// <summary>
         /// TenancyPaymentReference
         /// </summary>

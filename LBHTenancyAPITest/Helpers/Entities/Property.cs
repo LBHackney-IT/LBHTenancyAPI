@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
@@ -15,7 +15,6 @@ namespace LBHTenancyAPITest.Helpers.Entities
         [Required]
         public string prop_ref { get; set; }
 
-        
         [Column("short_address")]
         [MaxLength(200)]
         [Required]
@@ -30,5 +29,10 @@ namespace LBHTenancyAPITest.Helpers.Entities
         [MaxLength(255)]
         [Required]
         public string address1 { get; set; }
+
+        [Column("num_bedrooms")]
+        [MaxLength(255)]
+        [Required]
+        public int num_bedrooms { get; set; }
     }
 }
