@@ -394,11 +394,6 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);
             Assert.Equal(expectedTenancy.PrimaryContactPhone, tenancy.PrimaryContactPhone);
             Assert.Equal(expectedTenancy.CurrentBalance, tenancy.CurrentBalance);
-
-//            "INSERT INTO property (prop_ref, num_bedrooms, short_address, post_code) VALUES (@propRef, @numBedrooms, @shortAddress, @postcode)";
-//
-//            command.Parameters.Add("@numBedrooms", SqlDbType.Int);
-//            command.Parameters["@numBedrooms"].Value = '2';
         }
 
         [Fact]
