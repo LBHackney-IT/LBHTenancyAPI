@@ -389,7 +389,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         }
 
         [Fact]
-        public void WhenGivenJointTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
+        public void WhenGivenJointTenancyWithNonResponsibleMembersRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
         {
             var expectedTenant = Fake.UniversalHousing.GenerateFakeMember(responsible: true);
             var expectedTenant2 = Fake.UniversalHousing.GenerateFakeMember(responsible: true);
