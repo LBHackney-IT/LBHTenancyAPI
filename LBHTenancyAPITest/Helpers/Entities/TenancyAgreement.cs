@@ -14,7 +14,7 @@ namespace LBHTenancyAPITest.Helpers.Entities
         /// </summary>
         [Column("num_bedrooms")]
         [MaxLength(255)]
-        public Nullable<int> num_bedrooms { get; set; }
+        public int? num_bedrooms { get; set; }
         /// <summary>
         /// TenancyPaymentReference
         /// </summary>

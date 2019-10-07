@@ -114,7 +114,6 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
 
             tenancy.NumberOfBedrooms = null;
 
-
             gateway.SetTenancyDetails(tenancy.TenancyRef, tenancy);
 
             var tenancyDetails = new TenancyDetailsForRef(gateway);
