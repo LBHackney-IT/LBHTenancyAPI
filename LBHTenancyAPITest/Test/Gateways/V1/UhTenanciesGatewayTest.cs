@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,7 +111,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             };
         }
 
-        private Tenancy GenerateTenancy(string tenency_ref = "")
+        private Tenancy GenerateTenancy(string tenency_ref = "", List<Member> household = null)
         {
             //property
             var expectedProperty = Fake.UniversalHousing.GenerateFakeProperty();
@@ -123,10 +124,21 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             expectedTenancy.num_bedrooms = expectedProperty.num_bedrooms;
             expectedTenancy.start_date = expectedTenancy.start_date;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
-            //member 1
+
             var expectedMember = Fake.UniversalHousing.GenerateFakeMember();
-            expectedMember.house_ref = expectedTenancy.house_ref;
-            TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
+            if (household != null && household.Any())
+            {
+                household.ForEach(delegate(Member member)
+                {
+                    member.house_ref = expectedTenancy.house_ref;
+                    TestDataHelper.InsertMember(member, _databaseFixture.Db);
+                });
+            }
+            else
+            {
+                expectedMember.house_ref = expectedTenancy.house_ref;
+                TestDataHelper.InsertMember(expectedMember, _databaseFixture.Db);
+            }
             //arrears agreement
             var expectedArrearsAgreement = Fake.UniversalHousing.GenerateFakeArrearsAgreement();
             expectedArrearsAgreement.tag_ref = expectedTenancy.tag_ref;
@@ -380,13 +392,22 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         }
 
         [Fact]
-        public void WhenGivenJointTenancyRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
+        public void WhenGivenJointTenancyWithNonResponsibleMembersRef_GetSingleTenancyByRef_ShouldReturnTenancyWithBasicDetails()
         {
-            Tenancy expectedTenancy = GenerateTenancy();
-            Tenancy alsoExpectedTenancy = GenerateTenancy(expectedTenancy.TenancyRef);
+            var expectedTenant = Fake.UniversalHousing.GenerateFakeMember(responsible: true);
+            var expectedTenant2 = Fake.UniversalHousing.GenerateFakeMember(responsible: true);
+
+            var householdMembers = new List<Member>()
+            {
+                expectedTenant, expectedTenant2,
+                Fake.UniversalHousing.GenerateFakeMember(responsible: false),
+                Fake.UniversalHousing.GenerateFakeMember(responsible: false)
+            };
+
+            Tenancy expectedTenancy = GenerateTenancy(household: householdMembers);
 
             var tenancy = GetSingleTenacyForRef(expectedTenancy.TenancyRef);
-            Assert.Equal($"{expectedTenancy.PrimaryContactName} & {alsoExpectedTenancy.PrimaryContactName}", tenancy.PrimaryContactName);
+            Assert.Equal($"{expectedTenant.GetFullName()} & {expectedTenant2.GetFullName()}", tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
             Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
             Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);
