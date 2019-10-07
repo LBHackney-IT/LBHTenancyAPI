@@ -53,7 +53,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     TenancyRef = tenancy.TenancyRef,
                     PropertyRef = tenancy.PropertyRef,
                     PaymentRef = tenancy.PaymentRef,
-                    NumberOfBedrooms = (int)tenancy.NumberOfBedrooms,
+                    NumberOfBedrooms = tenancy.NumberOfBedrooms,
                     StartDate = string.Format("{0:u}", tenancy.StartDate),
                     Tenure = tenancy.Tenure,
                     Rent = tenancy.Rent.ToString("C"),
@@ -113,6 +113,7 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             var tenancy = Fake.GenerateTenancyDetails();
 
             tenancy.NumberOfBedrooms = null;
+
 
             gateway.SetTenancyDetails(tenancy.TenancyRef, tenancy);
 

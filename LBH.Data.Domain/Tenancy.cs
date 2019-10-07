@@ -108,6 +108,6 @@ namespace LBH.Data.Domain
 
         public DateTime? StartDate { get; set; }
 
-        public Nullable<int> NumberOfBedrooms { get; set; }
+        public int? NumberOfBedrooms { get; set; }
     }
 }
