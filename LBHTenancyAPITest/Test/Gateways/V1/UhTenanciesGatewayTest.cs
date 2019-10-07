@@ -121,6 +121,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             expectedTenancy.house_ref = expectedTenancy.house_ref;
             expectedTenancy.payment_ref = expectedTenancy.payment_ref;
             expectedTenancy.prop_ref = expectedProperty.prop_ref;
+            expectedTenancy.num_bedrooms = expectedProperty.num_bedrooms;
             expectedTenancy.start_date = expectedTenancy.start_date;
             TestDataHelper.InsertTenancy(expectedTenancy, _databaseFixture.Db);
 
@@ -158,6 +159,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 PrimaryContactPostcode = expectedProperty.post_code,
                 PrimaryContactLongAddress = expectedProperty.address1,
                 PropertyRef = expectedProperty.prop_ref,
+                NumberOfBedrooms = expectedProperty.num_bedrooms,
                 TenancyRef = expectedTenancy.tag_ref,
                 Tenure = expectedTenancy.tenure,
                 ArrearsActionDiary = actionDiaryDetails,
@@ -381,6 +383,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             Assert.Equal(expectedTenancy.PrimaryContactName, tenancy.PrimaryContactName);
             Assert.Equal(expectedTenancy.PropertyRef, tenancy.PropertyRef);
             Assert.Equal(expectedTenancy.PaymentRef, tenancy.PaymentRef);
+            Assert.Equal(expectedTenancy.NumberOfBedrooms, tenancy.NumberOfBedrooms);
             Assert.Equal(expectedTenancy.StartDate, tenancy.StartDate);
             Assert.Equal(expectedTenancy.PrimaryContactPostcode, tenancy.PrimaryContactPostcode);
             Assert.Equal(expectedTenancy.PrimaryContactLongAddress, tenancy.PrimaryContactLongAddress);

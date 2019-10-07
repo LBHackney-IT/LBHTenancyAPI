@@ -62,7 +62,8 @@ CREATE TABLE property
   short_address CHAR (200),
   address1 CHAR(255),
   prop_ref CHAR (12),
-  post_code CHAR (10)
+  post_code CHAR (10),
+  num_bedrooms INT NULL
 );
 
 CREATE TABLE rtrans
