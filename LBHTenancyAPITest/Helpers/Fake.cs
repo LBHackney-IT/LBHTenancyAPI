@@ -61,6 +61,7 @@ namespace LBHTenancyAPITest.Helpers
                 TenancyRef = random.Random.Hash(11),
                 PropertyRef = random.Random.Hash(12),
                 PaymentRef = random.Random.Hash(12),
+                NumberOfBedrooms = random.Random.Int(1,7),
                 StartDate = random.Date.Past(),
                 Tenure = random.Random.Hash(3),
                 CurrentBalance = random.Finance.Amount(),
@@ -174,7 +175,7 @@ namespace LBHTenancyAPITest.Helpers
         {
 
 
-            public static Member GenerateFakeMember()
+            public static Member GenerateFakeMember(bool responsible = true)
             {
                 var faker = new Faker<Member>()
                     .RuleFor(property => property.house_ref, (fake, model) => fake.Random.AlphaNumeric(10))
@@ -182,7 +183,7 @@ namespace LBHTenancyAPITest.Helpers
                     .RuleFor(property => property.forename, (fake, model) => fake.Name.FirstName().Trim())
                     .RuleFor(property => property.title, (fake, model) => "Mr")
                     .RuleFor(property => property.age, (fake, model) => fake.Random.Int(20, 50))
-                    .RuleFor(property => property.responsible, (fake, model) => true)
+                    .RuleFor(property => property.responsible, (fake, model) => responsible)
                     .RuleFor(property => property.person_no, (fake, model) => fake.IndexFaker)
                     ;
                 var member = faker.Generate();

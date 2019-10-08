@@ -163,7 +163,8 @@ namespace LBHTenancyAPI.Gateways.V1
                     tenagree.cot as StartDate,
                     RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                     property.address1 as PrimaryContactLongAddress,
-                    property.post_code as PrimaryContactPostcode
+                    property.post_code as PrimaryContactPostcode,
+                    property.num_bedrooms as NumberOfBedrooms
                     FROM tenagree WITH(NOLOCK)
                     LEFT JOIN arag WITH(NOLOCK)
                     ON arag.tag_ref = tenagree.tag_ref
@@ -171,7 +172,7 @@ namespace LBHTenancyAPI.Gateways.V1
                     LEFT JOIN property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
                     Left JOIN dbo.member member WITH(NOLOCK)
-                    ON member.house_ref = tenagree.house_ref
+                    ON member.house_ref = tenagree.house_ref AND member.responsible = 1
                     WHERE tenagree.tag_ref = @tRef
                     ORDER BY arag.arag_startdate DESC",
                     new {tRef = tenancyRef.Replace("%2F", "/")}
