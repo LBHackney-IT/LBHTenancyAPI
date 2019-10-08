@@ -51,7 +51,7 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                     new { tenancyRef = request.TenancyRef, firstName = request.FirstName, lastName = request.LastName, address = request.Address, postcode = request.PostCode, page = request.Page > 0 ? request.Page - 1: 0, pageSize = request.PageSize }
                 ).ConfigureAwait(false);
 
-                //add to paged results 
+                //add to paged results
                 results.Results = all?.ToList();
 
                 //get results total count
@@ -101,7 +101,7 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                     SELECT count(tenagree.tag_ref)
                     FROM tenagree
                     Left JOIN dbo.member member WITH(NOLOCK)
-                    ON member.house_ref = tenagree.house_ref
+                    ON member.house_ref = tenagree.house_ref AND member.responsible = 1
                     LEFT JOIN property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
                     WHERE tenagree.tag_ref IS NOT NULL
@@ -186,7 +186,7 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                         ROW_NUMBER() OVER (ORDER BY member.surname, member.forename ASC) AS Seq
                         FROM tenagree
                         Left JOIN dbo.member member WITH(NOLOCK)
-                        ON member.house_ref = tenagree.house_ref
+                        ON member.house_ref = tenagree.house_ref AND member.responsible = 1
                         LEFT JOIN property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
                         WHERE tenagree.tag_ref IS NOT NULL
