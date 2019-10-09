@@ -63,34 +63,39 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
                     PrimaryContactName = tenancy.PrimaryContactName,
                     PrimaryContactLongAddress = tenancy.PrimaryContactLongAddress,
                     PrimaryContactPostcode = tenancy.PrimaryContactPostcode,
-                    ArrearsAgreementStatus=tenancy.AgreementStatus,
+                    ArrearsAgreementStatus = tenancy.AgreementStatus,
 
-                    ArrearsActionDiary = tenancy.ArrearsActionDiary.ConvertAll(tenancyActionDiary => new TenancyDetailsForRef.ArrearsActionDiaryEntry
-                    {
-                        Code = tenancyActionDiary.Code,
-                        Type = tenancyActionDiary.Type,
-                        Balance = tenancyActionDiary.Balance.ToString("C"),
-                        Comment = tenancyActionDiary.Comment,
-                        Date = string.Format("{0:u}", tenancyActionDiary.Date),
-                        UniversalHousingUsername = tenancyActionDiary.UniversalHousingUsername
-                    }),
+                    ArrearsActionDiary = tenancy.ArrearsActionDiary.ConvertAll(tenancyActionDiary =>
+                        new TenancyDetailsForRef.ArrearsActionDiaryEntry
+                        {
+                            Code = tenancyActionDiary.Code,
+                            Type = tenancyActionDiary.Type,
+                            Balance = tenancyActionDiary.Balance.ToString("C"),
+                            Comment = tenancyActionDiary.Comment,
+                            Date = string.Format("{0:u}", tenancyActionDiary.Date),
+                            UniversalHousingUsername = tenancyActionDiary.UniversalHousingUsername
+                        }),
 
-                    ArrearsAgreements = tenancy.ArrearsAgreements.ConvertAll(tenancyAgreement => new TenancyDetailsForRef.ArrearsAgreement
-                    {
-                        Amount = tenancyAgreement.Amount.ToString("C"),
-                        Breached = tenancyAgreement.Breached,
-                        ClearBy = string.Format("{0:u}", tenancyAgreement.ClearBy),
-                        Frequency = tenancyAgreement.Frequency,
-                        StartBalance = tenancyAgreement.StartBalance.ToString("C"),
-                        Startdate = string.Format("{0:u}", tenancyAgreement.Startdate),
-                        Status = tenancyAgreement.Status
-                    })
+                    ArrearsAgreements = tenancy.ArrearsAgreements.ConvertAll(tenancyAgreement =>
+                        new TenancyDetailsForRef.ArrearsAgreement
+                        {
+                            Amount = tenancyAgreement.Amount.ToString("C"),
+                            Breached = tenancyAgreement.Breached,
+                            ClearBy = string.Format("{0:u}", tenancyAgreement.ClearBy),
+                            Frequency = tenancyAgreement.Frequency,
+                            StartBalance = tenancyAgreement.StartBalance.ToString("C"),
+                            Startdate = string.Format("{0:u}", tenancyAgreement.Startdate),
+                            Status = tenancyAgreement.Status
+                        })
                 }
             };
 
-            Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreementStatus, response.TenancyDetails.ArrearsAgreementStatus);
-            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.Value, response.TenancyDetails.CurrentBalance.Value);
-            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.CurrencyCode, response.TenancyDetails.CurrentBalance.CurrencyCode);
+            Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreementStatus,
+                response.TenancyDetails.ArrearsAgreementStatus);
+            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.Value,
+                response.TenancyDetails.CurrentBalance.Value);
+            Assert.Equal(expectedResponse.TenancyDetails.CurrentBalance.CurrencyCode,
+                response.TenancyDetails.CurrentBalance.CurrencyCode);
             Assert.Equal(expectedResponse.TenancyDetails.PropertyRef, response.TenancyDetails.PropertyRef);
             Assert.Equal(expectedResponse.TenancyDetails.PaymentRef, response.TenancyDetails.PaymentRef);
             Assert.Equal(expectedResponse.TenancyDetails.NumberOfBedrooms, response.TenancyDetails.NumberOfBedrooms);
@@ -99,29 +104,16 @@ namespace LBHTenancyAPITest.Test.UseCases.V1
             Assert.Equal(expectedResponse.TenancyDetails.Rent, response.TenancyDetails.Rent);
             Assert.Equal(expectedResponse.TenancyDetails.Service, response.TenancyDetails.Service);
             Assert.Equal(expectedResponse.TenancyDetails.OtherCharge, response.TenancyDetails.OtherCharge);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactLongAddress, response.TenancyDetails.PrimaryContactLongAddress);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactName, response.TenancyDetails.PrimaryContactName);
-            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactPostcode, response.TenancyDetails.PrimaryContactPostcode);
-            Assert.Equal(expectedResponse.TenancyDetails.ArrearsActionDiary, response.TenancyDetails.ArrearsActionDiary);
+            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactLongAddress,
+                response.TenancyDetails.PrimaryContactLongAddress);
+            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactName,
+                response.TenancyDetails.PrimaryContactName);
+            Assert.Equal(expectedResponse.TenancyDetails.PrimaryContactPostcode,
+                response.TenancyDetails.PrimaryContactPostcode);
+            Assert.Equal(expectedResponse.TenancyDetails.ArrearsActionDiary,
+                response.TenancyDetails.ArrearsActionDiary);
             Assert.Equal(expectedResponse.TenancyDetails.ArrearsAgreements, response.TenancyDetails.ArrearsAgreements);
         }
 
-        [Fact]
-        public void WhenATenancyRefIsGiven_AndTheNumberOfBedroomsIsNull()
-        {
-            var gateway = new StubTenanciesGateway();
-            var tenancy = Fake.GenerateTenancyDetails();
-
-            tenancy.NumberOfBedrooms = null;
-
-            gateway.SetTenancyDetails(tenancy.TenancyRef, tenancy);
-
-            var tenancyDetails = new TenancyDetailsForRef(gateway);
-            var response = tenancyDetails.Execute(tenancy.TenancyRef);
-
-            Assert.Null(response.TenancyDetails.NumberOfBedrooms);
-        }
     }
-
-
 }

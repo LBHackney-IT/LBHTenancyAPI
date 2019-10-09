@@ -54,6 +54,7 @@ namespace LBHTenancyAPI.Controllers.V1
                 {"payment_ref", tenancy.PaymentRef},
                 {"start_date", tenancy.StartDate},
                 {"tenure", tenancy.Tenure},
+                {"num_bedrooms", tenancy.NumberOfBedrooms},
                 {
                     "current_balance", new Dictionary<string, object>
                     {

@@ -59,6 +59,7 @@ namespace LBHTenancyAPI.UseCases.V1
             public string PrimaryContactPostcode { get; set; }
             public string PaymentRef { get; set; }
             public string StartDate { get; set; }
+            public int NumberOfBedrooms { get; set; }
         }
     }
 }

@@ -79,6 +79,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                                 {"payment_ref", "123456789"},
                                 {"start_date", string.Format("{0:u}", startDate)},
                                 {"tenure", "SEC"},
+                                {"num_bedrooms", 0},
                                 {
                                     "current_balance", new Dictionary<string, object>
                                     {
@@ -122,6 +123,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                 PaymentRef = faker.Random.Hash(20),
                 StartDate = string.Format("{0:u}", faker.Date.Past()),
                 Tenure = faker.Random.Word(),
+                NumberOfBedrooms = faker.Random.Int(1,3),
                 LastActionCode = faker.Random.Word(),
                 LastActionDate = faker.Date.Recent().ToLongDateString(),
                 CurrentBalance = new Currency(faker.Finance.Amount()),
@@ -149,6 +151,7 @@ namespace LBHTenancyAPITest.Test.Controllers.V1
                                 {"payment_ref", expectedTenancyResponse.PaymentRef},
                                 {"start_date", string.Format("{0:u}", expectedTenancyResponse.StartDate)},
                                 {"tenure", expectedTenancyResponse.Tenure},
+                                {"num_bedrooms", expectedTenancyResponse.NumberOfBedrooms},
                                 {"current_balance", expectedTenancyResponse.CurrentBalance},
                                 {"current_arrears_agreement_status", expectedTenancyResponse.ArrearsAgreementStatus},
                                 {
