@@ -108,6 +108,7 @@ namespace LBH.Data.Domain
 
         public DateTime? StartDate { get; set; }
 
+        private string numberOfBedrooms;
         public int? NumberOfBedrooms { get; set; }
     }
 }
