@@ -138,6 +138,7 @@ namespace LBHTenancyAPI.Controllers.V1
                 {"payment_ref", tenancy.PaymentRef},
                 {"start_date", tenancy.StartDate},
                 {"tenure", tenancy.Tenure},
+                {"num_bedrooms", tenancy.NumberOfBedrooms},
                 {"rent", tenancy.Rent},
                 {"service", tenancy.Service},
                 {"other_charge", tenancy.OtherCharge},
