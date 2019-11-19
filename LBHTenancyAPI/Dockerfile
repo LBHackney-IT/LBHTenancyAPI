@@ -12,10 +12,9 @@ ENV VERSION_SUFFIX=${VERSION_SUFFIX:-buildNumberUnsupplied}
 RUN echo "Build number: $VERSION_SUFFIX"
 
 COPY . .
-RUN dotnet restore LBHTenancyAPI.sln -nowarn:msb3202,nu1503
-
-RUN dotnet build LBH.Data.Domain/LBH.Data.Domain.csproj -c Release
-RUN dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
+RUN dotnet restore LBHTenancyAPI.sln -nowarn:msb3202,nu1503 && \
+    dotnet build LBH.Data.Domain/LBH.Data.Domain.csproj -c Release && \
+    dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
 
 FROM build AS publish
 RUN dotnet publish LBHTenancyAPI/LBHTenancyAPI.csproj -c Release -o /app --version-suffix "${VERSION_SUFFIX}"

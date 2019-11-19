@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  tenancyapi:
+    image: tenancyapi
+    environment:
+      Credentials__UHServiceSystemCredentials__UserName: sa
+      Credentials__UHServiceUserCredentials__UserName: sa
+      Credentials__UHServiceUserCredentials__UserPassword: Rooty-Tooty
+      UH_URL: Data Source=tcp:universal_housing_simulator;Initial Catalog=uhsimulator;Pooling=false;User ID=sa;Password=Rooty-Tooty
+    build:
+      context: .
+      dockerfile: LBHTenancyAPI/Dockerfile
+      args:
+        - VERSION_SUFFIX
+    ports:
+      - 3100:3100
