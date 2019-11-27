@@ -38,6 +38,8 @@ CREATE TABLE araction
   action_nr_balance   decimal(10,2),
   act_status VARCHAR(3),
   action_cat VARCHAR(3),
+  comp_avail VARCHAR(3),
+  comp_display VARCHAR(3),
   action_subno INT,
   action_subcode VARCHAR(3),
   action_process_no INT,
