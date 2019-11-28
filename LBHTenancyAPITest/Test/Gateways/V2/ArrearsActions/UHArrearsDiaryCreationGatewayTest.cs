@@ -32,11 +32,6 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
-//[Required] public string ActionCode { get; set; }
-//[Required] public string Comment { get; set; }
-//[Required] public string TenancyAgreementRef { get; set; }
-//public string Username { get; set; }
-
             var request = new ActionDiaryRequest
             {
                 ActionCode = "GEN",
