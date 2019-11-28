@@ -30,21 +30,8 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions
 
         public async Task<ArrearsActionResponse> ExecuteAsync(ActionDiaryRequest request)
         {
-            Tenancy tenancy = _tenanciesGateway.GetTenancyForRef(request.TenancyAgreementRef);
+            var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(request);
 
-            var thisRequest = _requestBuilder.BuildNewActionDiaryRequest(request, tenancy.CurrentBalance);
-
-            var response = await _arrearsActionDiaryGateway.CreateActionDiaryEntryAsync(thisRequest);
-
-            if (response.Success)
-            {
-                var requestDateTime = request.CreatedDate.GetValueOrDefault(DateTime.Now);
-
-                await _arrearsActionDiaryGateway.UpdateRecordingDetails(request.Username,
-                    response.ArrearsAction.Id, requestDateTime);
-                response.ArrearsAction.UserName = request.Username;
-                response.ArrearsAction.ActionDate = requestDateTime;
-            }
             return response;
         }
     }

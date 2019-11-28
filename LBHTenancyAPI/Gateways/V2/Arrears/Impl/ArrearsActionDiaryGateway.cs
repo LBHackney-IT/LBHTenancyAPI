@@ -4,6 +4,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using AgreementService;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 
 namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
 {
@@ -24,16 +25,16 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             _connectionString = connectionString;
         }
 
-        public async Task<ArrearsActionResponse> CreateActionDiaryEntryAsync(ArrearsActionCreateRequest request)
+        public async Task<ArrearsActionResponse> CreateActionDiaryEntryAsync(ActionDiaryRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request is null");
 
             var diaryEntry = AddActionDiaryEntry(
-                request.ArrearsAction.ActionCode,
-                request.ArrearsAction.Comment,
-                request.ArrearsAction.TenancyAgreementRef,
-                request.DirectUser.UserName
+                request.ActionCode,
+                request.Comment,
+                request.TenancyAgreementRef,
+                request.Username
             );
 
             var response = new ArrearsActionResponse();
@@ -42,9 +43,9 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             {
                 response.Success = true;
                 response.ArrearsAction = new ArrearsActionLogDto();
-                response.ArrearsAction.TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef;
-                response.ArrearsAction.ActionCode = request.ArrearsAction.ActionCode;
-                response.ArrearsAction.UserName = request.DirectUser.UserName;
+                response.ArrearsAction.TenancyAgreementRef = request.TenancyAgreementRef;
+                response.ArrearsAction.ActionCode = request.ActionCode;
+                response.ArrearsAction.UserName = request.Username;
             }
             else
             {
@@ -52,35 +53,6 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
                 response.ErrorMessage = "Failed to add entry into action diary";
             }
             return response;
-        }
-
-        public async Task UpdateRecordingDetails(string requestAppUser, int actionDiaryId, DateTime updateDate)
-        {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                SqlCommand cmd = null;
-                if (string.IsNullOrWhiteSpace(requestAppUser))
-                {
-                    cmd = new SqlCommand("UPDATE araction SET action_date=@action_date" +
-                                                    " WHERE araction_sid=@Id", conn);
-                }
-                else
-                {
-                    cmd = new SqlCommand("UPDATE araction SET username=@username, action_date=@action_date" +
-                                                    " WHERE araction_sid=@Id", conn);
-                }
-                conn.Open();
-                using (cmd)
-                {
-                    cmd.Parameters.AddWithValue("@Id", actionDiaryId);
-                    if(!string.IsNullOrWhiteSpace(requestAppUser))
-                    {
-                        cmd.Parameters.AddWithValue("@username", requestAppUser);
-                    }
-                    cmd.Parameters.AddWithValue("@action_date", updateDate);
-                    int rows = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-                }
-            }
         }
 
         private int AddActionDiaryEntry(string actionCode, string comment, string tenancyAgreementRef, string username)

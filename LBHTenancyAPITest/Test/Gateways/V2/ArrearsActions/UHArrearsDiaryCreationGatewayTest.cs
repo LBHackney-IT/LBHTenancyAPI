@@ -6,6 +6,7 @@ using AgreementService;
 using LBH.Data.Domain;
 using LBHTenancyAPI.Gateways.V2.Arrears;
 using LBHTenancyAPI.Gateways.V2.Arrears.Impl;
+using LBHTenancyAPI.UseCases.V2.ArrearsActions.Models;
 using LBHTenancyAPITest.Helpers;
 using LBHTenancyAPITest.Helpers.Data;
 using Moq;
@@ -31,22 +32,12 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
 
             IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    ActionBalance = 10,
-                    ActionCategory = "8",
-                    ActionCode = "GEN",
-                    Comment = "Testing",
-                    TenancyAgreementRef = "Not a real tenancy ref"
-                },
-                DirectUser = new UserCredential
-                {
-                    UserName = "TestUserName",
-                    UserPassword = "TestUserPassword"
-                },
-                SourceSystem = "TestSystem"
+                ActionCode = "GEN",
+                Comment = "Testing",
+                TenancyAgreementRef = "Not a real tenancy ref",
+                Username = "TestUserName",
             };
 
             //act
@@ -73,27 +64,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             tenancy.tag_ref = tenancyRef;
             TestDataHelper.InsertTenancy(tenancy, _databaseFixture.Db);
 
-            var request = new ArrearsActionCreateRequest
+            var request = new ActionDiaryRequest
             {
-                ArrearsAction = new ArrearsActionInfo
-                {
-                    TenancyAgreementRef = tenancyRef,
-                    ActionBalance = actionBalance,
-                    ActionCategory = actionCategory,
-                    ActionCode = actionCode,
-                    Comment = comment
-
-                },
-                DirectUser = new UserCredential
-                {
-                    UserName = "TestUserName",
-                    UserPassword = "TestUserPassword"
-                },
-                SourceSystem = "TestSystem"
+                ActionCode = actionCode,
+                Comment = comment,
+                TenancyAgreementRef = tenancyRef,
+                Username = "TestUserName"
             };
-
-            fakeArrearsAgreementService.Setup(s => s.CreateArrearsActionAsync(It.IsAny<ArrearsActionCreateRequest>()))
-                .ReturnsAsync(Fake.CreateArrearsActionAsync(request));
 
             //act
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
@@ -103,74 +80,6 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             response.Success.Should().BeTrue();
         }
 
-        [Fact]
-        public async Task UpdateRecordingUserName_WhenUsernameSupplyed_ShouldChangeUsername()
-        {
-            //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-
-            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
-            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
-
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
-
-            string username = "A Real username";
-
-            //act
-            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, DateTime.Now);
-            //assert
-            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
-
-            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
-            action.UniversalHousingUsername.Should().Be(username);
-        }
-
-        [Fact]
-        public async Task UpdateRecordingDateShouldChangeDate()
-        {
-            //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-
-            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
-            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
-
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
-
-            string username = "A Real username";
-            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"),"dd/MM/yyyy HH:mm",null);
-
-            //act
-            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, date);
-            //assert
-            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
-
-            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
-            action.UniversalHousingUsername.Should().Be(username);
-            action.Date.Should().Be(date);
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public async Task UpdateRecordingUserNameWhenNoUsernameSupplyed_ShouldNoOp(string username)
-        {
-            //Arrange
-            var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-            DateTime date = DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "dd/MM/yyyy HH:mm", null);
-            ArrearsActionDiaryEntry diaryEntry = Fake.GenerateActionDiary();
-            TestDataHelper.InsertArrearsActions(diaryEntry, _databaseFixture.Db);
-
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
-
-            //act
-            await classUnderTest.UpdateRecordingDetails(username, diaryEntry.Id, date);
-            //assert
-            ArrearsActionDiaryEntry action = TestDataHelper.GetArrearsActionsByRef(diaryEntry.TenancyRef).First();
-            action.Date.Should().Be(date);
-            action.TenancyRef.Should().Be(diaryEntry.TenancyRef);
-            action.UniversalHousingUsername.Should().Be(null);
-        }
 
         [Fact]
         public void GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithNull_ShouldThrowAnException()

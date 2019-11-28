@@ -9,7 +9,7 @@ namespace LBHTenancyAPI.UseCases.V2.ArrearsActions.Models
     public class ActionDiaryRequest
     {
         //For ArrearsAction object
-        [Required] public string ActionCategory { get; set; }
+        public string ActionCategory { get; set; }
         [Required] public string ActionCode { get; set; }
         [Required] public string Comment { get; set; }
         [Required] public string TenancyAgreementRef { get; set; }
