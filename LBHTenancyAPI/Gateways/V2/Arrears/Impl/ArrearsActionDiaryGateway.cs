@@ -41,6 +41,8 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             if (diaryEntry >= 1)
             {
                 response.Success = true;
+                response.ArrearsAction.TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef;
+                response.ArrearsAction.ActionCode = request.ArrearsAction.ActionCode;
             }
             else
             {
@@ -82,25 +84,84 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
         private int AddActionDiaryEntry(string actionCode, string comment, string tenancyAgreementRef, string username)
         {
                 int rows;
+//                string insertQuery = @"
+//                    DECLARE @sid int
+//                    SET @sid = (SELECT MAX(araction_sid) FROM araction)
+//
+//                    DECLARE @action_no int
+//                    SET @action_no = (SELECT MAX(action_no) FROM araction WHERE tag_ref = @tag_ref)
+//
+//                    DECLARE @current_balance numeric(9,2)
+//                    SET @current_balance = (SELECT cur_bal FROM tenagree WHERE tag_ref = @tag_ref)
+//
+//                    INSERT INTO araction (tag_ref, action_set, action_no, action_code,
+//                        action_date, action_balance, action_comment, username, comm_only, araction_sid,
+//                        action_deferred, deferred_until, deferral_reason, severity_level, action_nr_balance,
+//                        action_type, act_status, action_cat, action_subno, action_subcode, action_process_no,
+//                        notice_sid, courtord_sid, warrant_sid, action_doc_no, comp_avail, comp_display)
+//                    VALUES (@tag_ref, 1, (@action_no+1), @action_code,
+//                        GETDATE(), @current_balance, @action_comment, @username, 1, (@sid+1),
+//                        0, 0, '', 1, 0, 9, '001', 8, 1, '', 0,0, 0, 0, 0, '', '');
+//                ";
                 string insertQuery = @"
-                DECLARE @sid int
-                SET @sid = (SELECT MAX(araction_sid) FROM araction)
-
-                DECLARE @action_no int
-                SET @action_no = (SELECT MAX(action_no) FROM araction WHERE tag_ref = @tag_ref)
-
-                DECLARE @current_balance numeric(9,2)
-                SET @current_balance = (SELECT cur_bal FROM tenagree WHERE tag_ref = @tag_ref)
-
-                INSERT INTO araction (tag_ref, action_set, action_no, action_code,
-                    action_date, action_balance, action_comment, username, comm_only, araction_sid,
-                    action_deferred, deferred_until, deferral_reason, severity_level, action_nr_balance,
-                    action_type, act_status, action_cat, action_subno, action_subcode, action_process_no,
-                    notice_sid, courtord_sid, warrant_sid, action_doc_no, comp_avail, comp_display)
-                VALUES (@tag_ref, 1, (@action_no+1), @action_code,
-                    GETDATE(), @current_balance, @action_comment, @username, 1, (@sid+1),
-                    0, 0, '', 1, 0, 9, '001', 8, 1, '', 0,0, 0, 0, 0, '', '');
-            ";
+                    WITH context_cte (
+                        tag_ref,
+                        max_action_set,
+                        max_action_no,
+                        cur_bal
+                    ) AS (
+                        SELECT
+    	                    TOP 1 tenagree.tag_ref,
+    	                    ISNULL(action_set, 0) AS max_action_set,
+    	                    ISNULL(action_no, 0) AS max_action_no,
+    	                    tenagree.cur_bal
+                        FROM
+    	                    tenagree
+                        LEFT JOIN araction ON tenagree.tag_ref = araction.tag_ref
+                        WHERE
+    	                    tenagree.tag_ref = @tag_ref
+                        ORDER BY
+    	                    action_set DESC,
+    	                    action_no DESC
+                    )
+                    INSERT INTO araction (
+                        tag_ref, action_set, action_no, action_code, action_date, action_balance, action_comment, 
+                        username, comm_only, araction_sid, action_deferred, deferred_until, deferral_reason, 
+                        severity_level, action_nr_balance, action_type, act_status, action_cat, action_subno, 
+                        action_subcode, action_process_no, notice_sid, courtord_sid, warrant_sid, action_doc_no, 
+                        comp_avail, comp_display
+                    )
+                    SELECT DISTINCT
+                        context_cte.tag_ref AS tag_ref,
+                        context_cte.max_action_set as action_set,
+                        context_cte.max_action_no + 1 as action_no,
+                        @action_code as action_code,
+                        CURRENT_TIMESTAMP as action_date,
+                        context_cte.cur_bal as action_balance,
+                        @action_comment as action_comment,
+                        @username as username,
+                        1 as comm_only,
+                        (SELECT MAX(araction_sid) FROM araction) +1,
+                        0 AS action_deferred,
+                        0 AS deferred_until,
+                        '' AS deferral_reason,
+                        1 AS severity_level,
+                        0 AS action_nr_balance,
+                        9 AS action_type,
+                        '001' AS act_status,
+                        8 AS action_cat,
+                        1 AS action_subno,
+                        '' AS action_subcode,
+                        0 AS action_process_no,
+                        0 AS notice_sid,
+                        0 AS courtord_sid,
+                        0 AS warrant_sid,
+                        0 AS action_doc_no,
+                        '' AS comp_avail,
+                        '' AS comp_display
+                    FROM
+                        context_cte;
+                ";
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -123,6 +184,4 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             return rows;
         }
     }
-
-//    cmd.InsertCommand.Parameters.Add("@SourceName", SqlDbType.VarChar).Value = entry.Source;
 }
