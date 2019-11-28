@@ -23,7 +23,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         }
 
         [Fact]
-        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldNotBeNull()
+        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithIncorrectParameters_ShouldReturnAnError()
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
@@ -39,7 +39,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
                     ActionCategory = "8",
                     ActionCode = "GEN",
                     Comment = "Testing",
-                    TenancyAgreementRef = "000017/01"
+                    TenancyAgreementRef = "Not a real tenancy ref"
                 },
                 DirectUser = new UserCredential
                 {
@@ -53,12 +53,14 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
 
             //assert
-            Assert.NotNull(response);
+            response.Success.Should().BeFalse();
+            response.ErrorCode.Should().Be(1);
+            response.ErrorMessage.Should().Be("Failed to add entry into action diary");
         }
 
         [Theory]
-        [InlineData("000017/01", 10, "8", "GEN", "Webservice action")]
-        [InlineData("000017/02", 17, "9", "Test", "Testing")]
+        [InlineData("000017/01", 10, "8", "GEN", "An action diary entry comment")]
+        [InlineData("000017/02", 17, "9", "TST", "Testing")]
         public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldReturnAValidObject(
             string tenancyRef, decimal actionBalance, string actionCategory, string actionCode, string comment )
         {
@@ -96,10 +98,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             //act
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
             //assert
-//            response.ArrearsAction.TenancyAgreementRef.Should().Be(tenancyRef);
-//            response.ArrearsAction.ActionBalance.Should().Be(actionBalance);
-//            response.ArrearsAction.ActionCategory.Should().Be(actionCategory);
-//            response.ArrearsAction.ActionCode.Should().Be(actionCode);
+            response.ArrearsAction.TenancyAgreementRef.Should().Be(tenancyRef);
+            response.ArrearsAction.ActionCode.Should().Be(actionCode);
             response.Success.Should().BeTrue();
         }
 

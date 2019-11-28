@@ -41,6 +41,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
             if (diaryEntry == 1)
             {
                 response.Success = true;
+                response.ArrearsAction = new ArrearsActionLogDto();
                 response.ArrearsAction.TenancyAgreementRef = request.ArrearsAction.TenancyAgreementRef;
                 response.ArrearsAction.ActionCode = request.ArrearsAction.ActionCode;
                 response.ArrearsAction.UserName = request.DirectUser.UserName;
