@@ -23,17 +23,13 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         }
 
         [Fact]
-        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldNotBeNull()
+        public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithIncorrectParameters_ShouldReturnAnError()
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-            var connectionString = "test";
-
-            fakeArrearsAgreementService.Setup(s => s.CreateArrearsActionAsync(It.IsAny<ArrearsActionCreateRequest>()))
-                .ReturnsAsync(new ArrearsActionResponse());
 
 
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, connectionString);
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
             var request = new ArrearsActionCreateRequest
             {
@@ -43,7 +39,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
                     ActionCategory = "8",
                     ActionCode = "GEN",
                     Comment = "Testing",
-                    TenancyAgreementRef = "000017/01"
+                    TenancyAgreementRef = "Not a real tenancy ref"
                 },
                 DirectUser = new UserCredential
                 {
@@ -57,19 +53,25 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
 
             //assert
-            Assert.NotNull(response);
+            response.Success.Should().BeFalse();
+            response.ErrorCode.Should().Be(1);
+            response.ErrorMessage.Should().Be("Failed to add entry into action diary");
         }
 
         [Theory]
-        [InlineData("000017/01", 10, "8", "GEN", "Webservice action")]
-        [InlineData("000017/02", 17, "9", "Test", "Testing")]
+        [InlineData("000017/01", 10, "8", "GEN", "An action diary entry comment")]
+        [InlineData("000017/02", 17, "9", "TST", "Testing")]
         public async Task GivenTenancyAgreementRef_WhenCreateActionDiaryEntryWithCorrectParameters_ShouldReturnAValidObject(
             string tenancyRef, decimal actionBalance, string actionCategory, string actionCode, string comment )
         {
             //Arrange
+
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-            var connectionString = "test";
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, connectionString);
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
+
+            var tenancy = Fake.UniversalHousing.GenerateFakeTenancy();
+            tenancy.tag_ref = tenancyRef;
+            TestDataHelper.InsertTenancy(tenancy, _databaseFixture.Db);
 
             var request = new ArrearsActionCreateRequest
             {
@@ -97,9 +99,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
             var response = await classUnderTest.CreateActionDiaryEntryAsync(request);
             //assert
             response.ArrearsAction.TenancyAgreementRef.Should().Be(tenancyRef);
-            response.ArrearsAction.ActionBalance.Should().Be(actionBalance);
-            response.ArrearsAction.ActionCategory.Should().Be(actionCategory);
             response.ArrearsAction.ActionCode.Should().Be(actionCode);
+            response.Success.Should().BeTrue();
         }
 
         [Fact]
@@ -176,8 +177,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V2.ArrearsActions
         {
             //Arrange
             var fakeArrearsAgreementService = new Mock<IArrearsAgreementServiceChannel>();
-            var connectionString = "test";
-            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object,connectionString);
+            IArrearsActionDiaryGateway classUnderTest = new ArrearsActionDiaryGateway(fakeArrearsAgreementService.Object, _databaseFixture.ConnectionString);
 
             //act
             //assert

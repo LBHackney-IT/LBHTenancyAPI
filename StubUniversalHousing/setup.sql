@@ -27,7 +27,28 @@ CREATE TABLE araction
   action_balance NUMERIC(7,2),
   action_date SMALLDATETIME,
   action_comment VARCHAR(100),
-  username VARCHAR(40)
+  username VARCHAR(40),
+  action_set INT,
+  action_no INT,
+  comm_only BIT,
+  action_deferred   BIT,
+  deferred_until SMALLDATETIME,
+  deferral_reason VARCHAR(3),
+  severity_level INT,
+  action_nr_balance   decimal(10,2),
+  act_status VARCHAR(3),
+  action_cat VARCHAR(3),
+  comp_avail VARCHAR(3),
+  comp_display VARCHAR(3),
+  action_subno INT,
+  action_subcode VARCHAR(3),
+  action_process_no INT,
+  notice_sid     INT,
+  courtord_sid   INT,
+  warrant_sid    INT,
+  action_doc_no  INT,
+  tstamp binary(1),
+  u_saff_araction_ref varchar(30)
 );
 
 CREATE TABLE arag
