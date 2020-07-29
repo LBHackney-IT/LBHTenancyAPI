@@ -7,16 +7,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Dynamics365.Client
 {
     public class RestfulHttpClient : IHttpClient
     {
-        private readonly HttpClient _client;
-        public RestfulHttpClient()
-        {
-            _client = new HttpClient();
-        }
-
-        public RestfulHttpClient(HttpMessageHandler messageHandler)
-        {
-            _client = new HttpClient(messageHandler);
-        }
+        private static readonly HttpClient _client = new HttpClient();
 
         public void AddDefaultHeader(string key, string value)
         {
