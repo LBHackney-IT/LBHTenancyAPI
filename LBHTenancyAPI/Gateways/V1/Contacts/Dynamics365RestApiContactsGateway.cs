@@ -31,6 +31,7 @@ namespace LBHTenancyAPI.Gateways.V1.Contacts
 
             //call dynamics 365
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            httpClient.Dispose();
             //maybe no records found so return null
             if (string.IsNullOrEmpty(json))
                 return null;
@@ -52,7 +53,7 @@ namespace LBHTenancyAPI.Gateways.V1.Contacts
               <filter type ='and' >
                 <condition attribute ='housing_tag_ref' operator='eq' value='{tagReference}' />
               </filter>
-                <link-entity name ='contact' from='parentcustomerid' to='accountid' link-type='inner' > 
+                <link-entity name ='contact' from='parentcustomerid' to='accountid' link-type='inner' >
                   <attribute name ='contactid' />
                   <attribute name ='emailaddress1' />
                   <attribute name ='hackney_uprn' />
