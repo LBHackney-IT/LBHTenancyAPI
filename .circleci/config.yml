@@ -1,7 +1,7 @@
 version: 2
 jobs:
   check:
-    machine: 
+    machine:
       image: circleci/classic:201808-01 #used to push docker form 17 to 18 use 'machine: true' when this is no longer needed
       docker_layer_caching: true
     steps:
@@ -13,7 +13,7 @@ jobs:
           name: Run tests
           command: docker-compose run -e UH_CONNECTION_STRING="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm lbhtenancyapitest dotnet test
 
-  staging_release:
+  staging_release:  &staging_release
     machine: true
     steps:
       - checkout
@@ -51,6 +51,8 @@ jobs:
       - run:
           name: Force new deployment
           command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT
+  staging_release_manual:
+    <<: *staging_release
 
   production_release:
     machine: true
@@ -74,7 +76,7 @@ jobs:
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
           name: Build new application Docker image
-          command: docker build --file LBHTenancyAPI/Dockerfile --tag hackney/apps/tenancy-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM . 
+          command: docker build --file LBHTenancyAPI/Dockerfile --tag hackney/apps/tenancy-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM .
       - run:
           name: Tag new image for production release
           command: docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:production
@@ -96,6 +98,19 @@ workflows:
           filters:
             branches:
               only: master
+      - permit_manual_staging_release:
+          type: approval
+          requires:
+            - check
+          filters:
+            branches:
+              ignore: master
+      - staging_release_manual:
+          requires:
+            - permit_manual_staging_release
+          filters:
+            branches:
+              ignore: master
       - permit_production_release:
           type: approval
           requires:
