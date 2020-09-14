@@ -84,8 +84,9 @@ jobs:
           name: Release new image to ECR
           command: docker push $ECR_IMAGE_URL:production
       - run:
-          name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT
+          name: Force new application deployment
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
+          no_output_timeout: 50m
 
 workflows:
   version: 2
