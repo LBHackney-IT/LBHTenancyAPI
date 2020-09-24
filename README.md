@@ -54,20 +54,15 @@ Then we have an automated four step deployment process, which runs in CircleCI.
 ## Contacts
 
 ### Active Maintainers
-
 - **Rashmi Shetty**, Development Manager at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
-- **Vlad Atamanyuk**, Junior Developer at London Borough of Hackney (vladyslav.atamanyuk@hackney.gov.uk)
-- **Jeff Pinkham**, Engineer at [Made Tech][made-tech] (jeff@madetech.com)
-- **Mark Rosel**, Lead Engineer at [Made Tech][made-tech] (mark.rosel@madetech.com)
-- **Steven Leighton**, Engineer at [Made Tech][made-tech] (steven@madetech.com)
-- **Elena Vilimaite**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
+- **Miles Alford**, Engineer at London Borough of Hackney (miles.alford@hackney.gov.uk)
 
 ### Other Contacts
-
-- **Richard Foster**, Lead Engineer at [Made Tech][made-tech] (richard@madetech.com)
-- **Luke Morton**, Director at [Made Tech][made-tech] (luke@madetech.com)
-- **Dennis Robinson**, Delivery Lead at London Borough of Hackney (dennis.robinson@hackney.gov.uk)
-- **Soraya Clarke**, Delivery Manager at London Borough of Hackney (soraya.clarke@hackney.gov.uk)
+- **Antony O'Neill**, Lead Engineer at [Made Tech][made-tech] (antony.oneill@madetech.com)
+- **Elena Vilimaitė**, Engineer at [Made Tech][made-tech] (elena@madetech.com)
+- **Csaba Gyorfi**, Engineer at [Made Tech][made-tech] (csaba@madetech.com)
+- **Ninamma Rai**, Engineer at [Made Tech][made-tech] (ninamma@madetech.com)
+- **Soraya Clarke**, Relationship Manager at London Borough of Hackney (soraya.clarke@hackney.gov.uk)
 
 [docker-download]: https://www.docker.com/products/docker-desktop
 [mt-ca]: https://github.com/madetech/clean-architecture
