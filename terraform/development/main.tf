@@ -66,7 +66,7 @@ resource "aws_ecs_service" "tenancy-api-ecs-service" {
     network_configuration {
         subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
         security_groups = ["sg-00d2e14f38245dd0b"]
-        assign_public_ip = true
+        assign_public_ip = false
     }
     desired_count = 1
     load_balancer {
