@@ -210,7 +210,7 @@ resource "aws_lb" "lb" {
     subnets            = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]// Get this from AWS (data)
     enable_deletion_protection = false
     tags = {
-        Environment = var.environment_name
+        Environment = "development"
     }
 }
 resource "aws_lb_target_group" "lb_tg" {
