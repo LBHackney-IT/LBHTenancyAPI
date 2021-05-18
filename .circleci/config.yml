@@ -125,16 +125,6 @@ jobs:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
       - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
-      - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
       - run:
@@ -152,9 +142,6 @@ jobs:
             docker push $MA_ECR_IMAGE_URL:$CIRCLE_SHA1
             docker push $MA_ECR_IMAGE_URL:latest
             docker push $MA_ECR_IMAGE_URL:staging
-      - run:
-          name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_STAGING_CLUSTER --service-name $MA_ECS_STAGING_APP_NAME --image $MA_ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT
   staging_release_manual:
     <<: *staging_release
 
@@ -165,16 +152,6 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -187,10 +164,6 @@ jobs:
       - run:
           name: Release new image to ECR
           command: docker push $MA_ECR_IMAGE_URL:production
-      - run:
-          name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_PRODUCTION_CLUSTER --service-name $MA_ECS_PRODUCTION_APP_NAME --image $MA_ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
-          no_output_timeout: 50m
 
   terraform-init-and-apply-to-development:
     executor: docker-terraform
@@ -234,33 +207,40 @@ workflows:
 #          filters:
 #            branches:
 #              only: development
-#      - assume-role-staging:
-#          context: api-assume-role-housing-staging-context
+      - assume-role-staging:
+          context: api-assume-role-housing-staging-context
 #          requires:
 #            - check
-#      - staging_release:
-#          requires:
-#            - assume-role-staging
+      - staging_release:
+          context: api-assume-role-housing-staging-context
+          requires:
+            - assume-role-staging
 #          filters:
 #            branches:
 #              only: master
-#      - permit_manual_staging_release:
-#          type: approval
-#          requires:
-#            - check
+      - terraform-init-and-apply-to-staging:
+          context: api-assume-role-housing-staging-context
+          requires:
+            - staging_release
+      #          filters:
+      #            branches:
+      #              only: master
+      - permit_production_release:
+          type: approval
+          requires:
+            - staging_release
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - permit_production_release
+      - production_release:
+          context: api-assume-role-housing-production-context
+          requires:
+            - assume-role-production
+      - terraform-init-and-apply-to-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - production_release
 #          filters:
 #            branches:
-#              ignore: master
-#      - staging_release_manual:
-#          requires:
-#            - permit_manual_staging_release
-#          filters:
-#            branches:
-#              ignore: master
-#      - permit_production_release:
-#          type: approval
-#          requires:
-#            - staging_release
-#      - production_release:
-#          requires:
-#            - permit_production_release
+#              only: master
