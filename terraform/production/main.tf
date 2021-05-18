@@ -102,8 +102,8 @@ resource "aws_ecs_service" "tenancy-api-ecs-service" {
     task_definition = aws_ecs_task_definition.tenancy-api-ecs-task-definition.arn
     launch_type     = "FARGATE"
     network_configuration {
-        subnets          = [] //get this from AWS
-        security_groups = [] //get this from AWS
+        subnets          = ["subnet-0beb266003a56ca82","subnet-06a697d86a9b6ed01"] //get this from AWS
+        security_groups = ["sg-06a87f66de638c825"] //get this from AWS
         assign_public_ip = false
     }
     desired_count = 1
@@ -207,7 +207,7 @@ resource "aws_lb" "lb" {
     name               = "lb-tenancy-api"
     internal           = true
     load_balancer_type = "network"
-    subnets            = []// Get this from AWS (data)
+    subnets            = ["subnet-0beb266003a56ca82","subnet-06a697d86a9b6ed01"]// Get this from AWS (data)
     enable_deletion_protection = false
     tags = {
         Environment = "production"
@@ -220,7 +220,7 @@ resource "aws_lb_target_group" "lb_tg" {
     name_prefix = "ma-tg-"
     port        = 80
     protocol    = "TCP"
-    vpc_id      = "vpc-0d15f152935c8716f" // Get this from AWS (data)
+    vpc_id      = "vpc-0ce853ddb64e8fb3c" // Get this from AWS (data)
     target_type = "ip"
     stickiness {
         enabled = false
