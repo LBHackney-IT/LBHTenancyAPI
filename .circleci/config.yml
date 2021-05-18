@@ -191,40 +191,40 @@ workflows:
       - check
       - assume-role-development:
           context: api-assume-role-housing-development-context
-#          requires:
-#            - check
+          requires:
+            - check
       - development_release:
           context: api-assume-role-housing-development-context
           requires:
             - assume-role-development
-      #          filters:
-      #            branches:
-      #              only: development
+          filters:
+            branches:
+              only: development
       - terraform-init-and-apply-to-development:
           context: api-assume-role-housing-development-context
           requires:
             - development_release
-#          filters:
-#            branches:
-#              only: development
+          filters:
+            branches:
+              only: development
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
-#          requires:
-#            - check
+          requires:
+            - check
       - staging_release:
           context: api-assume-role-housing-staging-context
           requires:
             - assume-role-staging
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
       - terraform-init-and-apply-to-staging:
           context: api-assume-role-housing-staging-context
           requires:
             - staging_release
-      #          filters:
-      #            branches:
-      #              only: master
+          filters:
+            branches:
+              only: master
       - permit_production_release:
           type: approval
           requires:
@@ -241,6 +241,6 @@ workflows:
           context: api-assume-role-housing-production-context
           requires:
             - production_release
-#          filters:
-#            branches:
-#              only: master
+          filters:
+            branches:
+              only: master
