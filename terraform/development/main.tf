@@ -15,40 +15,40 @@ data "aws_ecs_cluster" "ecs_cluster_for_manage_arrears" {
 
 # SSM Parameters - Systems Manager/Parameter Store
 data "aws_ssm_parameter" "housing_finance_uhservicesystemcredentials_username" {
-    name = "/housing-finance/${var.environment_name}/uhservicesystemcredentials-username"
+    name = "/housing-finance/development/uhservicesystemcredentials-username"
 }
 data "aws_ssm_parameter" "housing_finance_uhserviceusercredentials_username" {
-    name = "/housing-finance/${var.environment_name}/uhserviceusercredentials-username"
+    name = "/housing-finance/development/uhserviceusercredentials-username"
 }
 data "aws_ssm_parameter" "housing_finance_uhserviceusercredentials_userpassword" {
-    name = "/housing-finance/${var.environment_name}/uhserviceusercredentials-userpassword"
+    name = "/housing-finance/development/uhserviceusercredentials-userpassword"
 }
 data "aws_ssm_parameter" "housing_finance_dynamics365settings_aadinstance" {
-    name = "/housing-finance/${var.environment_name}/dynamics365settings-aadinstance"
+    name = "/housing-finance/development/dynamics365settings-aadinstance"
 }
 data "aws_ssm_parameter" "housing_finance_dynamics365settings_appkey" {
-    name = "/housing-finance/${var.environment_name}/dynamics365settings-appkey"
+    name = "/housing-finance/development/dynamics365settings-appkey"
 }
 data "aws_ssm_parameter" "housing_finance_dynamics365settings_clientid" {
-    name = "/housing-finance/${var.environment_name}/dynamics365settings-clientid"
+    name = "/housing-finance/development/dynamics365settings-clientid"
 }
 data "aws_ssm_parameter" "housing_finance_dynamics365settings_organizationurl" {
-    name = "/housing-finance/${var.environment_name}/dynamics365settings-organizationurl"
+    name = "/housing-finance/development/dynamics365settings-organizationurl"
 }
 data "aws_ssm_parameter" "housing_finance_dynamics365settings_tenantid" {
-    name = "/housing-finance/${var.environment_name}/dynamics365settings-tenantid"
+    name = "/housing-finance/development/dynamics365settings-tenantid"
 }
 data "aws_ssm_parameter" "housing_finance_sentrysettings_environment" {
-    name = "/housing-finance/${var.environment_name}/sentrysettings-environment"
+    name = "/housing-finance/development/sentrysettings-environment"
 }
 data "aws_ssm_parameter" "housing_finance_sentrysettings_url" {
-    name = "/housing-finance/${var.environment_name}/sentrysettings-url"
+    name = "/housing-finance/development/sentrysettings-url"
 }
 data "aws_ssm_parameter" "housing_finance_servicesettings_agreementserviceendpoint" {
-    name = "/housing-finance/${var.environment_name}/servicesettings-agreementserviceendpoint"
+    name = "/housing-finance/development/servicesettings-agreementserviceendpoint"
 }
 data "aws_ssm_parameter" "housing_finance_uh_url" {
-    name = "/housing-finance/${var.environment_name}/uh-url"
+    name = "/housing-finance/development/uh-url"
 }
 
 terraform {
@@ -109,13 +109,13 @@ resource "aws_ecs_service" "tenancy-api-ecs-service" {
     desired_count = 1
     load_balancer {
         target_group_arn = aws_lb_target_group.lb_tg.arn
-        container_name   = "${var.app_name}-container"
-        container_port   = var.app_port
+        container_name   = "tenancy-api-container"
+        container_port   = 80
     }
 }
 
 resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
-    family                   = "ecs-task-definition-${var.app_name}"
+    family                   = "ecs-task-definition-tenancy-api"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
     memory                   = "4096"
@@ -124,22 +124,22 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
     container_definitions    = <<DEFINITION
 [
   {
-    "name": "${var.app_name}-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/${var.app_name}:latest",
+    "name": "tenancy-api-container",
+    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:latest",
     "memory": 4096,
     "cpu": 512,
     "essential": true,
     "portMappings": [
       {
-        "containerPort": ${var.app_port}
+        "containerPort": 80
       }
     ],
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-            "awslogs-group": "ecs-task-definition-${var.app_name}",
+            "awslogs-group": "ecs-task-definition-tenancy-api",
             "awslogs-region": "eu-west-2",
-            "awslogs-stream-prefix": "${var.app_name}-logs"
+            "awslogs-stream-prefix": "tenancy-api-logs"
         }
     },
     "environment": [
@@ -204,7 +204,7 @@ DEFINITION
 # Network Load Balancer (NLB) setup
 
 resource "aws_lb" "lb" {
-    name               = "lb-${var.app_name}"
+    name               = "lb-tenancy-api"
     internal           = true
     load_balancer_type = "network"
     subnets            = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]// Get this from AWS (data)
@@ -218,7 +218,7 @@ resource "aws_lb_target_group" "lb_tg" {
         aws_lb.lb
     ]
     name_prefix = "ma-tg-"
-    port        = var.app_port
+    port        = 80
     protocol    = "TCP"
     vpc_id      = "vpc-0d15f152935c8716f" // Get this from AWS (data)
     target_type = "ip"
@@ -233,7 +233,7 @@ resource "aws_lb_target_group" "lb_tg" {
 # Redirect all traffic from the NLB to the target group
 resource "aws_lb_listener" "lb_listener" {
     load_balancer_arn = aws_lb.lb.id
-    port              = var.app_port
+    port              = 80
     protocol    = "TCP"
     default_action {
         target_group_arn = aws_lb_target_group.lb_tg.id
@@ -245,14 +245,14 @@ resource "aws_lb_listener" "lb_listener" {
 
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
-    name = "vpc-link-${var.app_name}"
+    name = "vpc-link-tenancy-api"
     target_arns = [aws_lb.lb.arn]
 }
 # API Gateway, Private Integration with VPC Link
 # and deployment of a single resource that will take ANY
 # HTTP method and proxy the request to the NLB
 resource "aws_api_gateway_rest_api" "main" {
-    name = "${var.environment_name}-${var.app_name}"
+    name = "development-tenancy-api"
 }
 resource "aws_api_gateway_resource" "main" {
     rest_api_id = aws_api_gateway_rest_api.main.id
@@ -277,14 +277,14 @@ resource "aws_api_gateway_integration" "main" {
         "integration.request.path.proxy" = "method.request.path.proxy"
     }
     type                    = "HTTP_PROXY"
-    uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+    uri                     = "http://${aws_lb.lb.dns_name}:80/{proxy}"
     integration_http_method = "ANY"
     connection_type = "VPC_LINK"
     connection_id   = aws_api_gateway_vpc_link.this.id
 }
 resource "aws_api_gateway_deployment" "main" {
     rest_api_id = aws_api_gateway_rest_api.main.id
-    stage_name = var.environment_name
+    stage_name = "development"
     depends_on = [aws_api_gateway_integration.main]
     variables = {
         # just to trigger redeploy on resource changes

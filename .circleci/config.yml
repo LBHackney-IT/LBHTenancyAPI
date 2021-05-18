@@ -1,4 +1,71 @@
-version: 2
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+  aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+
+executors:
+  docker-python:
+    docker:
+      - image: circleci/python:3.7
+  docker-terraform:
+    docker:
+      - image: "hashicorp/terraform:light"
+  docker-dotnet:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+
+references:
+  workspace_root: &workspace_root "~"
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+commands:
+  assume-role-and-persist-workspace:
+    description: "Assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: "LBH_Circle_CI_Deployment_Role"
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+  deploy-lambda:
+    description: "Deploys API via Serverless"
+    parameters:
+      stage:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Node.js
+          command: |
+            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            apt-get update && apt-get install -y nodejs
+      - run:
+          name: Install serverless CLI
+          command: npm i -g serverless
+      - run:
+          name: Build lambda
+          command: |
+            cd ./HousingFinanceInterimApi/
+            chmod +x ./build.sh
+            ./build.sh
+      - run:
+          name: Deploy lambda
+          command: |
+            cd ./HousingFinanceInterimApi/
+            sls deploy --stage <<parameters.stage>> --conceal
+
 jobs:
   check:
     machine:
@@ -12,6 +79,63 @@ jobs:
       - run:
           name: Run tests
           command: docker-compose run -e UH_CONNECTION_STRING="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm lbhtenancyapitest dotnet test
+
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
+
+  development_release: &development_release
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Install AWS CLI
+          command: pip install awscli --upgrade --user
+      - run:
+          name: Install jq
+          command: |
+            sudo apt-get update
+            sudo apt-get install jq
+      - run:
+          name: Install ecs-deploy
+          command: |
+            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
+            sudo chmod +x /usr/bin/ecs-deploy
+      - run:
+          name: Login to ECR
+          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
+      - run:
+          name: Build new application Docker image
+          command: docker build --file LBHTenancyAPI/Dockerfile --tag hackney/apps/tenancy-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM .
+      - run:
+          name: Tag new image for staging release
+          command: |
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:latest
+            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:staging
+      - run:
+          name: Release new image to ECR
+          command: |
+            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
+            docker push $ECR_IMAGE_URL:latest
+            docker push $ECR_IMAGE_URL:staging
+      - run:
+          name: Force new deployment
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_DEVELOPMENT_CLUSTER --service-name $ECS_DEVELOPMENT_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT
+  development_release_manual:
+    <<: *development_release
 
   staging_release:  &staging_release
     machine: true
@@ -93,29 +217,43 @@ workflows:
   continuous_delivery:
     jobs:
       - check
-      - staging_release:
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
           requires:
             - check
-          filters:
-            branches:
-              only: master
-      - permit_manual_staging_release:
-          type: approval
+      - development_release:
           requires:
-            - check
-          filters:
-            branches:
-              ignore: master
-      - staging_release_manual:
-          requires:
-            - permit_manual_staging_release
-          filters:
-            branches:
-              ignore: master
-      - permit_production_release:
-          type: approval
-          requires:
-            - staging_release
-      - production_release:
-          requires:
-            - permit_production_release
+            - assume-role-development
+#          filters:
+#            branches:
+#              only: development
+#      - assume-role-staging:
+#          context: api-assume-role-housing-staging-context
+#          requires:
+#            - check
+#      - staging_release:
+#          requires:
+#            - assume-role-staging
+#          filters:
+#            branches:
+#              only: master
+#      - permit_manual_staging_release:
+#          type: approval
+#          requires:
+#            - check
+#          filters:
+#            branches:
+#              ignore: master
+#      - staging_release_manual:
+#          requires:
+#            - permit_manual_staging_release
+#          filters:
+#            branches:
+#              ignore: master
+#      - permit_production_release:
+#          type: approval
+#          requires:
+#            - staging_release
+#      - production_release:
+#          requires:
+#            - permit_production_release
