@@ -118,15 +118,15 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
     family                   = "ecs-task-definition-tenancy-api"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
-    memory                   = "2048"
+    memory                   = "1024"
     cpu                      = "512"
     execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
     container_definitions    = <<DEFINITION
 [
   {
     "name": "tenancy-api-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:latest",
-    "memory": 2048,
+    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
+    "memory": 1024,
     "cpu": 512,
     "essential": true,
     "portMappings": [

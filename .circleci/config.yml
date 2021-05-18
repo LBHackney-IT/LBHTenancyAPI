@@ -42,6 +42,8 @@ commands:
     parameters:
       environment:
         type: string
+      sha1:
+        type: string
     steps:
       - *attach_workspace
       - checkout
@@ -55,7 +57,7 @@ commands:
           name: apply
           command: |
             cd ./terraform/<<parameters.environment>>/
-            terraform apply -auto-approve
+            terraform apply -var sha1=<<parameters.sha1>> -auto-approve
 
 jobs:
   check:
@@ -87,22 +89,6 @@ jobs:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
-  terraform-init-and-apply-to-development:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "development"
-  terraform-init-and-apply-to-staging:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "staging"
-  terraform-init-and-apply-to-production:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "production"
-
   development_release: &development_release
     machine: true
     steps:
@@ -110,16 +96,16 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-      - run:
-          name: Install jq
-          command: |
-            sudo apt-get update
-            sudo apt-get install jq
-      - run:
-          name: Install ecs-deploy
-          command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
+#      - run:
+#          name: Install jq
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get install jq
+#      - run:
+#          name: Install ecs-deploy
+#          command: |
+#            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
+#            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -138,9 +124,9 @@ jobs:
             docker push $MA_ECR_IMAGE_URL:$CIRCLE_SHA1
             docker push $MA_ECR_IMAGE_URL:latest
             docker push $MA_ECR_IMAGE_URL:development
-      - run:
-          name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_DEVELOPMENT_CLUSTER --service-name $MA_ECS_DEVELOPMENT_APP_NAME --image $MA_ECR_IMAGE_URL:development --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def --launch-type FARGATE --run-task
+#      - run:
+#          name: Force new deployment
+#          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_DEVELOPMENT_CLUSTER --service-name $MA_ECS_DEVELOPMENT_APP_NAME --image $MA_ECR_IMAGE_URL:development --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def --launch-type FARGATE --run-task
   development_release_manual:
     <<: *development_release
 
@@ -219,6 +205,25 @@ jobs:
           command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_PRODUCTION_CLUSTER --service-name $MA_ECS_PRODUCTION_APP_NAME --image $MA_ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
           no_output_timeout: 50m
 
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+          sha1: $CIRCLE_SHA1
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+          sha1: $CIRCLE_SHA1
+
 workflows:
   version: 2
   continuous_delivery:
@@ -228,17 +233,17 @@ workflows:
           context: api-assume-role-housing-development-context
 #          requires:
 #            - check
-      - terraform-init-and-apply-to-development:
-          context: api-assume-role-housing-development-context
-          requires:
-            - assume-role-development
-#          filters:
-#            branches:
-#              only: development
       - development_release:
           context: api-assume-role-housing-development-context
           requires:
-            - terraform-init-and-apply-to-development
+            - assume-role-development
+      #          filters:
+      #            branches:
+      #              only: development
+      - terraform-init-and-apply-to-development:
+          context: api-assume-role-housing-development-context
+          requires:
+            - development_release
 #          filters:
 #            branches:
 #              only: development

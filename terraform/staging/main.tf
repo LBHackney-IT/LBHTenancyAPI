@@ -1,6 +1,6 @@
 provider "aws" {
-  region  = "eu-west-2"
-  version = "~> 2.0"
+    region  = "eu-west-2"
+    version = "~> 2.0"
 }
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
@@ -52,12 +52,12 @@ data "aws_ssm_parameter" "housing_finance_uh_url" {
 }
 
 terraform {
-  backend "s3" {
-    bucket  = "terraform-state-housing-staging"
-    encrypt = true
-    region  = "eu-west-2"
-    key     = "services/lbh-tenancy-api/state"
-  }
+    backend "s3" {
+        bucket  = "terraform-state-housing-staging"
+        encrypt = true
+        region  = "eu-west-2"
+        key     = "services/lbh-tenancy-api/state"
+    }
 }
 
 #Elastic Container Registry (ECR) setup
@@ -102,7 +102,7 @@ resource "aws_ecs_service" "tenancy-api-ecs-service" {
     task_definition = aws_ecs_task_definition.tenancy-api-ecs-task-definition.arn
     launch_type     = "FARGATE"
     network_configuration {
-        subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
+        subnets          = ["subnet-029aded4e4b739233", "subnet-0c522aafcb373a205"]
         security_groups = ["sg-00d2e14f38245dd0b"]
         assign_public_ip = false
     }
@@ -118,15 +118,15 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
     family                   = "ecs-task-definition-tenancy-api"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
-    memory                   = "4096"
+    memory                   = "1024"
     cpu                      = "512"
     execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
     container_definitions    = <<DEFINITION
 [
   {
     "name": "tenancy-api-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:latest",
-    "memory": 4096,
+    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
+    "memory": 1024,
     "cpu": 512,
     "essential": true,
     "portMappings": [
@@ -207,10 +207,10 @@ resource "aws_lb" "lb" {
     name               = "lb-tenancy-api"
     internal           = true
     load_balancer_type = "network"
-    subnets            = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]// Get this from AWS (data)
+    subnets            = ["subnet-029aded4e4b739233", "subnet-0c522aafcb373a205"]// Get this from AWS (data)
     enable_deletion_protection = false
     tags = {
-        Environment = var.environment_name
+        Environment = "staging"
     }
 }
 resource "aws_lb_target_group" "lb_tg" {
@@ -284,7 +284,7 @@ resource "aws_api_gateway_integration" "main" {
 }
 resource "aws_api_gateway_deployment" "main" {
     rest_api_id = aws_api_gateway_rest_api.main.id
-    stage_name = var.environment_name
+    stage_name = "staging"
     depends_on = [aws_api_gateway_integration.main]
     variables = {
         # just to trigger redeploy on resource changes
