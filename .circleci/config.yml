@@ -37,34 +37,26 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  deploy-lambda:
-    description: "Deploys API via Serverless"
+            -
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
     parameters:
-      stage:
+      environment:
         type: string
     steps:
       - *attach_workspace
       - checkout
-      - setup_remote_docker
       - run:
-          name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
-            apt-get update && apt-get install -y nodejs
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
       - run:
-          name: Install serverless CLI
-          command: npm i -g serverless
-      - run:
-          name: Build lambda
+          name: apply
           command: |
-            cd ./HousingFinanceInterimApi/
-            chmod +x ./build.sh
-            ./build.sh
-      - run:
-          name: Deploy lambda
-          command: |
-            cd ./HousingFinanceInterimApi/
-            sls deploy --stage <<parameters.stage>> --conceal
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
 
 jobs:
   check:
@@ -95,6 +87,22 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
 
   development_release: &development_release
     machine: true
@@ -221,6 +229,12 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - check
+      - terraform-init-and-apply-to-development:
+          requires:
+            - assume-role-development
+#          filters:
+#            branches:
+#              only: development
       - development_release:
           requires:
             - assume-role-development
