@@ -223,11 +223,11 @@ workflows:
   version: 2
   continuous_delivery:
     jobs:
-      - check
+#      - check
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
-            - check
+#          requires:
+#            - check
       - terraform-init-and-apply-to-development:
           context: api-assume-role-housing-development-context
           requires:
