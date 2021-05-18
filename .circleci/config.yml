@@ -228,7 +228,7 @@ workflows:
       - permit_production_release:
           type: approval
           requires:
-            - staging_release
+            - terraform-init-and-apply-to-staging
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
