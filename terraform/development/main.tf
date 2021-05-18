@@ -13,6 +13,44 @@ data "aws_ecs_cluster" "ecs_cluster_for_manage_arrears" {
     cluster_name = "ecs-cluster-for-manage-arrears"
 }
 
+# SSM Parameters - Systems Manager/Parameter Store
+data "aws_ssm_parameter" "housing_finance_uhservicesystemcredentials_username" {
+    name = "/housing-finance/${var.environment_name}/uhservicesystemcredentials-username"
+}
+data "aws_ssm_parameter" "housing_finance_uhserviceusercredentials_username" {
+    name = "/housing-finance/${var.environment_name}/uhserviceusercredentials-username"
+}
+data "aws_ssm_parameter" "housing_finance_uhserviceusercredentials_userpassword" {
+    name = "/housing-finance/${var.environment_name}/uhserviceusercredentials-userpassword"
+}
+data "aws_ssm_parameter" "housing_finance_dynamics365settings_aadinstance" {
+    name = "/housing-finance/${var.environment_name}/dynamics365settings-aadinstance"
+}
+data "aws_ssm_parameter" "housing_finance_dynamics365settings_appkey" {
+    name = "/housing-finance/${var.environment_name}/dynamics365settings-appkey"
+}
+data "aws_ssm_parameter" "housing_finance_dynamics365settings_clientid" {
+    name = "/housing-finance/${var.environment_name}/dynamics365settings-clientid"
+}
+data "aws_ssm_parameter" "housing_finance_dynamics365settings_organizationurl" {
+    name = "/housing-finance/${var.environment_name}/dynamics365settings-organizationurl"
+}
+data "aws_ssm_parameter" "housing_finance_dynamics365settings_tenantid" {
+    name = "/housing-finance/${var.environment_name}/dynamics365settings-tenantid"
+}
+data "aws_ssm_parameter" "housing_finance_sentrysettings_environment" {
+    name = "/housing-finance/${var.environment_name}/sentrysettings-environment"
+}
+data "aws_ssm_parameter" "housing_finance_sentrysettings_url" {
+    name = "/housing-finance/${var.environment_name}/sentrysettings-url"
+}
+data "aws_ssm_parameter" "housing_finance_servicesettings_agreementserviceendpoint" {
+    name = "/housing-finance/${var.environment_name}/servicesettings-agreementserviceendpoint"
+}
+data "aws_ssm_parameter" "housing_finance_uh_url" {
+    name = "/housing-finance/${var.environment_name}/uh-url"
+}
+
 terraform {
   backend "s3" {
     bucket  = "terraform-state-housing-development"
@@ -108,6 +146,54 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
       {
         "name": "UH_DATABASE_URL",
         "value": "HackneyAPIIncomeCollection"
+      },
+      {
+        "name": "Credentials__UHServiceSystemCredentials__UserName",
+        "value": "${data.aws_ssm_parameter.housing_finance_uhservicesystemcredentials_username.value}"
+      },
+      {
+        "name": "Credentials__UHServiceUserCredentials__UserName",
+        "value": "${data.aws_ssm_parameter.housing_finance_uhserviceusercredentials_username.value}"
+      },
+      {
+        "name": "Credentials__UHServiceUserCredentials__UserPassword",
+        "value": "${data.aws_ssm_parameter.housing_finance_uhserviceusercredentials_userpassword.value}"
+      },
+      {
+        "name": "Dynamics365Settings__AadInstance",
+        "value": "${data.aws_ssm_parameter.housing_finance_dynamics365settings_aadinstance.value}"
+      },
+      {
+        "name": "Dynamics365Settings__AppKey",
+        "value": "${data.aws_ssm_parameter.housing_finance_dynamics365settings_appkey.value}"
+      },
+      {
+        "name": "Dynamics365Settings__ClientId",
+        "value": "${data.aws_ssm_parameter.housing_finance_dynamics365settings_clientid.value}"
+      },
+      {
+        "name": "Dynamics365Settings__OrganizationUrl",
+        "value": "${data.aws_ssm_parameter.housing_finance_dynamics365settings_organizationurl.value}"
+      },
+      {
+        "name": "Dynamics365Settings__TenantId",
+        "value": "${data.aws_ssm_parameter.housing_finance_dynamics365settings_tenantid.value}"
+      },
+      {
+        "name": "SentrySettings__Url",
+        "value": "${data.aws_ssm_parameter.housing_finance_sentrysettings_url.value}"
+      },
+      {
+        "name": "SentrySettings__Environment",
+        "value": "${data.aws_ssm_parameter.housing_finance_sentrysettings_environment.value}"
+      },
+      {
+        "name": "ServiceSettings__AgreementServiceEndpoint",
+        "value": "${data.aws_ssm_parameter.housing_finance_servicesettings_agreementserviceendpoint.value}"
+      },
+      {
+        "name": "UH_URL",
+        "value": "${data.aws_ssm_parameter.housing_finance_uh_url.value}"
       }
     ]
   }
