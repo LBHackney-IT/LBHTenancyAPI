@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@3.0.0
-  aws-ecs: circleci/aws-ecs@2.0
   aws-cli: circleci/aws-cli@0.1.9
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
@@ -111,16 +110,16 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip install awscli --upgrade --user
-#      - run:
-#          name: Install jq
-#          command: |
-#            sudo apt-get update
-#            sudo apt-get install jq
-#      - run:
-#          name: Install ecs-deploy
-#          command: |
-#            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-#            sudo chmod +x /usr/bin/ecs-deploy
+      - run:
+          name: Install jq
+          command: |
+            sudo apt-get update
+            sudo apt-get install jq
+      - run:
+          name: Install ecs-deploy
+          command: |
+            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
+            sudo chmod +x /usr/bin/ecs-deploy
       - run:
           name: Login to ECR
           command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
@@ -139,14 +138,9 @@ jobs:
             docker push $MA_ECR_IMAGE_URL:$CIRCLE_SHA1
             docker push $MA_ECR_IMAGE_URL:latest
             docker push $MA_ECR_IMAGE_URL:development
-      - aws-ecs/run-task:
-          cluster: $MA_ECS_DEVELOPMENT_CLUSTER
-          security-group-ids: sg-00d2e14f38245dd0b
-          subnet-ids: subnet-0140d06fb84fdb547,subnet-05ce390ba88c42bfd
-          task-definition: ecs-task-definition-tenancy-api
-#      - run:
-#          name: Force new deployment
-#          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_DEVELOPMENT_CLUSTER --service-name $MA_ECS_DEVELOPMENT_APP_NAME --image $MA_ECR_IMAGE_URL:development --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def --launch-type "FARGATE" --run-task
+      - run:
+          name: Force new deployment
+          command: ecs-deploy --region $AWS_REGION --cluster $MA_ECS_DEVELOPMENT_CLUSTER --service-name $MA_ECS_DEVELOPMENT_APP_NAME --image $MA_ECR_IMAGE_URL:development --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def --launch-type FARGATE
   development_release_manual:
     <<: *development_release
 
@@ -229,7 +223,7 @@ workflows:
   version: 2
   continuous_delivery:
     jobs:
-#      - check
+      - check
       - assume-role-development:
           context: api-assume-role-housing-development-context
 #          requires:
