@@ -140,11 +140,9 @@ jobs:
             docker push $MA_ECR_IMAGE_URL:latest
             docker push $MA_ECR_IMAGE_URL:development
       - aws-ecs/run-task:
-          awsvpc: true
           cluster: $MA_ECS_DEVELOPMENT_CLUSTER
           security-group-ids: sg-00d2e14f38245dd0b
           subnet-ids: subnet-0140d06fb84fdb547,subnet-05ce390ba88c42bfd
-          launch-type: FARGATE
           task-definition: ecs-task-definition-tenancy-api
 #      - run:
 #          name: Force new deployment
