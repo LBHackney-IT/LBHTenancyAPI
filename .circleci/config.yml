@@ -211,6 +211,9 @@ workflows:
           context: api-assume-role-housing-staging-context
           requires:
             - check
+          filters:
+            branches:
+              only: master
       - staging_release:
           context: api-assume-role-housing-staging-context
           requires:
@@ -229,14 +232,23 @@ workflows:
           type: approval
           requires:
             - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
             - permit_production_release
+          filters:
+            branches:
+              only: master
       - production_release:
           context: api-assume-role-housing-production-context
           requires:
             - assume-role-production
+          filters:
+            branches:
+              only: master
       - terraform-init-and-apply-to-production:
           context: api-assume-role-housing-production-context
           requires:
