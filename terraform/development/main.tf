@@ -61,7 +61,6 @@ terraform {
 }
 
 #Elastic Container Registry (ECR) setup
-
 resource "aws_ecr_repository" "tenancy-api" {
     name                 = "hackney/apps/tenancy-api"
     image_tag_mutability = "MUTABLE"
