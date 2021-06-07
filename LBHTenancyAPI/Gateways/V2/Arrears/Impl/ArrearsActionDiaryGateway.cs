@@ -71,15 +71,15 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
     	                    ISNULL(action_no, 0) AS max_action_no,
     	                    tenagree.cur_bal
                         FROM
-    	                    tenagree
-                        LEFT JOIN araction ON tenagree.tag_ref = araction.tag_ref
+    	                    MATenancyAgreement tenagree
+                        LEFT JOIN UHAraction araction ON tenagree.tag_ref = araction.tag_ref
                         WHERE
     	                    tenagree.tag_ref = @tag_ref
                         ORDER BY
     	                    action_set DESC,
     	                    action_no DESC
                     )
-                    INSERT INTO araction (
+                    INSERT INTO UHAraction (
                         tag_ref, action_set, action_no, action_code, action_date, action_balance, action_comment, 
                         username, comm_only, araction_sid, action_deferred, deferred_until, deferral_reason, 
                         severity_level, action_nr_balance, action_type, act_status, action_cat, action_subno, 
@@ -96,7 +96,7 @@ namespace LBHTenancyAPI.Gateways.V2.Arrears.Impl
                         @action_comment as action_comment,
                         @username as username,
                         1 as comm_only,
-                        (SELECT MAX(araction_sid) FROM araction) +1,
+                        (SELECT MAX(araction_sid) FROM UHAraction araction) +1,
                         0 AS action_deferred,
                         0 AS deferred_until,
                         '' AS deferral_reason,

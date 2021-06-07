@@ -28,7 +28,7 @@ namespace LBHTenancyAPITest.Helpers.Stub
             SqlCommand command = null;
 
             string commandText =
-                "INSERT INTO rtrans (tag_ref, trans_ref, prop_ref, trans_type, post_date, real_value)" +
+                "INSERT INTO UHMiniTransaction (tag_ref, trans_ref, prop_ref, trans_type, post_date, real_value)" +
                 "VALUES (@tenancyRef, @transRef, @propRef, @transType, @transactionDate, @amount)";
 
             command = new SqlCommand(commandText, _db);

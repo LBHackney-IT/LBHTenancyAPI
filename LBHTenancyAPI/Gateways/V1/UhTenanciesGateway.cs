@@ -42,15 +42,15 @@ namespace LBHTenancyAPI.Gateways.V1
                     araction.action_date AS LastActionDate,
                     arag.arag_status as ArrearsAgreementStatus,
                     arag.arag_startdate as ArrearsAgreementStartDate
-                    FROM tenagree WITH(NOLOCK)
-                    LEFT JOIN property WITH(NOLOCK)
+                    FROM MATenancyAgreement tenagree WITH(NOLOCK)
+                    LEFT JOIN MAProperty property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
                     LEFT JOIN (
                     SELECT
                     araction.tag_ref,
                     araction.action_code,
                     araction.action_date
-                    FROM araction WITH(NOLOCK)
+                    FROM UHAraction araction WITH(NOLOCK)
                     WHERE araction.tag_ref IN @allRefs
                     ) AS araction ON araction.tag_ref = tenagree.tag_ref
                     LEFT JOIN (
@@ -58,10 +58,10 @@ namespace LBHTenancyAPI.Gateways.V1
                     arag.tag_ref,
                     arag.arag_status,
                     arag.arag_startdate
-                    FROM arag WITH(NOLOCK)
+                    FROM UHArag arag WITH(NOLOCK)
                     WHERE arag.tag_ref IN @allRefs
                     ) AS arag ON arag.tag_ref = tenagree.tag_ref
-                    Left JOIN dbo.member member WITH(NOLOCK)
+                    Left JOIN MAMember member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref
                     WHERE tenagree.tag_ref IN @allRefs
                     ORDER BY arag.arag_startdate DESC, araction.action_date DESC",
@@ -102,7 +102,7 @@ namespace LBHTenancyAPI.Gateways.V1
                     "action_comment as Comment, " +
                     "username as UniversalHousingUsername, " +
                     "action_balance as Balance " +
-                    "FROM araction WITH(NOLOCK)" +
+                    "FROM UHAraction araction WITH(NOLOCK)" +
                     "WHERE tag_ref = @tRef " +
                     "ORDER BY araction.action_date DESC",
                     new { tRef = tenancyRef.Replace("%2F", "/") }
@@ -124,10 +124,10 @@ namespace LBHTenancyAPI.Gateways.V1
             sb.AppendLine("post_date AS Date,");
             sb.AppendLine("trans_ref AS TransactionRef,");
             sb.AppendLine("d.Description");
-            sb.AppendLine("FROM rtrans r with(nolock),");
-            sb.AppendLine("(select deb.deb_code as Code, deb.deb_desc as Description from dbo.debtype deb with(nolock)");
+            sb.AppendLine("FROM VI_Transaction r with(nolock),");
+            sb.AppendLine("(select deb.deb_code as Code, deb.deb_desc as Description from UHDebType deb with(nolock)");
             sb.AppendLine("UNION");
-            sb.AppendLine("select rec_code as Code, rec_desc as Description from dbo.rectype with(nolock)");
+            sb.AppendLine("select rec_code as Code, rec_desc as Description from UHRecType with(nolock)");
             sb.AppendLine(") as d");
             sb.AppendLine("WHERE tag_ref = @tRef");
             sb.AppendLine("and d.Code = r.trans_type");
@@ -165,13 +165,13 @@ namespace LBHTenancyAPI.Gateways.V1
                     property.address1 as PrimaryContactLongAddress,
                     property.post_code as PrimaryContactPostcode,
                     property.num_bedrooms as NumberOfBedrooms
-                    FROM tenagree WITH(NOLOCK)
-                    LEFT JOIN arag WITH(NOLOCK)
+                    FROM MATenancyAgreement tenagree WITH(NOLOCK)
+                    LEFT JOIN UHArag arag WITH(NOLOCK)
                     ON arag.tag_ref = tenagree.tag_ref
 
-                    LEFT JOIN property WITH(NOLOCK)
+                    LEFT JOIN MAProperty property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
-                    Left JOIN dbo.member member WITH(NOLOCK)
+                    Left JOIN MAMember member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref AND member.responsible = 1
                     WHERE tenagree.tag_ref = @tRef
                     ORDER BY arag.arag_startdate DESC",
@@ -220,8 +220,8 @@ namespace LBHTenancyAPI.Gateways.V1
                 "arag.arag_breached AS Breached, " +
                 "arag.arag_startbal AS StartBalance, " +
                 "arag.arag_clearby AS ClearBy " +
-                "FROM arag WITH(NOLOCK)" +
-                "LEFT JOIN aragdet WITH(NOLOCK)" +
+                "FROM UHArag arag WITH(NOLOCK)" +
+                "LEFT JOIN UHAragdet aragdet WITH(NOLOCK)" +
                 "ON aragdet.arag_sid = arag.arag_sid " +
                 "WHERE arag.tag_ref = @tRef " +
                 "ORDER BY arag_startdate DESC ",
@@ -240,7 +240,7 @@ namespace LBHTenancyAPI.Gateways.V1
                 "action_comment as Comment, " +
                 "username as UniversalHousingUsername, " +
                 "action_balance as Balance " +
-                "FROM araction WITH(NOLOCK)" +
+                "FROM UHAraction araction WITH(NOLOCK)" +
                 "WHERE tag_ref = @tRef " +
                 "ORDER BY araction.action_date DESC",
                 new { tRef = tenancyRef.Replace("%2F", "/") }

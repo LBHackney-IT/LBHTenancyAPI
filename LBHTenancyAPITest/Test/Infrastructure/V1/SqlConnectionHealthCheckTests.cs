@@ -20,7 +20,8 @@ namespace LBHTenancyAPITest.Test.Infrastructure.V1
         public SqlConnectionHealthCheckTests(DatabaseFixture databaseFixture)
         {
             _db = databaseFixture.Db;
-            var connection = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //var connection = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var connection = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             var loggerFactory = new LoggerFactory();
             _sqlConnectionFactory = new SqlConnectionFactory(connection, loggerFactory.CreateLogger<SqlConnectionFactory>());
             var logger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();

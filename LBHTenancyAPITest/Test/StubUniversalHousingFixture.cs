@@ -26,7 +26,8 @@ namespace LBHTenancyAPITest.Test
                 Console.WriteLine("Failed to load .env file for test");
             }
 
-            ConnectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //ConnectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            ConnectionString = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             Db = new SqlConnection(ConnectionString);
 
             Db.Open();
@@ -35,14 +36,14 @@ namespace LBHTenancyAPITest.Test
         public void Dispose()
         {
             Db.Query(
-                "DELETE FROM araction;" +
-                "DELETE FROM arag;" +
-                "DELETE FROM contacts;" +
-                "DELETE FROM tenagree;" +
-                "DELETE FROM aragdet;" +
-                "DELETE FROM rtrans;" +
-                "DELETE FROM member;" +
-                "DELETE FROM property;"
+                "DELETE FROM UHAraction;" +
+                "DELETE FROM UHArag;" +
+                "DELETE FROM UHContacts;" +
+                "DELETE FROM UHTenancyAgreement;" +
+                "DELETE FROM UHAragdet;" +
+                "DELETE FROM UHMiniTransaction;" +
+                "DELETE FROM UHMember;" +
+                "DELETE FROM UHProperty;"
             );
 
             Db.Close();

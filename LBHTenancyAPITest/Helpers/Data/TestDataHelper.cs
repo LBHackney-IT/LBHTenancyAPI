@@ -15,7 +15,7 @@ namespace LBHTenancyAPITest.Helpers.Data
     {
         public static void InsertMember(Member member, SqlConnection db)
         {
-            var commandText = "INSERT INTO member (house_ref, person_no, title,forename,surname,age,responsible) VALUES (@house_ref, @person_no, @title,@forename,@surname,@age,@responsible);";
+            var commandText = "INSERT INTO UHMember (house_ref, person_no, title,forename,surname,age,responsible) VALUES (@house_ref, @person_no, @title,@forename,@surname,@age,@responsible);";
             var command = new SqlCommand(commandText, db);
 
             command.Parameters.Add("@house_ref", SqlDbType.Char);
@@ -46,7 +46,7 @@ namespace LBHTenancyAPITest.Helpers.Data
         {
 
             var sb = new StringBuilder();
-            sb.Append("INSERT INTO property(");
+            sb.Append("INSERT INTO UHProperty(");
             if (!property.short_address.IsNullOrEmpty())
                 sb.Append("short_address,");
 
@@ -75,7 +75,7 @@ namespace LBHTenancyAPITest.Helpers.Data
         }
         public static void InsertTenancy(TenancyAgreement tenancyAgreement, SqlConnection db)
         {
-            var commandText = @"INSERT INTO [dbo].[tenagree]
+            var commandText = @"INSERT INTO UHTenancyAgreement
                                 ([tag_ref],[u_saff_rentacc],[prop_ref],[house_ref],[cur_bal],[tenure],[rent],[service],[other_charge], [cot])
                                 VALUES
                                 (@tag_ref, @paymentRef, @prop_ref,@house_ref,@cur_bal,@tenure, @rent, @service, @other_charge, @start_date)";
@@ -117,7 +117,7 @@ namespace LBHTenancyAPITest.Helpers.Data
 
         public static void InsertAgreement(ArrearsAgreement arrearsAgreement,SqlConnection db)
         {
-            var commandText = "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)";
+            var commandText = "INSERT INTO UHArag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)";
             var command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = arrearsAgreement.tag_ref;
@@ -132,7 +132,7 @@ namespace LBHTenancyAPITest.Helpers.Data
 
         public static void InsertAgreementDet(ArrearsAgreementDet arrearsAgreementDet, SqlConnection db)
         {
-            var commandText = "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @aragdet_frequency, @aragSid)";
+            var commandText = "INSERT INTO UHAragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @aragdet_frequency, @aragSid)";
             var command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
             command.Parameters["@tenancyRef"].Value = arrearsAgreementDet.tag_ref;
@@ -147,7 +147,8 @@ namespace LBHTenancyAPITest.Helpers.Data
 
         public static List<ArrearsActionDiaryEntry> GetArrearsActionsByRef(string tenancyRef)
         {
-            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var connectionString = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             var gateway = new UhTenanciesGateway(connectionString);
             return gateway.GetActionDiaryEntriesbyTenancyRef(tenancyRef);
         }
@@ -155,7 +156,7 @@ namespace LBHTenancyAPITest.Helpers.Data
         public static void InsertArrearsActions(ArrearsActionDiaryEntry actionDiaryEntry, SqlConnection db)
         {
             string commandText =
-                "INSERT INTO araction (araction_sid, tag_ref, action_code, action_date) VALUES (@aractionSid, @tenancyRef, @actionCode, @actionDate)";
+                "INSERT INTO UHAragaction (araction_sid, tag_ref, action_code, action_date) VALUES (@aractionSid, @tenancyRef, @actionCode, @actionDate)";
 
             SqlCommand command = new SqlCommand(commandText, db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);

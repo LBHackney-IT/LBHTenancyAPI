@@ -42,7 +42,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Health
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Opening SqlConnection - {stopwatch.ElapsedMilliseconds}ms");
 
                 _logger.LogInformation($"SqlConnectionHealthCheck: Started Querying tenagree - {stopwatch.ElapsedMilliseconds}ms");
-                var result = await sqlConnection.QueryAsync<string>("SELECT TOP 1 tag_ref from tenagree WHERE tenagree.tag_ref IS NOT NULL").ConfigureAwait(false);
+                var result = await sqlConnection.QueryAsync<string>("SELECT TOP 1 tag_ref from MATenancyAgreement tenagree WHERE tenagree.tag_ref IS NOT NULL").ConfigureAwait(false);
                 _logger.LogInformation($"SqlConnectionHealthCheck: Finished Querying tenagree - {stopwatch.ElapsedMilliseconds}ms");
 
                 var list = result?.ToList();

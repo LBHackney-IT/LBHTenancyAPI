@@ -1,10 +1,10 @@
-﻿﻿using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
 {
-    [Table("property")]
+    [Table("UHProperty")]
     public class Property
     {
         /// <summary>
