@@ -150,6 +150,8 @@ namespace LBHTenancyAPI.Gateways.V1
 
         public Tenancy GetTenancyForRef(string tenancyRef)
         {
+                Console.WriteLine("*****************************");
+                Console.WriteLine(_connectionString);
             Tenancy tenancy;
             using (var conn = new SqlConnection(_connectionString))
             {
