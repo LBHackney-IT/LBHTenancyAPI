@@ -144,7 +144,7 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
     "environment": [
       {
         "name": "UH_DATABASE_URL",
-        "value": "HackneyAPIIncomeCollection"
+        "value": "${data.aws_ssm_parameter.housing_finance_uh_url.value}"
       },
       {
         "name": "Credentials__UHServiceSystemCredentials__UserName",
