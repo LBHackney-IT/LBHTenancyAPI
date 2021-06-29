@@ -205,6 +205,9 @@ workflows:
           context: api-assume-role-housing-development-context
       #          requires:
       #            - check
+          filters:
+            branches:
+              only: development
       - development_release:
           context: api-assume-role-housing-development-context
           requires:
