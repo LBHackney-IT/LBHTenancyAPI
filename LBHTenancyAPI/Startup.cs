@@ -49,6 +49,8 @@ namespace LBHTenancyAPI
             var settings = Configuration.Get<ConfigurationSettings>();
 
             var connectionString = Environment.GetEnvironmentVariable("UH_URL");
+            //var connectionString = "Data Source=127.0.0.1,1433;Initial Catalog=StubUH;User ID=sa;Password=Rooty-Tooty";
+            // var connectionString = "Data Source=127.0.0.1;Initial Catalog=SOW2b;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
 
             services.AddMvc();
 

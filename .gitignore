@@ -6,6 +6,9 @@
 [Bb]in/
 packages/
 TestResults/
+terraform/development/.terraform
+terraform/staging/.terraform
+terraform/production/.terraform
 
 # globs
 Makefile.in

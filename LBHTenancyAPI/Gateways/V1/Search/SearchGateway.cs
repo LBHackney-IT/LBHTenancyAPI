@@ -58,10 +58,10 @@ namespace LBHTenancyAPI.Gateways.V1.Search
                         property.short_address as PrimaryContactShortAddress,
                         RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                         ROW_NUMBER() OVER (ORDER BY member.surname, member.forename ASC) AS Seq
-                        FROM tenagree
-                        Left JOIN dbo.member member WITH(NOLOCK)
+                        FROM MATenancyAgreement tenagree
+                        Left JOIN MAMember member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref
-                        LEFT JOIN property WITH(NOLOCK)
+                        LEFT JOIN MAProperty property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
                         WHERE tenagree.tag_ref IS NOT NULL
                         AND (LOWER(tenagree.tag_ref) = @lowerSearchTerm
@@ -82,10 +82,10 @@ namespace LBHTenancyAPI.Gateways.V1.Search
                     DECLARE @lowerSearchTerm nvarchar(256);
                     SET @lowerSearchTerm = LOWER(@searchTerm) 
                     SELECT count(tenagree.tag_ref)
-                    FROM tenagree
-                    Left JOIN dbo.member member WITH(NOLOCK)
+                    FROM MATenancyAgreement tenagree
+                    Left JOIN MAMember member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref
-                    LEFT JOIN property WITH(NOLOCK)
+                    LEFT JOIN MAProperty property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
                     WHERE tenagree.tag_ref IS NOT NULL
                     AND (LOWER(tenagree.tag_ref) = @lowerSearchTerm
