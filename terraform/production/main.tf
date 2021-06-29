@@ -1,6 +1,5 @@
 provider "aws" {
     region  = "eu-west-2"
-    version = "~> 2.0"
 }
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
@@ -120,12 +119,12 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
     requires_compatibilities = ["FARGATE"]
     memory                   = "1024"
     cpu                      = "512"
-    execution_role_arn       = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
+    execution_role_arn       = "arn:aws:iam::282997303675:role/ecsTaskExecutionRole"
     container_definitions    = <<DEFINITION
 [
   {
     "name": "tenancy-api-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
+    "image": "282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
     "memory": 1024,
     "cpu": 512,
     "essential": true,
