@@ -172,10 +172,10 @@ jobs:
           command: docker build --file LBHTenancyAPI/Dockerfile --tag hackney/apps/tenancy-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM .
       - run:
           name: Tag new image for production release
-          command: docker tag hackney/apps/tenancy-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:production
+          command: docker tag hackney/apps/tenancy-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:$CIRCLE_SHA1
       - run:
           name: Release new image to ECR
-          command: docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:production
+          command: docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:$CIRCLE_SHA1
 
   terraform-init-and-apply-to-development:
     executor: docker-terraform
