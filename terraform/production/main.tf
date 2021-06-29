@@ -223,7 +223,7 @@ resource "aws_lb_target_group" "lb_tg" {
     target_type = "ip"
     stickiness {
         enabled = false
-        type = "lb_cookie"
+        type = "app_cookie"
     }
     lifecycle {
         create_before_destroy = true
