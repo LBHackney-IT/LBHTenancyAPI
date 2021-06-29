@@ -295,3 +295,23 @@ resource "aws_api_gateway_deployment" "main" {
         create_before_destroy = true
     }
 }
+
+
+resource "aws_api_gateway_usage_plan" "main" {
+    name = "tenancy_api_production_usage_plan"
+
+    api_stages {
+        api_id = aws_api_gateway_rest_api.main.id
+        stage  = aws_api_gateway_deployment.main.stage_name
+    }
+}
+
+resource "aws_api_gateway_api_key" "main" {
+    name = "tenancy_api_production_key"
+}
+
+resource "aws_api_gateway_usage_plan_key" "main" {
+    key_id        = aws_api_gateway_api_key.main.id
+    key_type      = "API_KEY"
+    usage_plan_id = aws_api_gateway_usage_plan.main.id
+}
