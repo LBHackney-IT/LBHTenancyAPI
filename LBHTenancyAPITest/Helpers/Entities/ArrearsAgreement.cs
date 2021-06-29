@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
 {
-    [Table("arag")]
+    [Table("UHArag")]
     public class ArrearsAgreement
     {
         [Key]

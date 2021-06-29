@@ -99,10 +99,10 @@ namespace LBHTenancyAPI.Gateways.V2.Search
             countStringBuilder.Append(
                 @"
                     SELECT count(tenagree.tag_ref)
-                    FROM tenagree
-                    Left JOIN dbo.member member WITH(NOLOCK)
+                    FROM MATenancyAgreement tenagree
+                    Left JOIN MAMember member WITH(NOLOCK)
                     ON member.house_ref = tenagree.house_ref AND member.responsible = 1
-                    LEFT JOIN property WITH(NOLOCK)
+                    LEFT JOIN MAProperty property WITH(NOLOCK)
                     ON property.prop_ref = tenagree.prop_ref
                     WHERE tenagree.tag_ref IS NOT NULL
                     ");
@@ -184,10 +184,10 @@ namespace LBHTenancyAPI.Gateways.V2.Search
                         property.short_address as PrimaryContactShortAddress,
                         RTRIM(LTRIM(member.forename)) + ' ' + RTRIM(LTRIM(member.surname)) as PrimaryContactName,
                         ROW_NUMBER() OVER (ORDER BY member.surname, member.forename ASC) AS Seq
-                        FROM tenagree
-                        Left JOIN dbo.member member WITH(NOLOCK)
+                        FROM MATenancyAgreement tenagree
+                        Left JOIN MAMember member WITH(NOLOCK)
                         ON member.house_ref = tenagree.house_ref AND member.responsible = 1
-                        LEFT JOIN property WITH(NOLOCK)
+                        LEFT JOIN MAProperty property WITH(NOLOCK)
                         ON property.prop_ref = tenagree.prop_ref
                         WHERE tenagree.tag_ref IS NOT NULL
 ");

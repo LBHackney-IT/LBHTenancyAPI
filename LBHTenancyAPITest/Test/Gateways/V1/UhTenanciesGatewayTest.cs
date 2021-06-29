@@ -240,11 +240,11 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         public void WhenGivenAListOfTenancyRefs_GetTenanciesByRefs_ShouldTrimCharacterFields()
         {
             string commandText =
-                "INSERT INTO tenagree (tag_ref, prop_ref, u_saff_rentacc) VALUES (@tenancyRef, @propRef, @paymentRef);" +
-                "INSERT INTO araction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
-                "INSERT INTO arag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
-                "INSERT INTO contacts (tag_ref, con_phone1) VALUES (@tenancyRef, @phone)" +
-                "INSERT INTO property (prop_ref, short_address, post_code) VALUES (@propRef, @shortAddress, @postcode)";
+                "INSERT INTO UHTenancyAgreement (tag_ref, prop_ref, u_saff_rentacc) VALUES (@tenancyRef, @propRef, @paymentRef);" +
+                "INSERT INTO UHAraction (tag_ref, action_code) VALUES (@tenancyRef, @actionCode)" +
+                "INSERT INTO UHArag (tag_ref, arag_status) VALUES (@tenancyRef, @aragStatus)" +
+                "INSERT INTO UHContacts (tag_ref, con_phone1) VALUES (@tenancyRef, @phone)" +
+                "INSERT INTO UHProperty (prop_ref, short_address, post_code) VALUES (@propRef, @shortAddress, @postcode)";
 
             SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);
@@ -266,24 +266,24 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
             command.ExecuteNonQuery();
 
-            string retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 tag_ref FROM tenagree WHERE tag_ref = 'not11chars '").First();
+            string retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 tag_ref FROM UHTenancyAgreement WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("not11chars ", retrieved_value);
 
-            string untrimmed_payment_ref = _databaseFixture.Db.Query<string>("SELECT TOP 1 u_saff_rentacc FROM tenagree").First();
+            string untrimmed_payment_ref = _databaseFixture.Db.Query<string>("SELECT TOP 1 u_saff_rentacc FROM UHTenancyAgreement").First();
             Assert.Equal("1234567890          ".Length, untrimmed_payment_ref.Length);
 
-            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 action_code FROM araction WHERE tag_ref = 'not11chars '").First();
+            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 action_code FROM UHAraction WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("ee ", retrieved_value);
 
-            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 arag_status FROM arag WHERE tag_ref = 'not11chars '").First();
+            retrieved_value = _databaseFixture.Db.Query<string>("SELECT TOP 1 arag_status FROM UHArag WHERE tag_ref = 'not11chars '").First();
             Assert.Contains("status    ", retrieved_value);
 
-            List<dynamic> retrieved_values = _databaseFixture.Db.Query("SELECT tag_ref, con_phone1 FROM contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
+            List<dynamic> retrieved_values = _databaseFixture.Db.Query("SELECT tag_ref, con_phone1 FROM UHContacts contacts WHERE contacts.tag_ref = 'not11chars '").ToList();
             IDictionary<string, object> row = retrieved_values[0];
 
             Assert.Contains("phone                ", row.Values);
 
-            retrieved_values = _databaseFixture.Db.Query("SELECT prop_ref, short_address, address1, post_code FROM property WHERE property.prop_ref = 'pref        '").ToList();
+            retrieved_values = _databaseFixture.Db.Query("SELECT prop_ref, short_address, address1, post_code FROM UHProperty property WHERE property.prop_ref = 'pref        '").ToList();
             row = retrieved_values[0];
 
             Assert.Contains("pref        ", row.Values);
@@ -316,7 +316,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
             // make sure there's a long string in the db
             string commandText =
-                $"UPDATE contacts SET con_address = '{longAddress}' WHERE contacts.tag_ref = '{expectedTenancy.TenancyRef}'";
+                $"UPDATE UHContacts SET con_address = '{longAddress}' WHERE UHContacts.tag_ref = '{expectedTenancy.TenancyRef}'";
             SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.ExecuteNonQuery();
 
@@ -531,21 +531,24 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
 
         private Tenancy GetSingleTenacyForRef(string tenancyRef)
         {
-            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var connectionString = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             var gateway = new UhTenanciesGateway(connectionString);
             return gateway.GetTenancyForRef(tenancyRef);
         }
 
         private List<TenancyListItem> GetTenanciesByRef(List<string> refs)
         {
-            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var connectionString = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             var gateway = new UhTenanciesGateway(connectionString);
             return gateway.GetTenanciesByRefs(refs);
         }
 
         private List<PaymentTransaction> GetPaymentTransactionsByTenancyRef(string tenancyRef)
         {
-            var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            //var connectionString = DotNetEnv.Env.GetString("UH_CONNECTION_STRING");
+            var connectionString = "Data Source=127.0.0.1;Initial Catalog=StubUH;User ID=housingadmin;Password=Vcf:8efGbuEv2qmD";
             var gateway = new UhTenanciesGateway(connectionString);
             return gateway.GetPaymentTransactionsByTenancyRefAsync(tenancyRef).ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -594,9 +597,9 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         private string InsertQueries()
         {
             string commandText =
-                "INSERT INTO tenagree (tag_ref, prop_ref, cur_bal, tenure, rent, service, other_charge) VALUES (@tenancyRef, @propRef, @currentBalance, @tenure, @rent, @service, @otherCharge);" +
-                "INSERT INTO contacts (tag_ref, con_name, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactPhone);" +
-                "INSERT INTO property (short_address, address1, prop_ref, post_code) VALUES (@primaryContactAddress, @primaryContactAddress, @propRef, @primaryContactPostcode);";
+                "INSERT INTO UHTenancyAgreement (tag_ref, prop_ref, cur_bal, tenure, rent, service, other_charge) VALUES (@tenancyRef, @propRef, @currentBalance, @tenure, @rent, @service, @otherCharge);" +
+                "INSERT INTO UHContacts (tag_ref, con_name, con_phone1) VALUES (@tenancyRef, @primaryContactName, @primaryContactPhone);" +
+                "INSERT INTO UHProperty (short_address, address1, prop_ref, post_code) VALUES (@primaryContactAddress, @primaryContactAddress, @propRef, @primaryContactPostcode);";
 
             return commandText;
         }
@@ -671,8 +674,8 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         private void InsertAgreement(string tenancyRef, string status, DateTime startDate)
         {
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)" +
-                "INSERT INTO aragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @frequency, @aragSid)";
+                "INSERT INTO UHArag (tag_ref, arag_status, arag_startdate, arag_sid) VALUES (@tenancyRef, @agreementStatus, @startDate, @aragSid)" +
+                "INSERT INTO UHAragdet (aragdet_amount, aragdet_frequency, arag_sid) VALUES (@amount, @frequency, @aragSid)";
 
 
             SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
@@ -698,9 +701,9 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
             List<ArrearsAgreement> items = new List<ArrearsAgreement>();
 
             string commandText =
-                "INSERT INTO arag (tag_ref, arag_status, arag_startdate, arag_startbal, arag_breached, arag_clearby) " +
+                "INSERT INTO UHArag (tag_ref, arag_status, arag_startdate, arag_startbal, arag_breached, arag_clearby) " +
                 "VALUES (@tenancyRef, @agreementStatus, @startDate, @startBal, @breached, @clearBy)" +
-                "INSERT INTO aragdet (arag_sid, aragdet_amount, aragdet_frequency) VALUES (@aragSid, @amount, @frequency)";
+                "INSERT INTO UHAragdet (arag_sid, aragdet_amount, aragdet_frequency) VALUES (@aragSid, @amount, @frequency)";
 
             foreach (int i in Enumerable.Range(0, num))
             {
@@ -754,7 +757,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 items = new List<ArrearsActionDiaryEntry>();
                 string commandText =
 
-                    "INSERT INTO araction (tag_ref, action_code, action_type, action_date, action_comment, action_balance, " +
+                    "INSERT INTO UHAraction (tag_ref, action_code, action_type, action_date, action_comment, action_balance, " +
                     "username) " +
                     "VALUES (@tenancyRef, @actionCode, @actionType, @actionDate, @actionComment, @actionBalance, @uhUsername)";
 
@@ -819,7 +822,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
                 items = new List<PaymentTransaction>();
                 string commandText =
 
-                    "INSERT INTO rtrans (tag_ref, trans_ref, prop_ref, trans_type, post_date, real_value)" +
+                    "INSERT INTO UHMiniTransaction (tag_ref, trans_ref, prop_ref, trans_type, post_date, real_value)" +
                     "VALUES (@tenancyRef, @transRef, @propRef, @transType, @transactionDate, @amount)";
 
                 foreach (int i in Enumerable.Range(0, num))
@@ -878,7 +881,7 @@ namespace LBHTenancyAPITest.Test.Gateways.V1
         private void InsertArrearsActions(string tenancyRef, string actionCode, DateTime actionDate)
         {
             string commandText =
-                "INSERT INTO araction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
+                "INSERT INTO UHAraction (tag_ref, action_code, action_date) VALUES (@tenancyRef, @actionCode, @actionDate)";
 
             SqlCommand command = new SqlCommand(commandText, _databaseFixture.Db);
             command.Parameters.Add("@tenancyRef", SqlDbType.Char);

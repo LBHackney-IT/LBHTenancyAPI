@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
 {
-    [Table("tenagree")]
+    [Table("UHTenancyAgreement")]
     public class TenancyAgreement
     {
         public DateTime? start_date;

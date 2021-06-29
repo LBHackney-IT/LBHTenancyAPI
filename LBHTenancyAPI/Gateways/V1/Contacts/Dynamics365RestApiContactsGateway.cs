@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -24,10 +25,9 @@ namespace LBHTenancyAPI.Gateways.V1.Contacts
         {
             var query = GetContactQuery(request?.TenancyAgreementReference);
             var httpClient = await _dynamics365ClientFactory.CreateClientAsync().ConfigureAwait(false);
-
             var response = await httpClient.GetAsync(query, cancellationToken).ConfigureAwait(false);
-            if(!response.IsSuccessStatusCode)
-                throw new Dynamics365RestApiException(response);
+            // if(!response.IsSuccessStatusCode)
+            //     throw new Dynamics365RestApiException(response);
 
             //call dynamics 365
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -52,7 +52,7 @@ namespace LBHTenancyAPI.Gateways.V1.Contacts
               <filter type ='and' >
                 <condition attribute ='housing_tag_ref' operator='eq' value='{tagReference}' />
               </filter>
-                <link-entity name ='contact' from='parentcustomerid' to='accountid' link-type='inner' > 
+                <link-entity name ='contact' from='parentcustomerid' to='accountid' link-type='inner' >
                   <attribute name ='contactid' />
                   <attribute name ='emailaddress1' />
                   <attribute name ='hackney_uprn' />

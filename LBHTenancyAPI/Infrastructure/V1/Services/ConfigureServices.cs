@@ -127,6 +127,7 @@ namespace LBHTenancyAPI.Infrastructure.V1.Services
                 return client;
             });
 
+
             var loggerFactory = new LoggerFactory();
             var sqlHealthCheckLogger = loggerFactory.CreateLogger<SqlConnectionHealthCheck>();
 

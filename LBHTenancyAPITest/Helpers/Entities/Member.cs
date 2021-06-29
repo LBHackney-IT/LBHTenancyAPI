@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LBHTenancyAPITest.Helpers.Entities
 {
-    [Table("member")]
+    [Table("UHMember")]
     public class Member
     {
         [Key]
