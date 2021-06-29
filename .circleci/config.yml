@@ -39,18 +39,18 @@ jobs:
       - run:
           name: Tag new image for staging release
           command: |
-            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:latest
-            docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:staging
+            docker tag hackney/apps/tenancy-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:$CIRCLE_SHA1
+            docker tag hackney/apps/tenancy-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:latest
+            docker tag hackney/apps/tenancy-api:latest 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:staging
       - run:
           name: Release new image to ECR
           command: |
-            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker push $ECR_IMAGE_URL:latest
-            docker push $ECR_IMAGE_URL:staging
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:$CIRCLE_SHA1
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:latest
+            docker push 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:staging
       - run:
           name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image 087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:staging --timeout $ECS_DEPLOY_TIMEOUT
   staging_release_manual:
     <<: *staging_release
 
@@ -79,13 +79,13 @@ jobs:
           command: docker build --file LBHTenancyAPI/Dockerfile --tag hackney/apps/tenancy-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM .
       - run:
           name: Tag new image for production release
-          command: docker tag hackney/apps/tenancy-api:latest $ECR_IMAGE_URL:production
+          command: docker tag hackney/apps/tenancy-api:latest 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:production
       - run:
           name: Release new image to ECR
-          command: docker push $ECR_IMAGE_URL:production
+          command: docker push 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:production
       - run:
           name: Force new application deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image $ECR_IMAGE_URL:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
+          command: ecs-deploy --region $AWS_REGION --cluster $ECS_PRODUCTION_CLUSTER --service-name $ECS_PRODUCTION_APP_NAME --image 282997303675.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:production --timeout $ECS_DEPLOY_TIMEOUT --use-latest-task-def
           no_output_timeout: 50m
 
 workflows:
