@@ -263,9 +263,9 @@ resource "aws_api_gateway_method" "main" {
     resource_id   = aws_api_gateway_resource.main.id
     http_method   = "ANY"
     authorization = "NONE"
+    api_key_required = true
     request_parameters = {
         "method.request.path.proxy" = true
-        "method.request.header.Authorization" = false
     }
 }
 resource "aws_api_gateway_integration" "main" {
