@@ -124,7 +124,7 @@ resource "aws_ecs_task_definition" "tenancy-api-ecs-task-definition" {
 [
   {
     "name": "tenancy-api-container",
-    "image": "364864573329.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
+    "image": "087586271961.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tenancy-api:${var.sha1}",
     "memory": 1024,
     "cpu": 512,
     "essential": true,
