@@ -102,7 +102,7 @@ resource "aws_ecs_service" "tenancy-api-ecs-service" {
     launch_type     = "FARGATE"
     network_configuration {
         subnets          = ["subnet-0743d86e9b362fa38", "subnet-0ea0020a44b98a2ca"]
-        security_groups = ["sg-00c197e980177983d"]
+        security_groups = ["sg-0be329a40ea5c4828"]
         assign_public_ip = false
     }
     desired_count = 1
